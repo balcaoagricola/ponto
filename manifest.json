@@ -1,0 +1,22 @@
+{
+  "name": "Sistema de Ponto Digital",
+  "short_name": "Ponto",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1f4e78",
+  "theme_color": "#1f4e78",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
