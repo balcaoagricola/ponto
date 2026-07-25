@@ -4,6 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Registo de Ponto Oficial</title>
+  
+  <!-- LIGAÇÃO PARA APLICAÇÃO INSTALÁVEL (PWA) -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1f4e78">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+
   <style>
     * { 
       margin: 0; 
@@ -26,7 +36,7 @@
 <body>
   <iframe 
     src="https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec" 
-    allow="geolocation"
+    allow="geolocation; camera; microphone; display-capture"
     sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts">
   </iframe>
 </body>
