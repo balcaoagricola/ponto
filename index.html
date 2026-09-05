@@ -91,6 +91,7 @@
 
     .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: center; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
     .btn-secondary { background: #ffffff; color: #475569; border: 1.5px solid var(--border); margin-top: 8px; }
 
     .modal-sistema { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
@@ -217,7 +218,10 @@
   function fecharModal() {
     document.getElementById('modalMensagem').style.display = 'none';
     var btn = document.getElementById('btnRegistar');
-    if (btn) btn.disabled = false;
+    if (btn) {
+      // Só desbloqueia o botão quando o utilizador clica explicitamente em "OK"
+      btn.disabled = false;
+    }
   }
 
   function abrirAdmin() { document.getElementById('modalAdmin').style.display = 'flex'; }
@@ -288,6 +292,7 @@
       return;
     }
 
+    // Desativa o botão imediatamente e mantém-no bloqueado até o utilizador fechar o modal
     btn.disabled = true;
     mostrarModal("A processar...", "A obter localização GPS e a enviar...", "⏳", false);
 
@@ -303,11 +308,6 @@
       };
 
       enviarServidorOnline(dadosPonto, function(sucesso, res) {
-        // Mantém o botão bloqueado por 3 segundos de segurança pós-envio
-        setTimeout(function() {
-          if (btn) btn.disabled = false;
-        }, 3000);
-
         var inputPin = document.getElementById('pinInput');
         if (inputPin) inputPin.value = "";
         atualizarPins();
@@ -320,6 +320,7 @@
       });
 
     }, function() {
+      // Se falhar a obtenção do GPS, reativa o botão para permitir nova tentativa
       if (btn) btn.disabled = false;
       mostrarModal("GPS Obrigatório", "Ative a localização do telemóvel para conseguir registar o ponto.", "⚠️", true);
     }, { timeout: 8000, enableHighAccuracy: false });
