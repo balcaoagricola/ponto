@@ -30,28 +30,28 @@
     body { background: linear-gradient(160deg, #eef2f7 0%, #f8fafc 100%); color: var(--text); padding: 4px 8px 12px 8px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; min-height: 100vh; }
     .container { width: 100%; max-width: 480px; background: var(--card-bg); border-radius: 24px; box-shadow: var(--shadow-lg); overflow: hidden; border: 1px solid #ffffff; position: relative; margin-top: 4px; }
     
-    /* Cabeçalho Azul com Logotipo Maior e Uniforme */
-    .header { background: linear-gradient(145deg, var(--primary-dark) 0%, var(--primary) 100%); color: white; padding: 18px 16px 16px 16px; text-align: center; }
+    /* Cabeçalho Azul com Logotipo e Relógio Extralargo */
+    .header { background: linear-gradient(145deg, var(--primary-dark) 0%, var(--primary) 100%); color: white; padding: 18px 14px 16px 14px; text-align: center; }
     .logo-empresa { width: 100%; max-height: 125px; margin-bottom: 12px; border-radius: 12px; object-fit: contain; background: #ffffff; padding: 6px; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     .header h2 { font-size: 1.15rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.3px; }
     
-    /* Relógio e Data Maiores e Largos */
+    /* Relógio e Data Extra Largos e Destacados */
     .live-clock-card { 
       background: rgba(255, 255, 255, 0.16); 
       border: 1px solid rgba(255, 255, 255, 0.3); 
-      border-radius: 18px; 
-      padding: 10px 12px; 
+      border-radius: 16px; 
+      padding: 10px 8px; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
-      gap: 2px; 
+      gap: 3px; 
       margin-top: 2px; 
       width: 100%;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    .clock-time-row { display: inline-flex; align-items: center; gap: 10px; font-size: 1.85rem; font-weight: 800; color: #ffffff; letter-spacing: 1.5px; }
-    .clock-date-row { font-size: 1rem; font-weight: 700; color: rgba(255, 255, 255, 0.92); letter-spacing: 0.8px; }
-    .gps-pulse-dot { width: 11px; height: 11px; background: #34d399; border-radius: 50%; box-shadow: 0 0 10px #34d399; }
+    .clock-time-row { display: inline-flex; align-items: center; gap: 8px; font-size: 2.1rem; font-weight: 800; color: #ffffff; letter-spacing: 2px; }
+    .clock-date-row { font-size: 0.98rem; font-weight: 700; color: rgba(255, 255, 255, 0.92); letter-spacing: 0.8px; text-transform: lowercase; }
+    .gps-pulse-dot { width: 10px; height: 10px; background: #34d399; border-radius: 50%; box-shadow: 0 0 10px #34d399; }
 
     .content-section { padding: 18px 20px; display: none; }
     .content-section.active { display: block; }
@@ -118,7 +118,7 @@
 <body>
 
 <div class="container">
-  <!-- Cabeçalho Azul Compacto com Logotipo Maior e Uniforme -->
+  <!-- Cabeçalho Azul com Relógio Extralargo e Data Formatada -->
   <div class="header">
     <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo">
     <h2 id="headerTitle">Controlo de Assiduidade</h2>
@@ -254,7 +254,13 @@
     setInterval(function() {
       var agora = new Date();
       var horaStr = String(agora.getHours()).padStart(2, '0') + ':' + String(agora.getMinutes()).padStart(2, '0') + ':' + String(agora.getSeconds()).padStart(2, '0');
-      var dataStr = String(agora.getDate()).padStart(2, '0') + '/' + String(agora.getMonth() + 1).padStart(2, '0') + '/' + agora.getFullYear();
+      
+      // Formato da data pretendido: "05 setembro 2026"
+      var meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+      var diaStr = String(agora.getDate()).padStart(2, '0');
+      var mesStr = meses[agora.getMonth()];
+      var anoStr = agora.getFullYear();
+      var dataStr = diaStr + ' ' + mesStr + ' ' + anoStr;
       
       var elTime = document.getElementById('liveClockTime');
       var elDate = document.getElementById('liveClockDate');
