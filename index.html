@@ -28,26 +28,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: linear-gradient(160deg, #eef2f7 0%, #f8fafc 100%); color: var(--text); padding: 28px 10px 16px 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; position: relative; }
     
-    .admin-gear-btn-top {
-      position: absolute;
-      top: 6px;
-      right: 20px;
-      background: #ffffff;
-      border: 1.5px solid var(--border);
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.25rem;
-      cursor: pointer;
-      z-index: 1000;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      transition: all 0.2s;
-    }
-    .admin-gear-btn-top:hover { background: #f1f5f9; transform: scale(1.08); }
-
     .container { width: 100%; max-width: 480px; background: var(--card-bg); border-radius: 24px; box-shadow: var(--shadow-lg); overflow: hidden; margin: 8px 0; border: 1px solid #ffffff; position: relative; }
     
     .header { background: linear-gradient(145deg, var(--primary-dark) 0%, var(--primary) 100%); color: white; padding: 28px 20px 24px 20px; text-align: center; position: relative; }
@@ -123,8 +103,6 @@
 
     .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25); }
-    .btn-secondary { background: #ffffff; color: #475569; border: 1.5px solid var(--border); }
-    .btn-danger { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; }
 
     .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; }
     .toast-card { background: #ffffff; border-radius: 20px; padding: 28px 24px; max-width: 380px; width: 100%; text-align: center; box-shadow: var(--shadow-lg); }
@@ -157,7 +135,7 @@
     
     <div class="gps-status-indicator">
       <div class="gps-pulse-dot" id="gpsIndicator"></div>
-      <span>GPS e Rede Ativos (GitHub Pages)</span>
+      <span>GPS e Rede Ativos</span>
     </div>
   </div>
   
@@ -209,7 +187,6 @@
 </div>
 
 <script>
-  // URL Oficial do seu Google Apps Script Web App
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
 
   function iniciarRelogio() {
@@ -299,22 +276,26 @@
     var sel = document.getElementById('nomeFuncionario');
     if (!sel) return;
 
-    fetch(APP_SCRIPT_URL + "?action=obterFuncionarios")
-      .then(response => response.json())
-      .then(lista => {
-        sel.innerHTML = '<option value="">-- Escolha --</option>';
-        if (lista && lista.length > 0) {
-          lista.forEach(function(nome) {
-            var o = document.createElement('option');
-            o.value = nome;
-            o.text = nome;
-            sel.appendChild(o);
-          });
-        }
-      })
-      .catch(err => {
-        sel.innerHTML = '<option value="">Erro ao carregar nomes</option>';
-      });
+    window.processarListaColaboradores = function(lista) {
+      sel.innerHTML = '<option value="">-- Escolha --</option>';
+      if (lista && lista.length > 0) {
+        lista.forEach(function(nome) {
+          var o = document.createElement('option');
+          o.value = nome;
+          o.text = nome;
+          sel.appendChild(o);
+        });
+      } else {
+        sel.innerHTML = '<option value="">Nenhum colaborador encontrado</option>';
+      }
+    };
+
+    var scriptTag = document.createElement('script');
+    scriptTag.src = APP_SCRIPT_URL + "?action=obterFuncionarios&callback=processarListaColaboradores";
+    scriptTag.onerror = function() {
+      sel.innerHTML = '<option value="">Erro ao ligar ao servidor</option>';
+    };
+    document.body.appendChild(scriptTag);
   }
 
   function registarPontoDiario() {
@@ -351,7 +332,6 @@
         return;
       }
 
-      // Envio via fetch POST para o Google Apps Script
       fetch(APP_SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
