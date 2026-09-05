@@ -101,8 +101,8 @@
 <body>
 
 <div class="container">
-  <!-- Botão de Ferramenta no canto superior direito (fora do cabeçalho azul, sobre o fundo branco) -->
-  <button class="admin-gear-btn" onclick="mudarAba('admin')" title="Painel Administrativo">⚙️</button>
+  <!-- Botão de Ferramenta no canto superior direito -->
+  <button class="admin-gear-btn" onclick="pedirSenhaAdmin()" title="Painel Administrativo">⚙️</button>
 
   <div class="header">
     <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo">
@@ -142,6 +142,10 @@
   
   <!-- ABA 2: ADMIN -->
   <div id="section-admin" class="content-section">
+    <div style="margin-bottom: 16px;">
+      <button class="btn btn-secondary" onclick="voltarAoEcraPrincipal()">⬅️ Voltar ao Ecrã Principal</button>
+    </div>
+
     <div id="admin-sub-menu">
       <div class="admin-card">
         <h3>Painel de Gestão</h3>
@@ -319,14 +323,37 @@
     if(document.getElementById('dataInicio')) document.getElementById('dataInicio').value = pMes.toISOString().split('T')[0];
   });
 
-  function mudarAba(abaId) {
-    document.querySelectorAll('.content-section').forEach(function(s) { s.classList.remove('active'); });
-    if(abaId === 'ponto') { 
-      document.getElementById('section-ponto').classList.add('active'); 
-      voltarAoMenuCentralAdmin();
-    } else { 
-      document.getElementById('section-admin').classList.add('active'); 
-    }
+  function pedirSenhaAdmin() {
+    var senhaInput = prompt("Introduza a Senha de Administrador:");
+    if (senhaInput === null) return; // Se cancelar
+
+    dispararConfirmacaoGeral("A Verificar...", "A validar credenciais...", "processando");
+
+    // Valida diretamente contra uma das funções de admin ou simula validação via script
+    chamarAPIJsonp({
+      action: "gerarPdfJsonp",
+      funcionario: "TESTE_AUTH_ADMIN",
+      dataInicio: "2026-01-01",
+      dataFim: "2026-01-01",
+      senha: senhaInput
+    }, function(resp) {
+      fecharToast();
+      // Se a resposta não for erro de palavra-passe incorreta, a senha está certa
+      if (resp.indexOf("incorreta") !== -1) {
+        alert("⚠️ Senha de administrador incorreta!");
+      } else {
+        // Senha correta: abre o painel admin
+        document.getElementById('section-ponto').classList.remove('active');
+        document.getElementById('section-admin').classList.add('active');
+        voltarAoMenuCentralAdmin();
+      }
+    });
+  }
+
+  function voltarAoEcraPrincipal() {
+    document.getElementById('section-admin').classList.remove('active');
+    document.getElementById('section-ponto').classList.add('active');
+    voltarAoMenuCentralAdmin();
   }
 
   function carregarFuncionariosEmTodosOsCampos() {
