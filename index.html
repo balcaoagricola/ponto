@@ -162,11 +162,6 @@
       <span>GPS e Rede Ativos (GitHub Pages)</span>
     </div>
   </div>
-
-  <div id="headerAdmin" class="header" style="display: none;">
-    <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo">
-    <h2>Painel Administrativo</h2>
-  </div>
   
   <div id="section-ponto" class="content-section active">
     <div id="bloco-ponto-smartphone-valido">
@@ -231,7 +226,6 @@
 </div>
 
 <script>
-  // Link oficial do Google Apps Script
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
   var senhaAdminSessao = "";
 
@@ -337,14 +331,13 @@
     fecharModalAdmin();
     dispararConfirmacaoGeral("A validar...", "A verificar credenciais...", "processando");
 
-    // Validação da senha via JSONP para o Apps Script
     window.processarValidacaoSenha = function(valido) {
       fecharToast();
       if (valido) {
         senhaAdminSessao = senhaDigitada;
-        dispararConfirmacaoGeral("Sucesso", "Senha de administrador aceite. (Nota: Gestão avançada disponível no Google Sheets)", "sucesso");
+        dispararConfirmacaoGeral("Sucesso", "Senha de administrador aceite.", "sucesso");
       } else {
-        dispararConfirmacaoGeral("Acesso Negado", "Palavra-passe de administrador incorreta.", "erro");
+        dispararConfirmacaoGeral("Acesso Negado", "Palavra-passe incorreta.", "erro");
       }
     };
 
@@ -353,30 +346,49 @@
     document.body.appendChild(scriptTag);
   }
 
+  // Sistema com Cache Local para evitar falhas de carregamento
   function carregarFuncionariosGitHub() {
     var sel = document.getElementById('nomeFuncionario');
     if (!sel) return;
 
-    window.processarListaColaboradores = function(lista) {
-      sel.innerHTML = '<option value="">-- Escolha --</option>';
-      if (lista && lista.length > 0) {
-        lista.forEach(function(nome) {
-          var o = document.createElement('option');
-          o.value = nome;
-          o.text = nome;
-          sel.appendChild(o);
-        });
-      } else {
-        sel.innerHTML = '<option value="">Nenhum colaborador encontrado</option>';
-      }
-    };
+    var funcionariosCache = localStorage.getItem('balcao_funcionarios_cache');
+    if (funcionariosCache) {
+      preencherSelectFuncionarios(JSON.parse(funcionariosCache));
+    }
 
-    var scriptTag = document.createElement('script');
-    scriptTag.src = APP_SCRIPT_URL + "?action=obterFuncionarios&callback=processarListaColaboradores";
-    scriptTag.onerror = function() {
-      sel.innerHTML = '<option value="">Erro ao ligar ao servidor</option>';
-    };
-    document.body.appendChild(scriptTag);
+    if (navigator.onLine) {
+      window.processarListaColaboradores = function(lista) {
+        if (lista && lista.length > 0) {
+          localStorage.setItem('balcao_funcionarios_cache', JSON.stringify(lista));
+          preencherSelectFuncionarios(lista);
+        }
+      };
+
+      var scriptTag = document.createElement('script');
+      scriptTag.src = APP_SCRIPT_URL + "?action=obterFuncionarios&callback=processarListaColaboradores";
+      scriptTag.onerror = function() {
+        if (!funcionariosCache) {
+          sel.innerHTML = '<option value="">Erro ao ligar ao servidor</option>';
+        }
+      };
+      document.body.appendChild(scriptTag);
+    } else if (!funcionariosCache) {
+      sel.innerHTML = '<option value="">Sem ligação à internet</option>';
+    }
+  }
+
+  function preencherSelectFuncionarios(lista) {
+    var sel = document.getElementById('nomeFuncionario');
+    if (!sel) return;
+    var valorAtual = sel.value;
+    sel.innerHTML = '<option value="">-- Escolha --</option>';
+    lista.forEach(function(nome) {
+      var o = document.createElement('option');
+      o.value = nome;
+      o.text = nome;
+      sel.appendChild(o);
+    });
+    if (valorAtual) sel.value = valorAtual;
   }
 
   function registarPontoDiario() {
@@ -384,10 +396,10 @@
     var pin = document.getElementById('pinPonto').value;
     var btn = document.getElementById('btnPonto');
     if(!nome) { dispararConfirmacaoGeral("Atenção", "Por favor, selecione o seu nome.", "erro"); return; }
-    if(!pin || pin.trim().length !== 4) { dispararConfirmacaoGeral("Atenção", "Introduza o seu PIN secreto de 4 dígitos.", "erro"); return; }
+    if(!pin || pin.trim().length !== 4) { dispararConfirmacaoGeral("Atenção", "Introduza o seu PIN de 4 dígitos.", "erro"); return; }
     
     btn.disabled = true;
-    dispararConfirmacaoGeral("A processar o registo...", "A aguardar validação da localização e gravação...", "processando");
+    dispararConfirmacaoGeral("A processar o registo...", "A validar localização e a gravar...", "processando");
     
     navigator.geolocation.getCurrentPosition(function(pos) {
       var isMock = pos.mocked || (pos.coords && pos.coords.mocked);
@@ -409,7 +421,7 @@
         btn.disabled = false;
         document.getElementById('pinPonto').value = "";
         atualizarPinDisplay('pinPonto', 'dotsPonto');
-        dispararConfirmacaoGeral("Guardado Offline", "Sem ligação à internet. O seu registo foi guardado no telemóvel.", "sucesso");
+        dispararConfirmacaoGeral("Guardado Offline", "Sem internet. Registo guardado localmente e será enviado quando houver rede.", "sucesso");
         return;
       }
 
@@ -424,13 +436,16 @@
       })
       .then(() => {
         btn.disabled = false;
-        dispararConfirmacaoGeral("Sucesso!", "Ponto registado e enviado com sucesso!", "sucesso");
+        dispararConfirmacaoGeral("Sucesso!", "Ponto registado com sucesso!", "sucesso");
         document.getElementById('pinPonto').value = "";
         atualizarPinDisplay('pinPonto', 'dotsPonto');
       })
       .catch(() => {
         btn.disabled = false;
-        dispararConfirmacaoGeral("Erro", "Falha de comunicação com o servidor.", "erro");
+        var pendentes = JSON.parse(localStorage.getItem('pontosOfflinePendentes') || '[]');
+        pendentes.push(dadosPonto);
+        localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
+        dispararConfirmacaoGeral("Modo Offline", "Falha de rede temporária. Registo guardado no telemóvel.", "sucesso");
       });
 
     }, function(errGps) { 
@@ -438,6 +453,22 @@
       dispararConfirmacaoGeral("Localização Indisponível", "Ative a localização (GPS) e permita o acesso no navegador.", "erro"); 
     }, { enableHighAccuracy: true, timeout: 15000 });
   }
+
+  window.addEventListener('online', function() {
+    var pendentesStr = localStorage.getItem('pontosOfflinePendentes');
+    if (!pendentesStr) return;
+    var pendentes = JSON.parse(pendentesStr);
+    if (pendentes.length > 0) {
+      fetch(APP_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ func: "sincronizarPicagensOffline", args: [pendentes] })
+      }).then(() => {
+        localStorage.removeItem('pontosOfflinePendentes');
+      }).catch(() => {});
+    }
+  });
 
   function limparFeedbackPonto() { gerirErroCampo("erro-nome-ponto", ""); gerirErroCampo("erro-pin-ponto", ""); }
   function gerirErroCampo(idElemento, msg) {
