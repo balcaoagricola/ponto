@@ -373,6 +373,15 @@
     }
   }
 
+  function obterDetalhesDispositivo() {
+    var ua = navigator.userAgent;
+    var match = ua.match(/\(([^)]+)\)/);
+    if (match && match[1]) {
+      return match[1];
+    }
+    return navigator.platform || "Smartphone";
+  }
+
   function chamarAPIJsonp(params, callbackSucesso) {
     if (!navigator.onLine) {
       emProcessamento = false;
@@ -567,7 +576,7 @@
         lon: pos.coords.longitude,
         pin: pin,
         isMock: pos.mocked || (pos.coords && pos.coords.mocked),
-        disp: navigator.platform || "Smartphone",
+        disp: obterDetalhesDispositivo(),
         ua: navigator.userAgent
       }, function(resposta) {
         document.getElementById('pinPonto').value = "";
