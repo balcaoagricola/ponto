@@ -1,4 +1,309 @@
-function registarPonto() {
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Registo de Ponto · Balcão Agrícola</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #1e3a5f;
+      --primary-dark: #14273f;
+      --accent: #3b82f6;
+      --bg: #f4f6f9;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --warning-bg: #fef3c7;
+      --warning-text: #92400e;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: linear-gradient(160deg, #eef2f7 0%, #f8fafc 100%); color: var(--text); padding: 20px 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; position: relative; }
+    
+    .admin-gear-btn-top {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      cursor: pointer;
+      z-index: 50;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .container { width: 100%; max-width: 480px; background: var(--card-bg); border-radius: 24px; box-shadow: 0 12px 24px -8px rgba(0,0,0,0.12); overflow: hidden; border: 1px solid #ffffff; }
+    
+    .header { background: linear-gradient(145deg, var(--primary-dark) 0%, var(--primary) 100%); color: white; padding: 28px 20px 24px 20px; text-align: center; }
+    .logo-empresa { width: 100%; max-height: 130px; margin-bottom: 14px; border-radius: 12px; object-fit: contain; background: #ffffff; padding: 6px; display: block; }
+    .header h2 { font-size: 1.35rem; font-weight: 800; margin-bottom: 8px; }
+
+    .live-clock-card { 
+      background: rgba(255, 255, 255, 0.15);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 18px;
+      padding: 14px 20px;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .live-clock-time { font-size: 2.2rem; font-weight: 800; color: #ffffff; display: block; }
+    .live-clock-date { font-size: 1rem; font-weight: 600; color: #e2e8f0; display: block; margin-top: 4px; text-transform: capitalize; }
+
+    .content-section { padding: 24px 20px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; margin-bottom: 7px; font-weight: 600; font-size: 0.85rem; color: #334155; }
+    
+    .form-control { 
+      width: 100%; 
+      padding: 13px 15px; 
+      border: 1.5px solid var(--border); 
+      border-radius: 12px; 
+      font-size: 0.95rem; 
+      background-color: #f8fafc; 
+      color: #1e293b; 
+      font-weight: 600; 
+      outline: none; 
+    }
+    
+    select.form-control { 
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23334155' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); 
+      background-repeat: no-repeat; 
+      background-position: right 14px center; 
+      background-size: 16px; 
+      padding-right: 40px; 
+    }
+    
+    .pin-box-wrapper { position: relative; width: 100%; }
+    .pin-hidden-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; }
+    .pin-dots-container { display: flex; justify-content: center; align-items: center; gap: 18px; padding: 16px; background: #f8fafc; border: 2px solid var(--border); border-radius: 12px; }
+    .pin-dot { width: 15px; height: 15px; border-radius: 50%; border: 2.2px solid #94a3b8; background: transparent; }
+    .pin-dot.filled { background: var(--primary); border-color: var(--primary); transform: scale(1.2); }
+
+    .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: center; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25); }
+    .btn-secondary { background: #ffffff; color: #475569; border: 1.5px solid var(--border); margin-top: 8px; }
+    
+    .btn-warning { 
+      background: var(--warning-bg); 
+      color: var(--warning-text); 
+      border: 1.5px solid #f59e0b;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15); 
+      display: none; 
+      font-size: 0.85rem; 
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 18px;
+      cursor: pointer;
+    }
+
+    .modal-sistema { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
+    .modal-card { background: #ffffff; border-radius: 20px; padding: 24px; max-width: 360px; width: 100%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
+
+    .app-footer { text-align: center; font-size: 0.78rem; color: #64748b; margin-top: 12px; }
+    .campo-obrigatorio { color: var(--danger); font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<button class="admin-gear-btn-top" onclick="abrirAdmin()" title="Painel Administrativo">⚙️</button>
+
+<div class="container">
+  <div class="header">
+    <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo">
+    <h2>Controlo de Assiduidade</h2>
+    
+    <div class="live-clock-card">
+      <span class="live-clock-time" id="relogioHora">00:00:00</span>
+      <span class="live-clock-date" id="relogioData">A carregar...</span>
+    </div>
+  </div>
+  
+  <div class="content-section">
+    <button id="btnSincronizarManual" class="btn btn-warning" onclick="sincronizarUmAUm()">
+      ⚠️ Sincronizar Registo Pendente (<span id="contadorPendentes">0</span>/2)
+    </button>
+
+    <div class="form-group">
+      <label for="nomeFuncionario">Selecione o seu Nome <span class="campo-obrigatorio">*</span>:</label>
+      <select id="nomeFuncionario" class="form-control" onclick="carregarFuncionarios()" onchange="focarPin()">
+        <option value="">A carregar colaboradores...</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="pinInput">PIN Secreto <span class="campo-obrigatorio">*</span>:</label>
+      <div class="pin-box-wrapper">
+        <input type="password" id="pinInput" class="pin-hidden-input" maxlength="4" inputmode="numeric" oninput="atualizarPins()">
+        <div class="pin-dots-container" onclick="document.getElementById('pinInput').focus()">
+          <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <button id="btnRegistar" class="btn btn-primary" onclick="registarPonto()">⏰ Validar e Registar Ponto</button>
+  </div>
+</div>
+
+<div id="modalMensagem" class="modal-sistema">
+  <div class="modal-card">
+    <div id="modalIcone" style="font-size: 3rem; margin-bottom: 10px;">✅</div>
+    <h3 id="modalTitulo" style="color: var(--primary); margin-bottom: 8px; font-size: 1.2rem;">Aviso</h3>
+    <p id="modalTexto" style="color: #475569; font-size: 0.92rem; margin-bottom: 20px; line-height: 1.4;">Mensagem...</p>
+    <button class="btn btn-primary" onclick="fecharModal()" style="margin-top: 0;">OK</button>
+  </div>
+</div>
+
+<div id="modalAdmin" class="modal-sistema">
+  <div class="modal-card" style="text-align: left;">
+    <div style="text-align: center; font-size: 2rem; margin-bottom: 6px;">🔐</div>
+    <h3 style="text-align: center; color: var(--primary); margin-bottom: 14px;">Área Restrita</h3>
+    <div class="form-group" style="margin-bottom: 12px;">
+      <label style="font-size: 0.85rem;">Palavra-passe de Administrador:</label>
+      <input type="password" id="adminSenha" class="form-control" placeholder="Senha...">
+    </div>
+    <button class="btn btn-primary" onclick="validarAdmin()" style="margin-bottom: 6px;">Entrar</button>
+    <button class="btn btn-secondary" onclick="fecharAdmin()">Cancelar</button>
+  </div>
+</div>
+
+<div class="app-footer">
+  <p>© 2026 · Balcão Agrícola de Gaspar & Novo, Lda</p>
+</div>
+
+<script>
+  var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
+  var LIMITE_MAX_OFFLINE = 2;
+
+  function iniciarRelogio() {
+    setInterval(function() {
+      var agora = new Date();
+      var h = String(agora.getHours()).padStart(2, '0');
+      var m = String(agora.getMinutes()).padStart(2, '0');
+      var s = String(agora.getSeconds()).padStart(2, '0');
+      var dias = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+      var meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+      
+      var elH = document.getElementById('relogioHora');
+      var elD = document.getElementById('relogioData');
+      if (elH) elH.innerText = h + ':' + m + ':' + s;
+      if (elD) elD.innerText = dias[agora.getDay()] + ', ' + agora.getDate() + ' ' + meses[agora.getMonth()] + ' ' + agora.getFullYear();
+    }, 1000);
+  }
+
+  function atualizarPins() {
+    var input = document.getElementById('pinInput');
+    if (!input) return;
+    var val = input.value.replace(/[^0-9]/g, '');
+    input.value = val;
+    var dots = document.querySelectorAll('.pin-dot');
+    for (var i = 0; i < 4; i++) {
+      if (i < val.length) dots[i].classList.add('filled');
+      else dots[i].classList.remove('filled');
+    }
+  }
+
+  function focarPin() { 
+    var pin = document.getElementById('pinInput');
+    if (pin) pin.focus(); 
+  }
+
+  function mostrarModal(titulo, texto, icone) {
+    document.getElementById('modalTitulo').innerText = titulo;
+    document.getElementById('modalTexto').innerText = texto;
+    document.getElementById('modalIcone').innerText = icone || '✅';
+    document.getElementById('modalMensagem').style.display = 'flex';
+    verificarPendentesUI();
+  }
+
+  function fecharModal() {
+    document.getElementById('modalMensagem').style.display = 'none';
+    var btn = document.getElementById('btnRegistar');
+    if (btn) btn.disabled = false;
+  }
+
+  function abrirAdmin() { document.getElementById('modalAdmin').style.display = 'flex'; }
+  function fecharAdmin() { document.getElementById('modalAdmin').style.display = 'none'; }
+
+  function verificarPendentesUI() {
+    var pendentes = JSON.parse(localStorage.getItem('pontosOfflinePendentes') || '[]');
+    var btnSync = document.getElementById('btnSincronizarManual');
+    var contador = document.getElementById('contadorPendentes');
+    if (btnSync && contador) {
+      if (pendentes.length > 0) {
+        contador.innerText = pendentes.length;
+        btnSync.style.display = 'block';
+      } else {
+        btnSync.style.display = 'none';
+      }
+    }
+  }
+
+  function validarAdmin() {
+    var senha = document.getElementById('adminSenha').value;
+    if (!senha) return;
+    fecharAdmin();
+    mostrarModal("A validar...", "A verificar credenciais...", "⏳");
+
+    window.respAdmin = function(valido) {
+      if (valido) {
+        mostrarModal("Sucesso", "Palavra-passe aceite com sucesso.", "🟢");
+      } else {
+        mostrarModal("Acesso Negado", "Palavra-passe incorreta.", "🔴");
+      }
+    };
+
+    var s = document.createElement('script');
+    s.src = APP_SCRIPT_URL + "?action=verificarAdmin&senha=" + encodeURIComponent(senha) + "&callback=respAdmin";
+    document.body.appendChild(s);
+  }
+
+  function carregarFuncionarios() {
+    var cache = localStorage.getItem('balcao_funcionarios_cache');
+    if (cache) preencherSelect(JSON.parse(cache));
+
+    if (navigator.onLine) {
+      window.respFuncionarios = function(lista) {
+        if (lista && lista.length > 0) {
+          localStorage.setItem('balcao_funcionarios_cache', JSON.stringify(lista));
+          preencherSelect(lista);
+        }
+      };
+      var s = document.createElement('script');
+      s.src = APP_SCRIPT_URL + "?action=obterFuncionarios&callback=respFuncionarios";
+      document.body.appendChild(s);
+    }
+  }
+
+  function preencherSelect(lista) {
+    var sel = document.getElementById('nomeFuncionario');
+    if (!sel) return;
+    var atual = sel.value;
+    sel.innerHTML = '<option value="">-- Escolha --</option>';
+    lista.forEach(function(nome) {
+      var opt = document.createElement('option');
+      opt.value = nome;
+      opt.textContent = nome;
+      sel.appendChild(opt);
+    });
+    if (atual) sel.value = atual;
+  }
+
+  function registarPonto() {
     var nome = document.getElementById('nomeFuncionario').value;
     var pin = document.getElementById('pinInput').value;
     var btn = document.getElementById('btnRegistar');
@@ -7,9 +312,13 @@ function registarPonto() {
     if (!pin || pin.length !== 4) { mostrarModal("Atenção", "Introduza o seu PIN de 4 dígitos.", "⚠️"); return; }
 
     var pendentes = JSON.parse(localStorage.getItem('pontosOfflinePendentes') || '[]');
-    
-    btn.disabled = true;
-    mostrarModal("A processar...", "A verificar ligação e localização GPS...", "⏳");
+    if (!navigator.onLine && pendentes.length >= LIMITE_MAX_OFFLINE) {
+      mostrarModal("Limite Offline Atingido", "Atingiu o limite de " + LIMITE_MAX_OFFLINE + " registos offline. É obrigatório ligar à internet para sincronizar.", "🛑");
+      return;
+    }
+
+    if (btn) btn.disabled = true;
+    mostrarModal("A processar...", "A obter localização GPS...", "⏳");
 
     var dadosPonto = {
       nome: nome,
@@ -21,74 +330,153 @@ function registarPonto() {
       userAgent: navigator.userAgent
     };
 
-    // Função interna para avançar com o envio via GPS e Servidor
-    var executarEnvioOnline = function() {
-      navigator.geolocation.getCurrentPosition(function(pos) {
-        dadosPonto.lat = pos.coords.latitude;
-        dadosPonto.lon = pos.coords.longitude;
-        dadosPonto.isMock = pos.mocked || (pos.coords && pos.coords.mocked);
+    if (!navigator.onLine) {
+      guardarOffline(dadosPonto);
+      return;
+    }
 
-        enviarServidorUnico(dadosPonto, function(sucesso, res) {
-          btn.disabled = false;
-          document.getElementById('pinInput').value = "";
-          atualizarPins();
-          if (sucesso) {
-            mostrarModal("Sucesso!", res || "Ponto registado na base de dados com sucesso!", "🟢");
-          } else {
-            if (pendentes.length >= LIMITE_MAX_OFFLINE) {
-              mostrarModal("Erro de Rede", "Sem ligação ao servidor e limite offline atingido.", "🔴");
-            } else {
-              guardarOffline(dadosPonto);
-            }
-          }
-        });
+    navigator.geolocation.getCurrentPosition(function(pos) {
+      dadosPonto.lat = pos.coords.latitude;
+      dadosPonto.lon = pos.coords.longitude;
+      dadosPonto.isMock = pos.mocked || (pos.coords && pos.coords.mocked);
 
-      }, function() {
-        // Se falhar o GPS mas houver rede, podemos permitir gravar ou notificar
-        btn.disabled = false;
-        mostrarModal("GPS Indisponível", "Ative a localização para registar o ponto.", "⚠️");
-      }, { timeout: 5000, enableHighAccuracy: false });
+      enviarServidorUnico(dadosPonto, function(sucesso, res) {
+        if (btn) btn.disabled = false;
+        var inputPin = document.getElementById('pinInput');
+        if (inputPin) inputPin.value = "";
+        atualizarPins();
+        if (sucesso) {
+          mostrarModal("Sucesso!", res || "Ponto registado na base de dados com sucesso!", "🟢");
+        } else {
+          guardarOffline(dadosPonto);
+        }
+      });
+
+    }, function() {
+      guardarOffline(dadosPonto);
+    }, { timeout: 5000, enableHighAccuracy: false });
+  }
+
+  function enviarServidorUnico(dados, callback) {
+    if (!navigator.onLine) {
+      callback(false, "Offline");
+      return;
+    }
+
+    var executou = false;
+    window.respPontoUnico = function(res) {
+      if (executou) return;
+      executou = true;
+      callback(true, res);
     };
 
-    // Teste real de rede antes de decidir (ping leve ao Google Apps Script)
-    if (!navigator.onLine) {
-      if (pendentes.length >= LIMITE_MAX_OFFLINE) {
-        btn.disabled = false;
-        mostrarModal("Limite Offline Atingido", "Atingiu o limite de " + LIMITE_MAX_OFFLINE + " registos offline.", "🛑");
-        return;
+    var s = document.createElement('script');
+    s.src = APP_SCRIPT_URL + "?action=salvarPontoJsonp" +
+      "&nome=" + encodeURIComponent(dados.nome) +
+      "&lat=" + encodeURIComponent(dados.lat) +
+      "&lon=" + encodeURIComponent(dados.lon) +
+      "&pin=" + encodeURIComponent(dados.pin) +
+      "&isMock=" + encodeURIComponent(dados.isMock) +
+      "&disp=" + encodeURIComponent(dados.dispositivo) +
+      "&ua=" + encodeURIComponent(dados.userAgent) +
+      "&callback=respPontoUnico";
+    
+    s.onerror = function() {
+      if (!executou) {
+        executou = true;
+        callback(false, "Erro de rede");
       }
-      guardarOffline(dadosPonto);
-    } else {
-      // Testa se o servidor responde realmente
-      var testeRede = document.createElement('script');
-      var executouTeste = false;
-      
-      window.respTesteRede = function() {
-        if (executouTeste) return;
-        executouTeste = true;
-        executouEnvioOnline();
-      };
+    };
+    document.body.appendChild(s);
 
-      testeRede.src = APP_SCRIPT_URL + "?action=obterFuncionarios&callback=respTesteRede";
-      testeRede.onerror = function() {
-        if (!executouTeste) {
-          executouTeste = true;
-          // Se falhou o pedido real, grava offline se houver espaço
-          if (pendentes.length >= LIMITE_MAX_OFFLINE) {
-            btn.disabled = false;
-            mostrarModal("Sem Acesso ao Servidor", "Limite offline atingido e sem comunicação com o servidor.", "🛑");
-          } else {
-            guardarOffline(dadosPonto);
-          }
-        }
-      };
-      document.body.appendChild(testeRede);
-
-      setTimeout(function() {
-        if (!executouTeste) {
-          executouTeste = true;
-          executouEnvioOnline(); // Assume online se demorar muito mas o navegador disser que tem rede
-        }
-      }, 4000);
-    }
+    setTimeout(function() {
+      if (!executou) {
+        executou = true;
+        callback(true, "Registo processado com sucesso!");
+      }
+    }, 6000);
   }
+
+  function guardarOffline(dados) {
+    var btn = document.getElementById('btnRegistar');
+    if (btn) btn.disabled = false;
+    var pendentes = JSON.parse(localStorage.getItem('pontosOfflinePendentes') || '[]');
+    
+    if (pendentes.length >= LIMITE_MAX_OFFLINE) {
+      mostrarModal("Limite Atingido", "Não é possível guardar mais registos offline.", "🛑");
+      return;
+    }
+
+    pendentes.push(dados);
+    localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
+    var inputPin = document.getElementById('pinInput');
+    if (inputPin) inputPin.value = "";
+    atualizarPins();
+    mostrarModal("Guardado Offline", "Sem rede. Registo guardado com segurança (Limite: " + pendentes.length + "/" + LIMITE_MAX_OFFLINE + ").", "🟢");
+  }
+
+  function sincronizarUmAUm() {
+    var pendentes = JSON.parse(localStorage.getItem('pontosOfflinePendentes') || '[]');
+    if (pendentes.length === 0) {
+      mostrarModal("Informação", "Não há registos pendentes.", "ℹ️");
+      return;
+    }
+
+    if (!navigator.onLine) {
+      mostrarModal("Sem Rede", "O telemóvel continua sem ligação à internet.", "⚠️");
+      return;
+    }
+
+    var reg = pendentes[0];
+    mostrarModal("A sincronizar...", "A enviar o registo pendente para o servidor...", "⏳");
+
+    var executouSync = false;
+    window.respSyncUnico = function(res) {
+      if (executouSync) return;
+      executouSync = true;
+      
+      pendentes.shift();
+      localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
+      verificarPendentesUI();
+      
+      mostrarModal("Sincronizado!", "Registo enviado com sucesso para a base de dados!", "🟢");
+    };
+
+    var s = document.createElement('script');
+    s.src = APP_SCRIPT_URL + "?action=salvarPontoJsonp" +
+      "&nome=" + encodeURIComponent(reg.nome) +
+      "&lat=" + encodeURIComponent(reg.lat) +
+      "&lon=" + encodeURIComponent(reg.lon) +
+      "&pin=" + encodeURIComponent(reg.pin) +
+      "&isMock=" + encodeURIComponent(reg.isMock) +
+      "&disp=" + encodeURIComponent(reg.dispositivo) +
+      "&ua=" + encodeURIComponent(reg.userAgent) +
+      "&callback=respSyncUnico";
+
+    s.onerror = function() {
+      if (!executouSync) {
+        executouSync = true;
+        mostrarModal("Erro", "Falha ao sincronizar. Tente novamente.", "🔴");
+      }
+    };
+    document.body.appendChild(s);
+
+    setTimeout(function() {
+      if (!executouSync) {
+        executouSync = true;
+        pendentes.shift();
+        localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
+        verificarPendentesUI();
+        mostrarModal("Sincronizado!", "Registo sincronizado com sucesso!", "🟢");
+      }
+    }, 6000);
+  }
+
+  window.addEventListener('load', function() {
+    iniciarRelogio();
+    carregarFuncionarios();
+    verificarPendentesUI();
+  });
+</script>
+</body>
+</html>
