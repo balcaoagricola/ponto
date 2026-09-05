@@ -166,6 +166,7 @@
 
 <script>
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
+  var emProcessamento = false; // Trava global anti-duplo clique
 
   function iniciarRelogio() {
     setInterval(function() {
@@ -217,11 +218,10 @@
 
   function fecharModal() {
     document.getElementById('modalMensagem').style.display = 'none';
+    // Liberta a trava e o botão apenas após clicar em OK
+    emProcessamento = false;
     var btn = document.getElementById('btnRegistar');
-    if (btn) {
-      // Só desbloqueia o botão quando o utilizador clica explicitamente em "OK"
-      btn.disabled = false;
-    }
+    if (btn) btn.disabled = false;
   }
 
   function abrirAdmin() { document.getElementById('modalAdmin').style.display = 'flex'; }
@@ -278,8 +278,7 @@
   }
 
   function registarPonto() {
-    var btn = document.getElementById('btnRegistar');
-    if (btn.disabled) return; // Bloqueia cliques duplos instantaneamente
+    if (emProcessamento) return; // Trava estricta anti-duplo clique
 
     var nome = document.getElementById('nomeFuncionario').value;
     var pin = document.getElementById('pinInput').value;
@@ -292,8 +291,10 @@
       return;
     }
 
-    // Desativa o botão imediatamente e mantém-no bloqueado até o utilizador fechar o modal
-    btn.disabled = true;
+    emProcessamento = true;
+    var btn = document.getElementById('btnRegistar');
+    if (btn) btn.disabled = true;
+
     mostrarModal("A processar...", "A obter localização GPS e a enviar...", "⏳", false);
 
     navigator.geolocation.getCurrentPosition(function(pos) {
@@ -320,7 +321,7 @@
       });
 
     }, function() {
-      // Se falhar a obtenção do GPS, reativa o botão para permitir nova tentativa
+      emProcessamento = false;
       if (btn) btn.disabled = false;
       mostrarModal("GPS Obrigatório", "Ative a localização do telemóvel para conseguir registar o ponto.", "⚠️", true);
     }, { timeout: 8000, enableHighAccuracy: false });
