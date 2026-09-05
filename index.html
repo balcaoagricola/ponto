@@ -126,8 +126,9 @@
     .btn-secondary { background: #ffffff; color: #475569; border: 1.5px solid var(--border); }
     .btn-danger { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; }
 
-    .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; pointer-events: none; }
-    .toast-overlay.ativo { display: flex; pointer-events: auto; }
+    /* Correção do Overlay para nunca bloquear cliques por engano */
+    .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; pointer-events: none; opacity: 0; transition: opacity 0.2s ease; }
+    .toast-overlay.ativo { display: flex; pointer-events: auto; opacity: 1; }
     .toast-card { background: #ffffff; border-radius: 20px; padding: 28px 24px; max-width: 380px; width: 100%; text-align: center; box-shadow: var(--shadow-lg); pointer-events: auto; }
     .toast-icon { font-size: 3.4rem; margin-bottom: 12px; display: inline-block; }
     .ampulheta-animada { animation: rodarAmpulheta 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite; }
@@ -196,7 +197,7 @@
   </div>
 </div>
 
-<div id="modalAdminPassword" class="toast-overlay">
+<div id="modalAdminPassword" class="toast-overlay" onclick="if(event.target === this) fecharModalAdmin()">
   <div class="toast-card" style="text-align: left;">
     <div style="text-align: center; font-size: 2.2rem; margin-bottom: 8px;">🔐</div>
     <div class="toast-title" style="text-align: center; margin-bottom: 14px;">Área Restrita</div>
@@ -211,7 +212,7 @@
   </div>
 </div>
 
-<div id="toastOverlay" class="toast-overlay">
+<div id="toastOverlay" class="toast-overlay" onclick="if(event.target === this) fecharToast()">
   <div class="toast-card">
     <div id="toastIconContainer">
       <div id="toastIcon" class="toast-icon">🟢</div>
@@ -406,7 +407,6 @@
     btn.disabled = true;
     dispararConfirmacaoGeral("A processar o registo...", "A validar localização...", "processando");
     
-    // Se estiver explicitamente offline, grava direto sem esperar pelo GPS para não congelar
     if (!navigator.onLine) {
       guardarPontoOfflineLocal({
         nome: nome,
@@ -465,7 +465,6 @@
       document.body.appendChild(scriptTag);
 
     }, function(errGps) { 
-      // Se falhar o GPS porque o telemóvel está sem dados, guarda logo offline para não trancar!
       guardarPontoOfflineLocal({
         nome: nome,
         lat: 0,
