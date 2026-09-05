@@ -98,7 +98,7 @@
 
 <div class="container">
   <div class="header">
-    <img src="https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo">
+    <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo">
     <h2>Controlo de Assiduidade</h2>
     <div class="live-clock-card">
       <div class="gps-pulse-dot" id="gpsIndicator"></div>
@@ -298,10 +298,10 @@
 </div>
 
 <script>
-  // COLOQUE AQUI O SEU URL DO GOOGLE APPS SCRIPT (WEB APP)
-  var APP_SCRIPT_URL = "INSIRA_O_SEU_LINK_DO_APPS_SCRIPT_AQUI";
+  // O seu link do Google Apps Script já está inserido aqui em baixo:
+  var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
   var listaAnexosMemoria = [];
-  var emProcessamento = false; // Trava contra cliques duplos
+  var emProcessamento = false;
 
   function iniciarRelogio() {
     setInterval(function() {
@@ -345,12 +345,14 @@
     title.innerText = titulo; body.innerHTML = mensagem;
     overlay.style.display = "flex";
   }
+
   function fecharToast() { 
     document.getElementById('toastOverlay').style.display = "none"; 
-    emProcessamento = false; // Liberta a trava ao fechar o pop-up
+    emProcessamento = false;
     var btnPonto = document.getElementById('btnPonto');
     if (btnPonto) btnPonto.disabled = false;
   }
+
   function fecharToastOverlay(e) { if (e.target.id === 'toastOverlay') fecharToast(); }
 
   function chamarAPIJsonp(params, callbackSucesso) {
@@ -431,7 +433,7 @@
   }
 
   function registarPontoDiario() {
-    if (emProcessamento) return; // Trava anti-duplo clique
+    if (emProcessamento) return;
 
     var nome = document.getElementById('nomeFuncionario').value;
     var pin = document.getElementById('pinPonto').value;
