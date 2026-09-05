@@ -404,8 +404,22 @@
     if(!pin || pin.trim().length !== 4) { dispararConfirmacaoGeral("Atenção", "Introduza o seu PIN de 4 dígitos.", "erro"); return; }
     
     btn.disabled = true;
-    dispararConfirmacaoGeral("A processar o registo...", "A validar localização e a gravar...", "processando");
+    dispararConfirmacaoGeral("A processar o registo...", "A validar localização...", "processando");
     
+    // Se estiver explicitamente offline, grava direto sem esperar pelo GPS para não congelar
+    if (!navigator.onLine) {
+      guardarPontoOfflineLocal({
+        nome: nome,
+        lat: 0,
+        lon: 0,
+        pin: pin,
+        isMock: false,
+        dispositivo: "Smartphone (Offline)",
+        userAgent: navigator.userAgent
+      });
+      return;
+    }
+
     navigator.geolocation.getCurrentPosition(function(pos) {
       var isMock = pos.mocked || (pos.coords && pos.coords.mocked);
       var dadosPonto = {
@@ -417,11 +431,6 @@
         dispositivo: "Smartphone (GitHub)",
         userAgent: navigator.userAgent
       };
-
-      if (!navigator.onLine) {
-        guardarPontoOfflineLocal(dadosPonto);
-        return;
-      }
 
       window.processarRespostaPonto = function(resposta) {
         btn.disabled = false;
@@ -456,9 +465,17 @@
       document.body.appendChild(scriptTag);
 
     }, function(errGps) { 
-      btn.disabled = false; 
-      dispararConfirmacaoGeral("Localização Indisponível", "Ative a localização (GPS) e permita o acesso no navegador.", "erro"); 
-    }, { enableHighAccuracy: true, timeout: 15000 });
+      // Se falhar o GPS porque o telemóvel está sem dados, guarda logo offline para não trancar!
+      guardarPontoOfflineLocal({
+        nome: nome,
+        lat: 0,
+        lon: 0,
+        pin: pin,
+        isMock: false,
+        dispositivo: "Smartphone (GPS Offline)",
+        userAgent: navigator.userAgent
+      });
+    }, { enableHighAccuracy: false, timeout: 6000 });
   }
 
   function guardarPontoOfflineLocal(dadosPonto) {
