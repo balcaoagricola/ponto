@@ -119,7 +119,7 @@
   
   <div class="content-section">
     <button id="btnSincronizarManual" class="btn btn-warning" onclick="sincronizarUmAUm()">
-      ⚠️ Sincronizar Registo Pendente (<span id="contadorPendentes">0</span>)
+      ⚠️ Sincronizar Registo Pendente (<span id="contadorPendentes">0</span>/<span id="limitePendentes">2</span>)
     </button>
 
     <div class="form-group" style="margin-top: 10px;">
@@ -171,7 +171,7 @@
 
 <script>
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
-  var LIMITE_MAX_OFFLINE = 2; // Limite estricto: máximo de 2 registos guardados offline
+  var LIMITE_MAX_OFFLINE = 2;
 
   function iniciarRelogio() {
     setInterval(function() {
@@ -337,38 +337,22 @@
       return;
     }
 
-    var executou = false;
-    window.respPontoUnico = function(res) {
-      if (executou) return;
-      executou = true;
-      callback(true, res);
-    };
-
-    var s = document.createElement('script');
-    s.src = APP_SCRIPT_URL + "?action=salvarPontoJsonp" +
+    var urlEnvio = APP_SCRIPT_URL + "?action=salvarPontoJsonp" +
       "&nome=" + encodeURIComponent(dados.nome) +
       "&lat=" + encodeURIComponent(dados.lat) +
       "&lon=" + encodeURIComponent(dados.lon) +
       "&pin=" + encodeURIComponent(dados.pin) +
       "&isMock=" + encodeURIComponent(dados.isMock) +
       "&disp=" + encodeURIComponent(dados.dispositivo) +
-      "&ua=" + encodeURIComponent(dados.userAgent) +
-      "&callback=respPontoUnico";
-    
-    s.onerror = function() {
-      if (!executou) {
-        executou = true;
-        callback(false, "Erro de rede");
-      }
-    };
-    document.body.appendChild(s);
+      "&ua=" + encodeURIComponent(dados.userAgent);
 
-    setTimeout(function() {
-      if (!executou) {
-        executou = true;
-        callback(false, "Timeout");
-      }
-    }, 8000);
+    fetch(urlEnvio, { method: "GET", mode: "no-cors" })
+      .then(function() {
+        callback(true, "Registo enviado com sucesso!");
+      })
+      .catch(function(err) {
+        callback(false, "Erro de rede");
+      });
   }
 
   function guardarOffline(dados) {
@@ -403,43 +387,25 @@
     var reg = pendentes[0];
     mostrarModal("A sincronizar...", "A enviar o registo pendente...", "⏳");
 
-    var executouSync = false;
-    window.respSyncUnico = function(res) {
-      if (executouSync) return;
-      executouSync = true;
-      
-      pendentes.shift();
-      localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
-      verificarPendentesUI();
-      
-      mostrarModal("Sincronizado!", "Registo enviado com sucesso para a folha de cálculo!", "🟢");
-    };
-
-    var s = document.createElement('script');
-    s.src = APP_SCRIPT_URL + "?action=salvarPontoJsonp" +
+    var urlEnvio = APP_SCRIPT_URL + "?action=salvarPontoJsonp" +
       "&nome=" + encodeURIComponent(reg.nome) +
       "&lat=" + encodeURIComponent(reg.lat) +
       "&lon=" + encodeURIComponent(reg.lon) +
       "&pin=" + encodeURIComponent(reg.pin) +
       "&isMock=" + encodeURIComponent(reg.isMock) +
       "&disp=" + encodeURIComponent(reg.dispositivo) +
-      "&ua=" + encodeURIComponent(reg.userAgent) +
-      "&callback=respSyncUnico";
+      "&ua=" + encodeURIComponent(reg.userAgent);
 
-    s.onerror = function() {
-      if (!executouSync) {
-        executouSync = true;
-        mostrarModal("Erro", "Falha ao sincronizar. Tente novamente.", "🔴");
-      }
-    };
-    document.body.appendChild(s);
-
-    setTimeout(function() {
-      if (!executouSync) {
-        executouSync = true;
-        mostrarModal("Timeout", "O servidor demorou a responder. Tente novamente.", "⚠️");
-      }
-    }, 7000);
+    fetch(urlEnvio, { method: "GET", mode: "no-cors" })
+      .then(function() {
+        pendentes.shift();
+        localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
+        verificarPendentesUI();
+        mostrarModal("Sincronizado!", "Registo enviado com sucesso para a folha de cálculo!", "🟢");
+      })
+      .catch(function(err) {
+        mostrarModal("Erro", "Falha de rede ao sincronizar. Tente novamente.", "🔴");
+      });
   }
 
   window.addEventListener('load', function() {
