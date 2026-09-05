@@ -301,6 +301,7 @@
     iniciarRelogio();
     verificarTipoDeDispositivo();
     carregarFuncionariosGitHub();
+    processarFilaOffline();
   });
 
   function verificarTipoDeDispositivo() {
@@ -346,7 +347,6 @@
     document.body.appendChild(scriptTag);
   }
 
-  // Sistema com Cache Local para evitar falhas de carregamento
   function carregarFuncionariosGitHub() {
     var sel = document.getElementById('nomeFuncionario');
     if (!sel) return;
@@ -414,39 +414,41 @@
       };
 
       if (!navigator.onLine) {
-        var pendentes = JSON.parse(localStorage.getItem('pontosOfflinePendentes') || '[]');
-        pendentes.push(dadosPonto);
-        localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
-        
-        btn.disabled = false;
-        document.getElementById('pinPonto').value = "";
-        atualizarPinDisplay('pinPonto', 'dotsPonto');
-        dispararConfirmacaoGeral("Guardado Offline", "Sem internet. Registo guardado localmente e será enviado quando houver rede.", "sucesso");
+        guardarPontoOfflineLocal(dadosPonto);
         return;
       }
 
-      fetch(APP_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          func: "salvarPonto",
-          args: [nome, pos.coords.latitude, pos.coords.longitude, pin, isMock, "Smartphone", "", navigator.userAgent]
-        })
-      })
-      .then(() => {
+      window.processarRespostaPonto = function(resposta) {
         btn.disabled = false;
-        dispararConfirmacaoGeral("Sucesso!", "Ponto registado com sucesso!", "sucesso");
-        document.getElementById('pinPonto').value = "";
-        atualizarPinDisplay('pinPonto', 'dotsPonto');
-      })
-      .catch(() => {
+        if (resposta && resposta.indexOf("Aviso") !== -1) {
+          dispararConfirmacaoGeral("Aviso", resposta, "erro");
+          document.getElementById('pinPonto').value = "";
+          atualizarPinDisplay('pinPonto', 'dotsPonto');
+        } else {
+          dispararConfirmacaoGeral("Sucesso!", resposta || "Ponto registado com sucesso!", "sucesso");
+          document.getElementById('pinPonto').value = "";
+          atualizarPinDisplay('pinPonto', 'dotsPonto');
+          processarFilaOffline();
+        }
+      };
+
+      var scriptTag = document.createElement('script');
+      scriptTag.src = APP_SCRIPT_URL + 
+        "?action=salvarPontoJsonp" +
+        "&nome=" + encodeURIComponent(dadosPonto.nome) +
+        "&lat=" + encodeURIComponent(dadosPonto.lat) +
+        "&lon=" + encodeURIComponent(dadosPonto.lon) +
+        "&pin=" + encodeURIComponent(dadosPonto.pin) +
+        "&isMock=" + encodeURIComponent(dadosPonto.isMock) +
+        "&disp=" + encodeURIComponent(dadosPonto.dispositivo) +
+        "&ua=" + encodeURIComponent(dadosPonto.userAgent) +
+        "&callback=processarRespostaPonto";
+
+      scriptTag.onerror = function() {
         btn.disabled = false;
-        var pendentes = JSON.parse(localStorage.getItem('pontosOfflinePendentes') || '[]');
-        pendentes.push(dadosPonto);
-        localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
-        dispararConfirmacaoGeral("Modo Offline", "Falha de rede temporária. Registo guardado no telemóvel.", "sucesso");
-      });
+        guardarPontoOfflineLocal(dadosPonto);
+      };
+      document.body.appendChild(scriptTag);
 
     }, function(errGps) { 
       btn.disabled = false; 
@@ -454,20 +456,50 @@
     }, { enableHighAccuracy: true, timeout: 15000 });
   }
 
-  window.addEventListener('online', function() {
+  function guardarPontoOfflineLocal(dadosPonto) {
+    var btn = document.getElementById('btnPonto');
+    if(btn) btn.disabled = false;
+    var pendentes = JSON.parse(localStorage.getItem('pontosOfflinePendentes') || '[]');
+    pendentes.push(dadosPonto);
+    localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
+    document.getElementById('pinPonto').value = "";
+    atualizarPinDisplay('pinPonto', 'dotsPonto');
+    dispararConfirmacaoGeral("Guardado Offline", "Sem rede estável. Registo guardado no telemóvel e será sincronizado assim que houver ligação.", "sucesso");
+  }
+
+  function processarFilaOffline() {
     var pendentesStr = localStorage.getItem('pontosOfflinePendentes');
     if (!pendentesStr) return;
     var pendentes = JSON.parse(pendentesStr);
-    if (pendentes.length > 0) {
-      fetch(APP_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ func: "sincronizarPicagensOffline", args: [pendentes] })
-      }).then(() => {
-        localStorage.removeItem('pontosOfflinePendentes');
-      }).catch(() => {});
-    }
+    if (pendentes.length === 0) return;
+
+    var reg = pendentes[0];
+    window.processarRespostaSincronizacao = function(resposta) {
+      if (resposta && resposta.indexOf("Sucesso") !== -1) {
+        pendentes.shift();
+        localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
+        if (pendentes.length > 0) {
+          processarFilaOffline();
+        }
+      }
+    };
+
+    var scriptTag = document.createElement('script');
+    scriptTag.src = APP_SCRIPT_URL + 
+      "?action=salvarPontoJsonp" +
+      "&nome=" + encodeURIComponent(reg.nome) +
+      "&lat=" + encodeURIComponent(reg.lat) +
+      "&lon=" + encodeURIComponent(reg.lon) +
+      "&pin=" + encodeURIComponent(reg.pin) +
+      "&isMock=" + encodeURIComponent(reg.isMock) +
+      "&disp=" + encodeURIComponent(reg.dispositivo) +
+      "&ua=" + encodeURIComponent(reg.userAgent) +
+      "&callback=processarRespostaSincronizacao";
+    document.body.appendChild(scriptTag);
+  }
+
+  window.addEventListener('online', function() {
+    processarFilaOffline();
   });
 
   function limparFeedbackPonto() { gerirErroCampo("erro-nome-ponto", ""); gerirErroCampo("erro-pin-ponto", ""); }
