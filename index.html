@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>Registo de Ponto · Balcão Agrícola</title>
+  <title>Registo de Ponto Oficial · Balcão Agrícola</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -110,6 +110,7 @@
       margin-bottom: 18px;
       cursor: pointer;
     }
+    .btn-warning:hover { background: #fde68a; }
 
     .modal-sistema { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
     .modal-card { background: #ffffff; border-radius: 20px; padding: 24px; max-width: 360px; width: 100%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
@@ -394,7 +395,7 @@
         executou = true;
         callback(true, "Registo processado com sucesso!");
       }
-    }, 6000);
+    }, 12000);
   }
 
   function guardarOffline(dados) {
@@ -469,7 +470,7 @@
         verificarPendentesUI();
         mostrarModal("Sincronizado!", "Registo sincronizado com sucesso!", "🟢");
       }
-    }, 6000);
+    }, 12000);
   }
 
   window.addEventListener('load', function() {
