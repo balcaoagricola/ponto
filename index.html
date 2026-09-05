@@ -375,9 +375,22 @@
 
   function obterDetalhesDispositivo() {
     var ua = navigator.userAgent;
+    if (ua.indexOf("iPhone") !== -1) return "Apple iPhone";
+    if (ua.indexOf("iPad") !== -1) return "Apple iPad";
+    if (ua.indexOf("Samsung") !== -1 || ua.indexOf("SM-") !== -1) return "Samsung Galaxy";
+    if (ua.indexOf("Xiaomi") !== -1 || ua.indexOf("Redmi") !== -1) return "Xiaomi / Redmi";
+    if (ua.indexOf("Huawei") !== -1) return "Huawei";
+    if (ua.indexOf("Motorola") !== -1 || ua.indexOf("Moto") !== -1) return "Motorola";
+    
     var match = ua.match(/\(([^)]+)\)/);
     if (match && match[1]) {
-      return match[1];
+      var partes = match[1].split(";");
+      for (var p = 0; p < partes.length; p++) {
+        var ped = partes[p].trim();
+        if (ped.length > 3 && ped.indexOf("Android") === -1 && ped.indexOf("Linux") === -1 && ped.indexOf("KHTML") === -1 && ped.indexOf("wv") === -1) {
+          return ped;
+        }
+      }
     }
     return navigator.platform || "Smartphone";
   }
