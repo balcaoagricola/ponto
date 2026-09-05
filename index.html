@@ -37,7 +37,6 @@
     .live-clock-card { background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 30px; padding: 8px 16px; display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 0.95rem; font-weight: 600; color: #f1f5f9; }
     .gps-pulse-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; }
     
-    /* Botão de Ferramenta Discreto no Fundo Branco */
     .admin-gear-btn {
       position: absolute;
       top: 12px;
@@ -80,13 +79,18 @@
     .btn-danger { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; }
 
     .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; }
-    .toast-card { background: #ffffff; border-radius: 20px; padding: 28px 24px; max-width: 380px; width: 100%; text-align: center; box-shadow: var(--shadow-lg); }
+    .toast-card { background: #ffffff; border-radius: 20px; padding: 28px 24px; max-width: 380px; width: 100%; text-align: center; box-shadow: var(--shadow-lg); animation: popModal 0.25s ease-out; }
+    @keyframes popModal { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    
     .toast-icon { font-size: 3.4rem; margin-bottom: 12px; }
     .ampulheta-animada { display: inline-block; animation: rodarAmpulheta 2s infinite; }
     @keyframes rodarAmpulheta { 0% { transform: rotate(0deg); } 50% { transform: rotate(180deg); } 100% { transform: rotate(360deg); } }
-    .toast-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; }
+    .toast-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; color: var(--primary); }
     .toast-body { font-size: 0.92rem; color: #475569; margin-bottom: 20px; line-height: 1.5; }
-    .toast-btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: 700; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; cursor: pointer; }
+    .toast-actions { display: flex; gap: 10px; }
+    .toast-btn { flex: 1; padding: 13px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; }
+    .toast-btn-primary { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; }
+    .toast-btn-secondary { background: #f1f5f9; color: var(--text-muted); }
 
     .info-box { background: var(--info-bg); border: 1px solid var(--info-border); color: var(--info-text); border-radius: 12px; padding: 12px 14px; font-size: 0.82rem; line-height: 1.5; margin-bottom: 16px; display: flex; gap: 10px; }
     .info-box.success { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
@@ -101,13 +105,12 @@
 <body>
 
 <div class="container">
-  <!-- Botão de Ferramenta no canto superior direito -->
-  <button class="admin-gear-btn" onclick="pedirSenhaAdmin()" title="Painel Administrativo">⚙️</button>
+  <button class="admin-gear-btn" onclick="abrirModalSenhaAdmin()" title="Painel Administrativo">⚙️</button>
 
   <div class="header">
     <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo">
-    <h2>Controlo de Assiduidade</h2>
-    <div class="live-clock-card">
+    <h2 id="headerTitle">Controlo de Assiduidade</h2>
+    <div class="live-clock-card" id="headerClockBox">
       <div class="gps-pulse-dot" id="gpsIndicator"></div>
       <span id="liveClockDisplay">A sincronizar hora...</span>
     </div>
@@ -142,13 +145,8 @@
   
   <!-- ABA 2: ADMIN -->
   <div id="section-admin" class="content-section">
-    <div style="margin-bottom: 16px;">
-      <button class="btn btn-secondary" onclick="voltarAoEcraPrincipal()">⬅️ Voltar ao Ecrã Principal</button>
-    </div>
-
     <div id="admin-sub-menu">
       <div class="admin-card">
-        <h3>Painel de Gestão</h3>
         <div class="menu-admin-grid">
           <button class="btn btn-primary" onclick="abrirSubModulo('ausencias')">📅 Registos Administrativos</button>
           <button class="btn btn-primary" onclick="abrirSubModulo('pdf')">📧 Exportar PDF</button>
@@ -171,7 +169,6 @@
           </select>
         </div>
         <div class="form-group"><label>Data:</label><input type="date" id="dataFolgaInicio" class="form-control"></div>
-        <div class="form-group"><label>Senha Admin:</label><input type="password" id="senhaAdminFolga" class="form-control"></div>
         <button class="btn btn-primary" onclick="submeterAusenciaAdministrativa()">📅 Lançar</button>
       </div>
     </div>
@@ -183,7 +180,6 @@
         <div class="form-group"><label>Funcionário:</label><select id="selecaoFuncionario" class="form-control"></select></div>
         <div class="form-group"><label>Início:</label><input type="date" id="dataInicio" class="form-control"></div>
         <div class="form-group"><label>Fim:</label><input type="date" id="dataFim" class="form-control"></div>
-        <div class="form-group"><label>Senha Admin:</label><input type="password" id="senhaAdminExportar" class="form-control"></div>
         <button class="btn btn-primary" onclick="exportarRelatorioPDF()">📧 Enviar PDF</button>
       </div>
     </div>
@@ -195,7 +191,6 @@
         <div class="form-group"><label>Nome:</label><input type="text" id="nomeNovo" class="form-control"></div>
         <div class="form-group"><label>PIN (4 dígitos):</label><input type="text" id="pinNovo" class="form-control" maxlength="4"></div>
         <div class="form-group"><label>Filial:</label><select id="filialNovo" class="form-control"><option value="PATAIAS">Pataias</option><option value="GARCIA">Garcia</option></select></div>
-        <div class="form-group"><label>Senha Admin:</label><input type="password" id="senhaAdmin" class="form-control"></div>
         <button class="btn btn-primary" onclick="submeterNovoFuncionario()">➕ Adicionar</button>
       </div>
     </div>
@@ -205,13 +200,17 @@
       <div class="admin-card">
         <h3 style="color:var(--danger);">❌ Inativar Funcionário</h3>
         <div class="form-group"><label>Funcionário:</label><select id="nomeRemover" class="form-control"></select></div>
-        <div class="form-group"><label>Senha Admin:</label><input type="password" id="senhaAdminRemover" class="form-control"></div>
         <button class="btn btn-danger" onclick="submeterRemocaoFuncionario()">❌ Inativar</button>
       </div>
     </div>
     
-    <div class="nav-navigation-block" id="adminNavigationGroup" style="display: none; margin-top: 15px;">
-      <button class="btn btn-secondary" onclick="voltarAoMenuCentralAdmin()">⬅️ Voltar</button>
+    <div class="nav-navigation-block" id="adminNavigationGroup" style="display: none; margin-bottom: 12px;">
+      <button class="btn btn-secondary" onclick="voltarAoMenuCentralAdmin()">⬅️ Voltar ao Painel</button>
+    </div>
+
+    <!-- Botão global para voltar ao ecrã principal colocado no fundo da página admin -->
+    <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+      <button class="btn btn-secondary" onclick="voltarAoEcraPrincipal()">⬅️ Voltar ao Ecrã Principal</button>
     </div>
   </div>
 </div>
@@ -221,7 +220,9 @@
     <div id="toastIcon" class="toast-icon">🟢</div>
     <div id="toastTitle" class="toast-title">Concluído!</div>
     <div id="toastBody" class="toast-body">Operação processada.</div>
-    <button id="toastBtn" class="toast-btn" onclick="fecharToast()">OK</button>
+    <div id="toastActionsContainer" class="toast-actions">
+      <button id="toastBtn" class="toast-btn toast-btn-primary" onclick="fecharToast()">OK</button>
+    </div>
   </div>
 </div>
 
@@ -231,6 +232,7 @@
 
 <script>
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
+  var senhaAdminSessao = "";
   var emProcessamento = false;
 
   function iniciarRelogio() {
@@ -258,21 +260,43 @@
 
   function focarPin(inputId) { var input = document.getElementById(inputId); if (input) input.focus(); }
 
-  function dispararConfirmacaoGeral(titulo, mensagem, tipo) {
+  function mostrarPopupPersonalizado(config) {
     var overlay = document.getElementById('toastOverlay');
     var icon = document.getElementById('toastIcon');
     var title = document.getElementById('toastTitle');
     var body = document.getElementById('toastBody');
-    var btn = document.getElementById('toastBtn');
-    
-    if (tipo === "sucesso") {
-      icon.className = "toast-icon"; icon.innerText = "🟢"; btn.style.display = "block";
-    } else if (tipo === "erro") {
-      icon.className = "toast-icon"; icon.innerText = "🔴"; btn.style.display = "block";
+    var actionsContainer = document.getElementById('toastActionsContainer');
+
+    title.innerText = config.titulo || "Aviso";
+    body.innerHTML = config.mensagem || "";
+
+    if (config.tipo === "sucesso") {
+      icon.className = "toast-icon"; icon.innerText = "🟢";
+    } else if (config.tipo === "erro") {
+      icon.className = "toast-icon"; icon.innerText = "🔴";
+    } else if (config.tipo === "processando") {
+      icon.className = "toast-icon ampulheta-animada"; icon.innerText = "⏳";
     } else {
-      icon.className = "toast-icon ampulheta-animada"; icon.innerText = "⏳"; btn.style.display = "none";
+      icon.className = "toast-icon"; icon.innerText = config.icone || "🔐";
     }
-    title.innerText = titulo; body.innerHTML = mensagem;
+
+    actionsContainer.innerHTML = "";
+    if (config.botoes && config.botoes.length > 0) {
+      config.botoes.forEach(function(btnInfo) {
+        var btn = document.createElement('button');
+        btn.className = "toast-btn " + (btnInfo.classe || "toast-btn-primary");
+        btn.innerText = btnInfo.texto;
+        btn.onclick = btnInfo.acao;
+        actionsContainer.appendChild(btn);
+      });
+    } else {
+      var btnOk = document.createElement('button');
+      btnOk.className = "toast-btn toast-btn-primary";
+      btnOk.innerText = "OK";
+      btnOk.onclick = fecharToast;
+      actionsContainer.appendChild(btnOk);
+    }
+
     overlay.style.display = "flex";
   }
 
@@ -283,7 +307,7 @@
     if (btnPonto) btnPonto.disabled = false;
   }
 
-  function fecharToastOverlay(e) { if (e.target.id === 'toastOverlay') fecharToast(); }
+  function fecharToastOverlay(e) { if (e.target.id === 'toastOverlay') {} }
 
   function chamarAPIJsonp(params, callbackSucesso) {
     var cbName = "jsonp_cb_" + Math.random().toString(36).substring(2, 9);
@@ -307,7 +331,7 @@
       delete window[cbName];
       script.remove();
       emProcessamento = false;
-      dispararConfirmacaoGeral("Erro de Ligação", "Não foi possível comunicar com o servidor.", "erro");
+      mostrarPopupPersonalizado({ titulo: "Erro de Ligação", mensagem: "Não foi possível comunicar com o servidor.", tipo: "erro" });
     };
     document.body.appendChild(script);
   }
@@ -323,36 +347,60 @@
     if(document.getElementById('dataInicio')) document.getElementById('dataInicio').value = pMes.toISOString().split('T')[0];
   });
 
-  function pedirSenhaAdmin() {
-    var senhaInput = prompt("Introduza a Senha de Administrador:");
-    if (senhaInput === null) return; // Se cancelar
+  function abrirModalSenhaAdmin() {
+    mostrarPopupPersonalizado({
+      titulo: "Painel Administrativo",
+      mensagem: '<p style="margin-bottom:12px;">Introduza a senha de administrador para continuar:</p><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.1rem; letter-spacing:3px;" placeholder="••••" autofocus>',
+      icone: "⚙️",
+      botoes: [
+        { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
+        { texto: "Entrar", classe: "toast-btn-primary", acao: function() {
+            var senhaVal = document.getElementById('inputSenhaPopup').value;
+            if (!senhaVal) return;
+            
+            mostrarPopupPersonalizado({ titulo: "A Verificar...", mensagem: "A validar credenciais...", tipo: "processando" });
 
-    dispararConfirmacaoGeral("A Verificar...", "A validar credenciais...", "processando");
+            chamarAPIJsonp({
+              action: "gerarPdfJsonp",
+              funcionario: "TESTE_AUTH_ADMIN",
+              dataInicio: "2026-01-01",
+              dataFim: "2026-01-01",
+              senha: senhaVal
+            }, function(resp) {
+              if (resp.indexOf("incorreta") !== -1) {
+                mostrarPopupPersonalizado({
+                  titulo: "Acesso Negado",
+                  mensagem: "Senha de administrador incorreta.",
+                  tipo: "erro"
+                });
+              } else {
+                senhaAdminSessao = senhaVal; // Guarda a senha para as ações seguintes
+                fecharToast();
+                document.getElementById('section-ponto').classList.remove('active');
+                document.getElementById('section-admin').classList.add('active');
+                
+                // Oculta relógio e título no modo admin
+                document.getElementById('headerTitle').style.display = 'none';
+                document.getElementById('headerClockBox').style.display = 'none';
 
-    // Valida diretamente contra uma das funções de admin ou simula validação via script
-    chamarAPIJsonp({
-      action: "gerarPdfJsonp",
-      funcionario: "TESTE_AUTH_ADMIN",
-      dataInicio: "2026-01-01",
-      dataFim: "2026-01-01",
-      senha: senhaInput
-    }, function(resp) {
-      fecharToast();
-      // Se a resposta não for erro de palavra-passe incorreta, a senha está certa
-      if (resp.indexOf("incorreta") !== -1) {
-        alert("⚠️ Senha de administrador incorreta!");
-      } else {
-        // Senha correta: abre o painel admin
-        document.getElementById('section-ponto').classList.remove('active');
-        document.getElementById('section-admin').classList.add('active');
-        voltarAoMenuCentralAdmin();
-      }
+                voltarAoMenuCentralAdmin();
+              }
+            });
+          }
+        }
+      ]
     });
   }
 
   function voltarAoEcraPrincipal() {
+    senhaAdminSessao = ""; // Limpa a senha por segurança
     document.getElementById('section-admin').classList.remove('active');
     document.getElementById('section-ponto').classList.add('active');
+    
+    // Restaura relógio e título original
+    document.getElementById('headerTitle').style.display = 'block';
+    document.getElementById('headerClockBox').style.display = 'inline-flex';
+
     voltarAoMenuCentralAdmin();
   }
 
@@ -399,7 +447,7 @@
     
     emProcessamento = true;
     if (btn) btn.disabled = true;
-    dispararConfirmacaoGeral("A Validar...", "A verificar GPS e a enviar...", "processando");
+    mostrarPopupPersonalizado({ titulo: "A Validar...", mensagem: "A verificar GPS e a enviar...", tipo: "processando" });
     
     navigator.geolocation.getCurrentPosition(function(pos) {
       chamarAPIJsonp({
@@ -418,13 +466,13 @@
           gerirErroCampo("erro-pin-ponto", resposta);
           fecharToast();
         } else {
-          dispararConfirmacaoGeral("Sucesso!", resposta, "sucesso");
+          mostrarPopupPersonalizado({ titulo: "Sucesso!", mensagem: resposta, tipo: "sucesso" });
         }
       });
     }, function() {
       emProcessamento = false;
       if (btn) btn.disabled = false;
-      dispararConfirmacaoGeral("GPS Indisponível", "Ative a localização do telemóvel.", "erro");
+      mostrarPopupPersonalizado({ titulo: "GPS Indisponível", mensagem: "Ative a localização do telemóvel.", tipo: "erro" });
     }, { enableHighAccuracy: true, timeout: 15000 });
   }
 
@@ -432,15 +480,15 @@
     var nome = document.getElementById('nomeFuncionarioFolga').value;
     var tipo = document.getElementById('tipoAusencia').value;
     var dIni = document.getElementById('dataFolgaInicio').value;
-    var senhaAdmin = document.getElementById('senhaAdminFolga').value;
-    if(!nome || !tipo || !dIni || !senhaAdmin) { alert("Preencha todos os campos."); return; }
     
-    dispararConfirmacaoGeral("A Lançar...", "A atualizar registo...", "processando");
+    if(!nome || !tipo || !dIni) { mostrarPopupPersonalizado({ titulo: "Aviso", mensagem: "Preencha todos os campos.", tipo: "erro" }); return; }
+    
+    mostrarPopupPersonalizado({ titulo: "A Lançar...", mensagem: "A atualizar registo...", tipo: "processando" });
     chamarAPIJsonp({
       action: "lancarAusenciaAdminJsonp",
-      nome: nome, tipo: tipo, dataInicio: dIni, senha: senhaAdmin
+      nome: nome, tipo: tipo, dataInicio: dIni, senha: senhaAdminSessao
     }, function(resp) {
-      fecharToast(); alert(resp);
+      mostrarPopupPersonalizado({ titulo: "Resultado", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
     });
   }
 
@@ -448,15 +496,15 @@
     var funcionario = document.getElementById('selecaoFuncionario').value;
     var dataInicio = document.getElementById('dataInicio').value;
     var dataFim = document.getElementById('dataFim').value;
-    var senha = document.getElementById('senhaAdminExportar').value;
-    if(!funcionario || !dataInicio || !dataFim || !senha) { alert("Preencha todos os campos."); return; }
     
-    dispararConfirmacaoGeral("A Gerar PDF...", "A preparar documento...", "processando");
+    if(!funcionario || !dataInicio || !dataFim) { mostrarPopupPersonalizado({ titulo: "Aviso", mensagem: "Preencha todos os campos.", tipo: "erro" }); return; }
+    
+    mostrarPopupPersonalizado({ titulo: "A Gerar PDF...", mensagem: "A preparar documento...", tipo: "processando" });
     chamarAPIJsonp({
       action: "gerarPdfJsonp",
-      funcionario: funcionario, dataInicio: dataInicio, dataFim: dataFim, senha: senha
+      funcionario: funcionario, dataInicio: dataInicio, dataFim: dataFim, senha: senhaAdminSessao
     }, function(resp) {
-      fecharToast(); alert(resp);
+      mostrarPopupPersonalizado({ titulo: "Resultado", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
     });
   }
 
@@ -464,22 +512,28 @@
     var nome = document.getElementById('nomeNovo').value;
     var pin = document.getElementById('pinNovo').value;
     var filial = document.getElementById('filialNovo').value;
-    var senhaAdmin = document.getElementById('senhaAdmin').value;
-    if(!nome || !pin || !senhaAdmin) { alert("Preencha os campos."); return; }
+    
+    if(!nome || !pin) { mostrarPopupPersonalizado({ titulo: "Aviso", mensagem: "Preencha os campos.", tipo: "erro" }); return; }
     chamarAPIJsonp({
       action: "adicionarFuncionarioJsonp",
-      nome: nome, pin: pin, filial: filial, senha: senhaAdmin
-    }, function(resp) { alert(resp); carregarFuncionariosEmTodosOsCampos(); });
+      nome: nome, pin: pin, filial: filial, senha: senhaAdminSessao
+    }, function(resp) { 
+      mostrarPopupPersonalizado({ titulo: "Resultado", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+      carregarFuncionariosEmTodosOsCampos(); 
+    });
   }
 
   function submeterRemocaoFuncionario() {
     var nome = document.getElementById('nomeRemover').value;
-    var senhaAdmin = document.getElementById('senhaAdminRemover').value;
-    if(!nome || !senhaAdmin) { alert("Preencha os campos."); return; }
+    
+    if(!nome) { mostrarPopupPersonalizado({ titulo: "Aviso", mensagem: "Selecione o funcionário.", tipo: "erro" }); return; }
     chamarAPIJsonp({
       action: "removerFuncionarioJsonp",
-      nome: nome, senha: senhaAdmin
-    }, function(resp) { alert(resp); carregarFuncionariosEmTodosOsCampos(); });
+      nome: nome, senha: senhaAdminSessao
+    }, function(resp) { 
+      mostrarPopupPersonalizado({ titulo: "Resultado", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+      carregarFuncionariosEmTodosOsCampos(); 
+    });
   }
 
   function abrirSubModulo(id) {
