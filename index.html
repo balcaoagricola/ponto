@@ -203,8 +203,8 @@
       <div class="admin-card">
         <h3>📧 Exportar PDF</h3>
         <div class="form-group"><label>Funcionário:</label><select id="selecaoFuncionario" class="form-control"></select></div>
-        <div class="form-group"><label>Início:</label><input type="date" id="dataInicio" class="form-control"></div>
-        <div class="form-group"><label>Fim:</label><input type="date" id="dataFim" class="form-control"></div>
+        <div class="form-group"><label>Data de Início:</label><input type="date" id="dataInicio" class="form-control"></div>
+        <div class="form-group"><label>Data de Fim:</label><input type="date" id="dataFim" class="form-control"></div>
         <button class="btn btn-primary" onclick="exportarRelatorioPDF()">📧 Enviar PDF</button>
       </div>
     </div>
@@ -280,7 +280,6 @@
     }, 1000);
   }
 
-  // Monitorização de Conexão Online/Offline
   window.addEventListener('online', function() {
     estaOnline = true;
     var gpsDot = document.getElementById('gpsIndicator');
@@ -433,7 +432,6 @@
     var pMes = new Date(); pMes.setDate(1);
     if(document.getElementById('dataInicio')) document.getElementById('dataInicio').value = pMes.toISOString().split('T')[0];
 
-    // Verificação inicial de estado de rede
     if (!navigator.onLine) {
       var gpsDot = document.getElementById('gpsIndicator');
       if (gpsDot) gpsDot.classList.add('offline');
