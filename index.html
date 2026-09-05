@@ -126,8 +126,9 @@
     .btn-secondary { background: #ffffff; color: #475569; border: 1.5px solid var(--border); }
     .btn-danger { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; }
 
-    .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; }
-    .toast-card { background: #ffffff; border-radius: 20px; padding: 28px 24px; max-width: 380px; width: 100%; text-align: center; box-shadow: var(--shadow-lg); }
+    .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; pointer-events: none; }
+    .toast-overlay.ativo { display: flex; pointer-events: auto; }
+    .toast-card { background: #ffffff; border-radius: 20px; padding: 28px 24px; max-width: 380px; width: 100%; text-align: center; box-shadow: var(--shadow-lg); pointer-events: auto; }
     .toast-icon { font-size: 3.4rem; margin-bottom: 12px; display: inline-block; }
     .ampulheta-animada { animation: rodarAmpulheta 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite; }
     @keyframes rodarAmpulheta { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.15); } 100% { transform: rotate(360deg) scale(1); } }
@@ -292,10 +293,14 @@
     }
     title.innerText = titulo;
     body.innerHTML = mensagem;
-    overlay.style.display = "flex";
+    overlay.classList.add('ativo');
   }
 
-  function fecharToast() { document.getElementById('toastOverlay').style.display = "none"; }
+  function fecharToast() { 
+    document.getElementById('toastOverlay').classList.remove('ativo'); 
+    var btn = document.getElementById('btnPonto');
+    if (btn) btn.disabled = false;
+  }
 
   window.addEventListener('load', function() {
     iniciarRelogio();
@@ -317,12 +322,12 @@
     var modal = document.getElementById('modalAdminPassword');
     var input = document.getElementById('inputSenhaAdminGlobal');
     input.value = "";
-    modal.style.display = "flex";
+    modal.classList.add('ativo');
     setTimeout(function() { input.focus(); }, 100);
   }
 
   function fecharModalAdmin() {
-    document.getElementById('modalAdminPassword').style.display = "none";
+    document.getElementById('modalAdminPassword').classList.remove('ativo');
   }
 
   function confirmarSenhaAdminGlobal() {
