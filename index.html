@@ -498,9 +498,14 @@
     document.body.appendChild(scriptTag);
   }
 
-  window.addEventListener('online', function() {
-    processarFilaOffline();
-  });
+  function verificarEProcessarPendentes() {
+    if (navigator.onLine) {
+      processarFilaOffline();
+    }
+  }
+
+  window.addEventListener('online', verificarEProcessarPendentes);
+  setInterval(verificarEProcessarPendentes, 10000);
 
   function limparFeedbackPonto() { gerirErroCampo("erro-nome-ponto", ""); gerirErroCampo("erro-pin-ponto", ""); }
   function gerirErroCampo(idElemento, msg) {
