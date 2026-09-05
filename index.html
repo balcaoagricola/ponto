@@ -22,62 +22,93 @@
       --success: #10b981;
       --warning: #f59e0b;
       --danger: #ef4444;
-      --info-bg: #f0f7ff;
-      --info-border: #cce4ff;
-      --info-text: #1e40af;
       --shadow-lg: 0 12px 24px -8px rgba(0,0,0,0.12);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: linear-gradient(160deg, #eef2f7 0%, #f8fafc 100%); color: var(--text); padding: 16px 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; }
     .container { width: 100%; max-width: 480px; background: var(--card-bg); border-radius: 24px; box-shadow: var(--shadow-lg); overflow: hidden; border: 1px solid #ffffff; position: relative; }
-    .header { background: linear-gradient(145deg, var(--primary-dark) 0%, var(--primary) 100%); color: white; padding: 28px 20px 24px 20px; text-align: center; }
-    .logo-empresa { width: 100%; max-height: 130px; margin-bottom: 14px; border-radius: 12px; object-fit: contain; background: #ffffff; padding: 6px; display: block; }
-    .header h2 { font-size: 1.35rem; font-weight: 800; margin-bottom: 6px; }
-    .live-clock-card { background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 30px; padding: 8px 16px; display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 0.95rem; font-weight: 600; color: #f1f5f9; }
-    .gps-pulse-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; }
     
+    /* Cabeçalho Azul com maior destaque no relógio e data */
+    .header { background: linear-gradient(145deg, var(--primary-dark) 0%, var(--primary) 100%); color: white; padding: 28px 20px 24px 20px; text-align: center; }
+    .logo-empresa { width: 100%; max-height: 110px; margin-bottom: 14px; border-radius: 12px; object-fit: contain; background: #ffffff; padding: 6px; display: block; }
+    .header h2 { font-size: 1.35rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.3px; }
+    
+    .live-clock-card { 
+      background: rgba(255, 255, 255, 0.15); 
+      border: 1px solid rgba(255, 255, 255, 0.25); 
+      border-radius: 35px; 
+      padding: 10px 20px; 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 10px; 
+      margin-top: 6px; 
+      font-size: 1.15rem; 
+      font-weight: 800; 
+      color: #ffffff; 
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .gps-pulse-dot { width: 9px; height: 9px; background: #34d399; border-radius: 50%; box-shadow: 0 0 8px #34d399; }
+    
+    /* Botão de Ferramenta posicionado estritamente no fundo branco abaixo do cabeçalho azul */
     .admin-gear-btn {
       position: absolute;
-      top: 12px;
+      top: 14px;
       right: 14px;
       background: #ffffff;
       border: 1.5px solid var(--border);
-      width: 38px;
-      height: 38px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 1.1rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-      z-index: 50;
+      font-size: 1.15rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      z-index: 100;
       transition: all 0.2s;
     }
     .admin-gear-btn:active { transform: scale(0.92); }
 
-    .content-section { padding: 20px 16px; display: none; }
+    .content-section { padding: 24px 20px; display: none; }
     .content-section.active { display: block; }
-    .form-group { margin-bottom: 18px; }
-    .form-group label { display: block; margin-bottom: 7px; font-weight: 600; font-size: 0.85rem; color: #334155; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.88rem; color: #334155; }
     
-    .form-control { width: 100%; padding: 13px 15px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.95rem; background-color: #f8fafc; color: #1e293b; font-weight: 600; outline: none; }
-    select.form-control { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23334155' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; padding-right: 40px; }
+    /* Remoção total de setas nativas ou duplicadas nos seletores */
+    .form-control { width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.98rem; background-color: #f8fafc; color: #1e293b; font-weight: 600; outline: none; transition: border-color 0.2s; }
+    .form-control:focus { border-color: var(--accent); background-color: #ffffff; }
+    
+    select.form-control {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23334155' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      background-size: 16px;
+      padding-right: 44px;
+    }
+    select.form-control::-ms-expand { display: none; }
+
     textarea.form-control { min-height: 100px; resize: vertical; }
 
-    .pin-box-wrapper { position: relative; width: 100%; margin-bottom: 18px; }
+    .pin-box-wrapper { position: relative; width: 100%; margin-bottom: 20px; }
     .pin-hidden-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; }
-    .pin-dots-container { display: flex; justify-content: center; align-items: center; gap: 18px; padding: 16px; background: #f8fafc; border: 2px solid var(--border); border-radius: 12px; }
-    .pin-dot { width: 15px; height: 15px; border-radius: 50%; border: 2.2px solid #94a3b8; background: transparent; }
+    .pin-dots-container { display: flex; justify-content: center; align-items: center; gap: 20px; padding: 18px; background: #f8fafc; border: 2px solid var(--border); border-radius: 12px; }
+    .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2.2px solid #94a3b8; background: transparent; transition: all 0.2s; }
     .pin-dot.filled { background: var(--primary); border-color: var(--primary); transform: scale(1.2); }
 
-    .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: center; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25); }
-    .btn-primary:disabled { background: #cbd5e1 !important; cursor: not-allowed; opacity: 0.6; }
-    .btn-secondary { background: #ffffff; color: #475569; border: 1.5px solid var(--border); }
-    .btn-danger { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; }
+    .btn { width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; text-align: center; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.1s; }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); }
+    .btn-primary:disabled { background: #cbd5e1 !important; cursor: not-allowed; opacity: 0.6; box-shadow: none; }
+    .btn-secondary { background: #ffffff; color: #475569; border: 1.5px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .btn-danger { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); }
 
+    /* Pop-ups / Modais Modernos */
     .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; }
     .toast-card { background: #ffffff; border-radius: 20px; padding: 28px 24px; max-width: 380px; width: 100%; text-align: center; box-shadow: var(--shadow-lg); animation: popModal 0.25s ease-out; }
     @keyframes popModal { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -86,27 +117,24 @@
     .ampulheta-animada { display: inline-block; animation: rodarAmpulheta 2s infinite; }
     @keyframes rodarAmpulheta { 0% { transform: rotate(0deg); } 50% { transform: rotate(180deg); } 100% { transform: rotate(360deg); } }
     .toast-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; color: var(--primary); }
-    .toast-body { font-size: 0.92rem; color: #475569; margin-bottom: 20px; line-height: 1.5; }
+    .toast-body { font-size: 0.95rem; color: #475569; margin-bottom: 20px; line-height: 1.5; }
     .toast-actions { display: flex; gap: 10px; }
-    .toast-btn { flex: 1; padding: 13px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; }
+    .toast-btn { flex: 1; padding: 14px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; }
     .toast-btn-primary { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; }
     .toast-btn-secondary { background: #f1f5f9; color: var(--text-muted); }
 
-    .info-box { background: var(--info-bg); border: 1px solid var(--info-border); color: var(--info-text); border-radius: 12px; padding: 12px 14px; font-size: 0.82rem; line-height: 1.5; margin-bottom: 16px; display: flex; gap: 10px; }
-    .info-box.success { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
-    .admin-card { border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 16px; background: #ffffff; }
-    .admin-card h3 { font-size: 1rem; margin-bottom: 16px; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
+    .admin-card { border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 16px; background: #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+    .admin-card h3 { font-size: 1.05rem; margin-bottom: 16px; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; font-weight: 800; }
     .menu-admin-grid { display: flex; flex-direction: column; gap: 12px; }
-    .app-footer { text-align: center; font-size: 0.78rem; color: var(--text-muted); padding: 10px; }
+    .app-footer { text-align: center; font-size: 0.78rem; color: var(--text-muted); padding: 14px; }
     .campo-obrigatorio { color: var(--danger); font-weight: bold; }
-    .erro-campo { color: var(--danger); font-size: 0.82rem; font-weight: 600; margin-top: 6px; display: none; }
+    .erro-campo { color: var(--danger); font-size: 0.85rem; font-weight: 600; margin-top: 6px; display: none; }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <button class="admin-gear-btn" onclick="abrirModalSenhaAdmin()" title="Painel Administrativo">⚙️</button>
-
+  <!-- Cabeçalho Azul com Relógio e Data em Destaque -->
   <div class="header">
     <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo">
     <h2 id="headerTitle">Controlo de Assiduidade</h2>
@@ -115,13 +143,13 @@
       <span id="liveClockDisplay">A sincronizar hora...</span>
     </div>
   </div>
+
+  <!-- Botão de Ferramenta posicionado no fundo branco -->
+  <button class="admin-gear-btn" onclick="abrirModalSenhaAdmin()" title="Painel Administrativo">⚙️</button>
   
   <!-- ABA 1: PICAR PONTO -->
   <div id="section-ponto" class="content-section active">
-    <div class="info-box success">
-      <span>💡 Selecione o seu nome, digite o PIN e toque em registar com o GPS ativo.</span>
-    </div>
-    <div class="form-group">
+    <div class="form-group" style="margin-top: 5px;">
       <label for="nomeFuncionario">Selecione o seu Nome <span class="campo-obrigatorio">*</span>:</label>
       <select id="nomeFuncionario" class="form-control" onchange="limparFeedbackPonto(); focarPin('pinPonto')">
         <option value="">A carregar lista...</option>
@@ -140,7 +168,7 @@
       <div id="erro-pin-ponto" class="erro-campo"></div>
     </div>
 
-    <button id="btnPonto" class="btn btn-primary" onclick="registarPontoDiario()">⏰ Validar e Registar Ponto</button>
+    <button id="btnPonto" class="btn btn-primary" onclick="registarPontoDiario()" style="margin-top: 10px;">⏰ Validar e Registar Ponto</button>
   </div>
   
   <!-- ABA 2: ADMIN -->
@@ -168,7 +196,8 @@
             <option value="📄 Falta Justificada">📄 Falta Justificada</option>
           </select>
         </div>
-        <div class="form-group"><label>Data:</label><input type="date" id="dataFolgaInicio" class="form-control"></div>
+        <div class="form-group"><label>Data de Início:</label><input type="date" id="dataFolgaInicio" class="form-control"></div>
+        <div class="form-group"><label>Data de Fim:</label><input type="date" id="dataFolgaFim" class="form-control"></div>
         <button class="btn btn-primary" onclick="submeterAusenciaAdministrativa()">📅 Lançar</button>
       </div>
     </div>
@@ -188,8 +217,8 @@
     <div id="admin-sub-funcionario" style="display: none;">
       <div class="admin-card">
         <h3>➕ Adicionar Funcionário</h3>
-        <div class="form-group"><label>Nome:</label><input type="text" id="nomeNovo" class="form-control"></div>
-        <div class="form-group"><label>PIN (4 dígitos):</label><input type="text" id="pinNovo" class="form-control" maxlength="4"></div>
+        <div class="form-group"><label>Nome:</label><input type="text" id="nomeNovo" class="form-control" placeholder="Nome completo"></div>
+        <div class="form-group"><label>PIN (4 dígitos):</label><input type="text" id="pinNovo" class="form-control" maxlength="4" placeholder="0000"></div>
         <div class="form-group"><label>Filial:</label><select id="filialNovo" class="form-control"><option value="PATAIAS">Pataias</option><option value="GARCIA">Garcia</option></select></div>
         <button class="btn btn-primary" onclick="submeterNovoFuncionario()">➕ Adicionar</button>
       </div>
@@ -205,7 +234,7 @@
     </div>
     
     <div class="nav-navigation-block" id="adminNavigationGroup" style="display: none; margin-bottom: 12px;">
-      <button class="btn btn-secondary" onclick="voltarAoMenuCentralAdmin()">⬅️ Voltar ao Painel</button>
+      <button class="btn btn-secondary" onclick="voltarAoMenuCentralAdmin()">⬅️ Voltar painel admin</button>
     </div>
 
     <!-- Botão global para voltar ao ecrã principal colocado no fundo da página admin -->
@@ -350,7 +379,7 @@
   function abrirModalSenhaAdmin() {
     mostrarPopupPersonalizado({
       titulo: "Painel Administrativo",
-      mensagem: '<p style="margin-bottom:12px;">Introduza a senha de administrador para continuar:</p><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.1rem; letter-spacing:3px;" placeholder="••••" autofocus>',
+      mensagem: '<p style="margin-bottom:14px;">Introduza a senha de administrador para continuar:</p><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.15rem; letter-spacing:3px;" placeholder="••••" autofocus>',
       icone: "⚙️",
       botoes: [
         { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
@@ -358,7 +387,7 @@
             var senhaVal = document.getElementById('inputSenhaPopup').value;
             if (!senhaVal) return;
             
-            mostrarPopupPersonalizado({ titulo: "A Verificar...", mensagem: "A validar credenciais...", tipo: "processando" });
+            mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A validar credenciais...", tipo: "processando" });
 
             chamarAPIJsonp({
               action: "gerarPdfJsonp",
@@ -374,12 +403,11 @@
                   tipo: "erro"
                 });
               } else {
-                senhaAdminSessao = senhaVal; // Guarda a senha para as ações seguintes
+                senhaAdminSessao = senhaVal;
                 fecharToast();
                 document.getElementById('section-ponto').classList.remove('active');
                 document.getElementById('section-admin').classList.add('active');
                 
-                // Oculta relógio e título no modo admin
                 document.getElementById('headerTitle').style.display = 'none';
                 document.getElementById('headerClockBox').style.display = 'none';
 
@@ -393,11 +421,10 @@
   }
 
   function voltarAoEcraPrincipal() {
-    senhaAdminSessao = ""; // Limpa a senha por segurança
+    senhaAdminSessao = "";
     document.getElementById('section-admin').classList.remove('active');
     document.getElementById('section-ponto').classList.add('active');
     
-    // Restaura relógio e título original
     document.getElementById('headerTitle').style.display = 'block';
     document.getElementById('headerClockBox').style.display = 'inline-flex';
 
@@ -447,7 +474,7 @@
     
     emProcessamento = true;
     if (btn) btn.disabled = true;
-    mostrarPopupPersonalizado({ titulo: "A Validar...", mensagem: "A verificar GPS e a enviar...", tipo: "processando" });
+    mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A verificar GPS e a registar ponto...", tipo: "processando" });
     
     navigator.geolocation.getCurrentPosition(function(pos) {
       chamarAPIJsonp({
@@ -466,7 +493,7 @@
           gerirErroCampo("erro-pin-ponto", resposta);
           fecharToast();
         } else {
-          mostrarPopupPersonalizado({ titulo: "Sucesso!", mensagem: resposta, tipo: "sucesso" });
+          mostrarPopupPersonalizado({ titulo: "Concluído!", mensagem: resposta, tipo: "sucesso" });
         }
       });
     }, function() {
@@ -480,15 +507,16 @@
     var nome = document.getElementById('nomeFuncionarioFolga').value;
     var tipo = document.getElementById('tipoAusencia').value;
     var dIni = document.getElementById('dataFolgaInicio').value;
+    var dFim = document.getElementById('dataFolgaFim').value || dIni;
     
-    if(!nome || !tipo || !dIni) { mostrarPopupPersonalizado({ titulo: "Aviso", mensagem: "Preencha todos os campos.", tipo: "erro" }); return; }
+    if(!nome || !tipo || !dIni) { mostrarPopupPersonalizado({ titulo: "Aviso", mensagem: "Preencha todos os campos obrigatórios.", tipo: "erro" }); return; }
     
-    mostrarPopupPersonalizado({ titulo: "A Lançar...", mensagem: "A atualizar registo...", tipo: "processando" });
+    mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A registar período na folha do colaborador...", tipo: "processando" });
     chamarAPIJsonp({
       action: "lancarAusenciaAdminJsonp",
-      nome: nome, tipo: tipo, dataInicio: dIni, senha: senhaAdminSessao
+      nome: nome, tipo: tipo, dataInicio: dIni, dataFim: dFim, senha: senhaAdminSessao
     }, function(resp) {
-      mostrarPopupPersonalizado({ titulo: "Resultado", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+      mostrarPopupPersonalizado({ titulo: "Concluído!", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
     });
   }
 
@@ -499,12 +527,12 @@
     
     if(!funcionario || !dataInicio || !dataFim) { mostrarPopupPersonalizado({ titulo: "Aviso", mensagem: "Preencha todos os campos.", tipo: "erro" }); return; }
     
-    mostrarPopupPersonalizado({ titulo: "A Gerar PDF...", mensagem: "A preparar documento...", tipo: "processando" });
+    mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A gerar relatório em PDF e a enviar por email...", tipo: "processando" });
     chamarAPIJsonp({
       action: "gerarPdfJsonp",
       funcionario: funcionario, dataInicio: dataInicio, dataFim: dataFim, senha: senhaAdminSessao
     }, function(resp) {
-      mostrarPopupPersonalizado({ titulo: "Resultado", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+      mostrarPopupPersonalizado({ titulo: "Concluído!", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
     });
   }
 
@@ -514,11 +542,13 @@
     var filial = document.getElementById('filialNovo').value;
     
     if(!nome || !pin) { mostrarPopupPersonalizado({ titulo: "Aviso", mensagem: "Preencha os campos.", tipo: "erro" }); return; }
+    
+    mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A criar novo colaborador...", tipo: "processando" });
     chamarAPIJsonp({
       action: "adicionarFuncionarioJsonp",
       nome: nome, pin: pin, filial: filial, senha: senhaAdminSessao
     }, function(resp) { 
-      mostrarPopupPersonalizado({ titulo: "Resultado", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+      mostrarPopupPersonalizado({ titulo: "Concluído!", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
       carregarFuncionariosEmTodosOsCampos(); 
     });
   }
@@ -527,11 +557,13 @@
     var nome = document.getElementById('nomeRemover').value;
     
     if(!nome) { mostrarPopupPersonalizado({ titulo: "Aviso", mensagem: "Selecione o funcionário.", tipo: "erro" }); return; }
+    
+    mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A inativar colaborador...", tipo: "processando" });
     chamarAPIJsonp({
       action: "removerFuncionarioJsonp",
       nome: nome, senha: senhaAdminSessao
     }, function(resp) { 
-      mostrarPopupPersonalizado({ titulo: "Resultado", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+      mostrarPopupPersonalizado({ titulo: "Concluído!", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
       carregarFuncionariosEmTodosOsCampos(); 
     });
   }
