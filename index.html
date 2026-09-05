@@ -142,7 +142,6 @@
     <div id="modalIcone" style="font-size: 3rem; margin-bottom: 10px;">✅</div>
     <h3 id="modalTitulo" style="color: var(--primary); margin-bottom: 8px; font-size: 1.2rem;">Aviso</h3>
     <p id="modalTexto" style="color: #475569; font-size: 0.92rem; margin-bottom: 20px; line-height: 1.4;">Mensagem...</p>
-    <!-- O botão OK agora só aparece quando concluído -->
     <button id="btnModalOk" class="btn btn-primary" onclick="fecharModal()" style="margin-top: 0; display: none;">OK</button>
   </div>
 </div>
@@ -200,7 +199,6 @@
     if (pin) pin.focus(); 
   }
 
-  // Se o parâmetro 'mostrarBotao' for falso (ou omitido em carregamentos), o botão OK fica oculto
   function mostrarModal(titulo, texto, icone, mostrarBotao) {
     document.getElementById('modalTitulo').innerText = titulo;
     document.getElementById('modalTexto').innerText = texto;
@@ -276,9 +274,11 @@
   }
 
   function registarPonto() {
+    var btn = document.getElementById('btnRegistar');
+    if (btn.disabled) return; // Bloqueia cliques duplos instantaneamente
+
     var nome = document.getElementById('nomeFuncionario').value;
     var pin = document.getElementById('pinInput').value;
-    var btn = document.getElementById('btnRegistar');
 
     if (!nome) { mostrarModal("Atenção", "Selecione o seu nome.", "⚠️", true); return; }
     if (!pin || pin.length !== 4) { mostrarModal("Atenção", "Introduza o seu PIN de 4 dígitos.", "⚠️", true); return; }
@@ -288,8 +288,7 @@
       return;
     }
 
-    if (btn) btn.disabled = true;
-    // 'false' no quarto argumento esconde o botão OK enquanto aguarda
+    btn.disabled = true;
     mostrarModal("A processar...", "A obter localização GPS e a enviar...", "⏳", false);
 
     navigator.geolocation.getCurrentPosition(function(pos) {
@@ -304,7 +303,11 @@
       };
 
       enviarServidorOnline(dadosPonto, function(sucesso, res) {
-        if (btn) btn.disabled = false;
+        // Mantém o botão bloqueado por 3 segundos de segurança pós-envio
+        setTimeout(function() {
+          if (btn) btn.disabled = false;
+        }, 3000);
+
         var inputPin = document.getElementById('pinInput');
         if (inputPin) inputPin.value = "";
         atualizarPins();
@@ -312,7 +315,7 @@
         if (sucesso) {
           mostrarModal("Sucesso!", res || "Ponto registado na base de dados com sucesso!", "🟢", true);
         } else {
-          mostrarModal("Erro de Conexão", "Não foi possível comunicar com o servidor. Verifique a sua rede ou registe o ponto manualmente.", "🔴", true);
+          mostrarModal("Erro de Conexão", "Não foi possível comunicar com o servidor. Verifique a sua rede.", "🔴", true);
         }
       });
 
