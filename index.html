@@ -12,83 +12,55 @@
     :root {
       --primary: #1e3a5f;
       --primary-dark: #14273f;
-      --primary-light: #2a5298;
       --accent: #3b82f6;
       --bg: #f4f6f9;
       --card-bg: #ffffff;
       --text: #1e293b;
-      --text-muted: #64748b;
       --border: #e2e8f0;
       --success: #10b981;
       --warning: #f59e0b;
       --danger: #ef4444;
-      --shadow-lg: 0 12px 24px -8px rgba(0,0,0,0.12);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: linear-gradient(160deg, #eef2f7 0%, #f8fafc 100%); color: var(--text); padding: 28px 10px 16px 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; position: relative; }
+    body { background: linear-gradient(160deg, #eef2f7 0%, #f8fafc 100%); color: var(--text); padding: 20px 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; position: relative; }
     
     .admin-gear-btn-top {
       position: absolute;
-      top: 6px;
+      top: 10px;
       right: 20px;
       background: #ffffff;
       border: 1.5px solid var(--border);
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.25rem;
       cursor: pointer;
-      z-index: 1000;
+      z-index: 50;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      transition: all 0.2s;
     }
-    .admin-gear-btn-top:hover { background: #f1f5f9; transform: scale(1.08); }
 
-    .container { width: 100%; max-width: 480px; background: var(--card-bg); border-radius: 24px; box-shadow: var(--shadow-lg); overflow: hidden; margin: 8px 0; border: 1px solid #ffffff; position: relative; }
+    .container { width: 100%; max-width: 480px; background: var(--card-bg); border-radius: 24px; box-shadow: 0 12px 24px -8px rgba(0,0,0,0.12); overflow: hidden; border: 1px solid #ffffff; }
     
-    .header { background: linear-gradient(145deg, var(--primary-dark) 0%, var(--primary) 100%); color: white; padding: 28px 20px 24px 20px; text-align: center; position: relative; }
-    .logo-empresa { width: 100%; max-height: 130px; margin-bottom: 14px; border-radius: 12px; object-fit: contain; background: #ffffff; padding: 6px; box-shadow: 0 6px 16px rgba(0,0,0,0.2); display: block; }
+    .header { background: linear-gradient(145deg, var(--primary-dark) 0%, var(--primary) 100%); color: white; padding: 28px 20px 24px 20px; text-align: center; }
+    .logo-empresa { width: 100%; max-height: 130px; margin-bottom: 14px; border-radius: 12px; object-fit: contain; background: #ffffff; padding: 6px; display: block; }
     .header h2 { font-size: 1.35rem; font-weight: 800; margin-bottom: 8px; }
 
     .live-clock-card { 
       background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(6px);
       border: 1.5px solid rgba(255, 255, 255, 0.3);
       border-radius: 18px;
       padding: 14px 20px;
-      display: inline-block;
       margin-top: 10px;
       text-align: center;
-      width: 100%;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
     }
-    .live-clock-time { 
-      font-size: 2.2rem; 
-      font-weight: 800; 
-      letter-spacing: 1px; 
-      color: #ffffff; 
-      display: block; 
-      text-shadow: 0 2px 4px rgba(0,0,0,0.15);
-    }
-    .live-clock-date { 
-      font-size: 1rem; 
-      font-weight: 600; 
-      color: #e2e8f0; 
-      display: block; 
-      margin-top: 4px; 
-      text-transform: capitalize; 
-    }
+    .live-clock-time { font-size: 2.2rem; font-weight: 800; color: #ffffff; display: block; }
+    .live-clock-date { font-size: 1rem; font-weight: 600; color: #e2e8f0; display: block; margin-top: 4px; text-transform: capitalize; }
 
-    .gps-status-indicator { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 600; color: #cbd5e1; margin-top: 10px; }
-    .gps-pulse-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; animation: pulseGps 2s infinite; }
-    @keyframes pulseGps { 0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); } 70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(16, 185, 129, 0); } 100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
-
-    .content-section { padding: 24px 20px; display: none; }
-    .content-section.active { display: block; }
+    .content-section { padding: 24px 20px; }
     .form-group { margin-bottom: 18px; }
     .form-group label { display: block; margin-bottom: 7px; font-weight: 600; font-size: 0.85rem; color: #334155; }
     
@@ -98,13 +70,10 @@
       border: 1.5px solid var(--border); 
       border-radius: 12px; 
       font-size: 0.95rem; 
-      background-color: #f8fafc !important; 
-      color: #1e293b !important; 
+      background-color: #f8fafc; 
+      color: #1e293b; 
       font-weight: 600; 
       outline: none; 
-      -webkit-appearance: none; 
-      -moz-appearance: none; 
-      appearance: none; 
     }
     
     select.form-control { 
@@ -115,111 +84,82 @@
       padding-right: 40px; 
     }
     
-    .pin-box-wrapper { position: relative; width: 100%; margin-bottom: 18px; }
+    .pin-box-wrapper { position: relative; width: 100%; }
     .pin-hidden-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; }
     .pin-dots-container { display: flex; justify-content: center; align-items: center; gap: 18px; padding: 16px; background: #f8fafc; border: 2px solid var(--border); border-radius: 12px; }
-    .pin-dot { width: 15px; height: 15px; border-radius: 50%; border: 2.2px solid #94a3b8; background: transparent; transition: all 0.2s; }
+    .pin-dot { width: 15px; height: 15px; border-radius: 50%; border: 2.2px solid #94a3b8; background: transparent; }
     .pin-dot.filled { background: var(--primary); border-color: var(--primary); transform: scale(1.2); }
 
-    .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: center; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25); }
-    .btn-secondary { background: #ffffff; color: #475569; border: 1.5px solid var(--border); }
-    .btn-danger { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; }
+    .btn-secondary { background: #ffffff; color: #475569; border: 1.5px solid var(--border); margin-top: 8px; }
 
-    /* Correção do Overlay para nunca bloquear cliques por engano */
-    .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; pointer-events: none; opacity: 0; transition: opacity 0.2s ease; }
-    .toast-overlay.ativo { display: flex; pointer-events: auto; opacity: 1; }
-    .toast-card { background: #ffffff; border-radius: 20px; padding: 28px 24px; max-width: 380px; width: 100%; text-align: center; box-shadow: var(--shadow-lg); pointer-events: auto; }
-    .toast-icon { font-size: 3.4rem; margin-bottom: 12px; display: inline-block; }
-    .ampulheta-animada { animation: rodarAmpulheta 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite; }
-    @keyframes rodarAmpulheta { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.15); } 100% { transform: rotate(360deg) scale(1); } }
-    .toast-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; color: var(--primary); }
-    .toast-title.sucesso { color: var(--success); }
-    .toast-title.erro { color: var(--danger); }
-    .toast-body { font-size: 0.92rem; color: #475569; line-height: 1.5; margin-bottom: 20px; }
-    .toast-btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: 700; font-size: 0.95rem; cursor: pointer; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; }
+    /* Modal / Popup nativo seguro que nunca bloqueia por defeito (display: none absoluto) */
+    .modal-sistema { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
+    .modal-card { background: #ffffff; border-radius: 20px; padding: 24px; max-width: 360px; width: 100%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
 
-    .alerta-computador-bloqueio { background: #fffbeb; border: 1.5px dashed var(--warning); border-radius: 16px; padding: 22px; text-align: center; color: #92400e; font-size: 0.95rem; font-weight: 600; }
-    .app-footer { text-align: center; font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; padding: 0 10px 6px; }
-    .erro-campo { color: var(--danger); font-size: 0.82rem; font-weight: 600; margin-top: 6px; display: none; }
+    .app-footer { text-align: center; font-size: 0.78rem; color: #64748b; margin-top: 12px; }
     .campo-obrigatorio { color: var(--danger); font-weight: bold; }
   </style>
 </head>
 <body>
 
-<button id="btnGearTop" class="admin-gear-btn-top" onclick="abrirModalAdmin()" title="Painel Administrativo">⚙️</button>
+<button class="admin-gear-btn-top" onclick="abrirAdmin()" title="Painel Administrativo">⚙️</button>
 
 <div class="container">
-  <div id="headerPonto" class="header">
+  <div class="header">
     <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo">
     <h2>Controlo de Assiduidade</h2>
     
     <div class="live-clock-card">
-      <span class="live-clock-time" id="liveClockTime">00:00:00</span>
-      <span class="live-clock-date" id="liveClockDate">A carregar data...</span>
-    </div>
-    
-    <div class="gps-status-indicator">
-      <div class="gps-pulse-dot" id="gpsIndicator"></div>
-      <span>GPS e Rede Ativos (GitHub Pages)</span>
+      <span class="live-clock-time" id="relogioHora">00:00:00</span>
+      <span class="live-clock-date" id="relogioData">A carregar...</span>
     </div>
   </div>
   
-  <div id="section-ponto" class="content-section active">
-    <div id="bloco-ponto-smartphone-valido">
-      <div class="form-group">
-        <label for="nomeFuncionario">Selecione o seu Nome <span class="campo-obrigatorio">*</span>:</label>
-        <select id="nomeFuncionario" class="form-control" onchange="limparFeedbackPonto(); focarPin('pinPonto')">
-          <option value="">A carregar colaboradores...</option>
-        </select>
-        <div id="erro-nome-ponto" class="erro-campo"></div>
-      </div>
-      
-      <div class="form-group">
-        <label for="pinPonto">PIN Secreto <span class="campo-obrigatorio">*</span>:</label>
-        <div class="pin-box-wrapper">
-          <input type="password" id="pinPonto" class="pin-hidden-input" maxlength="4" inputmode="numeric" oninput="atualizarPinDisplay('pinPonto', 'dotsPonto'); limparFeedbackPonto();">
-          <div id="dotsPonto" class="pin-dots-container" onclick="document.getElementById('pinPonto').focus()">
-            <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
-          </div>
+  <div class="content-section">
+    <div class="form-group">
+      <label for="nomeFuncionario">Selecione o seu Nome <span class="campo-obrigatorio">*</span>:</label>
+      <select id="nomeFuncionario" class="form-control" onchange="focarPin()">
+        <option value="">A carregar colaboradores...</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="pinInput">PIN Secreto <span class="campo-obrigatorio">*</span>:</label>
+      <div class="pin-box-wrapper">
+        <input type="password" id="pinInput" class="pin-hidden-input" maxlength="4" inputmode="numeric" oninput="atualizarPins()">
+        <div class="pin-dots-container" onclick="document.getElementById('pinInput').focus()">
+          <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
         </div>
-        <div id="erro-pin-ponto" class="erro-campo"></div>
       </div>
-
-      <button id="btnPonto" class="btn btn-primary" onclick="registarPontoDiario()">⏰ Validar e Registar Ponto</button>
     </div>
 
-    <div id="bloco-ponto-computador-bloqueado" class="alerta-computador-bloqueio" style="display: none;">
-      <span>⚠️</span>
-      <b>Dispositivo Não Autorizado</b><br><br>
-      O registo de ponto só funciona com Smartphone.
-    </div>
+    <button id="btnRegistar" class="btn btn-primary" onclick="registarPonto()">⏰ Validar e Registar Ponto</button>
   </div>
 </div>
 
-<div id="modalAdminPassword" class="toast-overlay" onclick="if(event.target === this) fecharModalAdmin()">
-  <div class="toast-card" style="text-align: left;">
-    <div style="text-align: center; font-size: 2.2rem; margin-bottom: 8px;">🔐</div>
-    <div class="toast-title" style="text-align: center; margin-bottom: 14px;">Área Restrita</div>
-    <div class="form-group" style="margin-bottom: 14px;">
-      <label for="inputSenhaAdminGlobal" style="font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 6px;">Palavra-passe de Administrador:</label>
-      <input type="password" id="inputSenhaAdminGlobal" class="form-control" placeholder="Introduza a senha..." style="background: #ffffff !important;">
-    </div>
-    <div style="display: flex; gap: 8px;">
-      <button type="button" class="btn btn-secondary" onclick="fecharModalAdmin()" style="margin-bottom: 0; padding: 12px;">Cancelar</button>
-      <button type="button" class="btn btn-primary" onclick="confirmarSenhaAdminGlobal()" style="margin-bottom: 0; padding: 12px;">Entrar</button>
-    </div>
+<!-- Janela Modal de Mensagens (Completamente isolada) -->
+<div id="modalMensagem" class="modal-sistema">
+  <div class="modal-card">
+    <div id="modalIcone" style="font-size: 3rem; margin-bottom: 10px;">✅</div>
+    <h3 id="modalTitulo" style="color: var(--primary); margin-bottom: 8px; font-size: 1.2rem;">Aviso</h3>
+    <p id="modalTexto" style="color: #475569; font-size: 0.92rem; margin-bottom: 20px; line-height: 1.4;">Mensagem...</p>
+    <button class="btn btn-primary" onclick="fecharModal()" style="margin-top: 0;">OK</button>
   </div>
 </div>
 
-<div id="toastOverlay" class="toast-overlay" onclick="if(event.target === this) fecharToast()">
-  <div class="toast-card">
-    <div id="toastIconContainer">
-      <div id="toastIcon" class="toast-icon">🟢</div>
+<!-- Janela Modal de Admin -->
+<div id="modalAdmin" class="modal-sistema">
+  <div class="modal-card" style="text-align: left;">
+    <div style="text-align: center; font-size: 2rem; margin-bottom: 6px;">🔐</div>
+    <h3 style="text-align: center; color: var(--primary); margin-bottom: 14px;">Área Restrita</h3>
+    <div class="form-group" style="margin-bottom: 12px;">
+      <label style="font-size: 0.85rem;">Palavra-passe de Administrador:</label>
+      <input type="password" id="adminSenha" class="form-control" placeholder="Senha...">
     </div>
-    <div id="toastTitle" class="toast-title sucesso">Concluído!</div>
-    <div id="toastBody" class="toast-body">Operação processada.</div>
-    <button id="toastBtn" class="toast-btn" onclick="fecharToast()">OK</button>
+    <button class="btn btn-primary" onclick="validarAdmin()" style="margin-bottom: 6px;">Entrar</button>
+    <button class="btn btn-secondary" onclick="fecharAdmin()">Cancelar</button>
   </div>
 </div>
 
@@ -229,226 +169,148 @@
 
 <script>
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
-  var senhaAdminSessao = "";
 
+  // Relógio em tempo real
   function iniciarRelogio() {
-    function atualizar() {
+    setInterval(function() {
       var agora = new Date();
       var h = String(agora.getHours()).padStart(2, '0');
       var m = String(agora.getMinutes()).padStart(2, '0');
       var s = String(agora.getSeconds()).padStart(2, '0');
       
-      var diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+      var dias = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
       var meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
       
-      var nomeDia = diasSemana[agora.getDay()];
-      var d = agora.getDate();
-      var mes = meses[agora.getMonth()];
-      var y = agora.getFullYear();
-
-      var timeEl = document.getElementById('liveClockTime');
-      var dateEl = document.getElementById('liveClockDate');
-      
-      if (timeEl) timeEl.innerText = h + ':' + m + ':' + s;
-      if (dateEl) dateEl.innerText = nomeDia + ', ' + d + ' ' + mes + ' ' + y;
-    }
-    atualizar();
-    setInterval(atualizar, 1000);
+      document.getElementById('relogioHora').innerText = h + ':' + m + ':' + s;
+      document.getElementById('relogioData').innerText = dias[agora.getDay()] + ', ' + agora.getDate() + ' ' + meses[agora.getMonth()] + ' ' + agora.getFullYear();
+    }, 1000);
   }
 
-  function atualizarPinDisplay(inputId, containerId) {
-    var input = document.getElementById(inputId);
+  function atualizarPins() {
+    var input = document.getElementById('pinInput');
     var val = input.value.replace(/[^0-9]/g, '');
     input.value = val;
-    var container = document.getElementById(containerId);
-    if (!container) return;
-    var dots = container.children;
+    var dots = document.querySelectorAll('.pin-dot');
     for (var i = 0; i < 4; i++) {
       if (i < val.length) dots[i].classList.add('filled');
       else dots[i].classList.remove('filled');
     }
   }
 
-  function focarPin(inputId) { var el = document.getElementById(inputId); if (el) el.focus(); }
+  function focarPin() { document.getElementById('pinInput').focus(); }
 
-  function dispararConfirmacaoGeral(titulo, mensagem, tipo) {
-    var overlay = document.getElementById('toastOverlay');
-    var iconContainer = document.getElementById('toastIconContainer');
-    var title = document.getElementById('toastTitle');
-    var body = document.getElementById('toastBody');
-    var btn = document.getElementById('toastBtn');
-    
-    if (tipo === "sucesso") {
-      iconContainer.innerHTML = '<div id="toastIcon" class="toast-icon">🟢</div>';
-      title.className = "toast-title sucesso"; 
-      btn.style.display = "block";
-    } else if (tipo === "erro") {
-      iconContainer.innerHTML = '<div id="toastIcon" class="toast-icon">🔴</div>';
-      title.className = "toast-title erro"; 
-      btn.style.display = "block";
-    } else {
-      iconContainer.innerHTML = '<div id="toastIcon" class="toast-icon ampulheta-animada">⏳</div>';
-      title.className = "toast-title processando"; 
-      title.style.color = "var(--primary)";
-      btn.style.display = "none";
-    }
-    title.innerText = titulo;
-    body.innerHTML = mensagem;
-    overlay.classList.add('ativo');
+  function mostrarModal(titulo, texto, icone) {
+    document.getElementById('modalTitulo').innerText = titulo;
+    document.getElementById('modalTexto').innerText = texto;
+    document.getElementById('modalIcone').innerText = icone || '✅';
+    document.getElementById('modalMensagem').style.display = 'flex';
   }
 
-  function fecharToast() { 
-    document.getElementById('toastOverlay').classList.remove('ativo'); 
-    var btn = document.getElementById('btnPonto');
-    if (btn) btn.disabled = false;
+  function fecharModal() {
+    document.getElementById('modalMensagem').style.display = 'none';
+    document.getElementById('btnRegistar').disabled = false;
   }
 
-  window.addEventListener('load', function() {
-    iniciarRelogio();
-    verificarTipoDeDispositivo();
-    carregarFuncionariosGitHub();
-    processarFilaOffline();
-  });
+  function abrirAdmin() { document.getElementById('modalAdmin').style.display = 'flex'; }
+  function fecharAdmin() { document.getElementById('modalAdmin').style.display = 'none'; }
 
-  function verificarTipoDeDispositivo() {
-    var userAgent = navigator.userAgent || "";
-    var eSmartphone = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
-    if (!eSmartphone) {
-      document.getElementById('bloco-ponto-smartphone-valido').style.display = 'none';
-      document.getElementById('bloco-ponto-computador-bloqueado').style.display = 'block';
-    }
-  }
+  function validarAdmin() {
+    var senha = document.getElementById('adminSenha').value;
+    if (!senha) return;
+    fecharAdmin();
+    mostrarModal("A validar...", "A verificar credenciais...", "⏳");
 
-  function abrirModalAdmin() {
-    var modal = document.getElementById('modalAdminPassword');
-    var input = document.getElementById('inputSenhaAdminGlobal');
-    input.value = "";
-    modal.classList.add('ativo');
-    setTimeout(function() { input.focus(); }, 100);
-  }
-
-  function fecharModalAdmin() {
-    document.getElementById('modalAdminPassword').classList.remove('ativo');
-  }
-
-  function confirmarSenhaAdminGlobal() {
-    var senhaDigitada = document.getElementById('inputSenhaAdminGlobal').value;
-    if (!senhaDigitada) return;
-
-    fecharModalAdmin();
-    dispararConfirmacaoGeral("A validar...", "A verificar credenciais...", "processando");
-
-    window.processarValidacaoSenha = function(valido) {
-      fecharToast();
+    window.respAdmin = function(valido) {
       if (valido) {
-        senhaAdminSessao = senhaDigitada;
-        dispararConfirmacaoGeral("Sucesso", "Senha de administrador aceite.", "sucesso");
+        mostrarModal("Sucesso", "Palavra-passe aceite com sucesso.", "🟢");
       } else {
-        dispararConfirmacaoGeral("Acesso Negado", "Palavra-passe incorreta.", "erro");
+        mostrarModal("Acesso Negado", "Palavra-passe incorreta.", "🔴");
       }
     };
 
-    var scriptTag = document.createElement('script');
-    scriptTag.src = APP_SCRIPT_URL + "?action=verificarAdmin&senha=" + encodeURIComponent(senhaDigitada) + "&callback=processarValidacaoSenha";
-    document.body.appendChild(scriptTag);
+    var s = document.createElement('script');
+    s.src = APP_SCRIPT_URL + "?action=verificarAdmin&senha=" + encodeURIComponent(senha) + "&callback=respAdmin";
+    document.body.appendChild(s);
   }
 
-  function carregarFuncionariosGitHub() {
+  // Carregar funcionários com cache local segura
+  function carregarFuncionarios() {
     var sel = document.getElementById('nomeFuncionario');
-    if (!sel) return;
-
-    var funcionariosCache = localStorage.getItem('balcao_funcionarios_cache');
-    if (funcionariosCache) {
-      preencherSelectFuncionarios(JSON.parse(funcionariosCache));
-    }
+    var cache = localStorage.getItem('balcao_funcionarios_cache');
+    if (cache) preencherSelect(JSON.parse(cache));
 
     if (navigator.onLine) {
-      window.processarListaColaboradores = function(lista) {
+      window.respFuncionarios = function(lista) {
         if (lista && lista.length > 0) {
           localStorage.setItem('balcao_funcionarios_cache', JSON.stringify(lista));
-          preencherSelectFuncionarios(lista);
+          preencherSelect(lista);
         }
       };
-
-      var scriptTag = document.createElement('script');
-      scriptTag.src = APP_SCRIPT_URL + "?action=obterFuncionarios&callback=processarListaColaboradores";
-      scriptTag.onerror = function() {
-        if (!funcionariosCache) {
-          sel.innerHTML = '<option value="">Erro ao ligar ao servidor</option>';
-        }
-      };
-      document.body.appendChild(scriptTag);
-    } else if (!funcionariosCache) {
-      sel.innerHTML = '<option value="">Sem ligação à internet</option>';
+      var s = document.createElement('script');
+      s.src = APP_SCRIPT_URL + "?action=obterFuncionarios&callback=respFuncionarios";
+      document.body.appendChild(s);
     }
   }
 
-  function preencherSelectFuncionarios(lista) {
+  function preencherSelect(lista) {
     var sel = document.getElementById('nomeFuncionario');
-    if (!sel) return;
-    var valorAtual = sel.value;
+    var atual = sel.value;
     sel.innerHTML = '<option value="">-- Escolha --</option>';
     lista.forEach(function(nome) {
-      var o = document.createElement('option');
-      o.value = nome;
-      o.text = nome;
-      sel.appendChild(o);
+      var opt = document.createElement('option');
+      opt.value = nome;
+      opt.textContent = nome;
+      sel.appendChild(opt);
     });
-    if (valorAtual) sel.value = valorAtual;
+    if (atual) sel.value = atual;
   }
 
-  function registarPontoDiario() {
+  // Registo de Ponto com suporte Offline sem bloquear
+  function registarPonto() {
     var nome = document.getElementById('nomeFuncionario').value;
-    var pin = document.getElementById('pinPonto').value;
-    var btn = document.getElementById('btnPonto');
-    if(!nome) { dispararConfirmacaoGeral("Atenção", "Por favor, selecione o seu nome.", "erro"); return; }
-    if(!pin || pin.trim().length !== 4) { dispararConfirmacaoGeral("Atenção", "Introduza o seu PIN de 4 dígitos.", "erro"); return; }
-    
+    var pin = document.getElementById('pinInput').value;
+    var btn = document.getElementById('btnRegistar');
+
+    if (!nome) { mostrarModal("Atenção", "Selecione o seu nome.", "⚠️"); return; }
+    if (!pin || pin.length !== 4) { mostrarModal("Atenção", "Introduza o seu PIN de 4 dígitos.", "⚠️"); return; }
+
     btn.disabled = true;
-    dispararConfirmacaoGeral("A processar o registo...", "A validar localização...", "processando");
-    
+    mostrarModal("A processar...", "A obter localização GPS...", "⏳");
+
+    var dadosPonto = {
+      nome: nome,
+      lat: 0,
+      lon: 0,
+      pin: pin,
+      isMock: false,
+      dispositivo: "Smartphone",
+      userAgent: navigator.userAgent
+    };
+
     if (!navigator.onLine) {
-      guardarPontoOfflineLocal({
-        nome: nome,
-        lat: 0,
-        lon: 0,
-        pin: pin,
-        isMock: false,
-        dispositivo: "Smartphone (Offline)",
-        userAgent: navigator.userAgent
-      });
+      guardarOffline(dadosPonto);
       return;
     }
 
     navigator.geolocation.getCurrentPosition(function(pos) {
-      var isMock = pos.mocked || (pos.coords && pos.coords.mocked);
-      var dadosPonto = {
-        nome: nome,
-        lat: pos.coords.latitude,
-        lon: pos.coords.longitude,
-        pin: pin,
-        isMock: isMock,
-        dispositivo: "Smartphone (GitHub)",
-        userAgent: navigator.userAgent
-      };
+      dadosPonto.lat = pos.coords.latitude;
+      dadosPonto.lon = pos.coords.longitude;
+      dadosPonto.isMock = pos.mocked || (pos.coords && pos.coords.mocked);
 
-      window.processarRespostaPonto = function(resposta) {
+      window.respPonto = function(res) {
         btn.disabled = false;
-        if (resposta && resposta.indexOf("Aviso") !== -1) {
-          dispararConfirmacaoGeral("Aviso", resposta, "erro");
-          document.getElementById('pinPonto').value = "";
-          atualizarPinDisplay('pinPonto', 'dotsPonto');
+        document.getElementById('pinInput').value = "";
+        atualizarPins();
+        if (res && res.indexOf("Aviso") !== -1) {
+          mostrarModal("Aviso", res, "⚠️");
         } else {
-          dispararConfirmacaoGeral("Sucesso!", resposta || "Ponto registado com sucesso!", "sucesso");
-          document.getElementById('pinPonto').value = "";
-          atualizarPinDisplay('pinPonto', 'dotsPonto');
-          processarFilaOffline();
+          mostrarModal("Sucesso!", res || "Ponto registado com sucesso!", "🟢");
+          sincronizarFila();
         }
       };
 
-      var scriptTag = document.createElement('script');
-      scriptTag.src = APP_SCRIPT_URL + 
-        "?action=salvarPontoJsonp" +
+      var s = document.createElement('script');
+      s.src = APP_SCRIPT_URL + "?action=salvarPontoJsonp" +
         "&nome=" + encodeURIComponent(dadosPonto.nome) +
         "&lat=" + encodeURIComponent(dadosPonto.lat) +
         "&lon=" + encodeURIComponent(dadosPonto.lon) +
@@ -456,58 +318,41 @@
         "&isMock=" + encodeURIComponent(dadosPonto.isMock) +
         "&disp=" + encodeURIComponent(dadosPonto.dispositivo) +
         "&ua=" + encodeURIComponent(dadosPonto.userAgent) +
-        "&callback=processarRespostaPonto";
+        "&callback=respPonto";
+      s.onerror = function() { guardarOffline(dadosPonto); };
+      document.body.appendChild(s);
 
-      scriptTag.onerror = function() {
-        btn.disabled = false;
-        guardarPontoOfflineLocal(dadosPonto);
-      };
-      document.body.appendChild(scriptTag);
-
-    }, function(errGps) { 
-      guardarPontoOfflineLocal({
-        nome: nome,
-        lat: 0,
-        lon: 0,
-        pin: pin,
-        isMock: false,
-        dispositivo: "Smartphone (GPS Offline)",
-        userAgent: navigator.userAgent
-      });
-    }, { enableHighAccuracy: false, timeout: 6000 });
+    }, function() {
+      // Se o GPS falhar ou demorar offline, grava logo
+      guardarOffline(dadosPonto);
+    }, { timeout: 5000, enableHighAccuracy: false });
   }
 
-  function guardarPontoOfflineLocal(dadosPonto) {
-    var btn = document.getElementById('btnPonto');
-    if(btn) btn.disabled = false;
+  function guardarOffline(dados) {
+    document.getElementById('btnRegistar').disabled = false;
     var pendentes = JSON.parse(localStorage.getItem('pontosOfflinePendentes') || '[]');
-    pendentes.push(dadosPonto);
+    pendentes.push(dados);
     localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
-    document.getElementById('pinPonto').value = "";
-    atualizarPinDisplay('pinPonto', 'dotsPonto');
-    dispararConfirmacaoGeral("Guardado Offline", "Sem rede estável. Registo guardado no telemóvel e será sincronizado assim que houver ligação.", "sucesso");
+    document.getElementById('pinInput').value = "";
+    atualizarPins();
+    mostrarModal("Guardado Offline", "Sem rede. O ponto foi guardado no telemóvel e será enviado assim que houver internet.", "🟢");
   }
 
-  function processarFilaOffline() {
-    var pendentesStr = localStorage.getItem('pontosOfflinePendentes');
-    if (!pendentesStr) return;
-    var pendentes = JSON.parse(pendentesStr);
-    if (pendentes.length === 0) return;
+  function sincronizarFila() {
+    var pendentes = JSON.parse(localStorage.getItem('pontosOfflinePendentes') || '[]');
+    if (pendentes.length === 0 || !navigator.onLine) return;
 
     var reg = pendentes[0];
-    window.processarRespostaSincronizacao = function(resposta) {
-      if (resposta && resposta.indexOf("Sucesso") !== -1) {
+    window.respSync = function(res) {
+      if (res && res.indexOf("Sucesso") !== -1) {
         pendentes.shift();
         localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
-        if (pendentes.length > 0) {
-          processarFilaOffline();
-        }
+        if (pendentes.length > 0) sincronizarFila();
       }
     };
 
-    var scriptTag = document.createElement('script');
-    scriptTag.src = APP_SCRIPT_URL + 
-      "?action=salvarPontoJsonp" +
+    var s = document.createElement('script');
+    s.src = APP_SCRIPT_URL + "?action=salvarPontoJsonp" +
       "&nome=" + encodeURIComponent(reg.nome) +
       "&lat=" + encodeURIComponent(reg.lat) +
       "&lon=" + encodeURIComponent(reg.lon) +
@@ -515,24 +360,18 @@
       "&isMock=" + encodeURIComponent(reg.isMock) +
       "&disp=" + encodeURIComponent(reg.dispositivo) +
       "&ua=" + encodeURIComponent(reg.userAgent) +
-      "&callback=processarRespostaSincronizacao";
-    document.body.appendChild(scriptTag);
+      "&callback=respSync";
+    document.body.appendChild(s);
   }
 
-  function verificarEProcessarPendentes() {
-    if (navigator.onLine) {
-      processarFilaOffline();
-    }
-  }
+  window.addEventListener('load', function() {
+    iniciarRelogio();
+    carregarFuncionarios();
+    sincronizarFila();
+  });
 
-  window.addEventListener('online', verificarEProcessarPendentes);
-  setInterval(verificarEProcessarPendentes, 10000);
-
-  function limparFeedbackPonto() { gerirErroCampo("erro-nome-ponto", ""); gerirErroCampo("erro-pin-ponto", ""); }
-  function gerirErroCampo(idElemento, msg) {
-    var cp = document.getElementById(idElemento); if (!cp) return;
-    if (msg) { cp.innerText = msg; cp.style.display = "block"; } else { cp.innerText = ""; cp.style.display = "none"; }
-  }
+  window.addEventListener('online', sincronizarFila);
+  setInterval(sincronizarFila, 15000);
 </script>
 </body>
 </html>
