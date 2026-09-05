@@ -53,12 +53,14 @@
     .clock-date-row { font-size: 1.05rem; font-weight: 700; color: rgba(255, 255, 255, 0.95); letter-spacing: 0.8px; text-transform: lowercase; }
     .gps-pulse-dot { width: 12px; height: 12px; background: #34d399; border-radius: 50%; box-shadow: 0 0 10px #34d399; }
 
-    .content-section { padding: 18px 20px; display: none; }
+    .content-section { padding: 22px 20px; display: none; }
     .content-section.active { display: block; }
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; margin-bottom: 6px; font-weight: 700; font-size: 0.85rem; color: #334155; }
     
-    .form-control { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.95rem; background-color: #f8fafc; color: #1e293b; font-weight: 600; outline: none; transition: border-color 0.2s; }
+    /* Mais espaçamento entre os campos principais da página de Ponto */
+    .form-group { margin-bottom: 24px; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: #334155; }
+    
+    .form-control { width: 100%; padding: 13px 15px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.98rem; background-color: #f8fafc; color: #1e293b; font-weight: 600; outline: none; transition: border-color 0.2s; }
     .form-control:focus { border-color: var(--accent); background-color: #ffffff; }
     
     select.form-control {
@@ -75,13 +77,13 @@
 
     textarea.form-control { min-height: 80px; resize: vertical; }
 
-    .pin-box-wrapper { position: relative; width: 100%; margin-bottom: 16px; }
+    .pin-box-wrapper { position: relative; width: 100%; margin-bottom: 4px; }
     .pin-hidden-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; }
-    .pin-dots-container { display: flex; justify-content: center; align-items: center; gap: 18px; padding: 14px; background: #f8fafc; border: 2px solid var(--border); border-radius: 12px; }
+    .pin-dots-container { display: flex; justify-content: center; align-items: center; gap: 18px; padding: 16px; background: #f8fafc; border: 2px solid var(--border); border-radius: 12px; }
     .pin-dot { width: 15px; height: 15px; border-radius: 50%; border: 2.2px solid #94a3b8; background: transparent; transition: all 0.2s; }
     .pin-dot.filled { background: var(--primary); border-color: var(--primary); transform: scale(1.2); }
 
-    .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: center; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.1s; }
+    .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; text-align: center; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.1s; }
     .btn:active { transform: scale(0.98); }
     .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25); }
     .btn-primary:disabled { background: #cbd5e1 !important; cursor: not-allowed; opacity: 0.6; box-shadow: none; }
@@ -103,11 +105,13 @@
     .toast-btn-primary { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; }
     .toast-btn-secondary { background: #f1f5f9; color: var(--text-muted); }
 
-    .admin-card { border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; background: #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
-    .admin-card h3 { font-size: 1rem; margin-bottom: 12px; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; font-weight: 800; }
-    .menu-admin-grid { display: flex; flex-direction: column; gap: 10px; }
+    .admin-card { border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 16px; background: #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+    .admin-card h3 { font-size: 1.05rem; margin-bottom: 14px; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; font-weight: 800; }
     
-    .app-footer { text-align: center; font-size: 0.76rem; color: var(--text-muted); padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); background: #f8fafc; }
+    /* Mais espaçamento entre os botões do menu admin */
+    .menu-admin-grid { display: flex; flex-direction: column; gap: 14px; }
+    
+    .app-footer { text-align: center; font-size: 0.76rem; color: var(--text-muted); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); background: #f8fafc; }
     .admin-gear-footer-btn { background: #ffffff; border: 1.5px solid var(--border); width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.2s; }
     .admin-gear-footer-btn:active { transform: scale(0.92); }
 
@@ -133,7 +137,7 @@
   
   <!-- ABA 1: PICAR PONTO -->
   <div id="section-ponto" class="content-section active">
-    <div class="form-group" style="margin-top: 2px;">
+    <div class="form-group">
       <label for="nomeFuncionario">Selecione o seu Nome <span class="campo-obrigatorio">*</span>:</label>
       <select id="nomeFuncionario" class="form-control" onchange="limparFeedbackPonto(); focarPin('pinPonto')">
         <option value="">A carregar lista...</option>
@@ -141,7 +145,7 @@
       <div id="erro-nome-ponto" class="erro-campo"></div>
     </div>
     
-    <div class="form-group">
+    <div class="form-group" style="margin-bottom: 28px;">
       <label for="pinPonto">PIN Secreto <span class="campo-obrigatorio">*</span>:</label>
       <div class="pin-box-wrapper">
         <input type="password" id="pinPonto" class="pin-hidden-input" maxlength="4" inputmode="numeric" oninput="atualizarPinDisplay('pinPonto', 'dotsPonto'); limparFeedbackPonto();">
@@ -152,7 +156,7 @@
       <div id="erro-pin-ponto" class="erro-campo"></div>
     </div>
 
-    <button id="btnPonto" class="btn btn-primary" onclick="registarPontoDiario()" style="margin-top: 4px;">⏰ Validar e Registar Ponto</button>
+    <button id="btnPonto" class="btn btn-primary" onclick="registarPontoDiario()">⏰ Validar e Registar Ponto</button>
   </div>
   
   <!-- ABA 2: ADMIN -->
@@ -218,11 +222,11 @@
       </div>
     </div>
     
-    <div class="nav-navigation-block" id="adminNavigationGroup" style="display: none; margin-bottom: 10px;">
+    <div class="nav-navigation-block" id="adminNavigationGroup" style="display: none; margin-bottom: 12px;">
       <button class="btn btn-secondary" onclick="voltarAoMenuCentralAdmin()">⬅️ Voltar painel admin</button>
     </div>
 
-    <div style="margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px;">
+    <div style="margin-top: 14px; border-top: 1px solid var(--border); padding-top: 14px;">
       <button class="btn btn-secondary" onclick="voltarAoEcraPrincipal()">⬅️ Voltar ao Ecrã Principal</button>
     </div>
   </div>
