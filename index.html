@@ -93,6 +93,7 @@
     .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: center; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25); }
     .btn-secondary { background: #ffffff; color: #475569; border: 1.5px solid var(--border); margin-top: 8px; }
+    .btn-warning { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); color: white; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.25); display: none; }
 
     .modal-sistema { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
     .modal-card { background: #ffffff; border-radius: 20px; padding: 24px; max-width: 360px; width: 100%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
@@ -117,7 +118,12 @@
   </div>
   
   <div class="content-section">
-    <div class="form-group">
+    <!-- Botão de Sincronização Manual (Aparece automaticamente se houver pontos pendentes) -->
+    <button id="btnSincronizarManual" class="btn btn-warning" onclick="sincronizarFilaManual()">
+      ⚠️ Sincronizar Registos Pendentes (<span id="contadorPendentes">0</span>)
+    </button>
+
+    <div class="form-group" style="margin-top: 10px;">
       <label for="nomeFuncionario">Selecione o seu Nome <span class="campo-obrigatorio">*</span>:</label>
       <select id="nomeFuncionario" class="form-control" onclick="carregarFuncionarios()" onchange="focarPin()">
         <option value="">A carregar colaboradores...</option>
@@ -199,6 +205,7 @@
     document.getElementById('modalTexto').innerText = texto;
     document.getElementById('modalIcone').innerText = icone || '✅';
     document.getElementById('modalMensagem').style.display = 'flex';
+    verificarPendentesUI();
   }
 
   function fecharModal() {
@@ -209,6 +216,18 @@
 
   function abrirAdmin() { document.getElementById('modalAdmin').style.display = 'flex'; }
   function fecharAdmin() { document.getElementById('modalAdmin').style.display = 'none'; }
+
+  function verificarPendentesUI() {
+    var pendentes = JSON.parse(localStorage.getItem('pontosOfflinePendentes') || '[]');
+    var btnSync = document.getElementById('btnSincronizarManual');
+    var contador = document.getElementById('contadorPendentes');
+    if (pendentes.length > 0) {
+      contador.innerText = pendentes.length;
+      btnSync.style.display = 'flex';
+    } else {
+      btnSync.style.display = 'none';
+    }
+  }
 
   function validarAdmin() {
     var senha = document.getElementById('adminSenha').value;
@@ -296,7 +315,6 @@
         atualizarPins();
         if (sucesso) {
           mostrarModal("Sucesso!", res || "Ponto registado com sucesso!", "🟢");
-          sincronizarFila();
         } else {
           guardarOffline(dadosPonto);
         }
@@ -317,11 +335,7 @@
     window.respPontoUnico = function(res) {
       if (executou) return;
       executou = true;
-      if (res && res.indexOf("Aviso") !== -1) {
-        callback(true, res); // Resposta válida do servidor (ex: pin errado)
-      } else {
-        callback(true, res);
-      }
+      callback(true, res);
     };
 
     var s = document.createElement('script');
@@ -343,7 +357,6 @@
     };
     document.body.appendChild(s);
 
-    // Timeout de segurança caso o Google Apps Script demore demasiado
     setTimeout(function() {
       if (!executou) {
         executou = true;
@@ -360,31 +373,45 @@
     localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
     document.getElementById('pinInput').value = "";
     atualizarPins();
-    mostrarModal("Guardado Offline", "Sem rede. O ponto foi guardado no telemóvel e será enviado assim que houver internet.", "🟢");
+    mostrarModal("Guardado Offline", "Sem rede. O ponto foi guardado no telemóvel. Toque no botão amarelo de sincronização quando a rede voltar.", "🟢");
   }
 
-  function sincronizarFila() {
-    var pendentesStr = localStorage.getItem('pontosOfflinePendentes');
-    if (!pendentesStr || !navigator.onLine) return;
-    
-    var pendentes = JSON.parse(pendentesStr);
-    if (pendentes.length === 0) return;
+  function sincronizarFilaManual() {
+    var pendentes = JSON.parse(localStorage.getItem('pontosOfflinePendentes') || '[]');
+    if (pendentes.length === 0) {
+      mostrarModal("Informação", "Não há registos pendentes.", "ℹ️");
+      return;
+    }
+
+    if (!navigator.onLine) {
+      mostrarModal("Sem Rede", "O telemóvel continua sem ligação à internet.", "⚠️");
+      return;
+    }
+
+    mostrarModal("A sincronizar...", "A enviar registos pendentes para a folha de cálculo...", "⏳");
+    processarProximoPendente(pendentes);
+  }
+
+  function processarProximoPendente(pendentes) {
+    if (pendentes.length === 0) {
+      localStorage.removeItem('pontosOfflinePendentes');
+      verificarPendentesUI();
+      mostrarModal("Sincronizado!", "Todos os pontos pendentes foram enviados com sucesso!", "🟢");
+      return;
+    }
 
     var reg = pendentes[0];
-    var executouSync = false;
+    var executou = false;
 
-    window.respSyncUnico = function(res) {
-      if (executouSync) return;
-      executouSync = true;
-      
-      // Remove da fila se o servidor processar com sucesso ou retornar aviso de duplicado/registo
+    window.respSyncManual = function(res) {
+      if (executou) return;
+      executou = true;
+      // Remove o primeiro da lista com sucesso
       pendentes.shift();
       localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
-      
-      // Se ainda restarem pontos, continua a enviar o próximo
-      if (pendentes.length > 0) {
-        setTimeout(sincronizarFila, 1000);
-      }
+      verificarPendentesUI();
+      // Envia o próximo da fila
+      setTimeout(function() { processarProximoPendente(pendentes); }, 600);
     };
 
     var s = document.createElement('script');
@@ -396,35 +423,33 @@
       "&isMock=" + encodeURIComponent(reg.isMock) +
       "&disp=" + encodeURIComponent(reg.dispositivo) +
       "&ua=" + encodeURIComponent(reg.userAgent) +
-      "&callback=respSyncUnico";
-    
+      "&callback=respSyncManual";
+
     s.onerror = function() {
-      executouSync = true;
+      if (!executou) {
+        executou = true;
+        mostrarModal("Erro de Sincronização", "Não foi possível enviar todos os registos. Tente novamente.", "🔴");
+      }
     };
     document.body.appendChild(s);
 
     setTimeout(function() {
-      if (!executouSync) {
-        executouSync = true;
+      if (!executou) {
+        executou = true;
+        // Avança mesmo se der timeout para não prender a fila
+        pendentes.shift();
+        localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
+        verificarPendentesUI();
+        processarProximoPendente(pendentes);
       }
-    }, 8000);
+    }, 7000);
   }
 
   window.addEventListener('load', function() {
     iniciarRelogio();
     carregarFuncionarios();
-    setTimeout(sincronizarFila, 2000);
+    verificarPendentesUI();
   });
-
-  window.addEventListener('online', function() {
-    setTimeout(sincronizarFila, 1500);
-  });
-  
-  setInterval(function() {
-    if (navigator.onLine) {
-      sincronizarFila();
-    }
-  }, 10000);
 </script>
 </body>
 </html>
