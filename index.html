@@ -83,7 +83,6 @@
     .toast-btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: 700; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; cursor: pointer; }
 
     .info-box { background: var(--info-bg); border: 1px solid var(--info-border); color: var(--info-text); border-radius: 12px; padding: 12px 14px; font-size: 0.82rem; line-height: 1.5; margin-bottom: 16px; display: flex; gap: 10px; }
-    .info-box.warning { background: #fff7ed; border-color: #fed7aa; color: #9a3412; }
     .info-box.success { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
     .admin-card { border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 16px; background: #ffffff; }
     .admin-card h3 { font-size: 1rem; margin-bottom: 16px; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
@@ -302,6 +301,7 @@
   // COLOQUE AQUI O SEU URL DO GOOGLE APPS SCRIPT (WEB APP)
   var APP_SCRIPT_URL = "INSIRA_O_SEU_LINK_DO_APPS_SCRIPT_AQUI";
   var listaAnexosMemoria = [];
+  var emProcessamento = false; // Trava contra cliques duplos
 
   function iniciarRelogio() {
     setInterval(function() {
@@ -345,7 +345,12 @@
     title.innerText = titulo; body.innerHTML = mensagem;
     overlay.style.display = "flex";
   }
-  function fecharToast() { document.getElementById('toastOverlay').style.display = "none"; }
+  function fecharToast() { 
+    document.getElementById('toastOverlay').style.display = "none"; 
+    emProcessamento = false; // Liberta a trava ao fechar o pop-up
+    var btnPonto = document.getElementById('btnPonto');
+    if (btnPonto) btnPonto.disabled = false;
+  }
   function fecharToastOverlay(e) { if (e.target.id === 'toastOverlay') fecharToast(); }
 
   function chamarAPIJsonp(params, callbackSucesso) {
@@ -369,6 +374,7 @@
     script.onerror = function() {
       delete window[cbName];
       script.remove();
+      emProcessamento = false;
       dispararConfirmacaoGeral("Erro de Ligação", "Não foi possível comunicar com o servidor.", "erro");
     };
     document.body.appendChild(script);
@@ -425,14 +431,18 @@
   }
 
   function registarPontoDiario() {
+    if (emProcessamento) return; // Trava anti-duplo clique
+
     var nome = document.getElementById('nomeFuncionario').value;
     var pin = document.getElementById('pinPonto').value;
     var btn = document.getElementById('btnPonto');
+    
     if(!nome) { gerirErroCampo("erro-nome-ponto", "Selecione o nome."); return; }
     if(!pin || pin.trim().length !== 4) { gerirErroCampo("erro-pin-ponto", "PIN de 4 dígitos."); return; }
     
-    btn.disabled = true;
-    dispararConfirmacaoGeral("A Validar...", "A verificar GPS...", "processando");
+    emProcessamento = true;
+    if (btn) btn.disabled = true;
+    dispararConfirmacaoGeral("A Validar...", "A verificar GPS e a enviar...", "processando");
     
     navigator.geolocation.getCurrentPosition(function(pos) {
       chamarAPIJsonp({
@@ -445,7 +455,6 @@
         disp: "Smartphone",
         ua: navigator.userAgent
       }, function(resposta) {
-        btn.disabled = false;
         document.getElementById('pinPonto').value = "";
         atualizarPinDisplay('pinPonto', 'dotsPonto');
         if (resposta.indexOf("Aviso") !== -1) {
@@ -456,7 +465,8 @@
         }
       });
     }, function() {
-      btn.disabled = false;
+      emProcessamento = false;
+      if (btn) btn.disabled = false;
       dispararConfirmacaoGeral("GPS Indisponível", "Ative a localização do telemóvel.", "erro");
     }, { enableHighAccuracy: true, timeout: 15000 });
   }
@@ -502,7 +512,6 @@
     
     dispararConfirmacaoGeral("A Enviar...", "A submeter pedido...", "processando");
     
-    // Como os pedidos aceitam anexos grandes, a submissão para o Google Apps Script é feita via script tag JSONP dinâmica
     var payloadObj = {
       action: "submeterPedidoJsonp",
       nome: nome, pin: pin, email: email, tipo: tipo,
