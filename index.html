@@ -94,7 +94,6 @@
     .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25); }
     .btn-secondary { background: #ffffff; color: #475569; border: 1.5px solid var(--border); margin-top: 8px; }
 
-    /* Modal / Popup nativo seguro que nunca bloqueia por defeito (display: none absoluto) */
     .modal-sistema { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
     .modal-card { background: #ffffff; border-radius: 20px; padding: 24px; max-width: 360px; width: 100%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
 
@@ -120,7 +119,7 @@
   <div class="content-section">
     <div class="form-group">
       <label for="nomeFuncionario">Selecione o seu Nome <span class="campo-obrigatorio">*</span>:</label>
-      <select id="nomeFuncionario" class="form-control" onchange="focarPin()">
+      <select id="nomeFuncionario" class="form-control" onclick="carregarFuncionarios()" onchange="focarPin()">
         <option value="">A carregar colaboradores...</option>
       </select>
     </div>
@@ -139,7 +138,6 @@
   </div>
 </div>
 
-<!-- Janela Modal de Mensagens (Completamente isolada) -->
 <div id="modalMensagem" class="modal-sistema">
   <div class="modal-card">
     <div id="modalIcone" style="font-size: 3rem; margin-bottom: 10px;">✅</div>
@@ -149,7 +147,6 @@
   </div>
 </div>
 
-<!-- Janela Modal de Admin -->
 <div id="modalAdmin" class="modal-sistema">
   <div class="modal-card" style="text-align: left;">
     <div style="text-align: center; font-size: 2rem; margin-bottom: 6px;">🔐</div>
@@ -170,14 +167,12 @@
 <script>
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
 
-  // Relógio em tempo real
   function iniciarRelogio() {
     setInterval(function() {
       var agora = new Date();
       var h = String(agora.getHours()).padStart(2, '0');
       var m = String(agora.getMinutes()).padStart(2, '0');
       var s = String(agora.getSeconds()).padStart(2, '0');
-      
       var dias = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
       var meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
       
@@ -208,7 +203,8 @@
 
   function fecharModal() {
     document.getElementById('modalMensagem').style.display = 'none';
-    document.getElementById('btnRegistar').disabled = false;
+    var btn = document.getElementById('btnRegistar');
+    if (btn) btn.disabled = false;
   }
 
   function abrirAdmin() { document.getElementById('modalAdmin').style.display = 'flex'; }
@@ -233,9 +229,7 @@
     document.body.appendChild(s);
   }
 
-  // Carregar funcionários com cache local segura
   function carregarFuncionarios() {
-    var sel = document.getElementById('nomeFuncionario');
     var cache = localStorage.getItem('balcao_funcionarios_cache');
     if (cache) preencherSelect(JSON.parse(cache));
 
@@ -265,7 +259,6 @@
     if (atual) sel.value = atual;
   }
 
-  // Registo de Ponto com suporte Offline sem bloquear
   function registarPonto() {
     var nome = document.getElementById('nomeFuncionario').value;
     var pin = document.getElementById('pinInput').value;
@@ -297,39 +290,71 @@
       dadosPonto.lon = pos.coords.longitude;
       dadosPonto.isMock = pos.mocked || (pos.coords && pos.coords.mocked);
 
-      window.respPonto = function(res) {
+      enviarServidor(dadosPonto, function(sucesso, res) {
         btn.disabled = false;
         document.getElementById('pinInput').value = "";
         atualizarPins();
-        if (res && res.indexOf("Aviso") !== -1) {
-          mostrarModal("Aviso", res, "⚠️");
-        } else {
+        if (sucesso) {
           mostrarModal("Sucesso!", res || "Ponto registado com sucesso!", "🟢");
           sincronizarFila();
+        } else {
+          guardarOffline(dadosPonto);
         }
-      };
-
-      var s = document.createElement('script');
-      s.src = APP_SCRIPT_URL + "?action=salvarPontoJsonp" +
-        "&nome=" + encodeURIComponent(dadosPonto.nome) +
-        "&lat=" + encodeURIComponent(dadosPonto.lat) +
-        "&lon=" + encodeURIComponent(dadosPonto.lon) +
-        "&pin=" + encodeURIComponent(dadosPonto.pin) +
-        "&isMock=" + encodeURIComponent(dadosPonto.isMock) +
-        "&disp=" + encodeURIComponent(dadosPonto.dispositivo) +
-        "&ua=" + encodeURIComponent(dadosPonto.userAgent) +
-        "&callback=respPonto";
-      s.onerror = function() { guardarOffline(dadosPonto); };
-      document.body.appendChild(s);
+      });
 
     }, function() {
-      // Se o GPS falhar ou demorar offline, grava logo
       guardarOffline(dadosPonto);
     }, { timeout: 5000, enableHighAccuracy: false });
   }
 
+  function enviarServidor(dados, callback) {
+    if (!navigator.onLine) {
+      callback(false, "Offline");
+      return;
+    }
+
+    var executou = false;
+    window.respPontoUnico = function(res) {
+      if (executou) return;
+      executou = true;
+      if (res && res.indexOf("Aviso") !== -1) {
+        callback(true, res); // Resposta válida do servidor (ex: pin errado)
+      } else {
+        callback(true, res);
+      }
+    };
+
+    var s = document.createElement('script');
+    s.src = APP_SCRIPT_URL + "?action=salvarPontoJsonp" +
+      "&nome=" + encodeURIComponent(dados.nome) +
+      "&lat=" + encodeURIComponent(dados.lat) +
+      "&lon=" + encodeURIComponent(dados.lon) +
+      "&pin=" + encodeURIComponent(dados.pin) +
+      "&isMock=" + encodeURIComponent(dados.isMock) +
+      "&disp=" + encodeURIComponent(dados.dispositivo) +
+      "&ua=" + encodeURIComponent(dados.userAgent) +
+      "&callback=respPontoUnico";
+    
+    s.onerror = function() {
+      if (!executou) {
+        executou = true;
+        callback(false, "Erro de rede");
+      }
+    };
+    document.body.appendChild(s);
+
+    // Timeout de segurança caso o Google Apps Script demore demasiado
+    setTimeout(function() {
+      if (!executou) {
+        executou = true;
+        callback(false, "Timeout");
+      }
+    }, 8000);
+  }
+
   function guardarOffline(dados) {
-    document.getElementById('btnRegistar').disabled = false;
+    var btn = document.getElementById('btnRegistar');
+    if (btn) btn.disabled = false;
     var pendentes = JSON.parse(localStorage.getItem('pontosOfflinePendentes') || '[]');
     pendentes.push(dados);
     localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
@@ -339,15 +364,26 @@
   }
 
   function sincronizarFila() {
-    var pendentes = JSON.parse(localStorage.getItem('pontosOfflinePendentes') || '[]');
-    if (pendentes.length === 0 || !navigator.onLine) return;
+    var pendentesStr = localStorage.getItem('pontosOfflinePendentes');
+    if (!pendentesStr || !navigator.onLine) return;
+    
+    var pendentes = JSON.parse(pendentesStr);
+    if (pendentes.length === 0) return;
 
     var reg = pendentes[0];
-    window.respSync = function(res) {
-      if (res && res.indexOf("Sucesso") !== -1) {
-        pendentes.shift();
-        localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
-        if (pendentes.length > 0) sincronizarFila();
+    var executouSync = false;
+
+    window.respSyncUnico = function(res) {
+      if (executouSync) return;
+      executouSync = true;
+      
+      // Remove da fila se o servidor processar com sucesso ou retornar aviso de duplicado/registo
+      pendentes.shift();
+      localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
+      
+      // Se ainda restarem pontos, continua a enviar o próximo
+      if (pendentes.length > 0) {
+        setTimeout(sincronizarFila, 1000);
       }
     };
 
@@ -360,18 +396,35 @@
       "&isMock=" + encodeURIComponent(reg.isMock) +
       "&disp=" + encodeURIComponent(reg.dispositivo) +
       "&ua=" + encodeURIComponent(reg.userAgent) +
-      "&callback=respSync";
+      "&callback=respSyncUnico";
+    
+    s.onerror = function() {
+      executouSync = true;
+    };
     document.body.appendChild(s);
+
+    setTimeout(function() {
+      if (!executouSync) {
+        executouSync = true;
+      }
+    }, 8000);
   }
 
   window.addEventListener('load', function() {
     iniciarRelogio();
     carregarFuncionarios();
-    sincronizarFila();
+    setTimeout(sincronizarFila, 2000);
   });
 
-  window.addEventListener('online', sincronizarFila);
-  setInterval(sincronizarFila, 15000);
+  window.addEventListener('online', function() {
+    setTimeout(sincronizarFila, 1500);
+  });
+  
+  setInterval(function() {
+    if (navigator.onLine) {
+      sincronizarFila();
+    }
+  }, 10000);
 </script>
 </body>
 </html>
