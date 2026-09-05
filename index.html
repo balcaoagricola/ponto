@@ -153,7 +153,6 @@
 <button id="btnGearTop" class="admin-gear-btn-top" onclick="abrirModalAdmin()" title="Painel Administrativo">⚙️</button>
 
 <div class="container">
-  <!-- CABEÇALHO DO ECRÃ DE PONTO (COM RELÓGIO) -->
   <div id="headerPonto" class="header">
     <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo">
     <h2>Controlo de Assiduidade</h2>
@@ -169,13 +168,11 @@
     </div>
   </div>
 
-  <!-- CABEÇALHO DO PAINEL ADMIN (SEM RELÓGIO) -->
   <div id="headerAdmin" class="header" style="display: none;">
     <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo">
     <h2>Painel Administrativo</h2>
   </div>
   
-  <!-- ABA 1: PICAR PONTO -->
   <div id="section-ponto" class="content-section active">
     <div id="bloco-ponto-smartphone-valido">
       <div class="form-group">
@@ -207,7 +204,6 @@
     </div>
   </div>
   
-  <!-- ABA 2: ADMIN -->
   <div id="section-admin" class="content-section">
     <div id="admin-sub-menu" style="display: block;">
       <div class="admin-card" style="border: none; padding: 5px; background: transparent;">
@@ -221,7 +217,6 @@
       </div>
     </div>
 
-    <!-- SUB-MODULO ADMIN: LANÇAR REGISTO -->
     <div id="admin-sub-ausencias" style="display: none;">
       <div class="admin-card">
         <h3>📅 Lançar Registo Administrativo</h3>
@@ -267,7 +262,6 @@
       </div>
     </div>
 
-    <!-- SUB-MODULO ADMIN: PDF -->
     <div id="admin-sub-pdf" style="display: none;">
       <div class="admin-card">
         <h3>📧 Exportar PDF</h3>
@@ -287,7 +281,6 @@
       </div>
     </div>
 
-    <!-- SUB-MODULO ADMIN: ADICIONAR -->
     <div id="admin-sub-funcionario" style="display: none;">
       <div class="admin-card">
         <h3>➕ Adicionar Funcionário</h3>
@@ -301,7 +294,6 @@
       </div>
     </div>
 
-    <!-- SUB-MODULO ADMIN: INATIVAR -->
     <div id="admin-sub-remover" style="display: none;">
       <div class="admin-card">
         <h3 style="color:var(--danger);">❌ Inativar Funcionário</h3>
@@ -316,7 +308,6 @@
   </div>
 </div>
 
-<!-- MODAL BONITO PARA PEDIR A SENHA DE ADMIN -->
 <div id="modalAdminPassword" class="toast-overlay">
   <div class="toast-card" style="text-align: left;">
     <div style="text-align: center; font-size: 2.2rem; margin-bottom: 8px;">🔐</div>
@@ -332,7 +323,6 @@
   </div>
 </div>
 
-<!-- TOAST PADRÃO -->
 <div id="toastOverlay" class="toast-overlay">
   <div class="toast-card">
     <div id="toastIconContainer">
