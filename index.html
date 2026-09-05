@@ -58,19 +58,10 @@
     .pin-dot { width: 15px; height: 15px; border-radius: 50%; border: 2.2px solid #94a3b8; background: transparent; }
     .pin-dot.filled { background: var(--primary); border-color: var(--primary); transform: scale(1.2); }
 
-    .file-preview-card { display: flex; align-items: center; gap: 12px; background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; margin-top: 8px; }
-    .file-preview-thumb { width: 42px; height: 42px; border-radius: 10px; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .file-preview-thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .file-preview-info { flex: 1; overflow: hidden; }
-    .file-name { font-size: 0.88rem; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .file-size { font-size: 0.76rem; color: var(--text-muted); }
-    .btn-remove-file { background: #fee2e2; color: #dc2626; border: none; width: 30px; height: 30px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-
     .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: center; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25); }
     .btn-primary:disabled { background: #cbd5e1 !important; cursor: not-allowed; opacity: 0.6; }
     .btn-secondary { background: #ffffff; color: #475569; border: 1.5px solid var(--border); }
-    .btn-action-alt { background: #f1f5f9; color: var(--primary); border: 1.5px solid #cbd5e1; }
     .btn-danger { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; }
 
     .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; }
@@ -86,8 +77,6 @@
     .info-box.success { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
     .admin-card { border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 16px; background: #ffffff; }
     .admin-card h3 { font-size: 1rem; margin-bottom: 16px; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
-    .radio-group { display: flex; gap: 15px; margin-bottom: 15px; }
-    .radio-option { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.9rem; color: #334155; cursor: pointer; }
     .menu-admin-grid { display: flex; flex-direction: column; gap: 12px; }
     .app-footer { text-align: center; font-size: 0.78rem; color: var(--text-muted); padding: 10px; }
     .campo-obrigatorio { color: var(--danger); font-weight: bold; }
@@ -109,7 +98,6 @@
   <div class="tabs-wrapper">
     <div class="tabs">
       <button class="tab-btn active" id="tabMenuPonto" onclick="mudarAba('ponto')"><span class="tab-icon">⏰</span><span>Ponto</span></button>
-      <button class="tab-btn" id="tabMenuPedido" onclick="mudarAba('pedido')"><span class="tab-icon">📝</span><span>Pedidos</span></button>
       <button class="tab-btn" id="tabMenuAdmin" onclick="mudarAba('admin')"><span class="tab-icon">⚙️</span><span>Admin</span></button>
     </div>
   </div>
@@ -140,79 +128,8 @@
 
     <button id="btnPonto" class="btn btn-primary" onclick="registarPontoDiario()">⏰ Validar e Registar Ponto</button>
   </div>
-
-  <!-- ABA 2: PEDIDOS -->
-  <div id="section-pedido" class="content-section">
-    <div class="admin-card">
-      <h3>📝 Submeter Pedido / Justificação</h3>
-      <div class="form-group">
-        <label for="nomeFuncionarioPedido">Selecione o seu Nome <span class="campo-obrigatorio">*</span>:</label>
-        <select id="nomeFuncionarioPedido" class="form-control"></select>
-      </div>
-
-      <div class="form-group">
-        <label for="pinFuncionarioPedido">PIN Secreto <span class="campo-obrigatorio">*</span>:</label>
-        <div class="pin-box-wrapper">
-          <input type="password" id="pinFuncionarioPedido" class="pin-hidden-input" maxlength="4" inputmode="numeric" oninput="atualizarPinDisplay('pinFuncionarioPedido', 'dotsPedido')">
-          <div id="dotsPedido" class="pin-dots-container" onclick="document.getElementById('pinFuncionarioPedido').focus()">
-            <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="emailFuncionarioPedido">O seu Email <span class="campo-obrigatorio">*</span>:</label>
-        <input type="email" id="emailFuncionarioPedido" class="form-control" placeholder="exemplo@gmail.com">
-      </div>
-
-      <div class="form-group">
-        <label for="tipoAusenciaPedido">Selecione o Assunto <span class="campo-obrigatorio">*</span>:</label>
-        <select id="tipoAusenciaPedido" class="form-control">
-          <option value="">-- Escolha o Assunto --</option>
-          <option value="🏖️ Férias">🏖️ Marcação de Férias</option>
-          <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
-          <option value="📄 Falta Justificada">📄 Falta Justificada</option>
-          <option value="⚠️ Falta Injustificada">⚠️ Falta / Imprevisto</option>
-          <option value="⏳ Compensação de Horas">⏳ Compensação de Horas</option>
-          <option value="Outro Assunto">✉️ Outro Assunto</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Período Pretendido <span class="campo-obrigatorio">*</span>:</label>
-        <div class="radio-group">
-          <label class="radio-option"><input type="radio" name="modoDataPedido" value="unico" checked onclick="alternarModoDataPedido('unico')"> Apenas 1 Dia</label>
-          <label class="radio-option"><input type="radio" name="modoDataPedido" value="periodo" onclick="alternarModoDataPedido('periodo')"> Período</label>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label id="labelDataInicioPedido">Data do Registo <span class="campo-obrigatorio">*</span>:</label>
-        <input type="date" id="dataInicioPedido" class="form-control">
-      </div>
-
-      <div class="form-group" id="containerDataFimPedido" style="display: none;">
-        <label>Data de Fim <span class="campo-obrigatorio">*</span>:</label>
-        <input type="date" id="dataFimPedido" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label>Anexar Comprovativo (Até 3):</label>
-        <button type="button" class="btn btn-action-alt" onclick="abrirGaleria()">📎 Ficheiro / Foto</button>
-        <input type="file" id="ficheiroAnexoInput" accept="image/*,.pdf,application/pdf,.heic" style="display:none;" multiple onchange="processarFicheiroAdicionado(this)">
-        <div id="container-lista-anexos"></div>
-      </div>
-
-      <div class="form-group">
-        <label for="notasPedido">Observações <span class="campo-obrigatorio">*</span>:</label>
-        <textarea id="notasPedido" class="form-control" placeholder="Detalhes..."></textarea>
-      </div>
-
-      <button id="btnEnviarPedido" class="btn btn-primary" onclick="submeterPedidoAusenciaFormulario()">📝 Submeter Pedido</button>
-    </div>
-  </div>
   
-  <!-- ABA 3: ADMIN -->
+  <!-- ABA 2: ADMIN -->
   <div id="section-admin" class="content-section">
     <div id="admin-sub-menu">
       <div class="admin-card">
@@ -298,9 +215,7 @@
 </div>
 
 <script>
-  // O seu link do Google Apps Script já está inserido aqui em baixo:
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
-  var listaAnexosMemoria = [];
   var emProcessamento = false;
 
   function iniciarRelogio() {
@@ -386,7 +301,7 @@
     iniciarRelogio();
     carregarFuncionariosEmTodosOsCampos();
     var hoje = new Date().toISOString().split('T')[0];
-    ['dataFolgaInicio', 'dataFolgaFim', 'dataInicioPedido', 'dataFimPedido', 'dataFim'].forEach(function(id) {
+    ['dataFolgaInicio', 'dataFolgaFim', 'dataInicio', 'dataFim'].forEach(function(id) {
       if(document.getElementById(id)) document.getElementById(id).value = hoje;
     });
     var pMes = new Date(); pMes.setDate(1);
@@ -397,7 +312,6 @@
     document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
     document.querySelectorAll('.content-section').forEach(function(s) { s.classList.remove('active'); });
     if(abaId === 'ponto') { document.getElementById('tabMenuPonto').classList.add('active'); document.getElementById('section-ponto').classList.add('active'); }
-    else if(abaId === 'pedido') { document.getElementById('tabMenuPedido').classList.add('active'); document.getElementById('section-pedido').classList.add('active'); }
     else { document.getElementById('tabMenuAdmin').classList.add('active'); document.getElementById('section-admin').classList.add('active'); }
   }
 
@@ -421,7 +335,7 @@
   }
 
   function preencherSelectsNomes(lista) {
-    ['nomeFuncionario', 'nomeFuncionarioPedido', 'nomeFuncionarioFolga', 'nomeRemover'].forEach(function(id) {
+    ['nomeFuncionario', 'nomeFuncionarioFolga', 'nomeRemover'].forEach(function(id) {
       var sel = document.getElementById(id);
       if (sel) {
         sel.innerHTML = '<option value="">-- Escolha --</option>';
@@ -471,68 +385,6 @@
       if (btn) btn.disabled = false;
       dispararConfirmacaoGeral("GPS Indisponível", "Ative a localização do telemóvel.", "erro");
     }, { enableHighAccuracy: true, timeout: 15000 });
-  }
-
-  function abrirGaleria() { document.getElementById('ficheiroAnexoInput').click(); }
-
-  function processarFicheiroAdicionado(input) {
-    if (!input.files || input.files.length === 0) return;
-    Array.from(input.files).forEach(function(file) {
-      if (window.listaAnexosMemoria.length >= 3) return;
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        window.listaAnexosMemoria.push({ nome: file.name, base64: e.target.result, mime: file.type || "application/pdf" });
-        renderizarListaAnexosHTML();
-      };
-      reader.readAsDataURL(file);
-    });
-    input.value = "";
-  }
-
-  function renderizarListaAnexosHTML() {
-    var container = document.getElementById('container-lista-anexos');
-    container.innerHTML = "";
-    window.listaAnexosMemoria.forEach(function(item, idx) {
-      var card = document.createElement('div');
-      card.className = "file-preview-card";
-      card.innerHTML = '<div class="file-preview-info"><div class="file-name">' + item.nome + '</div></div><button type="button" class="btn-remove-file" onclick="window.listaAnexosMemoria.splice(' + idx + ', 1); renderizarListaAnexosHTML();">✕</button>';
-      container.appendChild(card);
-    });
-  }
-
-  function submeterPedidoAusenciaFormulario() {
-    var nome = document.getElementById('nomeFuncionarioPedido').value;
-    var pin = document.getElementById('pinFuncionarioPedido').value;
-    var email = document.getElementById('emailFuncionarioPedido').value;
-    var tipo = document.getElementById('tipoAusenciaPedido').value;
-    var dIni = document.getElementById('dataInicioPedido').value;
-    var modoPeriodo = document.querySelector('input[name="modoDataPedido"]:checked').value === 'periodo';
-    var dFim = modoPeriodo ? document.getElementById('dataFimPedido').value : dIni;
-    var notas = document.getElementById('notasPedido').value;
-    
-    if(!nome || !pin || !email || !tipo || !dIni || !notas) { alert("Preencha todos os campos obrigatórios."); return; }
-    
-    dispararConfirmacaoGeral("A Enviar...", "A submeter pedido...", "processando");
-    
-    var payloadObj = {
-      action: "submeterPedidoJsonp",
-      nome: nome, pin: pin, email: email, tipo: tipo,
-      dataInicio: dIni, dataFim: dFim, notas: notas,
-      anexos: JSON.stringify(window.listaAnexosMemoria)
-    };
-    
-    chamarAPIJsonp(payloadObj, function(resposta) {
-      if (resposta.indexOf("Aviso") !== -1) {
-        fecharToast(); alert(resposta);
-      } else {
-        document.getElementById('pinFuncionarioPedido').value = "";
-        atualizarPinDisplay('pinFuncionarioPedido', 'dotsPedido');
-        document.getElementById('notasPedido').value = "";
-        window.listaAnexosMemoria = [];
-        renderizarListaAnexosHTML();
-        dispararConfirmacaoGeral("Submetido!", resposta, "sucesso");
-      }
-    });
   }
 
   function submeterAusenciaAdministrativa() {
@@ -603,13 +455,6 @@
     });
     document.getElementById('admin-sub-menu').style.display = 'block';
     document.getElementById('adminNavigationGroup').style.display = 'none';
-  }
-
-  function alternarModoDataPedido(modo) {
-    var cFim = document.getElementById('containerDataFimPedido');
-    var lblIni = document.getElementById('labelDataInicioPedido');
-    if (modo === 'unico') { cFim.style.display = 'none'; lblIni.innerHTML = 'Data do Registo <span class="campo-obrigatorio">*</span>:'; }
-    else { cFim.style.display = 'block'; lblIni.innerHTML = 'Data de Início <span class="campo-obrigatorio">*</span>:'; }
   }
 
   function limparFeedbackPonto() { gerirErroCampo("erro-nome-ponto", ""); gerirErroCampo("erro-pin-ponto", ""); }
