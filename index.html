@@ -30,10 +30,10 @@
     body { background: linear-gradient(160deg, #eef2f7 0%, #f8fafc 100%); color: var(--text); padding: 4px 8px 12px 8px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; min-height: 100vh; }
     .container { width: 100%; max-width: 480px; background: var(--card-bg); border-radius: 24px; box-shadow: var(--shadow-lg); overflow: hidden; border: 1px solid #ffffff; position: relative; margin-top: 4px; }
     
-    /* Cabeçalho Azul com Logotipo e Relógio Gigante */
+    /* Cabeçalho Azul com Título Aumentado */
     .header { background: linear-gradient(145deg, var(--primary-dark) 0%, var(--primary) 100%); color: white; padding: 18px 14px 16px 14px; text-align: center; }
     .logo-empresa { width: 100%; max-height: 125px; margin-bottom: 12px; border-radius: 12px; object-fit: contain; background: #ffffff; padding: 6px; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    .header h2 { font-size: 1.15rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.3px; }
+    .header h2 { font-size: 1.35rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.3px; }
     
     /* Relógio e Data Extra Grandes */
     .live-clock-card { 
@@ -52,6 +52,7 @@
     .clock-time-row { display: inline-flex; align-items: center; gap: 10px; font-size: 2.6rem; font-weight: 900; color: #ffffff; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.15); }
     .clock-date-row { font-size: 1.05rem; font-weight: 700; color: rgba(255, 255, 255, 0.95); letter-spacing: 0.8px; text-transform: lowercase; }
     .gps-pulse-dot { width: 12px; height: 12px; background: #34d399; border-radius: 50%; box-shadow: 0 0 10px #34d399; }
+    .gps-pulse-dot.offline { background: #ef4444; box-shadow: 0 0 10px #ef4444; }
 
     .content-section { padding: 22px 20px; display: none; }
     .content-section.active { display: block; }
@@ -83,6 +84,12 @@
     .pin-dot { width: 15px; height: 15px; border-radius: 50%; border: 2.2px solid #94a3b8; background: transparent; transition: all 0.2s; }
     .pin-dot.filled { background: var(--primary); border-color: var(--primary); transform: scale(1.2); }
 
+    /* Contêiner com o botão do olho para a senha admin */
+    .password-eye-wrapper { position: relative; width: 100%; }
+    .password-eye-wrapper .form-control { padding-right: 48px; }
+    .eye-toggle-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; font-size: 1.2rem; padding: 4px; z-index: 10; opacity: 0.7; transition: opacity 0.2s; }
+    .eye-toggle-btn:hover { opacity: 1; }
+
     .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; text-align: center; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.1s; }
     .btn:active { transform: scale(0.98); }
     .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25); }
@@ -109,7 +116,6 @@
     .admin-card h3 { font-size: 1.05rem; margin-bottom: 14px; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; font-weight: 800; }
     .menu-admin-grid { display: flex; flex-direction: column; gap: 14px; }
     
-    /* Rodapé dinâmico */
     .app-footer { text-align: center; font-size: 0.76rem; color: var(--text-muted); padding: 12px 16px; display: flex; justify-content: center; align-items: center; border-top: 1px solid var(--border); background: #f8fafc; position: relative; }
     .app-footer.com-gear { justify-content: space-between; }
     
@@ -123,7 +129,7 @@
 <body>
 
 <div class="container">
-  <!-- Cabeçalho Azul com Relógio Gigante -->
+  <!-- Cabeçalho Azul com Título Aumentado -->
   <div class="header">
     <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo">
     <h2 id="headerTitle">Controlo de Assiduidade</h2>
@@ -232,7 +238,7 @@
     </div>
   </div>
 
-  <!-- Rodapé Dinâmico (Botão de ferramenta só aparece no ecrã principal) -->
+  <!-- Rodapé Dinâmico -->
   <div class="app-footer com-gear" id="appFooter">
     <p>© 2026 · Balcão Agrícola</p>
     <button class="admin-gear-footer-btn" id="footerGearBtn" onclick="abrirModalSenhaAdmin()" title="Painel Administrativo">⚙️</button>
@@ -254,6 +260,7 @@
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
   var senhaAdminSessao = "";
   var emProcessamento = false;
+  var estaOnline = navigator.onLine;
 
   function iniciarRelogio() {
     setInterval(function() {
@@ -272,6 +279,29 @@
       if (elDate) elDate.innerText = dataStr;
     }, 1000);
   }
+
+  // Monitorização de Conexão Online/Offline
+  window.addEventListener('online', function() {
+    estaOnline = true;
+    var gpsDot = document.getElementById('gpsIndicator');
+    if (gpsDot) gpsDot.classList.remove('offline');
+    mostrarPopupPersonalizado({
+      titulo: "Ligação Restabelecida",
+      mensagem: "O dispositivo está novamente online. Já pode registar o ponto.",
+      tipo: "sucesso"
+    });
+  });
+
+  window.addEventListener('offline', function() {
+    estaOnline = false;
+    var gpsDot = document.getElementById('gpsIndicator');
+    if (gpsDot) gpsDot.classList.add('offline');
+    mostrarPopupPersonalizado({
+      titulo: "⚠️ Sem Conexão à Internet",
+      mensagem: "O dispositivo está offline. Não é possível picar ponto de momento.<br><br><b>Por favor, proceda ao registo do ponto manualmente.</b>",
+      tipo: "erro"
+    });
+  });
 
   function atualizarPinDisplay(inputId, containerId) {
     var input = document.getElementById(inputId);
@@ -343,7 +373,30 @@
 
   function fecharToastOverlay(e) { if (e.target.id === 'toastOverlay') {} }
 
+  function alternarVisibilidadeSenha() {
+    var inputPass = document.getElementById('inputSenhaPopup');
+    var btnEye = document.getElementById('btnEyeToggle');
+    if (!inputPass) return;
+    if (inputPass.type === "password") {
+      inputPass.type = "text";
+      if (btnEye) btnEye.innerText = "🙈";
+    } else {
+      inputPass.type = "password";
+      if (btnEye) btnEye.innerText = "👁️";
+    }
+  }
+
   function chamarAPIJsonp(params, callbackSucesso) {
+    if (!navigator.onLine) {
+      emProcessamento = false;
+      mostrarPopupPersonalizado({
+        titulo: "⚠️ Sem Conexão",
+        mensagem: "O dispositivo está offline. Registe o ponto manualmente.",
+        tipo: "erro"
+      });
+      return;
+    }
+
     var cbName = "jsonp_cb_" + Math.random().toString(36).substring(2, 9);
     window[cbName] = function(dados) {
       delete window[cbName];
@@ -365,7 +418,7 @@
       delete window[cbName];
       script.remove();
       emProcessamento = false;
-      mostrarPopupPersonalizado({ titulo: "Erro de Ligação", mensagem: "Não foi possível comunicar com o servidor.", tipo: "erro" });
+      mostrarPopupPersonalizado({ titulo: "Erro de Ligação", mensagem: "Não foi possível comunicar com o servidor. Registe o ponto manualmente.", tipo: "erro" });
     };
     document.body.appendChild(script);
   }
@@ -379,12 +432,22 @@
     });
     var pMes = new Date(); pMes.setDate(1);
     if(document.getElementById('dataInicio')) document.getElementById('dataInicio').value = pMes.toISOString().split('T')[0];
+
+    // Verificação inicial de estado de rede
+    if (!navigator.onLine) {
+      var gpsDot = document.getElementById('gpsIndicator');
+      if (gpsDot) gpsDot.classList.add('offline');
+    }
   });
 
   function abrirModalSenhaAdmin() {
     mostrarPopupPersonalizado({
       titulo: "Painel Administrativo",
-      mensagem: '<p style="margin-bottom:12px;">Introduza a senha de administrador para continuar:</p><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.15rem; letter-spacing:3px;" placeholder="••••" autofocus>',
+      mensagem: '<p style="margin-bottom:12px;">Introduza a senha de administrador:</p>' +
+                '<div class="password-eye-wrapper">' +
+                  '<input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.15rem; letter-spacing:3px;" placeholder="••••" autofocus>' +
+                  '<button type="button" id="btnEyeToggle" class="eye-toggle-btn" onclick="alternarVisibilidadeSenha()">👁️</button>' +
+                '</div>',
       icone: "⚙️",
       botoes: [
         { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
@@ -416,7 +479,6 @@
                 document.getElementById('headerTitle').style.display = 'none';
                 document.getElementById('headerClockBox').style.display = 'none';
                 
-                // Oculta a ferramenta admin do rodapé e centraliza o texto
                 document.getElementById('footerGearBtn').style.display = 'none';
                 document.getElementById('appFooter').classList.remove('com-gear');
 
@@ -437,7 +499,6 @@
     document.getElementById('headerTitle').style.display = 'block';
     document.getElementById('headerClockBox').style.display = 'inline-flex';
     
-    // Restaura a ferramenta admin no rodapé
     document.getElementById('footerGearBtn').style.display = 'inline-flex';
     document.getElementById('appFooter').classList.add('com-gear');
 
@@ -445,6 +506,7 @@
   }
 
   function carregarFuncionariosEmTodosOsCampos() {
+    if (!navigator.onLine) return;
     chamarAPIJsonp({ action: "obterFuncionarios" }, function(lista) {
       if (lista && lista.length > 0) {
         preencherSelectsNomes(lista);
@@ -477,6 +539,15 @@
 
   function registarPontoDiario() {
     if (emProcessamento) return;
+
+    if (!navigator.onLine) {
+      mostrarPopupPersonalizado({
+        titulo: "⚠️ Sem Conexão à Internet",
+        mensagem: "O dispositivo está offline. Não é possível registar o ponto automaticamente.<br><br><b>Por favor, proceda ao registo do ponto manualmente.</b>",
+        tipo: "erro"
+      });
+      return;
+    }
 
     var nome = document.getElementById('nomeFuncionario').value;
     var pin = document.getElementById('pinPonto').value;
@@ -517,6 +588,7 @@
   }
 
   function submeterAusenciaAdministrativa() {
+    if (!navigator.onLine) { mostrarPopupPersonalizado({ titulo: "⚠️ Sem Conexão", mensagem: "Dispositivo offline. Registe manualmente.", tipo: "erro" }); return; }
     var nome = document.getElementById('nomeFuncionarioFolga').value;
     var tipo = document.getElementById('tipoAusencia').value;
     var dIni = document.getElementById('dataFolgaInicio').value;
@@ -534,6 +606,7 @@
   }
 
   function exportarRelatorioPDF() {
+    if (!navigator.onLine) { mostrarPopupPersonalizado({ titulo: "⚠️ Sem Conexão", mensagem: "Dispositivo offline. Impossível exportar.", tipo: "erro" }); return; }
     var funcionario = document.getElementById('selecaoFuncionario').value;
     var dataInicio = document.getElementById('dataInicio').value;
     var dataFim = document.getElementById('dataFim').value;
@@ -550,6 +623,7 @@
   }
 
   function submeterNovoFuncionario() {
+    if (!navigator.onLine) { mostrarPopupPersonalizado({ titulo: "⚠️ Sem Conexão", mensagem: "Dispositivo offline.", tipo: "erro" }); return; }
     var nome = document.getElementById('nomeNovo').value;
     var pin = document.getElementById('pinNovo').value;
     var filial = document.getElementById('filialNovo').value;
@@ -567,6 +641,7 @@
   }
 
   function submeterRemocaoFuncionario() {
+    if (!navigator.onLine) { mostrarPopupPersonalizado({ titulo: "⚠️ Sem Conexão", mensagem: "Dispositivo offline.", tipo: "erro" }); return; }
     var nome = document.getElementById('nomeRemover').value;
     
     if(!nome) { mostrarPopupPersonalizado({ titulo: "Aviso", mensagem: "Selecione o funcionário.", tipo: "erro" }); return; }
