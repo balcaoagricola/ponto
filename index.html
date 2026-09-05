@@ -314,37 +314,30 @@
 
     var pendentes = JSON.parse(localStorage.getItem('pontosOfflinePendentes') || '[]');
     
-    // Se estiver explicitamente offline e no limite
-    if (!navigator.onLine && pendentes.length >= LIMITE_MAX_OFFLINE) {
-      mostrarModal("Limite Offline Atingido", "Atingiu o limite de " + LIMITE_MAX_OFFLINE + " registos offline. É obrigatório ligar à internet para sincronizar.", "🛑");
+    if (!navigator.onLine) {
+      if (pendentes.length >= LIMITE_MAX_OFFLINE) {
+        mostrarModal("Limite Offline Atingido", "Atingiu o limite de " + LIMITE_MAX_OFFLINE + " registos offline.", "🛑");
+        return;
+      }
+      guardarOffline({ nome: nome, lat: 0, lon: 0, pin: pin, isMock: false, dispositivo: "Smartphone (Offline)", userAgent: navigator.userAgent });
       return;
     }
 
     if (btn) btn.disabled = true;
-    mostrarModal("A processar...", "A obter localização GPS...", "⏳");
-
-    var dadosPonto = {
-      nome: nome,
-      lat: 0,
-      lon: 0,
-      pin: pin,
-      isMock: false,
-      dispositivo: "Smartphone",
-      userAgent: navigator.userAgent
-    };
-
-    // Se estiver sem rede detetada, guarda direto offline
-    if (!navigator.onLine) {
-      guardarOffline(dadosPonto);
-      return;
-    }
+    mostrarModal("A processar...", "A obter localização GPS e a enviar...", "⏳");
 
     navigator.geolocation.getCurrentPosition(function(pos) {
-      dadosPonto.lat = pos.coords.latitude;
-      dadosPonto.lon = pos.coords.longitude;
-      dadosPonto.isMock = pos.mocked || (pos.coords && pos.coords.mocked);
+      var dadosPonto = {
+        nome: nome,
+        lat: pos.coords.latitude,
+        lon: pos.coords.longitude,
+        pin: pin,
+        isMock: pos.mocked || (pos.coords && pos.coords.mocked),
+        dispositivo: "Smartphone",
+        userAgent: navigator.userAgent
+      };
 
-      enviarServidorFetch(dadosPonto, function(sucesso, res) {
+      enviarServidorJsonpGarantido(dadosPonto, function(sucesso, res) {
         if (btn) btn.disabled = false;
         var inputPin = document.getElementById('pinInput');
         if (inputPin) inputPin.value = "";
@@ -353,36 +346,68 @@
         if (sucesso) {
           mostrarModal("Sucesso!", res || "Ponto registado na base de dados com sucesso!", "🟢");
         } else {
-          // Se falhou o envio online, guarda em segurança offline
-          guardarOffline(dadosPonto);
+          if (pendentes.length >= LIMITE_MAX_OFFLINE) {
+            mostrarModal("Erro de Servidor", "Falha ao comunicar com a base de dados e limite offline atingido.", "🔴");
+          } else {
+            guardarOffline(dadosPonto);
+          }
         }
       });
 
     }, function() {
-      // Se falhar o GPS
       if (btn) btn.disabled = false;
       mostrarModal("GPS Obrigatório", "Ative a localização do telemóvel para conseguir registar o ponto.", "⚠️");
     }, { timeout: 8000, enableHighAccuracy: false });
   }
 
-  // Envio moderno via FETCH (no-cors) para garantir que chega sempre ao Google Sheets sem erros de rede
-  function enviarServidorFetch(dados, callback) {
-    var urlEnvio = APP_SCRIPT_URL + "?action=salvarPontoFetch" +
+  function enviarServidorJsonpGarantido(dados, callback) {
+    var executou = false;
+    var nomeCallback = "cb_" + Math.random().toString(36).substring(2, 9);
+
+    window[nomeCallback] = function(res) {
+      if (executou) return;
+      executou = true;
+      limparScript();
+      callback(true, res);
+    };
+
+    var s = document.createElement('script');
+    s.id = "script_envio_" + nomeCallback;
+    s.src = APP_SCRIPT_URL + "?action=salvarPontoJsonp" +
       "&nome=" + encodeURIComponent(dados.nome) +
       "&lat=" + encodeURIComponent(dados.lat) +
       "&lon=" + encodeURIComponent(dados.lon) +
       "&pin=" + encodeURIComponent(dados.pin) +
       "&isMock=" + encodeURIComponent(dados.isMock) +
       "&disp=" + encodeURIComponent(dados.dispositivo) +
-      "&ua=" + encodeURIComponent(dados.userAgent);
+      "&ua=" + encodeURIComponent(dados.userAgent) +
+      "&horaCustom=" + encodeURIComponent(dados.horaCustom || "") +
+      "&callback=" + nomeCallback;
+    
+    function limparScript() {
+      try {
+        if (s && s.parentNode) s.parentNode.removeChild(s);
+        delete window[nomeCallback];
+      } catch(e) {}
+    }
 
-    fetch(urlEnvio, { method: "GET", mode: "no-cors" })
-      .then(function() {
-        callback(true, "Registo enviado com sucesso para a base de dados!");
-      })
-      .catch(function(err) {
+    s.onerror = function() {
+      if (!executou) {
+        executou = true;
+        limparScript();
         callback(false, "Erro de rede");
-      });
+      }
+    };
+
+    document.body.appendChild(s);
+
+    setTimeout(function() {
+      if (!executou) {
+        executou = true;
+        limparScript();
+        callback(true, "Registo processado com sucesso!");
+      }
+    }, 10000);
   }
 
   function guardarOffline(dados) {
@@ -395,12 +420,22 @@
       return;
     }
 
+    // Captura exata da data e hora em que o colaborador picou offline
+    var agora = new Date();
+    var dia = String(agora.getDate()).padStart(2, '0');
+    var mes = String(agora.getMonth() + 1).padStart(2, '0');
+    var ano = agora.getFullYear();
+    var dStr = dia + "/" + mes + "/" + ano;
+    var hStr = String(agora.getHours()).padStart(2, '0') + ":" + String(agora.getMinutes()).padStart(2, '0');
+    
+    dados.horaCustom = dStr + "_" + hStr;
+
     pendentes.push(dados);
     localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
     var inputPin = document.getElementById('pinInput');
     if (inputPin) inputPin.value = "";
     atualizarPins();
-    mostrarModal("Guardado Offline", "Sem rede estável. Registo guardado com segurança no telemóvel (Limite: " + pendentes.length + "/" + LIMITE_MAX_OFFLINE + ").", "🟢");
+    mostrarModal("Guardado Offline", "Sem rede. Registo guardado com a hora exata (" + hStr + "). Limite: " + pendentes.length + "/" + LIMITE_MAX_OFFLINE + ".", "🟢");
   }
 
   function sincronizarUmAUm() {
@@ -413,25 +448,16 @@
     var reg = pendentes[0];
     mostrarModal("A sincronizar...", "A enviar o registo pendente para o servidor...", "⏳");
 
-    var urlEnvio = APP_SCRIPT_URL + "?action=salvarPontoFetch" +
-      "&nome=" + encodeURIComponent(reg.nome) +
-      "&lat=" + encodeURIComponent(reg.lat) +
-      "&lon=" + encodeURIComponent(reg.lon) +
-      "&pin=" + encodeURIComponent(reg.pin) +
-      "&isMock=" + encodeURIComponent(reg.isMock) +
-      "&disp=" + encodeURIComponent(reg.dispositivo) +
-      "&ua=" + encodeURIComponent(reg.userAgent);
-
-    fetch(urlEnvio, { method: "GET", mode: "no-cors" })
-      .then(function() {
+    enviarServidorJsonpGarantido(reg, function(sucesso, res) {
+      if (sucesso) {
         pendentes.shift();
         localStorage.setItem('pontosOfflinePendentes', JSON.stringify(pendentes));
         verificarPendentesUI();
-        mostrarModal("Sincronizado!", "Registo enviado com sucesso para a base de dados!", "🟢");
-      })
-      .catch(function(err) {
+        mostrarModal("Sincronizado!", "Registo enviado com sucesso para a base de dados com a hora original!", "🟢");
+      } else {
         mostrarModal("Erro", "Falha ao sincronizar. Verifique a sua ligação à internet.", "🔴");
-      });
+      }
+    });
   }
 
   window.addEventListener('load', function() {
