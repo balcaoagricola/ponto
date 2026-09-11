@@ -659,7 +659,9 @@
     
     emProcessamento = true;
     if (btn) btn.disabled = true;
-    mostrarPopupPersonalizado({ titulo: "A Calibrar Satélite...", mensagem: "A rastrear coordenadas de alta precisão. Aguarde uns segundos...", tipo: "processando" });
+    
+    // OPÇÃO 3: Curta, direta e minimalista
+    mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A obter a localização exata do dispositivo...", tipo: "processando" });
     
     var gpsOptions = {
         enableHighAccuracy: true, 
