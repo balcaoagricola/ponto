@@ -245,7 +245,9 @@
 </div>
 
 <script>
+  // INSIRA AQUI O SEU LINK DA API GERADO NO GOOGLE APPS SCRIPT
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
+  
   var senhaAdminSessao = "";
   var emProcessamento = false;
   var estaOnline = navigator.onLine;
@@ -558,6 +560,7 @@
     });
   }
 
+  // --- MOTOR DE GPS REFORÇADO E BLINDADO ---
   function registarPontoDiario() {
     if (emProcessamento) return;
 
@@ -579,33 +582,61 @@
     
     emProcessamento = true;
     if (btn) btn.disabled = true;
-    mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A verificar GPS e a registar ponto...", tipo: "processando" });
+    mostrarPopupPersonalizado({ titulo: "A Calibrar GPS...", mensagem: "A calcular a localização precisa do satélite. Aguarde uns segundos...", tipo: "processando" });
     
-    navigator.geolocation.getCurrentPosition(function(pos) {
-      chamarAPIJsonp({
-        action: "salvarPontoJsonp",
-        nome: nome,
-        lat: pos.coords.latitude,
-        lon: pos.coords.longitude,
-        pin: pin,
-        isMock: pos.mocked || (pos.coords && pos.coords.mocked),
-        disp: obterDetalhesDispositivo(),
-        ua: navigator.userAgent
-      }, function(resposta) {
-        document.getElementById('pinPonto').value = "";
-        atualizarPinDisplay('pinPonto', 'dotsPonto');
-        if (resposta.indexOf("Aviso") !== -1) {
-          gerirErroCampo("erro-pin-ponto", resposta);
-          fecharToast();
-        } else {
-          mostrarPopupPersonalizado({ titulo: "Concluído!", mensagem: resposta, tipo: "sucesso" });
-        }
-      });
-    }, function() {
-      emProcessamento = false;
-      if (btn) btn.disabled = false;
-      mostrarPopupPersonalizado({ titulo: "GPS Indisponível", mensagem: "Ative a localização do telemóvel.", tipo: "erro" });
-    }, { enableHighAccuracy: true, timeout: 15000 });
+    // Regras rígidas de GPS exigidas pela gerência
+    var gpsOptions = {
+        enableHighAccuracy: true, // Força antena de satélite (Ignora torres de rede)
+        timeout: 15000,           // 15 segundos no máximo a tentar
+        maximumAge: 0             // Bloqueia uso do histórico do GPS
+    };
+
+    navigator.geolocation.getCurrentPosition(
+        function(pos) {
+            var precisaoMetros = pos.coords.accuracy;
+            
+            // Rejeição direta se o GPS for lixo (maior que 150m de erro de estimativa)
+            if (precisaoMetros > 150) {
+                emProcessamento = false;
+                if (btn) btn.disabled = false;
+                mostrarPopupPersonalizado({ 
+                    titulo: "⚠️ Sinal Fraco (" + precisaoMetros.toFixed(0) + "m de erro)", 
+                    mensagem: "O GPS não consegue determinar a sua posição exata. Por favor, <b>aproxime-se de uma janela</b> ou vá à rua e tente novamente.", 
+                    tipo: "erro" 
+                });
+                return;
+            }
+
+            // Se passou no teste de qualidade, envia a lat e lon certas para a folha
+            chamarAPIJsonp({
+                action: "salvarPontoJsonp",
+                nome: nome,
+                lat: pos.coords.latitude,
+                lon: pos.coords.longitude,
+                pin: pin,
+                isMock: pos.mocked || (pos.coords && pos.coords.mocked),
+                disp: obterDetalhesDispositivo(),
+                ua: navigator.userAgent
+            }, function(resposta) {
+                document.getElementById('pinPonto').value = "";
+                atualizarPinDisplay('pinPonto', 'dotsPonto');
+                if (resposta.indexOf("Aviso") !== -1) {
+                gerirErroCampo("erro-pin-ponto", resposta);
+                fecharToast();
+                } else {
+                mostrarPopupPersonalizado({ titulo: "Concluído!", mensagem: resposta, tipo: "sucesso" });
+                }
+            });
+        }, 
+        function(erro) {
+            emProcessamento = false;
+            if (btn) btn.disabled = false;
+            var erroMsg = "Ative a localização do telemóvel e dê permissão no navegador.";
+            if(erro.code === 3) erroMsg = "Demorou demasiado tempo a encontrar o satélite. Tente na rua ou perto da janela.";
+            mostrarPopupPersonalizado({ titulo: "GPS Indisponível", mensagem: erroMsg, tipo: "erro" });
+        }, 
+        gpsOptions // Injeta as regras aqui
+    );
   }
 
   function submeterAusenciaAdministrativa() {
