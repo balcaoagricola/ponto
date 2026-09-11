@@ -144,7 +144,7 @@
   <!-- ECRÃ 1: PICAR O PONTO PRINCIPAL -->
   <div id="section-ponto" class="content-section active">
     <div class="form-group">
-      <!-- MUDANÇA: Rótulo "Nome" e Ícones agora estão lado a lado -->
+      <!-- Rótulo "Nome" e Ícones lado a lado -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <label for="nomeFuncionario" style="margin-bottom: 0;">O seu Nome <span class="campo-obrigatorio">*</span></label>
         <div style="display: flex; gap: 8px;">
@@ -177,7 +177,7 @@
   <!-- ECRÃ 2: COMUNICAÇÃO DE AUSÊNCIA DO FUNCIONÁRIO -->
   <div id="section-falta-func" class="content-section">
     <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
-      <h3 style="margin-bottom: 12px; color: var(--primary); text-align: left;">📅 Pedido de Ausência</h3>
+      <h3 style="margin-bottom: 12px; color: var(--primary); text-align: left;">📅 Comunicar Ausência</h3>
       <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; text-align: left;">Preencha os dados abaixo. A gerência será notificada e poderá aprovar respondendo diretamente para o seu e-mail.</p>
       
       <div class="admin-card" style="margin-bottom: 0;">
@@ -207,7 +207,6 @@
             <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
             <option value="📄 Falta Justificada">📄 Falta Justificada</option>
             <option value="⚠️ Falta Injustificada">⚠️ Falta Injustificada</option>
-            <option value="⚖️ Compensação de Horas">⚖️ Compensação de Horas</option>
           </select>
         </div>
 
@@ -736,6 +735,7 @@
     );
   }
 
+  // --- SUBMISSÃO DE FALTA PELO FUNCIONÁRIO ---
   function submeterFaltaFuncionario() {
     var nome = document.getElementById('nomeFuncFalta').value;
     var pin = document.getElementById('pinFuncFalta').value;
