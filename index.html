@@ -52,7 +52,7 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     
     .form-group { margin-bottom: 24px; }
-    .form-group label { display: block; font-weight: 700; font-size: 0.95rem; color: var(--primary); letter-spacing: -0.2px; }
+    .form-group label { display: block; margin-bottom: 10px; font-weight: 700; font-size: 0.95rem; color: var(--primary); letter-spacing: -0.2px; }
     
     .form-control { width: 100%; padding: 16px 18px; border: 2px solid transparent; border-radius: 16px; font-size: 1.05rem; background-color: var(--input-bg); color: var(--primary); font-weight: 600; outline: none; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
     .form-control:focus { border-color: var(--accent); background-color: #ffffff; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15); }
@@ -173,7 +173,7 @@
   <div id="section-falta-func" class="content-section">
     <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
       <h3 style="margin-bottom: 12px; color: var(--primary); text-align: left;">📅 Comunicar Ausência</h3>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; text-align: left;">Preencha os dados abaixo. O seu pedido será enviado à gerência, que procederá ao registo na folha de ponto após aprovação.</p>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; text-align: left;">Preencha os dados abaixo. A gerência será notificada e poderá aprovar respondendo diretamente para o seu e-mail.</p>
       
       <div class="admin-card" style="margin-bottom: 0;">
         <div class="form-group">
@@ -210,7 +210,7 @@
           <input type="date" id="dataFaltaFuncInicio" class="form-control">
         </div>
         <div class="form-group">
-          <label>Data de Fim (Opcional)</label>
+          <label>Data de Fim <span class="campo-obrigatorio">*</span></label>
           <input type="date" id="dataFaltaFuncFim" class="form-control">
         </div>
 
@@ -262,8 +262,8 @@
             <option value="⚖️ Compensação de Horas">⚖️ Compensação de Horas</option>
           </select>
         </div>
-        <div class="form-group"><label>Data de Início</label><input type="date" id="dataFolgaInicio" class="form-control"></div>
-        <div class="form-group"><label>Data de Fim (Opcional)</label><input type="date" id="dataFolgaFim" class="form-control"></div>
+        <div class="form-group"><label>Data de Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaInicio" class="form-control"></div>
+        <div class="form-group"><label>Data de Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaFim" class="form-control"></div>
         <button class="btn btn-primary" onclick="submeterAusenciaAdministrativa()">Confirmar Lançamento</button>
       </div>
     </div>
@@ -415,7 +415,8 @@
   function fecharToast() { 
     document.getElementById('toastOverlay').style.display = "none"; 
     emProcessamento = false;
-    if (document.getElementById('btnPonto')) document.getElementById('btnPonto').disabled = false;
+    var btnPonto = document.getElementById('btnPonto');
+    if (btnPonto) btnPonto.disabled = false;
   }
 
   function fecharToastOverlay(e) { if (e.target.id === 'toastOverlay') {} }
@@ -606,7 +607,7 @@
     var email = document.getElementById('emailFuncFalta').value;
     var tipo = document.getElementById('tipoFaltaFunc').value;
     var dIni = document.getElementById('dataFaltaFuncInicio').value;
-    var dFim = document.getElementById('dataFaltaFuncFim').value || dIni;
+    var dFim = document.getElementById('dataFaltaFuncFim').value;
 
     if(!nome) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione o seu nome.", tipo: "erro" }); return; }
     if(!pin || pin.trim().length !== 4) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Introduza o seu PIN de acesso (4 dígitos).", tipo: "erro" }); return; }
@@ -614,6 +615,7 @@
     if(email.indexOf("@") === -1) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Introduza um E-mail válido.", tipo: "erro" }); return; }
     if(!tipo) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione o Motivo da Falta.", tipo: "erro" }); return; }
     if(!dIni) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione a Data de Início.", tipo: "erro" }); return; }
+    if(!dFim) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione a Data de Fim. (Se for apenas um dia, coloque a mesma data).", tipo: "erro" }); return; }
 
     mostrarPopupPersonalizado({ titulo: "A Enviar Pedido...", mensagem: "A submeter o pedido à gerência...", tipo: "processando" });
 
@@ -629,8 +631,9 @@
     var nome = document.getElementById('nomeFuncionarioFolga').value;
     var tipo = document.getElementById('tipoAusencia').value;
     var dIni = document.getElementById('dataFolgaInicio').value;
-    var dFim = document.getElementById('dataFolgaFim').value || dIni;
-    if(!nome || !tipo || !dIni) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha todos os campos obrigatórios.", tipo: "erro" }); return; }
+    var dFim = document.getElementById('dataFolgaFim').value;
+    
+    if(!nome || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha todos os campos obrigatórios.", tipo: "erro" }); return; }
     
     mostrarPopupPersonalizado({ titulo: "A Executar...", mensagem: "A processar registos no sistema...", tipo: "processando" });
     chamarAPIJsonp({ action: "lancarAusenciaAdminJsonp", nome: nome, tipo: tipo, dataInicio: dIni, dataFim: dFim, senha: senhaAdminSessao }, function(resp) {
