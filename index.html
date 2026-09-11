@@ -130,7 +130,7 @@
     .btn { width: 100%; padding: 18px; border: none; border-radius: 16px; font-size: 1.05rem; font-weight: 700; cursor: pointer; text-align: center; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); letter-spacing: -0.2px; }
     .btn:active { transform: scale(0.97); }
     
-    #section-admin .btn { padding: 16px; font-size: 1rem; border-radius: 12px; } /* Botões do Admin um pouco mais esguios */
+    #section-admin .btn { padding: 16px; font-size: 1rem; border-radius: 12px; } 
 
     .btn-primary { background: var(--accent); color: white; box-shadow: var(--shadow-btn); }
     .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 10px 20px -4px rgba(37, 99, 235, 0.4); }
@@ -252,8 +252,7 @@
         <div class="form-group">
           <label>Motivo da Ausência</label>
           <select id="tipoAusencia" class="form-control">
-            <!-- Bloqueado e Selecionado por padrão para evitar erros -->
-            <option value="" disabled selected>-- Selecione o motivo --</option>
+            <option value="" disabled selected>Selecione o motivo</option>
             <option value="🏖️ Férias">🏖️ Férias</option>
             <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
             <option value="📄 Falta Justificada">📄 Falta Justificada</option>
@@ -279,11 +278,11 @@
 
     <div id="admin-sub-funcionario" style="display: none;">
       <div class="admin-card">
-        <h3>➕ Adicionar Equipa</h3>
-        <div class="form-group"><label>Nome Completo</label><input type="text" id="nomeNovo" class="form-control" placeholder="Ex: João Silva"></div>
+        <h3>➕ Adicionar Colaborador</h3>
+        <div class="form-group"><label>Primeiro e Último Nome</label><input type="text" id="nomeNovo" class="form-control" placeholder="Ex: Ana Paula"></div>
         <div class="form-group"><label>PIN de Acesso (4 dígitos)</label><input type="text" id="pinNovo" class="form-control" maxlength="4" placeholder="0000" inputmode="numeric"></div>
         <div class="form-group"><label>Loja/Filial</label><select id="filialNovo" class="form-control"><option value="PATAIAS">Pataias</option><option value="GARCIA">Garcia</option></select></div>
-        <button class="btn btn-primary" onclick="submeterNovoFuncionario()">Registar Funcionário</button>
+        <button class="btn btn-primary" onclick="submeterNovoFuncionario()">Registar Colaborador</button>
       </div>
     </div>
 
@@ -617,7 +616,7 @@
       if (listaCompleta && listaCompleta.length > 0) {
         var sAdmin = document.getElementById('selecaoFuncionario');
         if (sAdmin) {
-          sAdmin.innerHTML = '<option value="" disabled selected>-- Selecione o colaborador --</option><option value="TODOS">Exportar Todos (Equipa Inteira)</option>';
+          sAdmin.innerHTML = '<option value="" disabled selected>Selecione o colaborador</option><option value="TODOS">Exportar Todos (Equipa Inteira)</option>';
           listaCompleta.forEach(function(n) {
             var o = document.createElement('option'); o.value = n; o.text = n; sAdmin.appendChild(o);
           });
@@ -630,7 +629,7 @@
     ['nomeFuncionario', 'nomeFuncionarioFolga', 'nomeRemover'].forEach(function(id) {
       var sel = document.getElementById(id);
       if (sel) {
-        sel.innerHTML = '<option value="" disabled selected>-- Selecione o colaborador --</option>';
+        sel.innerHTML = '<option value="" disabled selected>Selecione o colaborador</option>';
         lista.forEach(function(n) {
           var o = document.createElement('option'); o.value = n; o.text = n; sel.appendChild(o);
         });
