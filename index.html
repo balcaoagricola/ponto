@@ -89,7 +89,6 @@
     .btn-danger { background: var(--danger); color: white; box-shadow: 0 8px 16px -4px rgba(239, 68, 68, 0.3); }
     .btn-danger:hover { background: #dc2626; transform: translateY(-1px); box-shadow: 0 10px 20px -4px rgba(239, 68, 68, 0.4); }
 
-    /* BOTÕES ESCONDIDOS NO TOPO (Perto do Nome) */
     .top-action-btn { background: var(--input-bg); color: var(--text-muted); border: none; width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
     .top-action-btn:hover { background: #e2e8f0; color: var(--primary); transform: translateY(-1px); }
     .top-action-btn:active { transform: scale(0.9); }
@@ -118,7 +117,6 @@
     .menu-admin-grid .btn { padding: 20px 12px; font-size: 0.9rem; flex-direction: column; gap: 8px; margin-bottom: 0; }
     .menu-admin-grid .btn span { font-size: 1.5rem; }
     
-    /* RODAPÉ LIMPO E CENTRADO */
     .app-footer { text-align: center; font-size: 0.85rem; font-weight: 600; color: #94a3b8; padding: 18px 24px; display: flex; justify-content: center; align-items: center; background: #ffffff; border-top: 1px solid var(--border); }
 
     .campo-obrigatorio { color: var(--danger); font-weight: 800; margin-left: 2px; }
@@ -141,10 +139,8 @@
     </div>
   </div>
   
-  <!-- ECRÃ 1: PICAR O PONTO PRINCIPAL -->
   <div id="section-ponto" class="content-section active">
     <div class="form-group">
-      <!-- Rótulo "Nome" e Ícones lado a lado -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <label for="nomeFuncionario" style="margin-bottom: 0;">O seu Nome <span class="campo-obrigatorio">*</span></label>
         <div style="display: flex; gap: 8px;">
@@ -174,11 +170,10 @@
     </button>
   </div>
 
-  <!-- ECRÃ 2: COMUNICAÇÃO DE AUSÊNCIA DO FUNCIONÁRIO -->
   <div id="section-falta-func" class="content-section">
     <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
       <h3 style="margin-bottom: 12px; color: var(--primary); text-align: left;">📅 Comunicar Ausência</h3>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; text-align: left;">Preencha os dados abaixo. A gerência será notificada e poderá aprovar respondendo diretamente para o seu e-mail.</p>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; text-align: left;">Preencha os dados abaixo. O seu pedido será enviado à gerência, que procederá ao registo na folha de ponto após aprovação.</p>
       
       <div class="admin-card" style="margin-bottom: 0;">
         <div class="form-group">
@@ -228,7 +223,6 @@
     </div>
   </div>
   
-  <!-- ECRÃ 3: PAINEL DE GESTÃO DO ADMIN -->
   <div id="section-admin" class="content-section">
     <div id="admin-sub-menu">
       <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
@@ -340,7 +334,6 @@
     setInterval(function() {
       var agora = new Date();
       var horaStr = String(agora.getHours()).padStart(2, '0') + ':' + String(agora.getMinutes()).padStart(2, '0') + ':' + String(agora.getSeconds()).padStart(2, '0');
-      
       var meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
       var diaStr = String(agora.getDate()).padStart(2, '0');
       var mesStr = meses[agora.getMonth()];
@@ -358,22 +351,14 @@
     estaOnline = true;
     var gpsDot = document.getElementById('gpsIndicator');
     if (gpsDot) gpsDot.classList.remove('offline');
-    mostrarPopupPersonalizado({
-      titulo: "Sinal Restabelecido",
-      mensagem: "O dispositivo está novamente online. Acesso ao sistema retomado.",
-      tipo: "sucesso"
-    });
+    mostrarPopupPersonalizado({ titulo: "Sinal Restabelecido", mensagem: "O dispositivo está novamente online. Acesso ao sistema retomado.", tipo: "sucesso" });
   });
 
   window.addEventListener('offline', function() {
     estaOnline = false;
     var gpsDot = document.getElementById('gpsIndicator');
     if (gpsDot) gpsDot.classList.add('offline');
-    mostrarPopupPersonalizado({
-      titulo: "Sem Conexão à Internet",
-      mensagem: "O dispositivo perdeu o sinal. A validação automática de ponto está suspensa até recuperar a ligação.",
-      tipo: "erro"
-    });
+    mostrarPopupPersonalizado({ titulo: "Sem Conexão à Internet", mensagem: "O dispositivo perdeu o sinal. A validação automática de ponto está suspensa até recuperar a ligação.", tipo: "erro" });
   });
 
   function atualizarPinDisplay(inputId, containerId) {
@@ -401,18 +386,12 @@
     title.innerText = config.titulo || "Aviso";
     body.innerHTML = config.mensagem || "";
 
-    if (config.tipo === "sucesso") {
-      icon.className = "toast-icon"; icon.innerText = "✅";
-    } else if (config.tipo === "erro") {
-      icon.className = "toast-icon"; icon.innerText = "❌";
-    } else if (config.tipo === "processando") {
-      icon.className = "toast-icon ampulheta-animada"; icon.innerText = "⏳";
-    } else {
-      icon.className = "toast-icon"; icon.innerText = config.icone || "💬";
-    }
+    if (config.tipo === "sucesso") { icon.className = "toast-icon"; icon.innerText = "✅"; } 
+    else if (config.tipo === "erro") { icon.className = "toast-icon"; icon.innerText = "❌"; } 
+    else if (config.tipo === "processando") { icon.className = "toast-icon ampulheta-animada"; icon.innerText = "⏳"; } 
+    else { icon.className = "toast-icon"; icon.innerText = config.icone || "💬"; }
 
     actionsContainer.innerHTML = "";
-    
     if (config.tipo === "processando") {
       actionsContainer.style.display = "none";
     } else {
@@ -421,54 +400,31 @@
         config.botoes.forEach(function(btnInfo) {
           var btn = document.createElement('button');
           btn.className = "toast-btn " + (btnInfo.classe || "toast-btn-primary");
-          btn.innerText = btnInfo.texto;
-          btn.onclick = btnInfo.acao;
+          btn.innerText = btnInfo.texto; btn.onclick = btnInfo.acao;
           actionsContainer.appendChild(btn);
         });
       } else {
         var btnOk = document.createElement('button');
-        btnOk.className = "toast-btn toast-btn-primary";
-        btnOk.innerText = "Concluir";
-        btnOk.onclick = fecharToast;
+        btnOk.className = "toast-btn toast-btn-primary"; btnOk.innerText = "Concluir"; btnOk.onclick = fecharToast;
         actionsContainer.appendChild(btnOk);
       }
     }
-
     overlay.style.display = "flex";
   }
 
   function fecharToast() { 
     document.getElementById('toastOverlay').style.display = "none"; 
     emProcessamento = false;
-    var btnPonto = document.getElementById('btnPonto');
-    if (btnPonto) btnPonto.disabled = false;
+    if (document.getElementById('btnPonto')) document.getElementById('btnPonto').disabled = false;
   }
 
   function fecharToastOverlay(e) { if (e.target.id === 'toastOverlay') {} }
 
-  function alternarVisibilidadeSenha() {
-    var inputPass = document.getElementById('inputSenhaPopup');
-    var btnEye = document.getElementById('btnEyeToggle');
-    if (!inputPass) return;
-    if (inputPass.type === "password") {
-      inputPass.type = "text";
-      if (btnEye) btnEye.innerText = "🙈";
-    } else {
-      inputPass.type = "password";
-      if (btnEye) btnEye.innerText = "👁️";
-    }
-  }
-
   function alternarVisibilidadeSenhaInput(inputId, btnEye) {
     var inputPass = document.getElementById(inputId);
     if (!inputPass) return;
-    if (inputPass.type === "password") {
-      inputPass.type = "text";
-      if (btnEye) btnEye.innerText = "🙈";
-    } else {
-      inputPass.type = "password";
-      if (btnEye) btnEye.innerText = "👁️";
-    }
+    if (inputPass.type === "password") { inputPass.type = "text"; if (btnEye) btnEye.innerText = "🙈"; } 
+    else { inputPass.type = "password"; if (btnEye) btnEye.innerText = "👁️"; }
   }
 
   function obterDetalhesDispositivo() {
@@ -479,15 +435,12 @@
     if (ua.indexOf("Xiaomi") !== -1 || ua.indexOf("Redmi") !== -1) return "Xiaomi / Redmi";
     if (ua.indexOf("Huawei") !== -1) return "Huawei";
     if (ua.indexOf("Motorola") !== -1 || ua.indexOf("Moto") !== -1) return "Motorola";
-    
     var match = ua.match(/\(([^)]+)\)/);
     if (match && match[1]) {
       var partes = match[1].split(";");
       for (var p = 0; p < partes.length; p++) {
         var ped = partes[p].trim();
-        if (ped.length > 3 && ped.indexOf("Android") === -1 && ped.indexOf("Linux") === -1 && ped.indexOf("KHTML") === -1 && ped.indexOf("wv") === -1) {
-          return ped;
-        }
+        if (ped.length > 3 && ped.indexOf("Android") === -1 && ped.indexOf("Linux") === -1 && ped.indexOf("KHTML") === -1 && ped.indexOf("wv") === -1) return ped;
       }
     }
     return navigator.platform || "Smartphone";
@@ -496,48 +449,27 @@
   function chamarAPIJsonp(params, callbackSucesso) {
     if (!navigator.onLine) {
       emProcessamento = false;
-      mostrarPopupPersonalizado({
-        titulo: "Sem Conexão",
-        mensagem: "O dispositivo está offline. Verifique a sua internet.",
-        tipo: "erro"
-      });
-      return;
+      mostrarPopupPersonalizado({ titulo: "Sem Conexão", mensagem: "O dispositivo está offline. Verifique a sua internet.", tipo: "erro" }); return;
     }
-
-    fetch('https://api.ipify.org?format=json')
-      .then(res => res.json())
-      .then(data => {
-        params.ip = data.ip || "Não disponível";
-        enviarPedidoComIp(params, callbackSucesso);
-      })
-      .catch(() => {
-        params.ip = "Indisponível";
-        enviarPedidoComIp(params, callbackSucesso);
-      });
+    fetch('https://api.ipify.org?format=json').then(res => res.json()).then(data => {
+        params.ip = data.ip || "Não disponível"; enviarPedidoComIp(params, callbackSucesso);
+    }).catch(() => {
+        params.ip = "Indisponível"; enviarPedidoComIp(params, callbackSucesso);
+    });
   }
 
   function enviarPedidoComIp(params, callbackSucesso) {
     var cbName = "jsonp_cb_" + Math.random().toString(36).substring(2, 9);
     window[cbName] = function(dados) {
-      delete window[cbName];
-      var scriptEl = document.getElementById(cbName);
-      if (scriptEl) scriptEl.remove();
-      if (callbackSucesso) callbackSucesso(dados);
+      delete window[cbName]; var scriptEl = document.getElementById(cbName);
+      if (scriptEl) scriptEl.remove(); if (callbackSucesso) callbackSucesso(dados);
     };
     var url = APP_SCRIPT_URL + "?";
-    for (var key in params) {
-      if (params.hasOwnProperty(key)) {
-        url += encodeURIComponent(key) + "=" + encodeURIComponent(params[key]) + "&";
-      }
-    }
+    for (var key in params) { if (params.hasOwnProperty(key)) url += encodeURIComponent(key) + "=" + encodeURIComponent(params[key]) + "&"; }
     url += "callback=" + cbName;
-    var script = document.createElement('script');
-    script.id = cbName;
-    script.src = url;
+    var script = document.createElement('script'); script.id = cbName; script.src = url;
     script.onerror = function() {
-      delete window[cbName];
-      script.remove();
-      emProcessamento = false;
+      delete window[cbName]; script.remove(); emProcessamento = false;
       mostrarPopupPersonalizado({ titulo: "Falha no Servidor", mensagem: "Não foi possível comunicar com o sistema central.", tipo: "erro" });
     };
     document.body.appendChild(script);
@@ -552,53 +484,26 @@
     });
     var pMes = new Date(); pMes.setDate(1);
     if(document.getElementById('dataInicio')) document.getElementById('dataInicio').value = pMes.toISOString().split('T')[0];
-
-    if (!navigator.onLine) {
-      var gpsDot = document.getElementById('gpsIndicator');
-      if (gpsDot) gpsDot.classList.add('offline');
-    }
+    if (!navigator.onLine) { var gpsDot = document.getElementById('gpsIndicator'); if (gpsDot) gpsDot.classList.add('offline'); }
   });
 
   function abrirModalSenhaAdmin() {
     mostrarPopupPersonalizado({
       titulo: "Autenticação",
-      mensagem: '<p style="margin-bottom:16px; color:var(--text-muted);">Área reservada à administração.</p>' +
-                '<div class="password-eye-wrapper">' +
-                  '<input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.4rem; letter-spacing:4px;" placeholder="••••" autofocus>' +
-                  '<button type="button" id="btnEyeToggle" class="eye-toggle-btn" onclick="alternarVisibilidadeSenha()">👁️</button>' +
-                '</div>',
+      mensagem: '<p style="margin-bottom:16px; color:var(--text-muted);">Área reservada à administração.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.4rem; letter-spacing:4px;" placeholder="••••" autofocus><button type="button" id="btnEyeToggle" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️</button></div>',
       icone: "🔐",
       botoes: [
         { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
         { texto: "Validar Acesso", classe: "toast-btn-primary", acao: function() {
             var senhaVal = document.getElementById('inputSenhaPopup').value;
             if (!senhaVal) return;
-            
             mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A verificar credenciais...", tipo: "processando" });
-
-            chamarAPIJsonp({
-              action: "gerarPdfJsonp",
-              funcionario: "TESTE_AUTH_ADMIN",
-              dataInicio: "2026-01-01",
-              dataFim: "2026-01-01",
-              senha: senhaVal
-            }, function(resp) {
-              if (resp.indexOf("incorreta") !== -1) {
-                mostrarPopupPersonalizado({
-                  titulo: "Acesso Negado",
-                  mensagem: "A palavra-passe inserida não está correta.",
-                  tipo: "erro"
-                });
-              } else {
-                senhaAdminSessao = senhaVal;
-                fecharToast();
-                document.getElementById('section-ponto').classList.remove('active');
-                document.getElementById('section-falta-func').classList.remove('active');
-                document.getElementById('section-admin').classList.add('active');
-                
-                document.getElementById('headerTitle').style.display = 'none';
-                document.getElementById('headerClockBox').style.display = 'none';
-
+            chamarAPIJsonp({ action: "gerarPdfJsonp", funcionario: "TESTE_AUTH_ADMIN", dataInicio: "2026-01-01", dataFim: "2026-01-01", senha: senhaVal }, function(resp) {
+              if (resp.indexOf("incorreta") !== -1) { mostrarPopupPersonalizado({ titulo: "Acesso Negado", mensagem: "A palavra-passe inserida não está correta.", tipo: "erro" }); } 
+              else {
+                senhaAdminSessao = senhaVal; fecharToast();
+                document.getElementById('section-ponto').classList.remove('active'); document.getElementById('section-falta-func').classList.remove('active'); document.getElementById('section-admin').classList.add('active');
+                document.getElementById('headerTitle').style.display = 'none'; document.getElementById('headerClockBox').style.display = 'none';
                 voltarAoMenuCentralAdmin();
               }
             });
@@ -612,16 +517,11 @@
     document.getElementById('section-ponto').classList.remove('active');
     document.getElementById('section-admin').classList.remove('active');
     document.getElementById('section-falta-func').classList.add('active');
-    
     document.getElementById('headerTitle').style.display = 'none';
     document.getElementById('headerClockBox').style.display = 'none';
-    
     var hoje = new Date().toISOString().split('T')[0];
-    document.getElementById('dataFaltaFuncInicio').value = hoje;
-    document.getElementById('dataFaltaFuncFim').value = hoje;
-    document.getElementById('emailFuncFalta').value = "";
-    document.getElementById('pinFuncFalta').value = "";
-    document.getElementById('tipoFaltaFunc').value = "";
+    document.getElementById('dataFaltaFuncInicio').value = hoje; document.getElementById('dataFaltaFuncFim').value = hoje;
+    document.getElementById('emailFuncFalta').value = ""; document.getElementById('pinFuncFalta').value = ""; document.getElementById('tipoFaltaFunc').value = "";
   }
 
   function voltarAoEcraPrincipal() {
@@ -629,28 +529,20 @@
     document.getElementById('section-admin').classList.remove('active');
     document.getElementById('section-falta-func').classList.remove('active');
     document.getElementById('section-ponto').classList.add('active');
-    
     document.getElementById('headerTitle').style.display = 'block';
     document.getElementById('headerClockBox').style.display = 'inline-flex';
-
     voltarAoMenuCentralAdmin();
   }
 
   function carregarFuncionariosEmTodosOsCampos() {
     if (!navigator.onLine) return;
-    chamarAPIJsonp({ action: "obterFuncionarios" }, function(lista) {
-      if (lista && lista.length > 0) {
-        preencherSelectsNomes(lista);
-      }
-    });
+    chamarAPIJsonp({ action: "obterFuncionarios" }, function(lista) { if (lista && lista.length > 0) preencherSelectsNomes(lista); });
     chamarAPIJsonp({ action: "obterTodosFuncionarios" }, function(listaCompleta) {
       if (listaCompleta && listaCompleta.length > 0) {
         var sAdmin = document.getElementById('selecaoFuncionario');
         if (sAdmin) {
           sAdmin.innerHTML = '<option value="" disabled selected>Selecione o colaborador</option><option value="TODOS">Exportar Todos (Equipa Inteira)</option>';
-          listaCompleta.forEach(function(n) {
-            var o = document.createElement('option'); o.value = n; o.text = n; sAdmin.appendChild(o);
-          });
+          listaCompleta.forEach(function(n) { var o = document.createElement('option'); o.value = n; o.text = n; sAdmin.appendChild(o); });
         }
       }
     });
@@ -661,20 +553,14 @@
       var sel = document.getElementById(id);
       if (sel) {
         sel.innerHTML = '<option value="" disabled selected>Selecione o colaborador</option>';
-        lista.forEach(function(n) {
-          var o = document.createElement('option'); o.value = n; o.text = n; sel.appendChild(o);
-        });
+        lista.forEach(function(n) { var o = document.createElement('option'); o.value = n; o.text = n; sel.appendChild(o); });
       }
     });
   }
 
   function registarPontoDiario() {
     if (emProcessamento) return;
-
-    if (!navigator.onLine) {
-      mostrarPopupPersonalizado({ titulo: "Sem Conexão", mensagem: "O dispositivo está offline. Não é possível comunicar com o sistema.", tipo: "erro" });
-      return;
-    }
+    if (!navigator.onLine) { mostrarPopupPersonalizado({ titulo: "Sem Conexão", mensagem: "O dispositivo está offline. Não é possível comunicar com o sistema.", tipo: "erro" }); return; }
 
     var nome = document.getElementById('nomeFuncionario').value;
     var pin = document.getElementById('pinPonto').value;
@@ -683,50 +569,29 @@
     if(!nome) { gerirErroCampo("erro-nome-ponto", "Selecione o seu nome na lista."); return; }
     if(!pin || pin.trim().length !== 4) { gerirErroCampo("erro-pin-ponto", "Introduza o seu PIN de 4 dígitos."); return; }
     
-    emProcessamento = true;
-    if (btn) btn.disabled = true;
+    emProcessamento = true; if (btn) btn.disabled = true;
     mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A obter a localização exata do dispositivo...", tipo: "processando" });
     
     var gpsOptions = { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 };
-
     navigator.geolocation.getCurrentPosition(
         function(pos) {
             var precisaoMetros = pos.coords.accuracy;
-            
             if (precisaoMetros > 150) {
-                emProcessamento = false;
-                if (btn) btn.disabled = false;
-                mostrarPopupPersonalizado({ 
-                    titulo: "Sinal Fraco (" + precisaoMetros.toFixed(0) + "m de erro)", 
-                    mensagem: "O GPS não consegue determinar a sua posição exata. Por favor, <b>aproxime-se de uma janela ou do exterior</b> e tente novamente.", 
-                    tipo: "erro" 
-                });
-                return;
+                emProcessamento = false; if (btn) btn.disabled = false;
+                mostrarPopupPersonalizado({ titulo: "Sinal Fraco (" + precisaoMetros.toFixed(0) + "m de erro)", mensagem: "O GPS não consegue determinar a sua posição exata. Por favor, <b>aproxime-se de uma janela ou do exterior</b> e tente novamente.", tipo: "erro" }); return;
             }
 
             chamarAPIJsonp({
-                action: "salvarPontoJsonp",
-                nome: nome,
-                lat: pos.coords.latitude,
-                lon: pos.coords.longitude,
-                pin: pin,
-                isMock: pos.mocked || (pos.coords && pos.coords.mocked),
-                disp: obterDetalhesDispositivo(),
-                ua: navigator.userAgent
+                action: "salvarPontoJsonp", nome: nome, lat: pos.coords.latitude, lon: pos.coords.longitude, pin: pin,
+                isMock: pos.mocked || (pos.coords && pos.coords.mocked), disp: obterDetalhesDispositivo(), ua: navigator.userAgent
             }, function(resposta) {
-                document.getElementById('pinPonto').value = "";
-                atualizarPinDisplay('pinPonto', 'dotsPonto');
-                if (resposta.indexOf("Aviso") !== -1) {
-                  gerirErroCampo("erro-pin-ponto", resposta.replace("Aviso: ", ""));
-                  fecharToast();
-                } else {
-                  mostrarPopupPersonalizado({ titulo: "Registo Validado!", mensagem: resposta, tipo: "sucesso" });
-                }
+                document.getElementById('pinPonto').value = ""; atualizarPinDisplay('pinPonto', 'dotsPonto');
+                if (resposta.indexOf("Aviso") !== -1) { gerirErroCampo("erro-pin-ponto", resposta.replace("Aviso: ", "")); fecharToast(); } 
+                else { mostrarPopupPersonalizado({ titulo: "Registo Validado!", mensagem: resposta, tipo: "sucesso" }); }
             });
         }, 
         function(erro) {
-            emProcessamento = false;
-            if (btn) btn.disabled = false;
+            emProcessamento = false; if (btn) btn.disabled = false;
             var erroMsg = "Por favor, autorize o acesso à localização neste dispositivo.";
             if(erro.code === 3) erroMsg = "Demorou demasiado tempo a comunicar com o satélite. Aproxime-se de uma janela.";
             mostrarPopupPersonalizado({ titulo: "Acesso GPS Bloqueado", mensagem: erroMsg, tipo: "erro" });
@@ -735,7 +600,6 @@
     );
   }
 
-  // --- SUBMISSÃO DE FALTA PELO FUNCIONÁRIO ---
   function submeterFaltaFuncionario() {
     var nome = document.getElementById('nomeFuncFalta').value;
     var pin = document.getElementById('pinFuncFalta').value;
@@ -751,24 +615,12 @@
     if(!tipo) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione o Motivo da Falta.", tipo: "erro" }); return; }
     if(!dIni) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione a Data de Início.", tipo: "erro" }); return; }
 
-    mostrarPopupPersonalizado({ titulo: "A Enviar Pedido...", mensagem: "A registar comunicação e a notificar a gerência...", tipo: "processando" });
+    mostrarPopupPersonalizado({ titulo: "A Enviar Pedido...", mensagem: "A submeter o pedido à gerência...", tipo: "processando" });
 
-    chamarAPIJsonp({
-      action: "comunicarAusenciaFuncionarioJsonp",
-      nome: nome,
-      pin: pin,
-      email: email,
-      tipo: tipo,
-      dataInicio: dIni,
-      dataFim: dFim
-    }, function(resp) {
+    chamarAPIJsonp({ action: "comunicarAusenciaFuncionarioJsonp", nome: nome, pin: pin, email: email, tipo: tipo, dataInicio: dIni, dataFim: dFim }, function(resp) {
       document.getElementById('pinFuncFalta').value = "";
-      if (resp.indexOf("Aviso") !== -1) {
-        mostrarPopupPersonalizado({ titulo: "Erro de Validação", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" });
-      } else {
-        mostrarPopupPersonalizado({ titulo: "Pedido Submetido!", mensagem: resp, tipo: "sucesso" });
-        setTimeout(voltarAoEcraPrincipal, 2500); 
-      }
+      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Erro de Validação", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); } 
+      else { mostrarPopupPersonalizado({ titulo: "Pedido Submetido!", mensagem: resp, tipo: "sucesso" }); setTimeout(voltarAoEcraPrincipal, 2500); }
     });
   }
 
@@ -778,14 +630,10 @@
     var tipo = document.getElementById('tipoAusencia').value;
     var dIni = document.getElementById('dataFolgaInicio').value;
     var dFim = document.getElementById('dataFolgaFim').value || dIni;
-    
     if(!nome || !tipo || !dIni) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha todos os campos obrigatórios.", tipo: "erro" }); return; }
     
     mostrarPopupPersonalizado({ titulo: "A Executar...", mensagem: "A processar registos no sistema...", tipo: "processando" });
-    chamarAPIJsonp({
-      action: "lancarAusenciaAdminJsonp",
-      nome: nome, tipo: tipo, dataInicio: dIni, dataFim: dFim, senha: senhaAdminSessao
-    }, function(resp) {
+    chamarAPIJsonp({ action: "lancarAusenciaAdminJsonp", nome: nome, tipo: tipo, dataInicio: dIni, dataFim: dFim, senha: senhaAdminSessao }, function(resp) {
       mostrarPopupPersonalizado({ titulo: "Registo Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
     });
   }
@@ -795,14 +643,10 @@
     var funcionario = document.getElementById('selecaoFuncionario').value;
     var dataInicio = document.getElementById('dataInicio').value;
     var dataFim = document.getElementById('dataFim').value;
-    
     if(!funcionario || !dataInicio || !dataFim) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione o funcionário e as datas.", tipo: "erro" }); return; }
     
     mostrarPopupPersonalizado({ titulo: "A Compilar Relatório...", mensagem: "A gerar ficheiros PDF e a preparar o envio por e-mail...", tipo: "processando" });
-    chamarAPIJsonp({
-      action: "gerarPdfJsonp",
-      funcionario: funcionario, dataInicio: dataInicio, dataFim: dataFim, senha: senhaAdminSessao
-    }, function(resp) {
+    chamarAPIJsonp({ action: "gerarPdfJsonp", funcionario: funcionario, dataInicio: dataInicio, dataFim: dataFim, senha: senhaAdminSessao }, function(resp) {
       mostrarPopupPersonalizado({ titulo: "Exportação Concluída", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
     });
   }
@@ -812,69 +656,48 @@
     var nome = document.getElementById('nomeNovo').value;
     var pin = document.getElementById('pinNovo').value;
     var filial = document.getElementById('filialNovo').value;
-    
     if(!nome || !pin) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha o nome e o PIN.", tipo: "erro" }); return; }
     
     mostrarPopupPersonalizado({ titulo: "A Guardar...", mensagem: "A registar novo colaborador na base de dados...", tipo: "processando" });
-    chamarAPIJsonp({
-      action: "adicionarFuncionarioJsonp",
-      nome: nome, pin: pin, filial: filial, senha: senhaAdminSessao
-    }, function(resp) { 
+    chamarAPIJsonp({ action: "adicionarFuncionarioJsonp", nome: nome, pin: pin, filial: filial, senha: senhaAdminSessao }, function(resp) { 
       mostrarPopupPersonalizado({ titulo: "Colaborador Registado", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
-      carregarFuncionariosEmTodosOsCampos(); 
-      document.getElementById('nomeNovo').value = "";
-      document.getElementById('pinNovo').value = "";
+      carregarFuncionariosEmTodosOsCampos(); document.getElementById('nomeNovo').value = ""; document.getElementById('pinNovo').value = "";
     });
   }
 
   function submeterRemocaoFuncionario() {
     if (!navigator.onLine) { mostrarPopupPersonalizado({ titulo: "Sem Conexão", mensagem: "Dispositivo offline.", tipo: "erro" }); return; }
     var nome = document.getElementById('nomeRemover').value;
-    
     if(!nome) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione o colaborador a inativar.", tipo: "erro" }); return; }
     
     mostrarPopupPersonalizado({ titulo: "A Atualizar...", mensagem: "A inativar o colaborador selecionado...", tipo: "processando" });
-    chamarAPIJsonp({
-      action: "removerFuncionarioJsonp",
-      nome: nome, senha: senhaAdminSessao
-    }, function(resp) { 
-      mostrarPopupPersonalizado({ titulo: "Colaborador Inativado", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
-      carregarFuncionariosEmTodosOsCampos(); 
+    chamarAPIJsonp({ action: "removerFuncionarioJsonp", nome: nome, senha: senhaAdminSessao }, function(resp) { 
+      mostrarPopupPersonalizado({ titulo: "Colaborador Inativado", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); carregarFuncionariosEmTodosOsCampos(); 
     });
   }
 
   function abrirSubModulo(id) {
     document.getElementById('admin-sub-menu').style.display = 'none';
-    ['ausencias', 'pdf', 'funcionario', 'remover'].forEach(function(m) {
-      document.getElementById('admin-sub-' + m).style.display = (m === id) ? 'block' : 'none';
-    });
+    ['ausencias', 'pdf', 'funcionario', 'remover'].forEach(function(m) { document.getElementById('admin-sub-' + m).style.display = (m === id) ? 'block' : 'none'; });
     document.getElementById('adminNavigationGroup').style.display = 'block';
   }
 
   function voltarAoMenuCentralAdmin() {
-    ['ausencias', 'pdf', 'funcionario', 'remover'].forEach(function(m) {
-      document.getElementById('admin-sub-' + m).style.display = 'none';
-    });
-    document.getElementById('admin-sub-menu').style.display = 'block';
-    document.getElementById('adminNavigationGroup').style.display = 'none';
+    ['ausencias', 'pdf', 'funcionario', 'remover'].forEach(function(m) { document.getElementById('admin-sub-' + m).style.display = 'none'; });
+    document.getElementById('admin-sub-menu').style.display = 'block'; document.getElementById('adminNavigationGroup').style.display = 'none';
   }
 
   function limparFeedbackPonto() { gerirErroCampo("erro-nome-ponto", ""); gerirErroCampo("erro-pin-ponto", ""); }
   function gerirErroCampo(id, msg) {
     var cp = document.getElementById(id); if (!cp) return;
     if (msg) { 
-      cp.innerHTML = msg; 
-      cp.style.display = "flex"; 
+      cp.innerHTML = msg; cp.style.display = "flex"; 
       var elPai = cp.parentElement;
       if (elPai.querySelector('.form-control') || elPai.querySelector('.pin-dots-container')) {
         var caixa = elPai.querySelector('.form-control') || elPai.querySelector('.pin-dots-container');
-        caixa.style.borderColor = 'var(--danger)';
-        setTimeout(function() { caixa.style.borderColor = 'transparent'; }, 3000);
+        caixa.style.borderColor = 'var(--danger)'; setTimeout(function() { caixa.style.borderColor = 'transparent'; }, 3000);
       }
-    } else { 
-      cp.innerHTML = ""; 
-      cp.style.display = "none"; 
-    }
+    } else { cp.innerHTML = ""; cp.style.display = "none"; }
   }
 </script>
 </body>
