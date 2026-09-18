@@ -120,7 +120,7 @@
     .app-footer { text-align: center; font-size: 0.85rem; font-weight: 600; color: #94a3b8; padding: 18px 24px; display: flex; justify-content: center; align-items: center; background: #ffffff; border-top: 1px solid var(--border); }
 
     .campo-obrigatorio { color: var(--danger); font-weight: 800; margin-left: 2px; }
-    .erro-campo { color: var(--danger); font-size: 0.85rem; font-weight: 600; margin-top: 8px; display: none; display: flex; align-items: center; gap: 4px; }
+    .erro-campo { color: var(--danger); font-size: 0.85rem; font-weight: 600; margin-top: 8px; display: none; align-items: center; gap: 4px; }
     .erro-campo::before { content: '⚠️'; font-size: 0.9rem; }
   </style>
 </head>
@@ -323,7 +323,7 @@
 </div>
 
 <script>
-  // INSIRA AQUI O SEU LINK DA API GERADO NO GOOGLE APPS SCRIPT
+  // LINK DA API GERADO NO GOOGLE APPS SCRIPT
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
   
   var senhaAdminSessao = "";
@@ -358,7 +358,7 @@
     estaOnline = false;
     var gpsDot = document.getElementById('gpsIndicator');
     if (gpsDot) gpsDot.classList.add('offline');
-    mostrarPopupPersonalizado({ titulo: "Sem Conexão à Internet", mensagem: "O dispositivo perdeu o sinal. A validação automática de ponto está suspensa até recuperar a ligação.", tipo: "erro" });
+    mostrarPopupPersonalizado({ titulo: "Sem Conexão à Internet", mensagem: "O dispositivo perdeu o sinal. A validação de ponto está suspensa até recuperar a ligação.", tipo: "erro" });
   });
 
   function atualizarPinDisplay(inputId, containerId) {
@@ -450,29 +450,58 @@
   function chamarAPIJsonp(params, callbackSucesso) {
     if (!navigator.onLine) {
       emProcessamento = false;
-      mostrarPopupPersonalizado({ titulo: "Sem Conexão", mensagem: "O dispositivo está offline. Verifique a sua internet.", tipo: "erro" }); return;
+      var btn = document.getElementById('btnPonto');
+      if (btn) btn.disabled = false;
+      mostrarPopupPersonalizado({ titulo: "Sem Conexão", mensagem: "O dispositivo está offline. Verifique a sua internet.", tipo: "erro" });
+      return;
     }
-    fetch('https://api.ipify.org?format=json').then(res => res.json()).then(data => {
-        params.ip = data.ip || "Não disponível"; enviarPedidoComIp(params, callbackSucesso);
-    }).catch(() => {
-        params.ip = "Indisponível"; enviarPedidoComIp(params, callbackSucesso);
-    });
+
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, 1200);
+
+    fetch('https://api.ipify.org?format=json', { signal: controller.signal })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        clearTimeout(timeoutId);
+        params.ip = data.ip || "Não disponível";
+        enviarPedidoComIp(params, callbackSucesso);
+      })
+      .catch(function() {
+        clearTimeout(timeoutId);
+        params.ip = "Não disponível";
+        enviarPedidoComIp(params, callbackSucesso);
+      });
   }
 
   function enviarPedidoComIp(params, callbackSucesso) {
     var cbName = "jsonp_cb_" + Math.random().toString(36).substring(2, 9);
+    var script = document.createElement('script');
+    script.id = cbName;
+
     window[cbName] = function(dados) {
-      delete window[cbName]; var scriptEl = document.getElementById(cbName);
-      if (scriptEl) scriptEl.remove(); if (callbackSucesso) callbackSucesso(dados);
+      delete window[cbName];
+      if (script && script.parentNode) script.remove();
+      if (callbackSucesso) callbackSucesso(dados);
     };
+
     var url = APP_SCRIPT_URL + "?";
-    for (var key in params) { if (params.hasOwnProperty(key)) url += encodeURIComponent(key) + "=" + encodeURIComponent(params[key]) + "&"; }
+    for (var key in params) {
+      if (params.hasOwnProperty(key)) {
+        url += encodeURIComponent(key) + "=" + encodeURIComponent(params[key]) + "&";
+      }
+    }
     url += "callback=" + cbName;
-    var script = document.createElement('script'); script.id = cbName; script.src = url;
+    script.src = url;
+
     script.onerror = function() {
-      delete window[cbName]; script.remove(); emProcessamento = false;
-      mostrarPopupPersonalizado({ titulo: "Falha no Servidor", mensagem: "Não foi possível comunicar com o sistema central.", tipo: "erro" });
+      delete window[cbName];
+      if (script && script.parentNode) script.remove();
+      emProcessamento = false;
+      var btn = document.getElementById('btnPonto');
+      if (btn) btn.disabled = false;
+      mostrarPopupPersonalizado({ titulo: "Falha no Servidor", mensagem: "Não foi possível comunicar com o sistema central. Tente novamente.", tipo: "erro" });
     };
+
     document.body.appendChild(script);
   }
 
@@ -587,8 +616,13 @@
                 isMock: pos.mocked || (pos.coords && pos.coords.mocked), disp: obterDetalhesDispositivo(), ua: navigator.userAgent
             }, function(resposta) {
                 document.getElementById('pinPonto').value = ""; atualizarPinDisplay('pinPonto', 'dotsPonto');
-                if (resposta.indexOf("Aviso") !== -1) { gerirErroCampo("erro-pin-ponto", resposta.replace("Aviso: ", "")); fecharToast(); } 
-                else { mostrarPopupPersonalizado({ titulo: "Registo Validado!", mensagem: resposta, tipo: "sucesso" }); }
+                emProcessamento = false; if (btn) btn.disabled = false;
+                if (resposta.indexOf("Aviso") !== -1) { 
+                  gerirErroCampo("erro-pin-ponto", resposta.replace("Aviso: ", "")); 
+                  fecharToast(); 
+                } else { 
+                  mostrarPopupPersonalizado({ titulo: "Registo Validado!", mensagem: resposta, tipo: "sucesso" }); 
+                }
             });
         }, 
         function(erro) {
