@@ -58,9 +58,9 @@
     .form-control:focus { border-color: var(--accent); background-color: #ffffff; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15); }
     .form-control::placeholder { color: #94a3b8; font-weight: 500; }
     
-    select.form-control { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 46px; cursor: pointer; }
+    select.form-control { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
     
-    #section-admin .form-control, #section-falta-func .form-control { padding: 14px 16px; font-size: 0.95rem; border-radius: 12px; }
+    #section-admin .form-control, #section-falta-func .form-control { padding: 14px 14px; font-size: 0.95rem; border-radius: 12px; }
     #section-admin input[type="date"].form-control, #section-falta-func input[type="date"].form-control { color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
 
     .pin-box-wrapper { position: relative; width: 100%; margin-bottom: 8px; }
@@ -149,7 +149,7 @@
         </div>
       </div>
       <select id="nomeFuncionario" class="form-control" onchange="limparFeedbackPonto(); focarPin('pinPonto')">
-        <option value="">A carregar lista de equipa...</option>
+        <option value="">Selecione o colaborador</option>
       </select>
       <div id="erro-nome-ponto" class="erro-campo" style="display:none;"></div>
     </div>
@@ -197,7 +197,7 @@
         <div class="form-group">
           <label>Motivo da Ausência <span class="campo-obrigatorio">*</span></label>
           <select id="tipoFaltaFunc" class="form-control">
-            <option value="" disabled selected>Selecione o motivo da ausência</option>
+            <option value="" disabled selected>Selecione o motivo</option>
             <option value="🏖️ Férias">🏖️ Férias</option>
             <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
             <option value="📄 Falta Justificada">📄 Falta Justificada</option>
@@ -254,7 +254,7 @@
         <div class="form-group">
           <label>Motivo da Ausência</label>
           <select id="tipoAusencia" class="form-control">
-            <option value="" disabled selected>Selecione o motivo da ausência</option>
+            <option value="" disabled selected>Selecione o motivo</option>
             <option value="🏖️ Férias">🏖️ Férias</option>
             <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
             <option value="📄 Falta Justificada">📄 Falta Justificada</option>
