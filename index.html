@@ -199,7 +199,7 @@
           <button class="btn btn-secondary" onclick="abrirSubModulo('acordo')"><span>🤝</span> Acordo 1:1</button>
           <button class="btn btn-secondary" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
           <button class="btn btn-secondary" onclick="abrirSubModulo('pdf')"><span>📄</span> Exportar PDF</button>
-          <button class="btn btn-secondary btn-full" onclick="abrirSubModulo('funcionario')"><span>➕</span> Registar Novo Colaborador</button>
+          <button class="btn btn-secondary btn-full" onclick="abrirSubModulo('funcionario')"><span>➕/❌</span> Gerir Equipa</button>
         </div>
       </div>
     </div>
@@ -260,7 +260,7 @@
       </div>
     </div>
 
-    <!-- MÓDULO: NOVO COLABORADOR -->
+    <!-- MÓDULO: NOVO COLABORADOR / INATIVAR -->
     <div id="admin-sub-funcionario" style="display: none;">
       <div class="admin-card">
         <h3>➕ Adicionar Colaborador</h3>
@@ -275,6 +275,7 @@
         </div>
       </div>
     </div>
+
     
     <div class="nav-navigation-block" id="adminNavigationGroup" style="display: none; margin-bottom: 16px;">
       <button class="btn btn-secondary" onclick="voltarAoMenuCentralAdmin()">⬅️ Voltar ao Menu</button>
@@ -491,12 +492,19 @@
 
   function abrirSubModulo(id) {
     document.getElementById('admin-sub-menu').style.display = 'none';
-    ['ausencias', 'pdf', 'funcionario', 'remover', 'acordo', 'corrigir'].forEach(function(m) { document.getElementById('admin-sub-' + m).style.display = (m === id) ? 'block' : 'none'; });
+    ['ausencias', 'pdf', 'funcionario', 'acordo', 'corrigir'].forEach(function(m) { 
+      var el = document.getElementById('admin-sub-' + m);
+      if (el) el.style.display = (m === id) ? 'block' : 'none'; 
+    });
     document.getElementById('adminNavigationGroup').style.display = 'block';
   }
   function voltarAoMenuCentralAdmin() {
-    ['ausencias', 'pdf', 'funcionario', 'remover', 'acordo', 'corrigir'].forEach(function(m) { document.getElementById('admin-sub-' + m).style.display = 'none'; });
-    document.getElementById('admin-sub-menu').style.display = 'block'; document.getElementById('adminNavigationGroup').style.display = 'none';
+    ['ausencias', 'pdf', 'funcionario', 'acordo', 'corrigir'].forEach(function(m) { 
+      var el = document.getElementById('admin-sub-' + m);
+      if (el) el.style.display = 'none'; 
+    });
+    document.getElementById('admin-sub-menu').style.display = 'block'; 
+    document.getElementById('adminNavigationGroup').style.display = 'none';
   }
   function limparFeedbackPonto() { gerirErroCampo("erro-nome-ponto", ""); gerirErroCampo("erro-pin-ponto", ""); }
   function gerirErroCampo(id, msg) {
