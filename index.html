@@ -34,514 +34,100 @@
       --radius-lg: 26px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg); color: var(--text); padding: 12px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+    .container { width: 100%; max-width: 440px; background: var(--card-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); overflow: hidden; position: relative; margin-top: 6px; border: 1px solid rgba(226, 232, 240, 0.8); }
+    
+    .header { background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); color: white; padding: 24px 20px 20px; text-align: center; position: relative; }
+    .logo-empresa { width: 100%; max-height: 95px; margin-bottom: 16px; border-radius: var(--radius-sm); object-fit: contain; background: #ffffff; padding: 8px 12px; display: block; box-shadow: 0 6px 18px rgba(0,0,0,0.18); border: 1px solid rgba(255,255,255,0.15); }
+    .header h2 { font-size: 1.25rem; font-weight: 800; margin-bottom: 14px; letter-spacing: -0.3px; color: #f8fafc; }
+    
+    .live-clock-card { background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: var(--radius-md); padding: 14px 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100%; }
+    .clock-time-row { display: inline-flex; align-items: center; gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 2.6rem; font-weight: 700; color: #ffffff; letter-spacing: 0.5px; line-height: 1; font-variant-numeric: tabular-nums; }
+    .clock-date-row { font-size: 0.82rem; font-weight: 600; color: rgba(255, 255, 255, 0.75); letter-spacing: 0.6px; text-transform: uppercase; }
+    
+    .gps-badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; background: rgba(16, 185, 129, 0.15); border-radius: 20px; }
+    .gps-pulse-dot { width: 10px; height: 10px; background: #10b981; border-radius: 50%; position: relative; }
+    .gps-pulse-dot::after { content: ''; position: absolute; top: -2px; left: -2px; width: 14px; height: 14px; border-radius: 50%; background: #10b981; opacity: 0.4; animation: pulseGps 2s infinite ease-out; }
+    @keyframes pulseGps { 0% { transform: scale(0.9); opacity: 0.6; } 100% { transform: scale(2.2); opacity: 0; } }
+    .gps-pulse-dot.offline { background: #ef4444; } .gps-pulse-dot.offline::after { animation: none; }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 440px;
-      background: var(--card-bg);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-md);
-      overflow: hidden;
-      position: relative;
-      margin-top: 6px;
-      border: 1px solid rgba(226, 232, 240, 0.8);
-    }
-
-    /* HEADER */
-    .header {
-      background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
-      color: white;
-      padding: 24px 20px 20px;
-      text-align: center;
-      position: relative;
-    }
-
-    .logo-empresa {
-      width: 100%;
-      max-height: 95px;
-      margin-bottom: 16px;
-      border-radius: var(--radius-sm);
-      object-fit: contain;
-      background: #ffffff;
-      padding: 8px 12px;
-      display: block;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
-      border: 1px solid rgba(255,255,255,0.15);
-    }
-
-    .header h2 {
-      font-size: 1.25rem;
-      font-weight: 800;
-      margin-bottom: 14px;
-      letter-spacing: -0.3px;
-      color: #f8fafc;
-    }
-
-    /* CARTÃO DO RELÓGIO */
-    .live-clock-card {
-      background: rgba(255, 255, 255, 0.06);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: var(--radius-md);
-      padding: 14px 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      width: 100%;
-    }
-
-    .clock-time-row {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 2.6rem;
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: 0.5px;
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .clock-date-row {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.75);
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-    }
-
-    .gps-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 8px;
-      background: rgba(16, 185, 129, 0.15);
-      border-radius: 20px;
-    }
-
-    .gps-pulse-dot {
-      width: 10px;
-      height: 10px;
-      background: #10b981;
-      border-radius: 50%;
-      position: relative;
-    }
-
-    .gps-pulse-dot::after {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #10b981;
-      opacity: 0.4;
-      animation: pulseGps 2s infinite ease-out;
-    }
-
-    @keyframes pulseGps {
-      0% { transform: scale(0.9); opacity: 0.6; }
-      100% { transform: scale(2.2); opacity: 0; }
-    }
-
-    .gps-pulse-dot.offline {
-      background: #ef4444;
-    }
-    .gps-pulse-dot.offline::after { animation: none; }
-
-    /* SECÇÕES */
-    .content-section {
-      padding: 26px 22px;
-      display: none;
-      animation: fadeIn 0.25s ease-out;
-    }
+    .content-section { padding: 26px 22px; display: none; animation: fadeIn 0.25s ease-out; }
     .content-section.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* CAMPOS & FORMULÁRIO */
+    
     .form-group { margin-bottom: 20px; }
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: var(--primary);
-      letter-spacing: -0.2px;
-    }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: var(--primary); letter-spacing: -0.2px; }
+    .form-control { width: 100%; padding: 15px 16px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.98rem; background-color: var(--input-bg); color: var(--primary); font-weight: 600; outline: none; transition: all 0.2s ease; }
+    .form-control:focus { border-color: var(--accent); background-color: #ffffff; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
+    select.form-control { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+    #section-admin input[type="date"].form-control, #section-falta-func input[type="date"].form-control { color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
 
-    .form-control {
-      width: 100%;
-      padding: 15px 16px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      font-size: 0.98rem;
-      background-color: var(--input-bg);
-      color: var(--primary);
-      font-weight: 600;
-      outline: none;
-      transition: all 0.2s ease;
-    }
-
-    .form-control:focus {
-      border-color: var(--accent);
-      background-color: #ffffff;
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
-    }
-
-    select.form-control {
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      padding-right: 38px;
-      cursor: pointer;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
-    #section-admin input[type="date"].form-control, 
-    #section-falta-func input[type="date"].form-control {
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* PIN BOX MODERNO */
     .pin-box-wrapper { position: relative; width: 100%; margin-bottom: 4px; }
-    .pin-hidden-input {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      z-index: 10;
-      cursor: pointer;
-    }
+    .pin-hidden-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; }
+    .pin-dots-container { display: flex; justify-content: center; align-items: center; gap: 20px; padding: 18px; background: var(--input-bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm); transition: all 0.2s ease; }
+    .pin-hidden-input:focus + .pin-dots-container { border-color: var(--accent); background: #ffffff; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
+    .pin-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #cbd5e1; background: transparent; transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .pin-dot.filled { background: var(--accent); border-color: var(--accent); transform: scale(1.35); box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4); }
 
-    .pin-dots-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-      padding: 18px;
-      background: var(--input-bg);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      transition: all 0.2s ease;
-    }
-
-    .pin-hidden-input:focus + .pin-dots-container {
-      border-color: var(--accent);
-      background: #ffffff;
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
-    }
-
-    .pin-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 2px solid #cbd5e1;
-      background: transparent;
-      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .pin-dot.filled {
-      background: var(--accent);
-      border-color: var(--accent);
-      transform: scale(1.35);
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
-    }
-
-    /* BOTÕES */
-    .btn {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: var(--radius-sm);
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-      letter-spacing: -0.2px;
-      user-select: none;
-    }
-
+    .btn { width: 100%; padding: 16px; border: none; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 700; cursor: pointer; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease; letter-spacing: -0.2px; user-select: none; margin-bottom:14px; }
     .btn:active { transform: scale(0.98); }
-
-    .btn-primary {
-      background: var(--accent-gradient);
-      color: white;
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
-    }
-
-    .btn-primary:hover {
-      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
-    }
-
-    .btn-primary:disabled {
-      background: #cbd5e1;
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
-      color: #94a3b8;
-    }
-
-    .btn-secondary {
-      background: #f1f5f9;
-      color: var(--primary);
-      border: 1px solid var(--border);
-    }
-
+    .btn-primary { background: var(--accent-gradient); color: white; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35); }
+    .btn-primary:hover { box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45); }
+    .btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; transform: none; color: #94a3b8; }
+    .btn-secondary { background: #f1f5f9; color: var(--primary); border: 1px solid var(--border); }
     .btn-secondary:hover { background: #e2e8f0; }
+    .btn-danger { background: var(--danger); color: white; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3); }
 
-    .btn-danger {
-      background: var(--danger);
-      color: white;
-      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
-    }
-
-    .top-action-btn {
-      background: #f8fafc;
-      color: var(--text-muted);
-      border: 1px solid var(--border);
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 1.05rem;
-      transition: all 0.2s ease;
-    }
-
-    .top-action-btn:hover {
-      background: #f1f5f9;
-      color: var(--primary);
-      border-color: #cbd5e1;
-    }
-
+    .top-action-btn { background: #f8fafc; color: var(--text-muted); border: 1px solid var(--border); width: 38px; height: 38px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.05rem; transition: all 0.2s ease; }
+    .top-action-btn:hover { background: #f1f5f9; color: var(--primary); border-color: #cbd5e1; }
     .top-action-btn:active { transform: scale(0.92); }
 
-    /* CARTÕES DE CONTEÚDO ADMIN */
-    .admin-card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 20px;
-      margin-bottom: 16px;
-      background: #ffffff;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .admin-card h3 {
-      font-size: 1.05rem;
-      margin-bottom: 16px;
-      color: var(--primary);
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .menu-admin-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .menu-admin-grid .btn {
-      padding: 20px 10px;
-      font-size: 0.88rem;
-      flex-direction: column;
-      gap: 8px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
-      background: #ffffff;
-    }
-
-    .menu-admin-grid .btn:hover {
-      border-color: var(--accent);
-      background: #f8fafc;
-    }
-
+    .admin-card { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; margin-bottom: 16px; background: #ffffff; box-shadow: var(--shadow-sm); }
+    .admin-card h3 { font-size: 1.05rem; margin-bottom: 16px; color: var(--primary); font-weight: 800; display: flex; align-items: center; gap: 8px; }
+    .menu-admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .menu-admin-grid .btn { padding: 20px 10px; font-size: 0.88rem; flex-direction: column; gap: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #ffffff; margin-bottom:0;}
+    .menu-admin-grid .btn:hover { border-color: var(--accent); background: #f8fafc; }
     .menu-admin-grid .btn span { font-size: 1.5rem; }
+    .menu-admin-grid .btn-full { grid-column: span 2; flex-direction: row; font-size: 1rem;}
 
-    /* TOAST / MODAL */
-    .toast-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(15, 23, 42, 0.65);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      z-index: 100000;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .toast-card {
-      background: #ffffff;
-      border-radius: var(--radius-lg);
-      padding: 28px 22px;
-      max-width: 350px;
-      width: 100%;
-      text-align: center;
-      box-shadow: var(--shadow-lg);
-      animation: popModal 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-      border: 1px solid rgba(255,255,255,0.4);
-    }
-
-    @keyframes popModal {
-      from { transform: scale(0.85); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    .toast-icon {
-      font-size: 3.2rem;
-      margin-bottom: 14px;
-    }
-
-    .ampulheta-animada {
-      display: inline-block;
-      animation: rodarAmpulheta 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    }
-
-    @keyframes rodarAmpulheta {
-      0% { transform: rotate(0deg); }
-      50% { transform: rotate(180deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .toast-title {
-      font-size: 1.2rem;
-      font-weight: 800;
-      margin-bottom: 6px;
-      color: var(--primary);
-    }
-
-    .toast-body {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-bottom: 22px;
-      line-height: 1.5;
-    }
-
+    .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; }
+    .toast-card { background: #ffffff; border-radius: var(--radius-lg); padding: 28px 22px; max-width: 350px; width: 100%; text-align: center; box-shadow: var(--shadow-lg); animation: popModal 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); border: 1px solid rgba(255,255,255,0.4); }
+    @keyframes popModal { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .toast-icon { font-size: 3.2rem; margin-bottom: 14px; }
+    .ampulheta-animada { display: inline-block; animation: rodarAmpulheta 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+    @keyframes rodarAmpulheta { 0% { transform: rotate(0deg); } 50% { transform: rotate(180deg); } 100% { transform: rotate(360deg); } }
+    .toast-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; color: var(--primary); }
+    .toast-body { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 22px; line-height: 1.5; }
     .toast-actions { display: flex; gap: 10px; }
-    .toast-btn {
-      flex: 1;
-      padding: 14px;
-      border: none;
-      border-radius: var(--radius-sm);
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
+    .toast-btn { flex: 1; padding: 14px; border: none; border-radius: var(--radius-sm); font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.15s ease; }
     .toast-btn-primary { background: var(--accent-gradient); color: white; }
     .toast-btn-secondary { background: #f1f5f9; color: var(--text); }
 
-    /* FOOTER */
-    .app-footer {
-      text-align: center;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: #94a3b8;
-      padding: 16px 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #fafbfc;
-      border-top: 1px solid var(--border);
-    }
-
+    .app-footer { text-align: center; font-size: 0.82rem; font-weight: 600; color: #94a3b8; padding: 16px 20px; display: flex; justify-content: center; align-items: center; background: #fafbfc; border-top: 1px solid var(--border); }
     .campo-obrigatorio { color: var(--danger); font-weight: 800; margin-left: 2px; }
-    .erro-campo {
-      color: var(--danger);
-      font-size: 0.82rem;
-      font-weight: 600;
-      margin-top: 6px;
-      display: none;
-      align-items: center;
-      gap: 4px;
-    }
+    .erro-campo { color: var(--danger); font-size: 0.82rem; font-weight: 600; margin-top: 6px; display: none; align-items: center; gap: 4px; }
     .erro-campo::before { content: '⚠️'; font-size: 0.85rem; }
-
     .password-eye-wrapper { position: relative; width: 100%; }
     .password-eye-wrapper .form-control { padding-right: 50px; }
-    .eye-toggle-btn {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      font-size: 1.15rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-      color: var(--text-muted);
-    }
+    .eye-toggle-btn { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; font-size: 1.15rem; display: flex; align-items: center; justify-content: center; z-index: 10; color: var(--text-muted); }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- TOPO -->
   <div class="header">
     <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo Balcão Agrícola">
     <h2 id="headerTitle">Controlo de Assiduidade</h2>
-    
     <div class="live-clock-card" id="headerClockBox">
       <div class="clock-time-row">
-        <div class="gps-badge">
-          <div class="gps-pulse-dot" id="gpsIndicator"></div>
-        </div>
+        <div class="gps-badge"><div class="gps-pulse-dot" id="gpsIndicator"></div></div>
         <span id="liveClockTime">00:00:00</span>
       </div>
       <div class="clock-date-row" id="liveClockDate">A sincronizar data...</div>
     </div>
   </div>
   
-  <!-- ECRÃ 1: PICAGEM DE PONTO -->
   <div id="section-ponto" class="content-section active">
     <div class="form-group">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -567,26 +153,15 @@
       </div>
       <div id="erro-pin-ponto" class="erro-campo" style="display:none;"></div>
     </div>
-
-    <button id="btnPonto" class="btn btn-primary" onclick="registarPontoDiario()">
-      <span style="font-size: 1.15rem;">👆</span> Validar Registo de Ponto
-    </button>
+    <button id="btnPonto" class="btn btn-primary" onclick="registarPontoDiario()"><span style="font-size: 1.15rem;">👆</span> Validar Registo de Ponto</button>
   </div>
 
-  <!-- ECRÃ 2: COMUNICAR AUSÊNCIA -->
   <div id="section-falta-func" class="content-section">
     <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
       <h3 style="margin-bottom: 8px; color: var(--primary); text-align: left;">📅 Comunicar Ausência</h3>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; text-align: left;">
-        Submeta os detalhes da sua ausência. A gerência será informada de imediato por e-mail.
-      </p>
-      
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; text-align: left;">Submeta os detalhes da sua ausência à gerência.</p>
       <div class="admin-card" style="margin-bottom: 0;">
-        <div class="form-group">
-          <label>O seu Nome <span class="campo-obrigatorio">*</span></label>
-          <select id="nomeFuncFalta" class="form-control"></select>
-        </div>
-
+        <div class="form-group"><label>O seu Nome <span class="campo-obrigatorio">*</span></label><select id="nomeFuncFalta" class="form-control"></select></div>
         <div class="form-group">
           <label>PIN de Acesso (4 dígitos) <span class="campo-obrigatorio">*</span></label>
           <div class="password-eye-wrapper">
@@ -594,12 +169,7 @@
             <button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput('pinFuncFalta', this)">👁️</button>
           </div>
         </div>
-
-        <div class="form-group">
-          <label>O seu E-mail de Contacto <span class="campo-obrigatorio">*</span></label>
-          <input type="email" id="emailFuncFalta" class="form-control" placeholder="ex: o_meu_email@email.com">
-        </div>
-
+        <div class="form-group"><label>O seu E-mail <span class="campo-obrigatorio">*</span></label><input type="email" id="emailFuncFalta" class="form-control" placeholder="ex: email@email.com"></div>
         <div class="form-group">
           <label>Motivo da Ausência <span class="campo-obrigatorio">*</span></label>
           <select id="tipoFaltaFunc" class="form-control">
@@ -610,57 +180,36 @@
             <option value="⚠️ Falta Injustificada">⚠️ Falta Injustificada</option>
           </select>
         </div>
-
-        <div class="form-group">
-          <label>Data de Início <span class="campo-obrigatorio">*</span></label>
-          <input type="date" id="dataFaltaFuncInicio" class="form-control">
-        </div>
-        <div class="form-group">
-          <label>Data de Fim <span class="campo-obrigatorio">*</span></label>
-          <input type="date" id="dataFaltaFuncFim" class="form-control">
-        </div>
-
-        <button class="btn btn-primary" onclick="submeterFaltaFuncionario()">Enviar Pedido à Gerência</button>
+        <div class="form-group"><label>Data de Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncInicio" class="form-control"></div>
+        <div class="form-group"><label>Data de Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncFim" class="form-control"></div>
+        <button class="btn btn-primary" onclick="submeterFaltaFuncionario()">Enviar Pedido</button>
       </div>
-
       <div style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 20px;">
         <button class="btn btn-secondary" onclick="voltarAoEcraPrincipal()">⬅️ Voltar ao Início</button>
       </div>
     </div>
   </div>
   
-  <!-- ECRÃ 3: PAINEL ADMIN -->
   <div id="section-admin" class="content-section">
     <div id="admin-sub-menu">
       <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
         <h3 style="margin-bottom: 16px; color: var(--primary); text-align: center;">⚙️ Painel de Gestão</h3>
         <div class="menu-admin-grid">
-          <button class="btn btn-secondary" onclick="abrirSubModulo('ausencias')">
-            <span>📅</span> Registar Faltas
-          </button>
-          <button class="btn btn-secondary" onclick="abrirSubModulo('pdf')">
-            <span>📄</span> Exportar PDF
-          </button>
-          <button class="btn btn-secondary" onclick="abrirSubModulo('funcionario')">
-            <span>➕</span> Novo Registo
-          </button>
-          <button class="btn btn-secondary" onclick="abrirSubModulo('remover')" style="color: var(--danger);">
-            <span>❌</span> Inativar
-          </button>
+          <button class="btn btn-secondary" onclick="abrirSubModulo('ausencias')"><span>📅</span> Lançar Faltas</button>
+          <button class="btn btn-secondary" onclick="abrirSubModulo('acordo')"><span>🤝</span> Acordo 1:1</button>
+          <button class="btn btn-secondary" onclick="abrirSubModulo('pdf')"><span>📄</span> Exportar PDF</button>
+          <button class="btn btn-secondary" onclick="abrirSubModulo('funcionario')"><span>➕</span> Novo Colab.</button>
+          <button class="btn btn-secondary btn-full" onclick="abrirSubModulo('remover')" style="color: var(--danger);"><span>❌</span> Inativar Colaborador</button>
         </div>
       </div>
     </div>
 
-    <!-- SUB-MÓDULO: REGISTAR AUSÊNCIA ADMIN -->
     <div id="admin-sub-ausencias" style="display: none;">
       <div class="admin-card">
         <h3>📅 Lançar Registo</h3>
+        <div class="form-group"><label>Colaborador</label><select id="nomeFuncionarioFolga" class="form-control"></select></div>
         <div class="form-group">
-          <label>Nome do Colaborador</label>
-          <select id="nomeFuncionarioFolga" class="form-control"></select>
-        </div>
-        <div class="form-group">
-          <label>Motivo da Ausência</label>
+          <label>Motivo</label>
           <select id="tipoAusencia" class="form-control">
             <option value="" disabled selected>Selecione o motivo</option>
             <option value="🏖️ Férias">🏖️ Férias</option>
@@ -670,40 +219,47 @@
             <option value="⚖️ Compensação de Horas">⚖️ Compensação de Horas</option>
           </select>
         </div>
-        <div class="form-group"><label>Data de Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaInicio" class="form-control"></div>
-        <div class="form-group"><label>Data de Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaFim" class="form-control"></div>
-        <button class="btn btn-primary" onclick="submeterAusenciaAdministrativa()">Confirmar Lançamento</button>
+        <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaInicio" class="form-control"></div>
+        <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaFim" class="form-control"></div>
+        <button class="btn btn-primary" onclick="submeterAusenciaAdministrativa()">Confirmar</button>
       </div>
     </div>
 
-    <!-- SUB-MÓDULO: PDF -->
+    <!-- NOVO MÓDULO: ACORDO DE HORAS -->
+    <div id="admin-sub-acordo" style="display: none;">
+      <div class="admin-card">
+        <h3>🤝 Acordo de Horas (1:1)</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">O dia selecionado passará a não aplicar qualquer majoração, servindo apenas para compensar futuras folgas.</p>
+        <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeAcordo" class="form-control"></select></div>
+        <div class="form-group"><label>Data do Trabalho Extra <span class="campo-obrigatorio">*</span></label><input type="date" id="dataAcordo" class="form-control"></div>
+        <button class="btn btn-primary" onclick="submeterAcordo()">Aplicar Acordo</button>
+      </div>
+    </div>
+
     <div id="admin-sub-pdf" style="display: none;">
       <div class="admin-card">
         <h3>📄 Exportar Relatório</h3>
-        <div class="form-group"><label>Selecionar Funcionário</label><select id="selecaoFuncionario" class="form-control"></select></div>
+        <div class="form-group"><label>Colaborador</label><select id="selecaoFuncionario" class="form-control"></select></div>
         <div class="form-group"><label>De:</label><input type="date" id="dataInicio" class="form-control"></div>
         <div class="form-group"><label>Até:</label><input type="date" id="dataFim" class="form-control"></div>
-        <button class="btn btn-primary" onclick="exportarRelatorioPDF()">Gerar e Enviar PDF</button>
+        <button class="btn btn-primary" onclick="exportarRelatorioPDF()">Gerar PDF</button>
       </div>
     </div>
 
-    <!-- SUB-MÓDULO: ADICIONAR -->
     <div id="admin-sub-funcionario" style="display: none;">
       <div class="admin-card">
         <h3>➕ Adicionar Colaborador</h3>
-        <div class="form-group"><label>Primeiro e Último Nome</label><input type="text" id="nomeNovo" class="form-control" placeholder="Ex: Ana Paula"></div>
-        <div class="form-group"><label>PIN de Acesso (4 dígitos)</label><input type="text" id="pinNovo" class="form-control" maxlength="4" placeholder="0000" inputmode="numeric"></div>
-        <div class="form-group"><label>Loja/Filial</label><select id="filialNovo" class="form-control"><option value="PATAIAS">Pataias</option><option value="GARCIA">Garcia</option></select></div>
-        <button class="btn btn-primary" onclick="submeterNovoFuncionario()">Registar Colaborador</button>
+        <div class="form-group"><label>Nome</label><input type="text" id="nomeNovo" class="form-control" placeholder="Ex: Ana Paula"></div>
+        <div class="form-group"><label>PIN (4 dígitos)</label><input type="text" id="pinNovo" class="form-control" maxlength="4" placeholder="0000" inputmode="numeric"></div>
+        <div class="form-group"><label>Filial</label><select id="filialNovo" class="form-control"><option value="PATAIAS">Pataias</option><option value="GARCIA">Garcia</option></select></div>
+        <button class="btn btn-primary" onclick="submeterNovoFuncionario()">Registar</button>
       </div>
     </div>
 
-    <!-- SUB-MÓDULO: REMOVER -->
     <div id="admin-sub-remover" style="display: none;">
       <div class="admin-card">
         <h3 style="color:var(--danger);">❌ Inativar Colaborador</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">O funcionário deixará de ter acesso à picagem de ponto. O histórico fica preservado.</p>
-        <div class="form-group"><label>Selecione o Funcionário</label><select id="nomeRemover" class="form-control"></select></div>
+        <div class="form-group"><label>Funcionário</label><select id="nomeRemover" class="form-control"></select></div>
         <button class="btn btn-danger" onclick="submeterRemocaoFuncionario()">Confirmar Inativação</button>
       </div>
     </div>
@@ -711,19 +267,14 @@
     <div class="nav-navigation-block" id="adminNavigationGroup" style="display: none; margin-bottom: 16px;">
       <button class="btn btn-secondary" onclick="voltarAoMenuCentralAdmin()">⬅️ Voltar ao Menu</button>
     </div>
-
     <div style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 20px;">
       <button class="btn btn-secondary" onclick="voltarAoEcraPrincipal()">Sair do Painel Admin</button>
     </div>
   </div>
 
-  <!-- RODAPÉ -->
-  <div class="app-footer" id="appFooter">
-    <p>© 2026 · Balcão Agrícola</p>
-  </div>
+  <div class="app-footer" id="appFooter"><p>© 2026 · Balcão Agrícola</p></div>
 </div>
 
-<!-- MODAL FLUTUANTE -->
 <div id="toastOverlay" class="toast-overlay" onclick="fecharToastOverlay(event)">
   <div class="toast-card">
     <div id="toastIcon" class="toast-icon">🟢</div>
@@ -737,210 +288,88 @@
 
 <script>
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
-  
-  var senhaAdminSessao = "";
-  var emProcessamento = false;
-  var estaOnline = navigator.onLine;
+  var senhaAdminSessao = ""; var emProcessamento = false; var estaOnline = navigator.onLine;
 
   function iniciarRelogio() {
     setInterval(function() {
       var agora = new Date();
       var horaStr = String(agora.getHours()).padStart(2, '0') + ':' + String(agora.getMinutes()).padStart(2, '0') + ':' + String(agora.getSeconds()).padStart(2, '0');
       var meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-      var diaStr = String(agora.getDate()).padStart(2, '0');
-      var mesStr = meses[agora.getMonth()];
-      var anoStr = agora.getFullYear();
-      var dataStr = diaStr + ' ' + mesStr + ' ' + anoStr;
-      
       var elTime = document.getElementById('liveClockTime');
       var elDate = document.getElementById('liveClockDate');
       if (elTime) elTime.innerText = horaStr;
-      if (elDate) elDate.innerText = dataStr;
+      if (elDate) elDate.innerText = String(agora.getDate()).padStart(2, '0') + ' ' + meses[agora.getMonth()] + ' ' + agora.getFullYear();
     }, 1000);
   }
 
-  window.addEventListener('online', function() {
-    estaOnline = true;
-    var gpsDot = document.getElementById('gpsIndicator');
-    if (gpsDot) gpsDot.classList.remove('offline');
-    mostrarPopupPersonalizado({ titulo: "Sinal Restabelecido", mensagem: "O dispositivo está online. Acesso retomado.", tipo: "sucesso" });
-  });
-
-  window.addEventListener('offline', function() {
-    estaOnline = false;
-    var gpsDot = document.getElementById('gpsIndicator');
-    if (gpsDot) gpsDot.classList.add('offline');
-    mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "O dispositivo perdeu o sinal de internet.", tipo: "erro" });
-  });
+  window.addEventListener('online', function() { estaOnline = true; var g = document.getElementById('gpsIndicator'); if(g) g.classList.remove('offline'); mostrarPopupPersonalizado({ titulo: "Online", mensagem: "Sinal retomado.", tipo: "sucesso" }); });
+  window.addEventListener('offline', function() { estaOnline = false; var g = document.getElementById('gpsIndicator'); if(g) g.classList.add('offline'); mostrarPopupPersonalizado({ titulo: "Offline", mensagem: "Sem ligação.", tipo: "erro" }); });
 
   function atualizarPinDisplay(inputId, containerId) {
-    var input = document.getElementById(inputId);
-    var val = input.value.replace(/[^0-9]/g, '');
-    input.value = val;
-    var container = document.getElementById(containerId);
-    if (!container) return;
-    var dots = container.children;
-    for (var i = 0; i < 4; i++) {
-      if (i < val.length) dots[i].classList.add('filled');
-      else dots[i].classList.remove('filled');
-    }
+    var input = document.getElementById(inputId); input.value = input.value.replace(/[^0-9]/g, '');
+    var dots = document.getElementById(containerId).children;
+    for (var i = 0; i < 4; i++) { if (i < input.value.length) dots[i].classList.add('filled'); else dots[i].classList.remove('filled'); }
   }
-
   function focarPin(inputId) { var input = document.getElementById(inputId); if (input) input.focus(); }
 
   function mostrarPopupPersonalizado(config) {
     var overlay = document.getElementById('toastOverlay');
+    document.getElementById('toastTitle').innerText = config.titulo || "Aviso";
+    document.getElementById('toastBody').innerHTML = config.mensagem || "";
     var icon = document.getElementById('toastIcon');
-    var title = document.getElementById('toastTitle');
-    var body = document.getElementById('toastBody');
-    var actionsContainer = document.getElementById('toastActionsContainer');
-
-    title.innerText = config.titulo || "Aviso";
-    body.innerHTML = config.mensagem || "";
-
-    if (config.tipo === "sucesso") { icon.className = "toast-icon"; icon.innerText = "✅"; } 
-    else if (config.tipo === "erro") { icon.className = "toast-icon"; icon.innerText = "❌"; } 
-    else if (config.tipo === "processando") { icon.className = "toast-icon ampulheta-animada"; icon.innerText = "⏳"; } 
-    else { icon.className = "toast-icon"; icon.innerText = config.icone || "💬"; }
-
-    actionsContainer.innerHTML = "";
-    if (config.tipo === "processando") {
-      actionsContainer.style.display = "none";
-    } else {
-      actionsContainer.style.display = "flex";
-      if (config.botoes && config.botoes.length > 0) {
-        config.botoes.forEach(function(btnInfo) {
-          var btn = document.createElement('button');
-          btn.className = "toast-btn " + (btnInfo.classe || "toast-btn-primary");
-          btn.innerText = btnInfo.texto; btn.onclick = btnInfo.acao;
-          actionsContainer.appendChild(btn);
-        });
-      } else {
-        var btnOk = document.createElement('button');
-        btnOk.className = "toast-btn toast-btn-primary"; btnOk.innerText = "Concluir"; btnOk.onclick = fecharToast;
-        actionsContainer.appendChild(btnOk);
-      }
+    if (config.tipo === "sucesso") icon.innerText = "✅"; else if (config.tipo === "erro") icon.innerText = "❌"; else if (config.tipo === "processando") { icon.className = "toast-icon ampulheta-animada"; icon.innerText = "⏳"; } else icon.innerText = config.icone || "💬";
+    
+    var acts = document.getElementById('toastActionsContainer'); acts.innerHTML = "";
+    if (config.tipo === "processando") acts.style.display = "none";
+    else {
+      acts.style.display = "flex";
+      if (config.botoes) config.botoes.forEach(function(b) { var btn = document.createElement('button'); btn.className = "toast-btn " + (b.classe || "toast-btn-primary"); btn.innerText = b.texto; btn.onclick = b.acao; acts.appendChild(btn); });
+      else { var btn = document.createElement('button'); btn.className = "toast-btn toast-btn-primary"; btn.innerText = "Concluir"; btn.onclick = fecharToast; acts.appendChild(btn); }
     }
     overlay.style.display = "flex";
   }
 
-  function fecharToast() { 
-    document.getElementById('toastOverlay').style.display = "none"; 
-    emProcessamento = false;
-    var btnPonto = document.getElementById('btnPonto');
-    if (btnPonto) btnPonto.disabled = false;
-  }
-
+  function fecharToast() { document.getElementById('toastOverlay').style.display = "none"; emProcessamento = false; var btn = document.getElementById('btnPonto'); if (btn) btn.disabled = false; }
   function fecharToastOverlay(e) { if (e.target.id === 'toastOverlay') {} }
-
-  function alternarVisibilidadeSenhaInput(inputId, btnEye) {
-    var inputPass = document.getElementById(inputId);
-    if (!inputPass) return;
-    if (inputPass.type === "password") { inputPass.type = "text"; if (btnEye) btnEye.innerText = "🙈"; } 
-    else { inputPass.type = "password"; if (btnEye) btnEye.innerText = "👁️"; }
-  }
+  function alternarVisibilidadeSenhaInput(inputId, btnEye) { var ip = document.getElementById(inputId); if (!ip) return; if (ip.type === "password") { ip.type = "text"; if (btnEye) btnEye.innerText = "🙈"; } else { ip.type = "password"; if (btnEye) btnEye.innerText = "👁️"; } }
 
   function obterDetalhesDispositivo() {
-    try {
-      if (window.AndroidBridge && typeof window.AndroidBridge.getDeviceModel === "function") {
-        var modeloApp = window.AndroidBridge.getDeviceModel();
-        if (modeloApp && modeloApp.trim() !== "") return modeloApp;
-      }
-    } catch(e) {}
-
-    var ua = navigator.userAgent;
-    if (ua.indexOf("iPhone") !== -1) return "Apple iPhone";
-    if (ua.indexOf("iPad") !== -1) return "Apple iPad";
-    if (ua.indexOf("Samsung") !== -1 || ua.indexOf("SM-") !== -1) return "Samsung Galaxy";
-    if (ua.indexOf("Xiaomi") !== -1 || ua.indexOf("Redmi") !== -1) return "Xiaomi / Redmi";
-    if (ua.indexOf("Huawei") !== -1) return "Huawei";
-    if (ua.indexOf("Motorola") !== -1 || ua.indexOf("Moto") !== -1) return "Motorola";
-    return navigator.platform || "Smartphone";
+    try { if (window.AndroidBridge && typeof window.AndroidBridge.getDeviceModel === "function") { var m = window.AndroidBridge.getDeviceModel(); if (m) return m; } } catch(e) {}
+    var ua = navigator.userAgent; if (ua.indexOf("iPhone") !== -1) return "Apple iPhone"; if (ua.indexOf("Samsung") !== -1) return "Samsung Galaxy"; return navigator.platform || "Smartphone";
   }
 
   function chamarAPIJsonp(params, callbackSucesso) {
-    if (!navigator.onLine) {
-      emProcessamento = false;
-      var btn = document.getElementById('btnPonto');
-      if (btn) btn.disabled = false;
-      mostrarPopupPersonalizado({ titulo: "Sem Conexão", mensagem: "O dispositivo está offline. Verifique a ligação.", tipo: "erro" });
-      return;
-    }
-
-    var controller = new AbortController();
-    var timeoutId = setTimeout(function() { controller.abort(); }, 1200);
-
+    if (!navigator.onLine) { emProcessamento = false; mostrarPopupPersonalizado({ titulo: "Sem Conexão", mensagem: "Offline.", tipo: "erro" }); return; }
+    var controller = new AbortController(); var timeoutId = setTimeout(function() { controller.abort(); }, 1200);
     fetch('https://api.ipify.org?format=json', { signal: controller.signal })
-      .then(function(res) { return res.json(); })
-      .then(function(data) {
-        clearTimeout(timeoutId);
-        params.ip = data.ip || "Não disponível";
-        enviarPedidoComIp(params, callbackSucesso);
-      })
-      .catch(function() {
-        clearTimeout(timeoutId);
-        params.ip = "Não disponível";
-        enviarPedidoComIp(params, callbackSucesso);
-      });
+      .then(function(res) { return res.json(); }).then(function(data) { clearTimeout(timeoutId); params.ip = data.ip || "Não disponível"; enviarPedidoComIp(params, callbackSucesso); })
+      .catch(function() { clearTimeout(timeoutId); params.ip = "Não disponível"; enviarPedidoComIp(params, callbackSucesso); });
   }
 
   function enviarPedidoComIp(params, callbackSucesso) {
     var cbName = "jsonp_cb_" + Math.random().toString(36).substring(2, 9);
-    var script = document.createElement('script');
-    script.id = cbName;
-
-    window[cbName] = function(dados) {
-      delete window[cbName];
-      if (script && script.parentNode) script.remove();
-      if (callbackSucesso) callbackSucesso(dados);
-    };
-
+    var script = document.createElement('script'); script.id = cbName;
+    window[cbName] = function(dados) { delete window[cbName]; if (script && script.parentNode) script.remove(); if (callbackSucesso) callbackSucesso(dados); };
     var url = APP_SCRIPT_URL + "?";
-    for (var key in params) {
-      if (params.hasOwnProperty(key)) {
-        url += encodeURIComponent(key) + "=" + encodeURIComponent(params[key]) + "&";
-      }
-    }
-    url += "callback=" + cbName;
-    script.src = url;
-
-    script.onerror = function() {
-      delete window[cbName];
-      if (script && script.parentNode) script.remove();
-      emProcessamento = false;
-      var btn = document.getElementById('btnPonto');
-      if (btn) btn.disabled = false;
-      mostrarPopupPersonalizado({ titulo: "Falha no Servidor", mensagem: "Não foi possível comunicar com o sistema. Tente de novo.", tipo: "erro" });
-    };
-
+    for (var key in params) { if (params.hasOwnProperty(key)) url += encodeURIComponent(key) + "=" + encodeURIComponent(params[key]) + "&"; }
+    url += "callback=" + cbName; script.src = url;
+    script.onerror = function() { delete window[cbName]; if (script && script.parentNode) script.remove(); emProcessamento = false; mostrarPopupPersonalizado({ titulo: "Erro", mensagem: "Falha no servidor.", tipo: "erro" }); };
     document.body.appendChild(script);
   }
 
-  window.addEventListener('load', function() {
-    iniciarRelogio();
-    carregarFuncionariosEmTodosOsCampos();
-    if (!navigator.onLine) { var gpsDot = document.getElementById('gpsIndicator'); if (gpsDot) gpsDot.classList.add('offline'); }
-  });
+  window.addEventListener('load', function() { iniciarRelogio(); carregarFuncionariosEmTodosOsCampos(); if (!navigator.onLine) { var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); } });
 
   function abrirModalSenhaAdmin() {
     mostrarPopupPersonalizado({
-      titulo: "Autenticação",
-      mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.9rem;">Área de acesso restrito à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.3rem; letter-spacing:4px;" placeholder="••••" autofocus><button type="button" id="btnEyeToggle" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️</button></div>',
-      icone: "🔐",
+      titulo: "Autenticação", mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.9rem;">Área reservada à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.3rem; letter-spacing:4px;" placeholder="••••" autofocus><button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️</button></div>', icone: "🔐",
       botoes: [
         { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
         { texto: "Entrar", classe: "toast-btn-primary", acao: function() {
-            var senhaVal = document.getElementById('inputSenhaPopup').value;
-            if (!senhaVal) return;
-            mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A verificar credenciais...", tipo: "processando" });
-            chamarAPIJsonp({ action: "gerarPdfJsonp", funcionario: "TESTE_AUTH_ADMIN", dataInicio: "2026-01-01", dataFim: "2026-01-01", senha: senhaVal }, function(resp) {
-              if (resp.indexOf("incorreta") !== -1) { mostrarPopupPersonalizado({ titulo: "Acesso Negado", mensagem: "A palavra-passe inserida não está correta.", tipo: "erro" }); } 
-              else {
-                senhaAdminSessao = senhaVal; fecharToast();
-                document.getElementById('section-ponto').classList.remove('active'); document.getElementById('section-falta-func').classList.remove('active'); document.getElementById('section-admin').classList.add('active');
-                document.getElementById('headerTitle').style.display = 'none'; document.getElementById('headerClockBox').style.display = 'none';
-                voltarAoMenuCentralAdmin();
-              }
+            var s = document.getElementById('inputSenhaPopup').value; if (!s) return;
+            mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A verificar...", tipo: "processando" });
+            chamarAPIJsonp({ action: "gerarPdfJsonp", funcionario: "TESTE", dataInicio: "2026-01-01", dataFim: "2026-01-01", senha: s }, function(resp) {
+              if (resp.indexOf("incorreta") !== -1) { mostrarPopupPersonalizado({ titulo: "Acesso Negado", mensagem: "Senha incorreta.", tipo: "erro" }); } 
+              else { senhaAdminSessao = s; fecharToast(); document.getElementById('section-ponto').classList.remove('active'); document.getElementById('section-falta-func').classList.remove('active'); document.getElementById('section-admin').classList.add('active'); document.getElementById('headerTitle').style.display = 'none'; document.getElementById('headerClockBox').style.display = 'none'; voltarAoMenuCentralAdmin(); }
             });
           }
         }
@@ -949,26 +378,12 @@
   }
 
   function abrirEcraFaltaFuncionario() {
-    document.getElementById('section-ponto').classList.remove('active');
-    document.getElementById('section-admin').classList.remove('active');
-    document.getElementById('section-falta-func').classList.add('active');
-    document.getElementById('headerTitle').style.display = 'none';
-    document.getElementById('headerClockBox').style.display = 'none';
-    document.getElementById('dataFaltaFuncInicio').value = ""; 
-    document.getElementById('dataFaltaFuncFim').value = "";
-    document.getElementById('emailFuncFalta').value = ""; 
-    document.getElementById('pinFuncFalta').value = ""; 
-    document.getElementById('tipoFaltaFunc').value = "";
+    document.getElementById('section-ponto').classList.remove('active'); document.getElementById('section-admin').classList.remove('active'); document.getElementById('section-falta-func').classList.add('active');
+    document.getElementById('headerTitle').style.display = 'none'; document.getElementById('headerClockBox').style.display = 'none';
   }
-
   function voltarAoEcraPrincipal() {
-    senhaAdminSessao = "";
-    document.getElementById('section-admin').classList.remove('active');
-    document.getElementById('section-falta-func').classList.remove('active');
-    document.getElementById('section-ponto').classList.add('active');
-    document.getElementById('headerTitle').style.display = 'block';
-    document.getElementById('headerClockBox').style.display = 'inline-flex';
-    voltarAoMenuCentralAdmin();
+    senhaAdminSessao = ""; document.getElementById('section-admin').classList.remove('active'); document.getElementById('section-falta-func').classList.remove('active'); document.getElementById('section-ponto').classList.add('active');
+    document.getElementById('headerTitle').style.display = 'block'; document.getElementById('headerClockBox').style.display = 'inline-flex'; voltarAoMenuCentralAdmin();
   }
 
   function carregarFuncionariosEmTodosOsCampos() {
@@ -977,169 +392,97 @@
     chamarAPIJsonp({ action: "obterTodosFuncionarios" }, function(listaCompleta) {
       if (listaCompleta && listaCompleta.length > 0) {
         var sAdmin = document.getElementById('selecaoFuncionario');
-        if (sAdmin) {
-          sAdmin.innerHTML = '<option value="" disabled selected>Selecione o colaborador</option><option value="TODOS">Exportar Todos (Equipa Inteira)</option>';
-          listaCompleta.forEach(function(n) { var o = document.createElement('option'); o.value = n; o.text = n; sAdmin.appendChild(o); });
-        }
+        if (sAdmin) { sAdmin.innerHTML = '<option value="" disabled selected>Selecione</option><option value="TODOS">Exportar Todos</option>'; listaCompleta.forEach(function(n) { var o = document.createElement('option'); o.value = n; o.text = n; sAdmin.appendChild(o); }); }
       }
     });
   }
 
   function preencherSelectsNomes(lista) {
-    ['nomeFuncionario', 'nomeFuncionarioFolga', 'nomeRemover', 'nomeFuncFalta'].forEach(function(id) {
+    ['nomeFuncionario', 'nomeFuncionarioFolga', 'nomeRemover', 'nomeFuncFalta', 'nomeAcordo'].forEach(function(id) {
       var sel = document.getElementById(id);
-      if (sel) {
-        sel.innerHTML = '<option value="" disabled selected>Selecione o colaborador</option>';
-        lista.forEach(function(n) { var o = document.createElement('option'); o.value = n; o.text = n; sel.appendChild(o); });
-      }
+      if (sel) { sel.innerHTML = '<option value="" disabled selected>Selecione o colaborador</option>'; lista.forEach(function(n) { var o = document.createElement('option'); o.value = n; o.text = n; sel.appendChild(o); }); }
     });
   }
 
   function registarPontoDiario() {
     if (emProcessamento) return;
-    if (!navigator.onLine) { mostrarPopupPersonalizado({ titulo: "Sem Conexão", mensagem: "O dispositivo está offline.", tipo: "erro" }); return; }
-
-    var nome = document.getElementById('nomeFuncionario').value;
-    var pin = document.getElementById('pinPonto').value;
-    var btn = document.getElementById('btnPonto');
+    var nome = document.getElementById('nomeFuncionario').value; var pin = document.getElementById('pinPonto').value;
+    if(!nome) { gerirErroCampo("erro-nome-ponto", "Selecione o nome."); return; }
+    if(!pin || pin.trim().length !== 4) { gerirErroCampo("erro-pin-ponto", "Insira o PIN (4 dígitos)."); return; }
     
-    if(!nome) { gerirErroCampo("erro-nome-ponto", "Selecione o seu nome na lista."); return; }
-    if(!pin || pin.trim().length !== 4) { gerirErroCampo("erro-pin-ponto", "Introduza o seu PIN de 4 dígitos."); return; }
+    emProcessamento = true; document.getElementById('btnPonto').disabled = true;
+    mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A obter localização...", tipo: "processando" });
     
-    emProcessamento = true; if (btn) btn.disabled = true;
-    mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A validar a localização precisa...", tipo: "processando" });
-    
-    var gpsOptions = { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 };
     navigator.geolocation.getCurrentPosition(
         function(pos) {
-            var precisaoMetros = pos.coords.accuracy;
-            if (precisaoMetros > 150) {
-                emProcessamento = false; if (btn) btn.disabled = false;
-                mostrarPopupPersonalizado({ titulo: "Sinal Fraco (" + precisaoMetros.toFixed(0) + "m)", mensagem: "O GPS não consegue determinar a sua posição exata. Aproxime-se de uma janela ou do exterior.", tipo: "erro" }); return;
-            }
-
-            chamarAPIJsonp({
-                action: "salvarPontoJsonp", nome: nome, lat: pos.coords.latitude, lon: pos.coords.longitude, pin: pin,
-                isMock: pos.mocked || (pos.coords && pos.coords.mocked), disp: obterDetalhesDispositivo(), ua: navigator.userAgent
-            }, function(resposta) {
+            if (pos.coords.accuracy > 150) { emProcessamento = false; document.getElementById('btnPonto').disabled = false; mostrarPopupPersonalizado({ titulo: "Sinal Fraco", mensagem: "Aproxime-se de uma janela.", tipo: "erro" }); return; }
+            chamarAPIJsonp({ action: "salvarPontoJsonp", nome: nome, lat: pos.coords.latitude, lon: pos.coords.longitude, pin: pin, isMock: pos.mocked || pos.coords.mocked, disp: obterDetalhesDispositivo(), ua: navigator.userAgent }, function(resposta) {
                 document.getElementById('pinPonto').value = ""; atualizarPinDisplay('pinPonto', 'dotsPonto');
-                emProcessamento = false; if (btn) btn.disabled = false;
-                if (resposta.indexOf("Aviso") !== -1) { 
-                  gerirErroCampo("erro-pin-ponto", resposta.replace("Aviso: ", "")); 
-                  fecharToast(); 
-                } else { 
-                  mostrarPopupPersonalizado({ titulo: "Registo Validado!", mensagem: resposta, tipo: "sucesso" }); 
-                }
+                emProcessamento = false; document.getElementById('btnPonto').disabled = false;
+                if (resposta.indexOf("Aviso") !== -1) { gerirErroCampo("erro-pin-ponto", resposta.replace("Aviso: ", "")); fecharToast(); } else { mostrarPopupPersonalizado({ titulo: "Registo Validado!", mensagem: resposta, tipo: "sucesso" }); }
             });
         }, 
-        function(erro) {
-            emProcessamento = false; if (btn) btn.disabled = false;
-            var erroMsg = "Por favor, autorize a localização neste telemóvel.";
-            if(erro.code === 3) erroMsg = "O sinal de satélite demorou a responder. Aproxime-se do exterior.";
-            mostrarPopupPersonalizado({ titulo: "GPS Não Disponível", mensagem: erroMsg, tipo: "erro" });
-        }, 
-        gpsOptions
+        function(erro) { emProcessamento = false; document.getElementById('btnPonto').disabled = false; mostrarPopupPersonalizado({ titulo: "Sem GPS", mensagem: "Autorize a localização.", tipo: "erro" }); }, 
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
   }
 
   function submeterFaltaFuncionario() {
-    var nome = document.getElementById('nomeFuncFalta').value;
-    var pin = document.getElementById('pinFuncFalta').value;
-    var email = document.getElementById('emailFuncFalta').value;
-    var tipo = document.getElementById('tipoFaltaFunc').value;
-    var dIni = document.getElementById('dataFaltaFuncInicio').value;
-    var dFim = document.getElementById('dataFaltaFuncFim').value;
-
-    if(!nome) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione o seu nome.", tipo: "erro" }); return; }
-    if(!pin || pin.trim().length !== 4) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Introduza o seu PIN de 4 dígitos.", tipo: "erro" }); return; }
-    if(!email || email.indexOf("@") === -1) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Introduza um e-mail válido.", tipo: "erro" }); return; }
-    if(!tipo) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione o motivo da ausência.", tipo: "erro" }); return; }
-    if(!dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha as datas de início e fim.", tipo: "erro" }); return; }
-
-    mostrarPopupPersonalizado({ titulo: "A Enviar Pedido...", mensagem: "A submeter comunicação à gerência...", tipo: "processando" });
-
+    var nome = document.getElementById('nomeFuncFalta').value; var pin = document.getElementById('pinFuncFalta').value; var email = document.getElementById('emailFuncFalta').value;
+    var tipo = document.getElementById('tipoFaltaFunc').value; var dIni = document.getElementById('dataFaltaFuncInicio').value; var dFim = document.getElementById('dataFaltaFuncFim').value;
+    if(!nome || !pin || !email || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha todos os campos.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Enviar...", mensagem: "A processar...", tipo: "processando" });
     chamarAPIJsonp({ action: "comunicarAusenciaFuncionarioJsonp", nome: nome, pin: pin, email: email, tipo: tipo, dataInicio: dIni, dataFim: dFim }, function(resp) {
-      document.getElementById('pinFuncFalta').value = "";
-      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Erro de Validação", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); } 
-      else { mostrarPopupPersonalizado({ titulo: "Pedido Submetido!", mensagem: resp, tipo: "sucesso" }); setTimeout(voltarAoEcraPrincipal, 2500); }
+      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Erro", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); } else { mostrarPopupPersonalizado({ titulo: "Sucesso!", mensagem: resp, tipo: "sucesso" }); setTimeout(voltarAoEcraPrincipal, 2500); }
     });
   }
 
   function submeterAusenciaAdministrativa() {
-    if (!navigator.onLine) { mostrarPopupPersonalizado({ titulo: "Sem Conexão", mensagem: "Dispositivo offline.", tipo: "erro" }); return; }
-    var nome = document.getElementById('nomeFuncionarioFolga').value;
-    var tipo = document.getElementById('tipoAusencia').value;
-    var dIni = document.getElementById('dataFolgaInicio').value;
-    var dFim = document.getElementById('dataFolgaFim').value;
-    
-    if(!nome || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha todos os campos obrigatórios.", tipo: "erro" }); return; }
-    
-    mostrarPopupPersonalizado({ titulo: "A Executar...", mensagem: "A atualizar os registos...", tipo: "processando" });
-    chamarAPIJsonp({ action: "lancarAusenciaAdminJsonp", nome: nome, tipo: tipo, dataInicio: dIni, dataFim: dFim, senha: senhaAdminSessao }, function(resp) {
-      mostrarPopupPersonalizado({ titulo: "Registo Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
-    });
+    var nome = document.getElementById('nomeFuncionarioFolga').value; var tipo = document.getElementById('tipoAusencia').value; var dIni = document.getElementById('dataFolgaInicio').value; var dFim = document.getElementById('dataFolgaFim').value;
+    if(!nome || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Campos obrigatórios.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Executar...", mensagem: "A processar...", tipo: "processando" });
+    chamarAPIJsonp({ action: "lancarAusenciaAdminJsonp", nome: nome, tipo: tipo, dataInicio: dIni, dataFim: dFim, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
+  }
+
+  function submeterAcordo() {
+    var nome = document.getElementById('nomeAcordo').value; var d = document.getElementById('dataAcordo').value;
+    if(!nome || !d) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha o colaborador e a data.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Executar...", mensagem: "A isentar horas extras de majoração...", tipo: "processando" });
+    chamarAPIJsonp({ action: "marcarAcordoJsonp", nome: nome, data: d, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
 
   function exportarRelatorioPDF() {
-    if (!navigator.onLine) { mostrarPopupPersonalizado({ titulo: "Sem Conexão", mensagem: "Dispositivo offline.", tipo: "erro" }); return; }
-    var funcionario = document.getElementById('selecaoFuncionario').value;
-    var dataInicio = document.getElementById('dataInicio').value;
-    var dataFim = document.getElementById('dataFim').value;
-    if(!funcionario || !dataInicio || !dataFim) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione o funcionário e o intervalo de datas.", tipo: "erro" }); return; }
-    
-    mostrarPopupPersonalizado({ titulo: "A Compilar Relatório...", mensagem: "A gerar os documentos oficiais e a remeter por e-mail...", tipo: "processando" });
-    chamarAPIJsonp({ action: "gerarPdfJsonp", funcionario: funcionario, dataInicio: dataInicio, dataFim: dataFim, senha: senhaAdminSessao }, function(resp) {
-      mostrarPopupPersonalizado({ titulo: "Exportação Concluída", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
-    });
+    var f = document.getElementById('selecaoFuncionario').value; var di = document.getElementById('dataInicio').value; var df = document.getElementById('dataFim').value;
+    if(!f || !di || !df) return;
+    mostrarPopupPersonalizado({ titulo: "A Exportar...", mensagem: "A gerar PDF...", tipo: "processando" });
+    chamarAPIJsonp({ action: "gerarPdfJsonp", funcionario: f, dataInicio: di, dataFim: df, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
 
   function submeterNovoFuncionario() {
-    if (!navigator.onLine) { mostrarPopupPersonalizado({ titulo: "Sem Conexão", mensagem: "Dispositivo offline.", tipo: "erro" }); return; }
-    var nome = document.getElementById('nomeNovo').value;
-    var pin = document.getElementById('pinNovo').value;
-    var filial = document.getElementById('filialNovo').value;
-    if(!nome || !pin) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha o nome e o PIN.", tipo: "erro" }); return; }
-    
-    mostrarPopupPersonalizado({ titulo: "A Guardar...", mensagem: "A registar novo colaborador...", tipo: "processando" });
-    chamarAPIJsonp({ action: "adicionarFuncionarioJsonp", nome: nome, pin: pin, filial: filial, senha: senhaAdminSessao }, function(resp) { 
-      mostrarPopupPersonalizado({ titulo: "Colaborador Registado", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
-      carregarFuncionariosEmTodosOsCampos(); document.getElementById('nomeNovo').value = ""; document.getElementById('pinNovo').value = "";
-    });
+    var n = document.getElementById('nomeNovo').value; var p = document.getElementById('pinNovo').value; var f = document.getElementById('filialNovo').value;
+    if(!n || !p) return; mostrarPopupPersonalizado({ titulo: "A Guardar...", mensagem: "...", tipo: "processando" });
+    chamarAPIJsonp({ action: "adicionarFuncionarioJsonp", nome: n, pin: p, filial: f, senha: senhaAdminSessao }, function(resp) { carregarFuncionariosEmTodosOsCampos(); mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
 
   function submeterRemocaoFuncionario() {
-    if (!navigator.onLine) { mostrarPopupPersonalizado({ titulo: "Sem Conexão", mensagem: "Dispositivo offline.", tipo: "erro" }); return; }
-    var nome = document.getElementById('nomeRemover').value;
-    if(!nome) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione o colaborador a inativar.", tipo: "erro" }); return; }
-    
-    mostrarPopupPersonalizado({ titulo: "A Atualizar...", mensagem: "A inativar o colaborador...", tipo: "processando" });
-    chamarAPIJsonp({ action: "removerFuncionarioJsonp", nome: nome, senha: senhaAdminSessao }, function(resp) { 
-      mostrarPopupPersonalizado({ titulo: "Colaborador Inativado", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); carregarFuncionariosEmTodosOsCampos(); 
-    });
+    var n = document.getElementById('nomeRemover').value; if(!n) return;
+    mostrarPopupPersonalizado({ titulo: "A Atualizar...", mensagem: "...", tipo: "processando" });
+    chamarAPIJsonp({ action: "removerFuncionarioJsonp", nome: n, senha: senhaAdminSessao }, function(resp) { carregarFuncionariosEmTodosOsCampos(); mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
 
   function abrirSubModulo(id) {
     document.getElementById('admin-sub-menu').style.display = 'none';
-    ['ausencias', 'pdf', 'funcionario', 'remover'].forEach(function(m) { document.getElementById('admin-sub-' + m).style.display = (m === id) ? 'block' : 'none'; });
+    ['ausencias', 'pdf', 'funcionario', 'remover', 'acordo'].forEach(function(m) { document.getElementById('admin-sub-' + m).style.display = (m === id) ? 'block' : 'none'; });
     document.getElementById('adminNavigationGroup').style.display = 'block';
   }
-
   function voltarAoMenuCentralAdmin() {
-    ['ausencias', 'pdf', 'funcionario', 'remover'].forEach(function(m) { document.getElementById('admin-sub-' + m).style.display = 'none'; });
+    ['ausencias', 'pdf', 'funcionario', 'remover', 'acordo'].forEach(function(m) { document.getElementById('admin-sub-' + m).style.display = 'none'; });
     document.getElementById('admin-sub-menu').style.display = 'block'; document.getElementById('adminNavigationGroup').style.display = 'none';
   }
-
   function limparFeedbackPonto() { gerirErroCampo("erro-nome-ponto", ""); gerirErroCampo("erro-pin-ponto", ""); }
   function gerirErroCampo(id, msg) {
     var cp = document.getElementById(id); if (!cp) return;
-    if (msg) { 
-      cp.innerHTML = msg; cp.style.display = "flex"; 
-      var elPai = cp.parentElement;
-      if (elPai.querySelector('.form-control') || elPai.querySelector('.pin-dots-container')) {
-        var caixa = elPai.querySelector('.form-control') || elPai.querySelector('.pin-dots-container');
-        caixa.style.borderColor = 'var(--danger)'; setTimeout(function() { caixa.style.borderColor = 'var(--border)'; }, 3000);
-      }
-    } else { cp.innerHTML = ""; cp.style.display = "none"; }
+    if (msg) { cp.innerHTML = msg; cp.style.display = "flex"; var f = cp.parentElement.querySelector('.form-control') || cp.parentElement.querySelector('.pin-dots-container'); if(f) { f.style.borderColor = 'var(--danger)'; setTimeout(function(){ f.style.borderColor='var(--border)'; }, 3000); } } else { cp.style.display = "none"; }
   }
 </script>
 </body>
