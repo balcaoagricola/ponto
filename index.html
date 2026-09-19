@@ -11,14 +11,14 @@
   <style>
     :root {
       --primary: #0f172a;        
-      --accent: #2563eb;         
-      --accent-hover: #1d4ed8;   
-      --bg: #f8fafc;             
-      --card-bg: #ffffff;        
-      --text: #334155;           
-      --text-muted: #64748b;     
-      --input-bg: #f1f5f9;       
-      --border: #e2e8f0;         
+      --accent: #2563eb;          
+      --accent-hover: #1d4ed8;    
+      --bg: #f8fafc;              
+      --card-bg: #ffffff;         
+      --text: #334155;            
+      --text-muted: #64748b;      
+      --input-bg: #f1f5f9;        
+      --border: #e2e8f0;          
       --success: #10b981;
       --warning: #f59e0b;
       --danger: #ef4444;
@@ -195,9 +195,9 @@
         </div>
 
         <div class="form-group">
-          <label>Motivo da Falta <span class="campo-obrigatorio">*</span></label>
+          <label>Motivo da Ausência <span class="campo-obrigatorio">*</span></label>
           <select id="tipoFaltaFunc" class="form-control">
-            <option value="" disabled selected>Selecione o motivo</option>
+            <option value="" disabled selected>Selecione o motivo da ausência</option>
             <option value="🏖️ Férias">🏖️ Férias</option>
             <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
             <option value="📄 Falta Justificada">📄 Falta Justificada</option>
@@ -254,7 +254,7 @@
         <div class="form-group">
           <label>Motivo da Ausência</label>
           <select id="tipoAusencia" class="form-control">
-            <option value="" disabled selected>Selecione o motivo</option>
+            <option value="" disabled selected>Selecione o motivo da ausência</option>
             <option value="🏖️ Férias">🏖️ Férias</option>
             <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
             <option value="📄 Falta Justificada">📄 Falta Justificada</option>
@@ -307,7 +307,7 @@
   </div>
 
   <div class="app-footer" id="appFooter">
-    <p>© 2026 · Balcão Agrícola, Lda.</p>
+    <p>© 2026 · Balcão Agrícola</p>
   </div>
 </div>
 
@@ -508,12 +508,6 @@
   window.addEventListener('load', function() {
     iniciarRelogio();
     carregarFuncionariosEmTodosOsCampos();
-    var hoje = new Date().toISOString().split('T')[0];
-    ['dataFolgaInicio', 'dataFolgaFim', 'dataInicio', 'dataFim', 'dataFaltaFuncInicio', 'dataFaltaFuncFim'].forEach(function(id) {
-      if(document.getElementById(id)) document.getElementById(id).value = hoje;
-    });
-    var pMes = new Date(); pMes.setDate(1);
-    if(document.getElementById('dataInicio')) document.getElementById('dataInicio').value = pMes.toISOString().split('T')[0];
     if (!navigator.onLine) { var gpsDot = document.getElementById('gpsIndicator'); if (gpsDot) gpsDot.classList.add('offline'); }
   });
 
@@ -549,9 +543,11 @@
     document.getElementById('section-falta-func').classList.add('active');
     document.getElementById('headerTitle').style.display = 'none';
     document.getElementById('headerClockBox').style.display = 'none';
-    var hoje = new Date().toISOString().split('T')[0];
-    document.getElementById('dataFaltaFuncInicio').value = hoje; document.getElementById('dataFaltaFuncFim').value = hoje;
-    document.getElementById('emailFuncFalta').value = ""; document.getElementById('pinFuncFalta').value = ""; document.getElementById('tipoFaltaFunc').value = "";
+    document.getElementById('dataFaltaFuncInicio').value = ""; 
+    document.getElementById('dataFaltaFuncFim').value = "";
+    document.getElementById('emailFuncFalta').value = ""; 
+    document.getElementById('pinFuncFalta').value = ""; 
+    document.getElementById('tipoFaltaFunc').value = "";
   }
 
   function voltarAoEcraPrincipal() {
@@ -647,7 +643,7 @@
     if(!pin || pin.trim().length !== 4) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Introduza o seu PIN de acesso (4 dígitos).", tipo: "erro" }); return; }
     if(!email) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Por favor, preencha o seu E-mail.", tipo: "erro" }); return; }
     if(email.indexOf("@") === -1) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Introduza um E-mail válido.", tipo: "erro" }); return; }
-    if(!tipo) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione o Motivo da Falta.", tipo: "erro" }); return; }
+    if(!tipo) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione o Motivo da Ausência.", tipo: "erro" }); return; }
     if(!dIni) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione a Data de Início.", tipo: "erro" }); return; }
     if(!dFim) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione a Data de Fim. (Se for apenas um dia, coloque a mesma data).", tipo: "erro" }); return; }
 
