@@ -61,7 +61,7 @@
     .form-control { width: 100%; padding: 15px 16px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.98rem; background-color: var(--input-bg); color: var(--primary); font-weight: 600; outline: none; transition: all 0.2s ease; }
     .form-control:focus { border-color: var(--accent); background-color: #ffffff; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
     select.form-control { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
-    #section-admin input[type="date"].form-control, #section-falta-func input[type="date"].form-control { color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+    #section-admin input[type="date"].form-control, #section-falta-func input[type="date"].form-control, #section-admin input[type="time"].form-control { color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
 
     .pin-box-wrapper { position: relative; width: 100%; margin-bottom: 4px; }
     .pin-hidden-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; }
@@ -86,9 +86,9 @@
     .admin-card { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; margin-bottom: 16px; background: #ffffff; box-shadow: var(--shadow-sm); }
     .admin-card h3 { font-size: 1.05rem; margin-bottom: 16px; color: var(--primary); font-weight: 800; display: flex; align-items: center; gap: 8px; }
     .menu-admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .menu-admin-grid .btn { padding: 20px 10px; font-size: 0.88rem; flex-direction: column; gap: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #ffffff; margin-bottom:0;}
+    .menu-admin-grid .btn { padding: 18px 8px; font-size: 0.82rem; flex-direction: column; gap: 6px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #ffffff; margin-bottom:0;}
     .menu-admin-grid .btn:hover { border-color: var(--accent); background: #f8fafc; }
-    .menu-admin-grid .btn span { font-size: 1.5rem; }
+    .menu-admin-grid .btn span { font-size: 1.4rem; }
     .menu-admin-grid .btn-full { grid-column: span 2; flex-direction: row; font-size: 1rem;}
 
     .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; }
@@ -197,13 +197,14 @@
         <div class="menu-admin-grid">
           <button class="btn btn-secondary" onclick="abrirSubModulo('ausencias')"><span>📅</span> Lançar Faltas</button>
           <button class="btn btn-secondary" onclick="abrirSubModulo('acordo')"><span>🤝</span> Acordo 1:1</button>
+          <button class="btn btn-secondary" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
           <button class="btn btn-secondary" onclick="abrirSubModulo('pdf')"><span>📄</span> Exportar PDF</button>
-          <button class="btn btn-secondary" onclick="abrirSubModulo('funcionario')"><span>➕</span> Novo Colab.</button>
-          <button class="btn btn-secondary btn-full" onclick="abrirSubModulo('remover')" style="color: var(--danger);"><span>❌</span> Inativar Colaborador</button>
+          <button class="btn btn-secondary btn-full" onclick="abrirSubModulo('funcionario')"><span>➕</span> Registar Novo Colaborador</button>
         </div>
       </div>
     </div>
 
+    <!-- MÓDULO: LANÇAR AUSÊNCIAS -->
     <div id="admin-sub-ausencias" style="display: none;">
       <div class="admin-card">
         <h3>📅 Lançar Registo</h3>
@@ -221,11 +222,11 @@
         </div>
         <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaInicio" class="form-control"></div>
         <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaFim" class="form-control"></div>
-        <button class="btn btn-primary" onclick="submeterAusenciaAdministrativa()">Confirmar</button>
+        <button class="btn btn-primary" onclick="submeterAusenciaAdministrativa()">Confirmar Lançamento</button>
       </div>
     </div>
 
-    <!-- NOVO MÓDULO: ACORDO DE HORAS -->
+    <!-- MÓDULO: ACORDO DE HORAS -->
     <div id="admin-sub-acordo" style="display: none;">
       <div class="admin-card">
         <h3>🤝 Acordo de Horas (1:1)</h3>
@@ -236,6 +237,19 @@
       </div>
     </div>
 
+    <!-- MÓDULO: CORRIGIR PICAGEM -->
+    <div id="admin-sub-corrigir" style="display: none;">
+      <div class="admin-card">
+        <h3>✏️ Corrigir Picagem / Esquecimento</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Introduza a hora de entrada ou saída que o colaborador se esqueceu de registar na aplicação. O sistema fechará o ciclo e ordenará as horas.</p>
+        <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeCorrigir" class="form-control"></select></div>
+        <div class="form-group"><label>Data do Esquecimento <span class="campo-obrigatorio">*</span></label><input type="date" id="dataCorrigir" class="form-control"></div>
+        <div class="form-group"><label>Hora (HH:mm) <span class="campo-obrigatorio">*</span></label><input type="time" id="horaCorrigir" class="form-control"></div>
+        <button class="btn btn-primary" onclick="submeterCorrecao()">Inserir Picagem Em Falta</button>
+      </div>
+    </div>
+
+    <!-- MÓDULO: EXPORTAR PDF -->
     <div id="admin-sub-pdf" style="display: none;">
       <div class="admin-card">
         <h3>📄 Exportar Relatório</h3>
@@ -246,21 +260,19 @@
       </div>
     </div>
 
+    <!-- MÓDULO: NOVO COLABORADOR -->
     <div id="admin-sub-funcionario" style="display: none;">
       <div class="admin-card">
         <h3>➕ Adicionar Colaborador</h3>
-        <div class="form-group"><label>Nome</label><input type="text" id="nomeNovo" class="form-control" placeholder="Ex: Ana Paula"></div>
+        <div class="form-group"><label>Nome Completo</label><input type="text" id="nomeNovo" class="form-control" placeholder="Ex: Ana Paula"></div>
         <div class="form-group"><label>PIN (4 dígitos)</label><input type="text" id="pinNovo" class="form-control" maxlength="4" placeholder="0000" inputmode="numeric"></div>
         <div class="form-group"><label>Filial</label><select id="filialNovo" class="form-control"><option value="PATAIAS">Pataias</option><option value="GARCIA">Garcia</option></select></div>
-        <button class="btn btn-primary" onclick="submeterNovoFuncionario()">Registar</button>
-      </div>
-    </div>
-
-    <div id="admin-sub-remover" style="display: none;">
-      <div class="admin-card">
-        <h3 style="color:var(--danger);">❌ Inativar Colaborador</h3>
-        <div class="form-group"><label>Funcionário</label><select id="nomeRemover" class="form-control"></select></div>
-        <button class="btn btn-danger" onclick="submeterRemocaoFuncionario()">Confirmar Inativação</button>
+        <button class="btn btn-primary" onclick="submeterNovoFuncionario()">Registar Colaborador</button>
+        <div style="border-top: 1px solid var(--border); margin: 20px 0; padding-top: 20px;">
+          <h3 style="color:var(--danger); font-size: 1rem; margin-bottom: 12px;">❌ Inativar Colaborador</h3>
+          <div class="form-group" style="margin-bottom:10px;"><select id="nomeRemover" class="form-control"></select></div>
+          <button class="btn btn-danger" onclick="submeterRemocaoFuncionario()" style="padding:12px; font-size:0.9rem;">Confirmar Inativação</button>
+        </div>
       </div>
     </div>
     
@@ -398,7 +410,7 @@
   }
 
   function preencherSelectsNomes(lista) {
-    ['nomeFuncionario', 'nomeFuncionarioFolga', 'nomeRemover', 'nomeFuncFalta', 'nomeAcordo'].forEach(function(id) {
+    ['nomeFuncionario', 'nomeFuncionarioFolga', 'nomeRemover', 'nomeFuncFalta', 'nomeAcordo', 'nomeCorrigir'].forEach(function(id) {
       var sel = document.getElementById(id);
       if (sel) { sel.innerHTML = '<option value="" disabled selected>Selecione o colaborador</option>'; lista.forEach(function(n) { var o = document.createElement('option'); o.value = n; o.text = n; sel.appendChild(o); }); }
     });
@@ -451,6 +463,13 @@
     chamarAPIJsonp({ action: "marcarAcordoJsonp", nome: nome, data: d, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
 
+  function submeterCorrecao() {
+    var nome = document.getElementById('nomeCorrigir').value; var d = document.getElementById('dataCorrigir').value; var h = document.getElementById('horaCorrigir').value;
+    if(!nome || !d || !h) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha o colaborador, a data e a hora.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Corrigir...", mensagem: "A inserir picagem e a organizar turnos...", tipo: "processando" });
+    chamarAPIJsonp({ action: "corrigirPicagemJsonp", nome: nome, data: d, hora: h, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
+  }
+
   function exportarRelatorioPDF() {
     var f = document.getElementById('selecaoFuncionario').value; var di = document.getElementById('dataInicio').value; var df = document.getElementById('dataFim').value;
     if(!f || !di || !df) return;
@@ -472,11 +491,11 @@
 
   function abrirSubModulo(id) {
     document.getElementById('admin-sub-menu').style.display = 'none';
-    ['ausencias', 'pdf', 'funcionario', 'remover', 'acordo'].forEach(function(m) { document.getElementById('admin-sub-' + m).style.display = (m === id) ? 'block' : 'none'; });
+    ['ausencias', 'pdf', 'funcionario', 'remover', 'acordo', 'corrigir'].forEach(function(m) { document.getElementById('admin-sub-' + m).style.display = (m === id) ? 'block' : 'none'; });
     document.getElementById('adminNavigationGroup').style.display = 'block';
   }
   function voltarAoMenuCentralAdmin() {
-    ['ausencias', 'pdf', 'funcionario', 'remover', 'acordo'].forEach(function(m) { document.getElementById('admin-sub-' + m).style.display = 'none'; });
+    ['ausencias', 'pdf', 'funcionario', 'remover', 'acordo', 'corrigir'].forEach(function(m) { document.getElementById('admin-sub-' + m).style.display = 'none'; });
     document.getElementById('admin-sub-menu').style.display = 'block'; document.getElementById('adminNavigationGroup').style.display = 'none';
   }
   function limparFeedbackPonto() { gerirErroCampo("erro-nome-ponto", ""); gerirErroCampo("erro-pin-ponto", ""); }
