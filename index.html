@@ -89,7 +89,6 @@
     .menu-admin-grid .btn { padding: 18px 8px; font-size: 0.82rem; flex-direction: column; gap: 6px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #ffffff; margin-bottom:0;}
     .menu-admin-grid .btn:hover { border-color: var(--accent); background: #f8fafc; }
     .menu-admin-grid .btn span { font-size: 1.4rem; }
-    .menu-admin-grid .btn-full { grid-column: span 2; flex-direction: row; font-size: 1rem;}
 
     .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; }
     .toast-card { background: #ffffff; border-radius: var(--radius-lg); padding: 28px 22px; max-width: 350px; width: 100%; text-align: center; box-shadow: var(--shadow-lg); animation: popModal 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); border: 1px solid rgba(255,255,255,0.4); }
@@ -199,7 +198,8 @@
           <button class="btn btn-secondary" onclick="abrirSubModulo('acordo')"><span>🤝</span> Acordo 1:1</button>
           <button class="btn btn-secondary" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
           <button class="btn btn-secondary" onclick="abrirSubModulo('pdf')"><span>📄</span> Exportar PDF</button>
-          <button class="btn btn-secondary btn-full" onclick="abrirSubModulo('funcionario')"><span>➕/❌</span> Gerir Equipa</button>
+          <button class="btn btn-secondary" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar Colab.</button>
+          <button class="btn btn-secondary" onclick="abrirSubModulo('remover')" style="color: var(--danger);"><span>❌</span> Inativar Colab.</button>
         </div>
       </div>
     </div>
@@ -230,9 +230,10 @@
     <div id="admin-sub-acordo" style="display: none;">
       <div class="admin-card">
         <h3>🤝 Acordo de Horas (1:1)</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">O dia selecionado passará a não aplicar qualquer majoração, servindo apenas para compensar futuras folgas.</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Se quiser isentar todo o tempo extra do dia, deixe a duração vazia. Para isentar apenas uma parte, defina a duração.</p>
         <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeAcordo" class="form-control"></select></div>
         <div class="form-group"><label>Data do Trabalho Extra <span class="campo-obrigatorio">*</span></label><input type="date" id="dataAcordo" class="form-control"></div>
+        <div class="form-group"><label>Duração Específica (Opcional)</label><input type="time" id="duracaoAcordo" class="form-control" placeholder="Deixe vazio para dia completo"></div>
         <button class="btn btn-primary" onclick="submeterAcordo()">Aplicar Acordo</button>
       </div>
     </div>
@@ -260,22 +261,25 @@
       </div>
     </div>
 
-    <!-- MÓDULO: NOVO COLABORADOR / INATIVAR -->
+    <!-- MÓDULO: NOVO COLABORADOR -->
     <div id="admin-sub-funcionario" style="display: none;">
       <div class="admin-card">
         <h3>➕ Adicionar Colaborador</h3>
-        <div class="form-group"><label>Nome Completo</label><input type="text" id="nomeNovo" class="form-control" placeholder="Ex: Ana Paula"></div>
+        <div class="form-group"><label>Primeiro e Último Nome <span class="campo-obrigatorio">*</span></label><input type="text" id="nomeNovo" class="form-control" placeholder="Ex: Ana Silva"></div>
         <div class="form-group"><label>PIN (4 dígitos)</label><input type="text" id="pinNovo" class="form-control" maxlength="4" placeholder="0000" inputmode="numeric"></div>
         <div class="form-group"><label>Filial</label><select id="filialNovo" class="form-control"><option value="PATAIAS">Pataias</option><option value="GARCIA">Garcia</option></select></div>
         <button class="btn btn-primary" onclick="submeterNovoFuncionario()">Registar Colaborador</button>
-        <div style="border-top: 1px solid var(--border); margin: 20px 0; padding-top: 20px;">
-          <h3 style="color:var(--danger); font-size: 1rem; margin-bottom: 12px;">❌ Inativar Colaborador</h3>
-          <div class="form-group" style="margin-bottom:10px;"><select id="nomeRemover" class="form-control"></select></div>
-          <button class="btn btn-danger" onclick="submeterRemocaoFuncionario()" style="padding:12px; font-size:0.9rem;">Confirmar Inativação</button>
-        </div>
       </div>
     </div>
 
+    <!-- MÓDULO: INATIVAR COLABORADOR -->
+    <div id="admin-sub-remover" style="display: none;">
+      <div class="admin-card">
+        <h3 style="color:var(--danger);">❌ Inativar Colaborador</h3>
+        <div class="form-group"><label>Selecione o Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeRemover" class="form-control"></select></div>
+        <button class="btn btn-danger" onclick="submeterRemocaoFuncionario()">Confirmar Inativação</button>
+      </div>
+    </div>
     
     <div class="nav-navigation-block" id="adminNavigationGroup" style="display: none; margin-bottom: 16px;">
       <button class="btn btn-secondary" onclick="voltarAoMenuCentralAdmin()">⬅️ Voltar ao Menu</button>
@@ -458,10 +462,13 @@
   }
 
   function submeterAcordo() {
-    var nome = document.getElementById('nomeAcordo').value; var d = document.getElementById('dataAcordo').value;
+    var nome = document.getElementById('nomeAcordo').value; 
+    var d = document.getElementById('dataAcordo').value;
+    var duracao = document.getElementById('duracaoAcordo').value;
+    
     if(!nome || !d) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha o colaborador e a data.", tipo: "erro" }); return; }
-    mostrarPopupPersonalizado({ titulo: "A Executar...", mensagem: "A isentar horas extras de majoração...", tipo: "processando" });
-    chamarAPIJsonp({ action: "marcarAcordoJsonp", nome: nome, data: d, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
+    mostrarPopupPersonalizado({ titulo: "A Executar...", mensagem: "A isentar horas de majoração...", tipo: "processando" });
+    chamarAPIJsonp({ action: "marcarAcordoJsonp", nome: nome, data: d, duracao: duracao, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
 
   function submeterCorrecao() {
@@ -492,14 +499,14 @@
 
   function abrirSubModulo(id) {
     document.getElementById('admin-sub-menu').style.display = 'none';
-    ['ausencias', 'pdf', 'funcionario', 'acordo', 'corrigir'].forEach(function(m) { 
+    ['ausencias', 'pdf', 'funcionario', 'remover', 'acordo', 'corrigir'].forEach(function(m) { 
       var el = document.getElementById('admin-sub-' + m);
       if (el) el.style.display = (m === id) ? 'block' : 'none'; 
     });
     document.getElementById('adminNavigationGroup').style.display = 'block';
   }
   function voltarAoMenuCentralAdmin() {
-    ['ausencias', 'pdf', 'funcionario', 'acordo', 'corrigir'].forEach(function(m) { 
+    ['ausencias', 'pdf', 'funcionario', 'remover', 'acordo', 'corrigir'].forEach(function(m) { 
       var el = document.getElementById('admin-sub-' + m);
       if (el) el.style.display = 'none'; 
     });
