@@ -111,7 +111,7 @@
     .password-eye-wrapper .form-control { padding-right: 50px; }
     .eye-toggle-btn { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; font-size: 1.15rem; display: flex; align-items: center; justify-content: center; z-index: 10; color: var(--text-muted); }
     
-    .pedido-item { border:1px solid var(--border); padding:16px; border-radius:var(--radius-sm); margin-bottom:12px; background: #fafbfc; }
+    .pedido-item { border:1px solid var(--border); padding:16px; border-radius:var(--radius-sm); margin-bottom:12px; background: #fafbfc; text-align: left; }
     .pedido-item p { margin-bottom: 6px; font-size: 0.9rem; color: var(--text-muted); }
     .pedido-item p strong { color: var(--primary); }
   </style>
@@ -184,7 +184,6 @@
             <option value="🤝 Acordo 1:1">🤝 Acordo 1:1</option>
           </select>
         </div>
-        <!-- NOVA CAIXA DE OBSERVAÇÕES MAIOR E AJUSTÁVEL -->
         <div class="form-group">
           <label>Observações / Justificação</label>
           <textarea id="obsFuncFalta" class="form-control" rows="4" placeholder="Detalhes adicionais (opcional)..." style="resize: vertical; min-height: 90px;"></textarea>
@@ -204,7 +203,6 @@
       <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
         <h3 style="margin-bottom: 16px; color: var(--primary); text-align: center;">⚙️ Painel de Gestão</h3>
         <div class="menu-admin-grid">
-          <!-- NOVO BOTÃO DE PEDIDOS PENDENTES -->
           <button class="btn btn-secondary" onclick="abrirSubModulo('pedidos'); carregarPedidosPendentes();"><span>📩</span> Pedidos</button>
           <button class="btn btn-secondary" onclick="abrirSubModulo('ausencias')"><span>📅</span> Lançar Faltas</button>
           <button class="btn btn-secondary" onclick="abrirSubModulo('acordo')"><span>🤝</span> Acordo 1:1</button>
@@ -216,11 +214,11 @@
       </div>
     </div>
 
-    <!-- MÓDULO: PEDIDOS PENDENTES (NOVO) -->
+    <!-- MÓDULO: PEDIDOS PENDENTES -->
     <div id="admin-sub-pedidos" style="display: none;">
       <div class="admin-card">
         <h3>📩 Pedidos Pendentes</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Avalie as ausências submetidas pelos colaboradores. Se aprovar, o registo será feito automaticamente na folha.</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; text-align: left;">Avalie as ausências submetidas. A decisão envia um email imediato ao colaborador, mas a gerência mantém o controlo de lançar o registo no mapa.</p>
         <div id="listaPedidosContainer">
           <p style="text-align: center; color: var(--text-muted);">A carregar...</p>
         </div>
@@ -327,9 +325,9 @@
 </div>
 
 <script>
-  // IMPORTANTE: DEPOIS DE COLARES O CÓDIGO GOOGLE APPS SCRIPT, FAZ "NOVA IMPLANTAÇÃO" 
-  // E COLA AQUI O NOVO LINK. SE NÃO FIZERES ISTO AS NOVIDADES NÃO VÃO FUNCIONAR.
+  // IMPORTANTE: DEPOIS DE COLARES O CÓDIGO GOOGLE APPS SCRIPT E FAZERES "NOVA IMPLANTAÇÃO", COLA AQUI O NOVO LINK:
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
+  
   var senhaAdminSessao = ""; var emProcessamento = false; var estaOnline = navigator.onLine;
 
   function iniciarRelogio() {
@@ -495,10 +493,10 @@
     });
   }
 
-  // NOVA FUNÇÃO: CARREGAR PEDIDOS NA APP
+  // CARREGAR PEDIDOS NA APP
   function carregarPedidosPendentes() {
     var container = document.getElementById('listaPedidosContainer');
-    container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>A procurar pedidos...</p>";
+    container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>A procurar pedidos pendentes...</p>";
     
     chamarAPIJsonp({ action: "obterPedidosPendentes", senha: senhaAdminSessao }, function(resp) {
       if(typeof resp === "string" && resp.indexOf("Aviso") !== -1) { container.innerHTML = "<p style='color:var(--danger);'>" + resp + "</p>"; return; }
@@ -520,14 +518,14 @@
     });
   }
 
-  // NOVA FUNÇÃO: RESPONDER A PEDIDOS DENTRO DA APP
+  // RESPONDER A PEDIDOS DENTRO DA APP
   function responderPedidoFaltaAdmin(idPedido, decisao) {
-    mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A gravar decisão e a notificar o colaborador...", tipo: "processando" });
+    mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A notificar o colaborador por email...", tipo: "processando" });
     chamarAPIJsonp({ action: "responderPedidoFaltaAdmin", idPedido: idPedido, decisao: decisao, senha: senhaAdminSessao }, function(resp) {
       if (resp.indexOf("Aviso") !== -1) {
          mostrarPopupPersonalizado({ titulo: "Erro", mensagem: resp, tipo: "erro" });
       } else {
-         mostrarPopupPersonalizado({ titulo: "Sucesso!", mensagem: resp, tipo: "sucesso" });
+         mostrarPopupPersonalizado({ titulo: "Concluído!", mensagem: resp, tipo: "sucesso" });
          carregarPedidosPendentes(); // Atualiza a lista na hora
       }
     });
