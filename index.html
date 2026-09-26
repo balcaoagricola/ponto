@@ -11,15 +11,14 @@
 
   <style>
     :root {
-      /* ══════════ PALETA CORPORATIVA BALCÃO AGRÍCOLA ══════════ */
-      --primary: #0f172a;            /* Slate profundo */
+      --primary: #0f172a;
       --primary-soft: #1e293b;
-      --accent: #059669;             /* Esmeralda (agrícola) */
+      --accent: #059669;
       --accent-light: #10b981;
       --accent-dark: #047857;
       --accent-glow: rgba(5, 150, 105, 0.35);
       
-      --secondary: #0ea5e9;          /* Azul tecnológico */
+      --secondary: #0ea5e9;
       --secondary-dark: #0284c7;
 
       --text: #1e293b;
@@ -63,26 +62,31 @@
       -webkit-tap-highlight-color: transparent; 
     }
 
-    /* ══════════ FUNDO ELEGANTE ANIMADO ══════════ */
-    html, body { height: 100%; }
+    /* ══════════ SCROLL CORRIGIDO ══════════ */
+    html {
+      min-height: 100%;
+      background: #f8fafc;
+      overflow-x: hidden;
+    }
     body { 
+      min-height: 100vh;
       background: 
         radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.10) 0%, transparent 45%),
         radial-gradient(circle at 85% 80%, rgba(14, 165, 233, 0.10) 0%, transparent 45%),
         linear-gradient(135deg, #f8fafc 0%, #eef2f6 50%, #ecfdf5 100%);
-      background-attachment: fixed;
       color: var(--text); 
       padding: 14px; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
-      min-height: 100vh; 
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       -webkit-font-smoothing: antialiased; 
       -moz-osx-font-smoothing: grayscale;
       letter-spacing: -0.01em;
     }
 
-    /* ══════════ CONTAINER PRINCIPAL ══════════ */
     .container { 
       width: 100%; 
       max-width: 460px; 
@@ -94,6 +98,7 @@
       position: relative; 
       margin-top: 8px;
       margin-bottom: 20px;
+      flex-shrink: 0;
     }
 
     /* ══════════ CABEÇALHO COM LOGO SEM FUNDO ══════════ */
@@ -105,7 +110,6 @@
       border-bottom: 1px solid var(--border);
     }
 
-    /* TÉCNICA: mix-blend-mode remove o branco do logótipo */
     .logo-wrapper {
       display: inline-flex;
       align-items: center;
@@ -255,7 +259,7 @@
       padding: 15px 18px; 
       border: 1.5px solid var(--border); 
       border-radius: var(--radius-sm); 
-      font-size: 0.95rem; 
+      font-size: 16px; /* 16px evita auto-zoom no iOS */
       background-color: var(--surface); 
       color: var(--text); 
       font-weight: 600; 
@@ -297,7 +301,7 @@
       opacity: 0; 
       z-index: 10; 
       cursor: pointer; 
-      font-size: 16px; /* evita zoom no iOS */
+      font-size: 16px;
     }
     .pin-dots-container { 
       display: flex; 
@@ -350,11 +354,11 @@
       letter-spacing: 0.01em;
       position: relative;
       overflow: hidden;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
     .btn:active { transform: scale(0.97); }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
 
-    /* Botão PRIMÁRIO - Esmeralda com gradiente e brilho */
     .btn-primary { 
       background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 55%, var(--accent-dark) 100%);
       color: #ffffff; 
@@ -375,7 +379,6 @@
     }
     .btn-primary:hover::before { left: 100%; }
 
-    /* Botão SECUNDÁRIO - Elegante e clean */
     .btn-secondary { 
       background: var(--surface); 
       color: var(--text); 
@@ -390,7 +393,6 @@
       color: var(--primary);
     }
 
-    /* Botão PERIGO */
     .btn-danger { 
       background: linear-gradient(135deg, #f87171 0%, var(--danger) 60%, #dc2626 100%);
       color: #ffffff; 
@@ -562,6 +564,7 @@
       cursor: pointer; 
       transition: all 0.22s ease; 
       letter-spacing: 0.01em;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
     .toast-btn-primary { 
       background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent-dark) 100%);
@@ -957,10 +960,12 @@
   function abrirEcraFaltaFuncionario() {
     document.getElementById('section-ponto').classList.remove('active'); document.getElementById('section-admin').classList.remove('active'); document.getElementById('section-falta-func').classList.add('active');
     document.getElementById('headerTitle').style.display = 'none'; document.getElementById('headerClockBox').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   function voltarAoEcraPrincipal() {
     senhaAdminSessao = ""; document.getElementById('section-admin').classList.remove('active'); document.getElementById('section-falta-func').classList.remove('active'); document.getElementById('section-ponto').classList.add('active');
     document.getElementById('headerTitle').style.display = 'block'; document.getElementById('headerClockBox').style.display = 'inline-flex'; voltarAoMenuCentralAdmin();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function carregarFuncionariosEmTodosOsCampos() {
@@ -977,7 +982,12 @@
   function preencherSelectsNomes(lista) {
     ['nomeFuncionario', 'nomeFuncionarioFolga', 'nomeRemover', 'nomeFuncFalta', 'nomeAcordo', 'nomeCorrigir'].forEach(function(id) {
       var sel = document.getElementById(id);
-      if (sel) { sel.innerHTML = '<option value="" disabled selected>Selecione o colaborador</option>'; lista.forEach(function(n) { var o = document.createElement('option'); o.value = n; o.text = n; sel.appendChild(o); }); }
+      if (sel) { 
+        var valorAtual = sel.value;
+        sel.innerHTML = '<option value="" disabled selected>Selecione o colaborador</option>'; 
+        lista.forEach(function(n) { var o = document.createElement('option'); o.value = n; o.text = n; sel.appendChild(o); }); 
+        if (valorAtual) sel.value = valorAtual;
+      }
     });
   }
 
@@ -1040,15 +1050,15 @@
       
       var html = "";
       resp.forEach(function(p) {
-        html += `<div class="pedido-item">
-          <p><strong>Colaborador:</strong> ${p.nome}</p>
-          <p><strong>Pedido:</strong> ${p.detalhes}</p>
-          ${p.obs ? `<p><strong>Obs:</strong> <i>${p.obs}</i></p>` : ''}
-          <div style="display:flex; gap:10px; margin-top:16px;">
-            <button class="btn btn-primary" style="padding:13px; margin:0; font-size:0.92rem;" onclick="responderPedidoFaltaAdmin('${p.id}', 'aprovar')">✅ Aprovar</button>
-            <button class="btn btn-danger" style="padding:13px; margin:0; font-size:0.92rem;" onclick="responderPedidoFaltaAdmin('${p.id}', 'recusar')">❌ Recusar</button>
-          </div>
-        </div>`;
+        html += '<div class="pedido-item">' +
+          '<p><strong>Colaborador:</strong> ' + p.nome + '</p>' +
+          '<p><strong>Pedido:</strong> ' + p.detalhes + '</p>' +
+          (p.obs ? '<p><strong>Obs:</strong> <i>' + p.obs + '</i></p>' : '') +
+          '<div style="display:flex; gap:10px; margin-top:16px;">' +
+            '<button class="btn btn-primary" style="padding:13px; margin:0; font-size:0.92rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'aprovar\')">✅ Aprovar</button>' +
+            '<button class="btn btn-danger" style="padding:13px; margin:0; font-size:0.92rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'recusar\')">❌ Recusar</button>' +
+          '</div>' +
+        '</div>';
       });
       container.innerHTML = html;
     });
@@ -1092,19 +1102,20 @@
 
   function exportarRelatorioPDF() {
     var f = document.getElementById('selecaoFuncionario').value; var di = document.getElementById('dataInicio').value; var df = document.getElementById('dataFim').value;
-    if(!f || !di || !df) return;
+    if(!f || !di || !df) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha todos os campos.", tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Exportar...", mensagem: "A gerar PDF...", tipo: "processando" });
     chamarAPIJsonp({ action: "gerarPdfJsonp", funcionario: f, dataInicio: di, dataFim: df, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
 
   function submeterNovoFuncionario() {
     var n = document.getElementById('nomeNovo').value; var p = document.getElementById('pinNovo').value; var f = document.getElementById('filialNovo').value;
-    if(!n || !p) return; mostrarPopupPersonalizado({ titulo: "A Guardar...", mensagem: "...", tipo: "processando" });
+    if(!n || !p) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha o nome e o PIN.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Guardar...", mensagem: "...", tipo: "processando" });
     chamarAPIJsonp({ action: "adicionarFuncionarioJsonp", nome: n, pin: p, filial: f, senha: senhaAdminSessao }, function(resp) { carregarFuncionariosEmTodosOsCampos(); mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
 
   function submeterRemocaoFuncionario() {
-    var n = document.getElementById('nomeRemover').value; if(!n) return;
+    var n = document.getElementById('nomeRemover').value; if(!n) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione um colaborador.", tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Atualizar...", mensagem: "...", tipo: "processando" });
     chamarAPIJsonp({ action: "removerFuncionarioJsonp", nome: n, senha: senhaAdminSessao }, function(resp) { carregarFuncionariosEmTodosOsCampos(); mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
@@ -1116,6 +1127,7 @@
       if (el) el.style.display = (m === id) ? 'block' : 'none'; 
     });
     document.getElementById('adminNavigationGroup').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   
   function voltarAoMenuCentralAdmin() {
@@ -1125,6 +1137,7 @@
     });
     document.getElementById('admin-sub-menu').style.display = 'block'; 
     document.getElementById('adminNavigationGroup').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   
   function limparFeedbackPonto() { gerirErroCampo("erro-nome-ponto", ""); gerirErroCampo("erro-pin-ponto", ""); }
