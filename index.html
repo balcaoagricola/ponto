@@ -10,125 +10,236 @@
 
   <style>
     :root {
-      /* Nova Paleta Agro-Premium */
-      --primary: #064e3b;          /* Verde Floresta Profundo */
-      --primary-dark: #022c22;     /* Verde Quase Preto */
-      --primary-light: #047857;    /* Verde Esmeralda Escuro */
-      --accent: #10b981;           /* Verde Esmeralda Vibrante (Botões/Foco) */
-      --accent-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      --accent-hover: #059669;
-      --bg: #f4f7f6;               /* Cinza muito claro com subtom esverdeado */
-      --card-bg: #ffffff;
-      --text: #1f2937;
+      /* NOVA PALETA MODERN GLASSMORPHISM */
+      --primary: #1e293b;
+      --accent: #3b82f6; /* Azul Tecnológico e Limpo */
+      --accent-hover: #2563eb;
+      --text: #334155;
       --text-muted: #64748b;
-      --input-bg: #f8fafc;
-      --border: #e2e8f0;
-      --border-focus: #10b981;
+      
+      /* Cores de Vidro */
+      --glass-bg: rgba(255, 255, 255, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.8);
+      --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+      
+      --input-bg: rgba(255, 255, 255, 0.8);
+      --border: rgba(148, 163, 184, 0.25);
+      --border-focus: #3b82f6;
+      
       --success: #10b981;
-      --warning: #f59e0b;
       --danger: #ef4444;
-      
-      /* Sombras mais suaves e modernas */
-      --shadow-sm: 0 2px 4px rgba(6, 78, 59, 0.04);
-      --shadow-md: 0 12px 30px -8px rgba(6, 78, 59, 0.12), 0 8px 16px -6px rgba(6, 78, 59, 0.06);
-      --shadow-lg: 0 25px 50px -12px rgba(6, 78, 59, 0.2);
-      
-      --radius-sm: 14px;
-      --radius-md: 20px;
-      --radius-lg: 28px;
+      --radius-sm: 16px;
+      --radius-md: 24px;
+      --radius-lg: 32px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: var(--bg); color: var(--text); padding: 12px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; min-height: 100vh; -webkit-font-smoothing: antialiased; }
-    .container { width: 100%; max-width: 440px; background: var(--card-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); overflow: hidden; position: relative; margin-top: 6px; border: 1px solid rgba(226, 232, 240, 0.6); }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
     
-    /* CABEÇALHO ATUALIZADO */
-    .header { background: linear-gradient(145deg, var(--primary-dark) 0%, var(--primary) 100%); color: white; padding: 32px 24px 26px; text-align: center; position: relative; border-bottom: 4px solid var(--accent); }
+    /* FUNDO ANIMADO PARA DAR COR A TODA A APP */
+    body { 
+      background: linear-gradient(-45deg, #e0eafc, #cfdef3, #eef2f3, #f5f7fa);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: var(--text); 
+      padding: 12px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      min-height: 100vh; 
+      -webkit-font-smoothing: antialiased; 
+    }
     
-    /* LOGÓTIPO TRANSPARENTE E MAIOR */
-    .logo-empresa { width: 100%; max-height: 135px; margin-bottom: 22px; object-fit: contain; background: transparent; padding: 0; display: block; border: none; box-shadow: none; filter: drop-shadow(0px 6px 8px rgba(0,0,0,0.4)); transition: transform 0.3s ease; }
-    .header h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 16px; letter-spacing: -0.3px; color: #f0fdf4; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-    
-    /* RELÓGIO COM GLASSMORPHISM APRIMORADO */
-    .live-clock-card { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: var(--radius-md); padding: 18px 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
-    .clock-time-row { display: inline-flex; align-items: center; gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 2.8rem; font-weight: 700; color: #ffffff; letter-spacing: 0.5px; line-height: 1; font-variant-numeric: tabular-nums; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-    .clock-date-row { font-size: 0.85rem; font-weight: 700; color: rgba(255, 255, 255, 0.85); letter-spacing: 0.8px; text-transform: uppercase; }
-    
-    .gps-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(16, 185, 129, 0.2); border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .gps-pulse-dot { width: 10px; height: 10px; background: #10b981; border-radius: 50%; position: relative; box-shadow: 0 0 8px #10b981; }
-    .gps-pulse-dot::after { content: ''; position: absolute; top: -2px; left: -2px; width: 14px; height: 14px; border-radius: 50%; background: #10b981; opacity: 0.5; animation: pulseGps 2s infinite ease-out; }
-    @keyframes pulseGps { 0% { transform: scale(0.9); opacity: 0.8; } 100% { transform: scale(2.5); opacity: 0; } }
-    .gps-pulse-dot.offline { background: #ef4444; box-shadow: 0 0 8px #ef4444; } .gps-pulse-dot.offline::after { animation: none; }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-    .content-section { padding: 30px 24px; display: none; animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    /* APP CONTAINER - EFEITO DE VIDRO FOSCO (GLASSMORPHISM) */
+    .container { 
+      width: 100%; 
+      max-width: 440px; 
+      background: var(--glass-bg); 
+      backdrop-filter: blur(16px); 
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: var(--radius-lg); 
+      box-shadow: var(--glass-shadow); 
+      border: 1px solid var(--glass-border);
+      overflow: hidden; 
+      position: relative; 
+      margin-top: 10px; 
+    }
+    
+    /* CABEÇALHO LIMPO SEM FUNDO ESCURO */
+    .header { 
+      padding: 35px 24px 20px; 
+      text-align: center; 
+      position: relative; 
+    }
+    
+    /* O SEGREDO DO LOGÓTIPO: mix-blend-mode: multiply remove o fundo branco */
+    .logo-empresa { 
+      width: 100%; 
+      max-height: 130px; 
+      margin-bottom: 10px; 
+      object-fit: contain; 
+      mix-blend-mode: multiply; /* Remove o branco da imagem */
+      filter: contrast(1.15) opacity(0.9); /* Dá um ar mais profissional e integrado */
+      display: block; 
+    }
+    
+    .header h2 { 
+      font-size: 1.4rem; 
+      font-weight: 800; 
+      margin-bottom: 20px; 
+      letter-spacing: -0.5px; 
+      color: var(--primary); 
+    }
+    
+    /* RELÓGIO FUTURISTA */
+    .live-clock-card { 
+      background: rgba(255, 255, 255, 0.9); 
+      border-radius: var(--radius-md); 
+      padding: 16px 12px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 4px; 
+      width: 100%; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      border: 1px solid rgba(255,255,255,1);
+    }
+    .clock-time-row { 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 12px; 
+      font-family: 'JetBrains Mono', monospace; 
+      font-size: 2.7rem; 
+      font-weight: 800; 
+      color: var(--accent); 
+      letter-spacing: 0px; 
+      line-height: 1; 
+    }
+    .clock-date-row { 
+      font-size: 0.85rem; 
+      font-weight: 700; 
+      color: var(--text-muted); 
+      letter-spacing: 1px; 
+      text-transform: uppercase; 
+    }
+    
+    .gps-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(16, 185, 129, 0.1); border-radius: 20px; }
+    .gps-pulse-dot { width: 12px; height: 12px; background: #10b981; border-radius: 50%; position: relative; box-shadow: 0 0 8px rgba(16, 185, 129, 0.6); }
+    .gps-pulse-dot::after { content: ''; position: absolute; top: -2px; left: -2px; width: 16px; height: 16px; border-radius: 50%; background: #10b981; opacity: 0.4; animation: pulseGps 2s infinite ease-out; }
+    @keyframes pulseGps { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(2.5); opacity: 0; } }
+    .gps-pulse-dot.offline { background: #ef4444; box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); } .gps-pulse-dot.offline::after { animation: none; }
+
+    .content-section { padding: 10px 24px 30px; display: none; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
     .content-section.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     
     .form-group { margin-bottom: 22px; }
-    .form-group label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.92rem; color: var(--primary); letter-spacing: -0.2px; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: var(--primary); }
     
-    /* INPUTS MAIS SUAVES E MODERNOS */
-    .form-control { width: 100%; padding: 16px 18px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 1rem; background-color: var(--input-bg); color: var(--primary); font-weight: 600; outline: none; transition: all 0.25s ease; }
-    .form-control:focus { border-color: var(--border-focus); background-color: #ffffff; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15); }
-    select.form-control { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23064e3b' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 42px; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
-    #section-admin input[type="date"].form-control, #section-falta-func input[type="date"].form-control, #section-admin input[type="time"].form-control { color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
-
-    .pin-box-wrapper { position: relative; width: 100%; margin-bottom: 4px; }
+    /* INPUTS SOFISTICADOS */
+    .form-control { 
+      width: 100%; 
+      padding: 16px 20px; 
+      border: 2px solid var(--border); 
+      border-radius: var(--radius-sm); 
+      font-size: 1rem; 
+      background-color: var(--input-bg); 
+      color: var(--primary); 
+      font-weight: 600; 
+      outline: none; 
+      transition: all 0.3s ease; 
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .form-control:focus { 
+      border-color: var(--border-focus); 
+      background-color: #ffffff; 
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15), inset 0 2px 4px rgba(0,0,0,0.01); 
+    }
+    
+    select.form-control { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 18px center; padding-right: 45px; cursor: pointer; }
+    
+    /* PONTOS DE PIN COM DESIGN INOVADOR */
+    .pin-box-wrapper { position: relative; width: 100%; margin-bottom: 8px; }
     .pin-hidden-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; }
-    .pin-dots-container { display: flex; justify-content: center; align-items: center; gap: 24px; padding: 20px; background: var(--input-bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm); transition: all 0.25s ease; cursor: pointer; }
-    .pin-hidden-input:focus + .pin-dots-container { border-color: var(--border-focus); background: #ffffff; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15); }
-    .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #cbd5e1; background: transparent; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
-    .pin-dot.filled { background: var(--accent); border-color: var(--accent); transform: scale(1.4); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); }
+    .pin-dots-container { display: flex; justify-content: center; align-items: center; gap: 24px; padding: 22px; background: rgba(255,255,255,0.8); border: 2px solid var(--border); border-radius: var(--radius-sm); transition: all 0.3s ease; }
+    .pin-hidden-input:focus + .pin-dots-container { border-color: var(--border-focus); background: #ffffff; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
+    .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #cbd5e1; background: transparent; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .pin-dot.filled { background: var(--accent); border-color: var(--accent); transform: scale(1.5); box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4); }
 
-    /* BOTÕES COM EFEITO DE LEVITAÇÃO */
-    .btn { width: 100%; padding: 18px; border: none; border-radius: var(--radius-sm); font-size: 1.05rem; font-weight: 700; cursor: pointer; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s ease; letter-spacing: -0.2px; user-select: none; margin-bottom:16px; }
-    .btn:active { transform: scale(0.97); }
-    .btn-primary { background: var(--accent-gradient); color: white; box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3); }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(16, 185, 129, 0.45); }
-    .btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; transform: none; color: #94a3b8; }
-    .btn-secondary { background: #f8fafc; color: var(--primary); border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-    .btn-secondary:hover { background: #f1f5f9; border-color: #cbd5e1; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.05); }
-    .btn-danger { background: var(--danger); color: white; box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3); }
-    .btn-danger:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(239, 68, 68, 0.45); }
+    /* BOTÕES MÁGICOS */
+    .btn { 
+      width: 100%; 
+      padding: 18px; 
+      border: none; 
+      border-radius: var(--radius-sm); 
+      font-size: 1.05rem; 
+      font-weight: 800; 
+      cursor: pointer; 
+      text-align: center; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 10px; 
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
+      margin-bottom: 16px; 
+    }
+    .btn:active { transform: scale(0.96); }
+    .btn-primary { 
+      background: var(--accent); 
+      color: white; 
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3); 
+    }
+    .btn-primary:hover { 
+      background: var(--accent-hover);
+      transform: translateY(-3px); 
+      box-shadow: 0 12px 25px rgba(59, 130, 246, 0.4); 
+    }
+    .btn-secondary { background: rgba(255,255,255,0.9); color: var(--text); border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+    .btn-secondary:hover { background: #ffffff; border-color: #cbd5e1; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.06); }
+    .btn-danger { background: var(--danger); color: white; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); }
 
-    .top-action-btn { background: #ffffff; color: var(--primary); border: 1.5px solid var(--border); width: 44px; height: 44px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.15rem; transition: all 0.2s ease; box-shadow: var(--shadow-sm); }
-    .top-action-btn:hover { border-color: var(--accent); color: var(--accent); background: #f0fdf4; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(16, 185, 129, 0.15); }
-    .top-action-btn:active { transform: scale(0.92); }
+    /* BOTÕES DE TOPO */
+    .top-action-btn { background: #ffffff; color: var(--text); border: 1px solid var(--border); width: 45px; height: 45px; border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+    .top-action-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 15px rgba(59, 130, 246, 0.15); }
 
-    .admin-card { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; margin-bottom: 20px; background: #ffffff; box-shadow: var(--shadow-sm); }
-    .admin-card h3 { font-size: 1.15rem; margin-bottom: 18px; color: var(--primary); font-weight: 800; display: flex; align-items: center; gap: 10px; }
+    /* CARTÕES ADMINISTRATIVOS */
+    .admin-card { background: rgba(255, 255, 255, 0.85); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 24px; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.03); backdrop-filter: blur(10px); }
+    .admin-card h3 { font-size: 1.2rem; margin-bottom: 18px; color: var(--primary); font-weight: 800; display: flex; align-items: center; gap: 10px; }
+    
     .menu-admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .menu-admin-grid .btn { padding: 20px 10px; font-size: 0.88rem; flex-direction: column; gap: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: #ffffff; margin-bottom:0;}
-    .menu-admin-grid .btn:hover { border-color: var(--accent); background: #f0fdf4; color: var(--primary-light); }
-    .menu-admin-grid .btn span { font-size: 1.6rem; transition: transform 0.2s ease; }
-    .menu-admin-grid .btn:hover span { transform: scale(1.15); }
+    .menu-admin-grid .btn { padding: 22px 10px; font-size: 0.9rem; flex-direction: column; gap: 10px; border-radius: var(--radius-sm); border: 1px solid rgba(148, 163, 184, 0.2); background: rgba(255,255,255,0.9); }
+    .menu-admin-grid .btn:hover { border-color: var(--accent); color: var(--accent); }
+    .menu-admin-grid .btn span { font-size: 1.8rem; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    .menu-admin-grid .btn:hover span { transform: scale(1.2) translateY(-2px); }
 
-    .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(2, 44, 34, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; }
-    .toast-card { background: #ffffff; border-radius: var(--radius-lg); padding: 32px 24px; max-width: 360px; width: 100%; text-align: center; box-shadow: var(--shadow-lg); animation: popModal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border: 1px solid rgba(255,255,255,0.8); }
-    @keyframes popModal { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    .toast-icon { font-size: 3.5rem; margin-bottom: 16px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1)); }
+    /* MODAL/TOAST REFEITO */
+    .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; }
+    .toast-card { background: #ffffff; border-radius: var(--radius-lg); padding: 35px 25px; max-width: 360px; width: 100%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); animation: popModal 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes popModal { from { transform: scale(0.9) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+    .toast-icon { font-size: 3.5rem; margin-bottom: 18px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
     .ampulheta-animada { display: inline-block; animation: rodarAmpulheta 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
     @keyframes rodarAmpulheta { 0% { transform: rotate(0deg); } 50% { transform: rotate(180deg); } 100% { transform: rotate(360deg); } }
     .toast-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; color: var(--primary); }
-    .toast-body { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 26px; line-height: 1.6; }
+    .toast-body { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 25px; line-height: 1.5; }
     .toast-actions { display: flex; gap: 12px; }
     .toast-btn { flex: 1; padding: 16px; border: none; border-radius: var(--radius-sm); font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.2s ease; }
-    .toast-btn-primary { background: var(--accent-gradient); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
-    .toast-btn-primary:hover { box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4); transform: translateY(-2px); }
-    .toast-btn-secondary { background: #f1f5f9; color: var(--text); border: 1px solid var(--border); }
-    .toast-btn-secondary:hover { background: #e2e8f0; transform: translateY(-2px); }
-
-    .app-footer { text-align: center; font-size: 0.85rem; font-weight: 600; color: #94a3b8; padding: 20px; display: flex; justify-content: center; align-items: center; background: #fafbfc; border-top: 1px solid var(--border); }
-    .campo-obrigatorio { color: var(--danger); font-weight: 800; margin-left: 2px; }
-    .erro-campo { color: var(--danger); font-size: 0.85rem; font-weight: 600; margin-top: 8px; display: none; align-items: center; gap: 6px; }
-    .erro-campo::before { content: '⚠️'; font-size: 0.9rem; }
-    .password-eye-wrapper { position: relative; width: 100%; }
-    .password-eye-wrapper .form-control { padding-right: 50px; }
-    .eye-toggle-btn { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; z-index: 10; color: var(--text-muted); transition: color 0.2s ease; }
-    .eye-toggle-btn:hover { color: var(--primary); }
     
-    .pedido-item { border:1px solid var(--border); padding:18px; border-radius:var(--radius-sm); margin-bottom:14px; background: #ffffff; text-align: left; box-shadow: var(--shadow-sm); border-left: 4px solid var(--accent); transition: transform 0.2s ease; }
-    .pedido-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .app-footer { text-align: center; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); padding: 20px; border-top: 1px solid rgba(255,255,255,0.5); background: transparent; }
+    .campo-obrigatorio { color: var(--danger); font-weight: 800; margin-left: 4px; }
+    .erro-campo { color: var(--danger); font-size: 0.85rem; font-weight: 600; margin-top: 8px; display: none; align-items: center; gap: 6px; }
+    
+    .password-eye-wrapper { position: relative; width: 100%; }
+    .password-eye-wrapper .form-control { padding-right: 55px; }
+    .eye-toggle-btn { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; z-index: 10; color: var(--text-muted); transition: color 0.3s ease; }
+    .eye-toggle-btn:hover { color: var(--accent); }
+    
+    .pedido-item { background: #ffffff; border: 1px solid var(--border); padding: 20px; border-radius: var(--radius-md); margin-bottom: 16px; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border-left: 5px solid var(--accent); transition: all 0.3s ease; }
+    .pedido-item:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
     .pedido-item p { margin-bottom: 8px; font-size: 0.95rem; color: var(--text-muted); }
     .pedido-item p strong { color: var(--primary); font-weight: 700; }
   </style>
@@ -173,19 +284,19 @@
       </div>
       <div id="erro-pin-ponto" class="erro-campo" style="display:none;"></div>
     </div>
-    <button id="btnPonto" class="btn btn-primary" onclick="registarPontoDiario()"><span style="font-size: 1.25rem;">👆</span> Validar Registo de Ponto</button>
+    <button id="btnPonto" class="btn btn-primary" onclick="registarPontoDiario()">👆 Validar Registo de Ponto</button>
   </div>
 
   <div id="section-falta-func" class="content-section">
     <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
       <h3 style="margin-bottom: 8px; color: var(--primary); text-align: left;">📅 Comunicar Ausência</h3>
-      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; text-align: left;">Submeta os detalhes da sua ausência à gerência.</p>
+      <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; text-align: left;">Submeta os detalhes da sua ausência à gerência.</p>
       <div class="admin-card" style="margin-bottom: 0;">
         <div class="form-group"><label>O seu Nome <span class="campo-obrigatorio">*</span></label><select id="nomeFuncFalta" class="form-control"></select></div>
         <div class="form-group">
           <label>PIN de Acesso (4 dígitos) <span class="campo-obrigatorio">*</span></label>
           <div class="password-eye-wrapper">
-            <input type="password" id="pinFuncFalta" class="form-control" maxlength="4" inputmode="numeric" placeholder="••••" style="letter-spacing: 6px; text-align: center; font-size: 1.2rem;">
+            <input type="password" id="pinFuncFalta" class="form-control" maxlength="4" inputmode="numeric" placeholder="••••" style="letter-spacing: 8px; text-align: center; font-size: 1.3rem;">
             <button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput('pinFuncFalta', this)">👁️</button>
           </div>
         </div>
@@ -203,13 +314,13 @@
         </div>
         <div class="form-group">
           <label>Observações / Justificação</label>
-          <textarea id="obsFuncFalta" class="form-control" rows="4" placeholder="Detalhes adicionais (opcional)..." style="resize: vertical; min-height: 100px;"></textarea>
+          <textarea id="obsFuncFalta" class="form-control" rows="4" placeholder="Detalhes adicionais (opcional)..." style="resize: vertical; min-height: 100px; line-height: 1.5;"></textarea>
         </div>
         <div class="form-group"><label>Data de Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncInicio" class="form-control"></div>
         <div class="form-group"><label>Data de Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncFim" class="form-control"></div>
         <button class="btn btn-primary" onclick="submeterFaltaFuncionario()">Enviar Pedido</button>
       </div>
-      <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 24px;">
+      <div style="margin-top: 20px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 24px;">
         <button class="btn btn-secondary" onclick="voltarAoEcraPrincipal()">⬅️ Voltar ao Início</button>
       </div>
     </div>
@@ -218,7 +329,7 @@
   <div id="section-admin" class="content-section">
     <div id="admin-sub-menu">
       <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
-        <h3 style="margin-bottom: 20px; color: var(--primary); text-align: center;">⚙️ Painel de Gestão</h3>
+        <h3 style="margin-bottom: 24px; color: var(--primary); text-align: center; justify-content: center;">⚙️ Painel de Gestão</h3>
         <div class="menu-admin-grid">
           <button class="btn btn-secondary" onclick="abrirSubModulo('pedidos'); carregarPedidosPendentes();"><span>📩</span> Pedidos</button>
           <button class="btn btn-secondary" onclick="abrirSubModulo('ausencias')"><span>📅</span> Lançar Faltas</button>
@@ -231,18 +342,16 @@
       </div>
     </div>
 
-    <!-- MÓDULO: PEDIDOS PENDENTES -->
     <div id="admin-sub-pedidos" style="display: none;">
       <div class="admin-card">
         <h3>📩 Pedidos Pendentes</h3>
-        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; text-align: left; line-height: 1.5;">Avalie as ausências submetidas. A decisão envia um email imediato ao colaborador, mas a gerência mantém o controlo de lançar o registo no mapa.</p>
+        <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px; text-align: left; line-height: 1.5;">Avalie as ausências submetidas. A decisão envia um email imediato ao colaborador, mas a gerência mantém o controlo de lançar o registo no mapa.</p>
         <div id="listaPedidosContainer">
           <p style="text-align: center; color: var(--text-muted);">A carregar...</p>
         </div>
       </div>
     </div>
 
-    <!-- MÓDULO: LANÇAR AUSÊNCIAS -->
     <div id="admin-sub-ausencias" style="display: none;">
       <div class="admin-card">
         <h3>📅 Lançar Registo Manual</h3>
@@ -264,11 +373,10 @@
       </div>
     </div>
 
-    <!-- MÓDULO: ACORDO DE HORAS -->
     <div id="admin-sub-acordo" style="display: none;">
       <div class="admin-card">
         <h3>🤝 Acordo de Horas (1:1)</h3>
-        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">Se quiser isentar todo o tempo extra do dia, deixe a duração vazia. Para isentar apenas uma parte, defina a duração.</p>
+        <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">Se quiser isentar todo o tempo extra do dia, deixe a duração vazia. Para isentar apenas uma parte, defina a duração.</p>
         <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeAcordo" class="form-control"></select></div>
         <div class="form-group"><label>Data do Trabalho Extra <span class="campo-obrigatorio">*</span></label><input type="date" id="dataAcordo" class="form-control"></div>
         <div class="form-group"><label>Duração Específica (Opcional)</label><input type="time" id="duracaoAcordo" class="form-control" placeholder="Deixe vazio para dia completo"></div>
@@ -276,11 +384,10 @@
       </div>
     </div>
 
-    <!-- MÓDULO: CORRIGIR PICAGEM -->
     <div id="admin-sub-corrigir" style="display: none;">
       <div class="admin-card">
         <h3>✏️ Corrigir Picagem</h3>
-        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">Introduza a hora de entrada ou saída em falta. O sistema fechará o ciclo e ordenará as horas.</p>
+        <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">Introduza a hora de entrada ou saída em falta. O sistema fechará o ciclo e ordenará as horas.</p>
         <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeCorrigir" class="form-control"></select></div>
         <div class="form-group"><label>Data do Esquecimento <span class="campo-obrigatorio">*</span></label><input type="date" id="dataCorrigir" class="form-control"></div>
         <div class="form-group"><label>Hora (HH:mm) <span class="campo-obrigatorio">*</span></label><input type="time" id="horaCorrigir" class="form-control"></div>
@@ -288,7 +395,6 @@
       </div>
     </div>
 
-    <!-- MÓDULO: EXPORTAR PDF -->
     <div id="admin-sub-pdf" style="display: none;">
       <div class="admin-card">
         <h3>📄 Exportar Relatório</h3>
@@ -299,7 +405,6 @@
       </div>
     </div>
 
-    <!-- MÓDULO: NOVO COLABORADOR -->
     <div id="admin-sub-funcionario" style="display: none;">
       <div class="admin-card">
         <h3>➕ Adicionar Colaborador</h3>
@@ -310,7 +415,6 @@
       </div>
     </div>
 
-    <!-- MÓDULO: INATIVAR COLABORADOR -->
     <div id="admin-sub-remover" style="display: none;">
       <div class="admin-card">
         <h3 style="color:var(--danger);">❌ Inativar Colaborador</h3>
@@ -322,7 +426,7 @@
     <div class="nav-navigation-block" id="adminNavigationGroup" style="display: none; margin-bottom: 20px;">
       <button class="btn btn-secondary" onclick="voltarAoMenuCentralAdmin()">⬅️ Voltar ao Menu</button>
     </div>
-    <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 24px;">
+    <div style="margin-top: 20px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 24px;">
       <button class="btn btn-secondary" onclick="voltarAoEcraPrincipal()">Sair do Painel Admin</button>
     </div>
   </div>
@@ -525,9 +629,9 @@
           <p><strong>Colaborador:</strong> ${p.nome}</p>
           <p><strong>Pedido:</strong> ${p.detalhes}</p>
           ${p.obs ? `<p><strong>Obs:</strong> <i>${p.obs}</i></p>` : ''}
-          <div style="display:flex; gap:10px; margin-top:16px;">
-            <button class="btn btn-primary" style="padding:12px; margin:0;" onclick="responderPedidoFaltaAdmin('${p.id}', 'aprovar')">✅ Aprovar</button>
-            <button class="btn btn-danger" style="padding:12px; margin:0;" onclick="responderPedidoFaltaAdmin('${p.id}', 'recusar')">❌ Recusar</button>
+          <div style="display:flex; gap:12px; margin-top:18px;">
+            <button class="btn btn-primary" style="padding:14px; margin:0;" onclick="responderPedidoFaltaAdmin('${p.id}', 'aprovar')">✅ Aprovar</button>
+            <button class="btn btn-danger" style="padding:14px; margin:0;" onclick="responderPedidoFaltaAdmin('${p.id}', 'recusar')">❌ Recusar</button>
           </div>
         </div>`;
       });
