@@ -177,7 +177,12 @@
             <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
             <option value="📄 Falta Justificada">📄 Falta Justificada</option>
             <option value="⚠️ Falta Injustificada">⚠️ Falta Injustificada</option>
+            <option value="🤝 Acordo 1:1">🤝 Acordo 1:1</option>
           </select>
+        </div>
+        <div class="form-group">
+          <label>Observações / Justificação</label>
+          <textarea id="obsFuncFalta" class="form-control" rows="2" placeholder="Detalhes adicionais (opcional)..." style="resize: none;"></textarea>
         </div>
         <div class="form-group"><label>Data de Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncInicio" class="form-control"></div>
         <div class="form-group"><label>Data de Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncFim" class="form-control"></div>
@@ -304,6 +309,8 @@
 </div>
 
 <script>
+  // ATENÇÃO: Se alterares o Google Apps Script e fizeres uma NOVA IMPLANTAÇÃO, 
+  // não te esqueças de colar aqui o novo link do APP_SCRIPT_URL
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
   var senhaAdminSessao = ""; var emProcessamento = false; var estaOnline = navigator.onLine;
 
@@ -445,12 +452,28 @@
   }
 
   function submeterFaltaFuncionario() {
-    var nome = document.getElementById('nomeFuncFalta').value; var pin = document.getElementById('pinFuncFalta').value; var email = document.getElementById('emailFuncFalta').value;
-    var tipo = document.getElementById('tipoFaltaFunc').value; var dIni = document.getElementById('dataFaltaFuncInicio').value; var dFim = document.getElementById('dataFaltaFuncFim').value;
-    if(!nome || !pin || !email || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha todos os campos.", tipo: "erro" }); return; }
+    var nome = document.getElementById('nomeFuncFalta').value; 
+    var pin = document.getElementById('pinFuncFalta').value; 
+    var email = document.getElementById('emailFuncFalta').value;
+    var tipo = document.getElementById('tipoFaltaFunc').value; 
+    var dIni = document.getElementById('dataFaltaFuncInicio').value; 
+    var dFim = document.getElementById('dataFaltaFuncFim').value;
+    var obs = document.getElementById('obsFuncFalta').value;
+    
+    if(!nome || !pin || !email || !tipo || !dIni || !dFim) { 
+      mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha todos os campos obrigatórios.", tipo: "erro" }); 
+      return; 
+    }
+    
     mostrarPopupPersonalizado({ titulo: "A Enviar...", mensagem: "A processar...", tipo: "processando" });
-    chamarAPIJsonp({ action: "comunicarAusenciaFuncionarioJsonp", nome: nome, pin: pin, email: email, tipo: tipo, dataInicio: dIni, dataFim: dFim }, function(resp) {
-      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Erro", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); } else { mostrarPopupPersonalizado({ titulo: "Sucesso!", mensagem: resp, tipo: "sucesso" }); setTimeout(voltarAoEcraPrincipal, 2500); }
+    
+    chamarAPIJsonp({ action: "comunicarAusenciaFuncionarioJsonp", nome: nome, pin: pin, email: email, tipo: tipo, dataInicio: dIni, dataFim: dFim, obs: obs }, function(resp) {
+      if (resp.indexOf("Aviso") !== -1) { 
+        mostrarPopupPersonalizado({ titulo: "Erro", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); 
+      } else { 
+        mostrarPopupPersonalizado({ titulo: "Sucesso!", mensagem: resp, tipo: "sucesso" }); 
+        setTimeout(voltarAoEcraPrincipal, 2500); 
+      }
     });
   }
 
