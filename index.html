@@ -128,12 +128,14 @@
       -webkit-user-drag: none;
     }
     
+    /* ══════════ TÍTULO PRINCIPAL EM MAIÚSCULAS ══════════ */
     .header h2 { 
-      font-size: 1.35rem; 
+      font-size: 1.15rem; 
       font-weight: 800; 
-      margin-top: 4px;
+      margin-top: 6px;
       margin-bottom: 22px; 
-      letter-spacing: -0.02em; 
+      letter-spacing: 0.08em; 
+      text-transform: uppercase;
       color: var(--primary); 
     }
     
@@ -259,7 +261,7 @@
       padding: 15px 18px; 
       border: 1.5px solid var(--border); 
       border-radius: var(--radius-sm); 
-      font-size: 16px; /* 16px evita auto-zoom no iOS */
+      font-size: 16px;
       background-color: var(--surface); 
       color: var(--text); 
       font-weight: 600; 
@@ -335,14 +337,14 @@
       box-shadow: 0 4px 12px var(--accent-glow); 
     }
 
-    /* ══════════ SISTEMA DE BOTÕES PREMIUM ══════════ */
+    /* ══════════ SISTEMA DE BOTÕES PREMIUM - TEXTO EM MAIÚSCULAS ══════════ */
     .btn { 
       width: 100%; 
       padding: 17px 20px; 
       border: none; 
       border-radius: var(--radius-sm); 
-      font-size: 1rem; 
-      font-weight: 700; 
+      font-size: 0.95rem; 
+      font-weight: 800; 
       cursor: pointer; 
       text-align: center; 
       display: flex; 
@@ -351,7 +353,8 @@
       gap: 10px; 
       transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1); 
       margin-bottom: 14px; 
-      letter-spacing: 0.01em;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
       position: relative;
       overflow: hidden;
       font-family: 'Plus Jakarta Sans', sans-serif;
@@ -436,14 +439,15 @@
       box-shadow: var(--shadow-sm); 
     }
     .admin-card h3 { 
-      font-size: 1.1rem; 
+      font-size: 1rem; 
       margin-bottom: 16px; 
       color: var(--primary); 
       font-weight: 800; 
       display: flex; 
       align-items: center; 
       gap: 10px; 
-      letter-spacing: -0.01em;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
     
     /* ══════════ MENU ADMIN - GRID DE TILES ══════════ */
@@ -454,8 +458,8 @@
     }
     .menu-admin-grid .btn { 
       padding: 22px 10px 20px; 
-      font-size: 0.86rem; 
-      font-weight: 700;
+      font-size: 0.78rem; 
+      font-weight: 800;
       flex-direction: column; 
       gap: 10px; 
       border-radius: var(--radius-md); 
@@ -465,6 +469,8 @@
       margin-bottom: 0;
       box-shadow: var(--shadow-sm);
       position: relative;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
     .menu-admin-grid .btn::after {
       content: '';
@@ -537,11 +543,12 @@
       100% { transform: rotate(360deg); } 
     }
     .toast-title { 
-      font-size: 1.25rem; 
+      font-size: 1.15rem; 
       font-weight: 800; 
       margin-bottom: 8px; 
       color: var(--primary); 
-      letter-spacing: -0.02em;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
     .toast-body { 
       font-size: 0.94rem; 
@@ -554,16 +561,18 @@
       display: flex; 
       gap: 10px; 
     }
+    /* ══════════ BOTÕES DO MODAL EM MAIÚSCULAS ══════════ */
     .toast-btn { 
       flex: 1; 
       padding: 15px 16px; 
       border: none; 
       border-radius: var(--radius-sm); 
-      font-weight: 700; 
-      font-size: 0.95rem; 
+      font-weight: 800; 
+      font-size: 0.88rem; 
       cursor: pointer; 
       transition: all 0.22s ease; 
-      letter-spacing: 0.01em;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
     .toast-btn-primary { 
@@ -668,7 +677,7 @@
     <div class="logo-wrapper">
       <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo Balcão Agrícola">
     </div>
-    <h2 id="headerTitle">Controlo de Assiduidade</h2>
+    <h2 id="headerTitle">CONTROLO DE ASSIDUIDADE</h2>
     <div class="live-clock-card" id="headerClockBox">
       <div class="clock-time-row">
         <div class="gps-badge"><div class="gps-pulse-dot" id="gpsIndicator"></div></div>
@@ -708,7 +717,7 @@
 
   <div id="section-falta-func" class="content-section">
     <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
-      <h3 style="margin-bottom: 8px; color: var(--primary); text-align: left; font-size: 1.35rem; letter-spacing: -0.02em;">📅 Comunicar Ausência</h3>
+      <h3 style="margin-bottom: 8px; color: var(--primary); text-align: left; font-size: 1.05rem;">📅 Comunicar Ausência</h3>
       <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 22px; line-height: 1.6; text-align: left;">Submeta os detalhes da sua ausência à gerência.</p>
       <div class="admin-card" style="margin-bottom: 0;">
         <div class="form-group"><label>O seu Nome <span class="campo-obrigatorio">*</span></label><select id="nomeFuncFalta" class="form-control"></select></div>
@@ -748,7 +757,7 @@
   <div id="section-admin" class="content-section">
     <div id="admin-sub-menu">
       <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
-        <h3 style="margin-bottom: 22px; color: var(--primary); text-align: center; justify-content: center; font-size: 1.35rem; letter-spacing: -0.02em;">⚙️ Painel de Gestão</h3>
+        <h3 style="margin-bottom: 22px; color: var(--primary); text-align: center; justify-content: center; font-size: 1.15rem;">⚙️ Painel de Gestão</h3>
         <div class="menu-admin-grid">
           <button class="btn btn-secondary" onclick="abrirSubModulo('pedidos'); carregarPedidosPendentes();"><span>📩</span> Pedidos</button>
           <button class="btn btn-secondary" onclick="abrirSubModulo('ausencias')"><span>📅</span> Lançar Faltas</button>
@@ -856,7 +865,7 @@
 <div id="toastOverlay" class="toast-overlay" onclick="fecharToastOverlay(event)">
   <div class="toast-card">
     <div id="toastIcon" class="toast-icon">🟢</div>
-    <div id="toastTitle" class="toast-title">Concluído!</div>
+    <div id="toastTitle" class="toast-title">CONCLUÍDO!</div>
     <div id="toastBody" class="toast-body">Operação processada.</div>
     <div id="toastActionsContainer" class="toast-actions">
       <button id="toastBtn" class="toast-btn toast-btn-primary" onclick="fecharToast()">Concluir</button>
@@ -1055,8 +1064,8 @@
           '<p><strong>Pedido:</strong> ' + p.detalhes + '</p>' +
           (p.obs ? '<p><strong>Obs:</strong> <i>' + p.obs + '</i></p>' : '') +
           '<div style="display:flex; gap:10px; margin-top:16px;">' +
-            '<button class="btn btn-primary" style="padding:13px; margin:0; font-size:0.92rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'aprovar\')">✅ Aprovar</button>' +
-            '<button class="btn btn-danger" style="padding:13px; margin:0; font-size:0.92rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'recusar\')">❌ Recusar</button>' +
+            '<button class="btn btn-primary" style="padding:13px; margin:0; font-size:0.82rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'aprovar\')">✅ Aprovar</button>' +
+            '<button class="btn btn-danger" style="padding:13px; margin:0; font-size:0.82rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'recusar\')">❌ Recusar</button>' +
           '</div>' +
         '</div>';
       });
