@@ -11,31 +11,15 @@
 
   <style>
     :root {
-      --primary: #0f172a;
-      --primary-soft: #1e293b;
-      --accent: #059669;
-      --accent-light: #10b981;
-      --accent-dark: #047857;
+      --primary: #0f172a; --primary-soft: #1e293b;
+      --accent: #059669; --accent-light: #10b981; --accent-dark: #047857;
       --accent-glow: rgba(5, 150, 105, 0.35);
-      --secondary: #0ea5e9;
-      --secondary-dark: #0284c7;
-      --text: #1e293b;
-      --text-muted: #64748b;
-      --text-light: #94a3b8;
-      --surface: #ffffff;
-      --surface-2: #f8fafc;
-      --surface-3: #f1f5f9;
-      --border: #e2e8f0;
-      --border-strong: #cbd5e1;
-      --border-focus: #059669;
-      --success: #10b981;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --radius-xs: 10px;
-      --radius-sm: 14px;
-      --radius-md: 20px;
-      --radius-lg: 28px;
-      --radius-xl: 36px;
+      --secondary: #0ea5e9; --secondary-dark: #0284c7;
+      --text: #1e293b; --text-muted: #64748b; --text-light: #94a3b8;
+      --surface: #ffffff; --surface-2: #f8fafc; --surface-3: #f1f5f9;
+      --border: #e2e8f0; --border-strong: #cbd5e1; --border-focus: #059669;
+      --success: #10b981; --danger: #ef4444; --warning: #f59e0b;
+      --radius-xs: 10px; --radius-sm: 14px; --radius-md: 20px; --radius-lg: 28px; --radius-xl: 36px;
       --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
       --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04);
       --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.08), 0 4px 8px rgba(15, 23, 42, 0.04);
@@ -44,14 +28,7 @@
       --shadow-danger: 0 10px 28px rgba(239, 68, 68, 0.25), 0 4px 8px rgba(239, 68, 68, 0.12);
     }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; 
-      -webkit-tap-highlight-color: transparent; 
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
     html { min-height: 100%; background: #f8fafc; overflow-x: hidden; }
     body { 
       min-height: 100vh;
@@ -59,37 +36,21 @@
         radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.10) 0%, transparent 45%),
         radial-gradient(circle at 85% 80%, rgba(14, 165, 233, 0.10) 0%, transparent 45%),
         linear-gradient(135deg, #f8fafc 0%, #eef2f6 50%, #ecfdf5 100%);
-      color: var(--text); 
-      padding: 14px; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      overflow-x: hidden;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      -webkit-font-smoothing: antialiased; 
-      -moz-osx-font-smoothing: grayscale;
+      color: var(--text); padding: 14px; display: flex; flex-direction: column; align-items: center; 
+      overflow-x: hidden; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
       letter-spacing: -0.01em;
     }
 
     .container { 
-      width: 100%; 
-      max-width: 460px; 
-      background: var(--surface);
-      border-radius: var(--radius-xl); 
-      box-shadow: var(--shadow-xl);
+      width: 100%; max-width: 460px; background: var(--surface);
+      border-radius: var(--radius-xl); box-shadow: var(--shadow-xl);
       border: 1px solid rgba(255, 255, 255, 0.9);
-      overflow: hidden; 
-      position: relative; 
-      margin-top: 8px;
-      margin-bottom: 20px;
-      flex-shrink: 0;
+      overflow: hidden; position: relative; margin-top: 8px; margin-bottom: 20px; flex-shrink: 0;
     }
 
     .header { 
-      padding: 32px 24px 22px; 
-      text-align: center; 
-      position: relative;
+      padding: 32px 24px 22px; text-align: center; position: relative;
       background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
       border-bottom: 1px solid var(--border);
     }
@@ -101,8 +62,7 @@
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       border-radius: var(--radius-md); padding: 18px 14px; 
       display: flex; flex-direction: column; align-items: center; gap: 8px; 
-      width: 100%; 
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18), inset 0 1px 0 rgba(255,255,255,0.06);
+      width: 100%; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18), inset 0 1px 0 rgba(255,255,255,0.06);
       position: relative; overflow: hidden;
     }
     .live-clock-card::before {
@@ -111,11 +71,7 @@
       animation: rotate 20s linear infinite; pointer-events: none;
     }
     @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    .clock-time-row { 
-      display: inline-flex; align-items: center; gap: 14px; 
-      font-family: 'JetBrains Mono', monospace; font-size: 2.6rem; font-weight: 700; 
-      color: #ffffff; letter-spacing: -0.02em; line-height: 1; position: relative; z-index: 1;
-    }
+    .clock-time-row { display: inline-flex; align-items: center; gap: 14px; font-family: 'JetBrains Mono', monospace; font-size: 2.6rem; font-weight: 700; color: #ffffff; letter-spacing: -0.02em; line-height: 1; position: relative; z-index: 1; }
     .clock-time-row #liveClockTime {
       background: linear-gradient(180deg, #ffffff 0%, #94a3b8 100%);
       -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
@@ -152,7 +108,6 @@
     }
     textarea.form-control { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; line-height: 1.5; }
 
-    /* ══════════ BADGE TROCA ══════════ */
     .badge-troca {
       display: inline-flex; align-items: center; gap: 7px; margin-top: 11px;
       padding: 7px 14px 7px 11px;
@@ -165,7 +120,6 @@
       background: #14b8a6; box-shadow: 0 0 8px rgba(20, 184, 166, 0.6); flex-shrink: 0;
     }
 
-    /* ══════════ DICA INFO ══════════ */
     .hint-info {
       display: flex; align-items: flex-start; gap: 10px;
       padding: 12px 15px; margin-bottom: 18px;
@@ -175,7 +129,65 @@
     }
     .hint-info::before { content: '💡'; font-size: 1rem; flex-shrink: 0; }
 
-    /* ══════════ PIN DOTS ══════════ */
+    /* ══════════ PERÍODOS DE HORÁRIO (Troca Turno) ══════════ */
+    .periodo-hint {
+      font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;
+      line-height: 1.45; font-weight: 500;
+    }
+    .periodo-card {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 10px; padding: 10px 12px;
+      background: var(--surface-2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: all 0.22s ease;
+    }
+    .periodo-card:focus-within {
+      border-color: var(--accent);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .periodo-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+      color: #ffffff; font-weight: 800; font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; box-shadow: 0 3px 8px rgba(20, 184, 166, 0.35);
+    }
+    .periodo-inputs {
+      display: flex; align-items: center; gap: 6px; flex: 1;
+    }
+    .periodo-input {
+      padding: 9px 6px !important;
+      font-size: 0.92rem !important;
+      text-align: center;
+      font-weight: 700 !important;
+      letter-spacing: 0.02em;
+      min-width: 0;
+    }
+    .periodo-sep {
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .btn-add-periodo {
+      width: 100%; padding: 11px;
+      background: transparent;
+      border: 1.5px dashed var(--border-strong);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted); font-weight: 700; font-size: 0.76rem;
+      cursor: pointer; transition: all 0.2s ease;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      margin-bottom: 8px;
+    }
+    .btn-add-periodo:hover {
+      border-color: var(--accent); color: var(--accent);
+      background: rgba(5, 150, 105, 0.05);
+    }
+
     .pin-box-wrapper { position: relative; width: 100%; margin-bottom: 8px; }
     .pin-hidden-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; font-size: 16px; }
     .pin-dots-container { 
@@ -262,7 +274,6 @@
     .tile-red { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); color: #b91c1c; border-color: #fca5a5; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.12); }
     .tile-red:hover { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-color: #f87171; color: #991b1b; transform: translateY(-3px); box-shadow: 0 12px 24px rgba(239, 68, 68, 0.28); }
 
-    /* NOVO TILE TEAL - Troca de Turno */
     .tile-teal { background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); color: #0f766e; border-color: #5eead4; box-shadow: 0 4px 12px rgba(20, 184, 166, 0.12); }
     .tile-teal:hover { background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%); border-color: #2dd4bf; color: #115e59; transform: translateY(-3px); box-shadow: 0 12px 24px rgba(20, 184, 166, 0.28); }
 
@@ -445,12 +456,12 @@
       </div>
     </div>
 
-    <!-- ══════════ NOVO SUB-MÓDULO: TROCA DE TURNO ══════════ -->
+    <!-- ══════════ TROCA DE TURNO (com períodos estruturados) ══════════ -->
     <div id="admin-sub-troca" style="display: none;">
       <div class="admin-card">
         <h3>🔄 Registar Troca de Turno</h3>
         <div class="hint-info">
-          O sistema lança automaticamente a ausência no mapa do colaborador que falta e regista o turno no mapa do colega substituto.
+          Lança a ausência no mapa do colaborador que falta e coloca as picagens do substituto nos sítios corretos.
         </div>
         <div class="form-group">
           <label>Colaborador que FALTA <span class="campo-obrigatorio">*</span></label>
@@ -466,11 +477,56 @@
         </div>
         <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataTrocaInicio" class="form-control"></div>
         <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataTrocaFim" class="form-control"></div>
-        <div class="form-group">
-          <label>Horário do Substituto (Opcional)</label>
-          <input type="text" id="horarioTroca" class="form-control" placeholder="Ex: 09:00-17:00 (ou vazio)">
-          <div class="badge-troca" style="margin-top: 11px;">Deixe vazio se o substituto pica normalmente</div>
+
+        <div class="form-group" style="margin-top: 24px;">
+          <label>Horário do Substituto</label>
+          <p class="periodo-hint">
+            Preencha cada período com Entrada e Saída (ex: 08:00 → 13:00, 14:00 → 17:00).<br>
+            Deixe em branco se o substituto pica ponto normalmente.
+          </p>
+          
+          <div class="periodo-card">
+            <div class="periodo-num">1</div>
+            <div class="periodo-inputs">
+              <input type="time" id="horE1" class="form-control periodo-input">
+              <span class="periodo-sep">→</span>
+              <input type="time" id="horS1" class="form-control periodo-input">
+            </div>
+          </div>
+          
+          <div class="periodo-card">
+            <div class="periodo-num">2</div>
+            <div class="periodo-inputs">
+              <input type="time" id="horE2" class="form-control periodo-input">
+              <span class="periodo-sep">→</span>
+              <input type="time" id="horS2" class="form-control periodo-input">
+            </div>
+          </div>
+          
+          <button type="button" class="btn-add-periodo" id="btnAddPeriodo" onclick="togglePeriodosExtra()">
+            ➕ Adicionar 3º / 4º período
+          </button>
+          
+          <div id="periodosExtra" style="display: none;">
+            <div class="periodo-card">
+              <div class="periodo-num">3</div>
+              <div class="periodo-inputs">
+                <input type="time" id="horE3" class="form-control periodo-input">
+                <span class="periodo-sep">→</span>
+                <input type="time" id="horS3" class="form-control periodo-input">
+              </div>
+            </div>
+            <div class="periodo-card">
+              <div class="periodo-num">4</div>
+              <div class="periodo-inputs">
+                <input type="time" id="horE4" class="form-control periodo-input">
+                <span class="periodo-sep">→</span>
+                <input type="time" id="horS4" class="form-control periodo-input">
+              </div>
+            </div>
+          </div>
         </div>
+
         <button class="btn btn-primary" onclick="submeterTrocaTurno()">Confirmar Troca de Turno</button>
       </div>
     </div>
@@ -582,7 +638,7 @@
     document.getElementById('toastTitle').innerText = config.titulo || "Aviso";
     document.getElementById('toastBody').innerHTML = config.mensagem || "";
     var icon = document.getElementById('toastIcon');
-    if (config.tipo === "sucesso") icon.innerText = "✅"; else if (config.tipo === "erro") icon.innerText = "❌"; else if (config.tipo === "processando") { icon.className = "toast-icon ampulheta-animada"; icon.innerText = "⏳"; } else icon.innerText = config.icone || "💬";
+    if (config.tipo === "sucesso") icon.innerText = "✅"; else if (config.tipo === "erro") icon.innerText = "❌"; else if (config.tipo === "processando") { icon.className = "toast-icon ampulheta-animada"; icon.innerText = "⏳"; } else if (config.tipo === "aviso") { icon.innerText = config.icone || "⚠️"; } else icon.innerText = config.icone || "💬";
     
     var acts = document.getElementById('toastActionsContainer'); acts.innerHTML = "";
     if (config.tipo === "processando") acts.style.display = "none";
@@ -708,7 +764,6 @@
     });
   }
 
-  // ══════════ NOVO: filtro de substitutos no módulo Troca Turno ══════════
   function atualizarFiltroSubstitutosTroca() {
     var selectSub = document.getElementById('nomeTrocaSubstituto');
     var nomeAusente = document.getElementById('nomeTrocaAusente').value;
@@ -723,13 +778,29 @@
     });
   }
 
-  // ══════════ NOVO: submissão de Troca de Turno ══════════
+  // ══════════ TROCA TURNO — período extra toggle ══════════
+  function togglePeriodosExtra() {
+    var el = document.getElementById('periodosExtra');
+    var btn = document.getElementById('btnAddPeriodo');
+    if (el.style.display === 'none') {
+      el.style.display = 'block';
+      btn.innerText = '➖ Ocultar 3º / 4º período';
+    } else {
+      el.style.display = 'none';
+      btn.innerText = '➕ Adicionar 3º / 4º período';
+      document.getElementById('horE3').value = "";
+      document.getElementById('horS3').value = "";
+      document.getElementById('horE4').value = "";
+      document.getElementById('horS4').value = "";
+    }
+  }
+
+  // ══════════ TROCA TURNO — submissão ══════════
   function submeterTrocaTurno() {
     var ausente = document.getElementById('nomeTrocaAusente').value;
     var substituto = document.getElementById('nomeTrocaSubstituto').value;
     var dIni = document.getElementById('dataTrocaInicio').value;
     var dFim = document.getElementById('dataTrocaFim').value;
-    var horario = document.getElementById('horarioTroca').value;
     
     if (!ausente || !substituto || !dIni || !dFim) {
       mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha o colaborador ausente, o substituto e as datas.", tipo: "erro" });
@@ -740,27 +811,88 @@
       return;
     }
     
+    var horarios = {
+      e1: document.getElementById('horE1').value,
+      s1: document.getElementById('horS1').value,
+      e2: document.getElementById('horE2').value,
+      s2: document.getElementById('horS2').value,
+      e3: document.getElementById('horE3').value,
+      s3: document.getElementById('horS3').value,
+      e4: document.getElementById('horE4').value,
+      s4: document.getElementById('horS4').value
+    };
+    
+    // Validar pares (entrada + saída ou ambos vazios)
+    var periodoAtivo = 0;
+    for (var i = 1; i <= 4; i++) {
+      var e = horarios['e' + i];
+      var s = horarios['s' + i];
+      if ((e && !s) || (!e && s)) {
+        mostrarPopupPersonalizado({ 
+          titulo: "Atenção", 
+          mensagem: "No " + i + "º período, preencha a entrada E a saída (ou deixe ambos vazios).", 
+          tipo: "erro" 
+        });
+        return;
+      }
+      if (e && s) {
+        if (e >= s) {
+          mostrarPopupPersonalizado({ 
+            titulo: "Atenção", 
+            mensagem: "No " + i + "º período, a saída tem de ser posterior à entrada.", 
+            tipo: "erro" 
+          });
+          return;
+        }
+        periodoAtivo++;
+      }
+    }
+    
+    if (periodoAtivo === 0) {
+      mostrarPopupPersonalizado({
+        titulo: "Horário Vazio",
+        mensagem: "Não preencheu nenhum período. O substituto terá de picar ponto normalmente. Deseja continuar?",
+        icone: "⚠️",
+        botoes: [
+          { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
+          { texto: "Continuar", classe: "toast-btn-primary", acao: function() { executarSubmissaoTroca(ausente, substituto, dIni, dFim, horarios); } }
+        ]
+      });
+      return;
+    }
+    
+    executarSubmissaoTroca(ausente, substituto, dIni, dFim, horarios);
+  }
+
+  function executarSubmissaoTroca(ausente, substituto, dIni, dFim, horarios) {
     mostrarPopupPersonalizado({ titulo: "A Registar Troca...", mensagem: "A lançar ausência e turno do substituto...", tipo: "processando" });
-    chamarAPIJsonp({ 
-      action: "registarTrocaTurnoJsonp", 
-      nomeAusente: ausente, 
-      nomeSubstituto: substituto, 
-      dataInicio: dIni, 
-      dataFim: dFim, 
-      horario: horario || "", 
-      senha: senhaAdminSessao 
+    
+    chamarAPIJsonp({
+      action: "registarTrocaTurnoJsonp",
+      nomeAusente: ausente,
+      nomeSubstituto: substituto,
+      dataInicio: dIni,
+      dataFim: dFim,
+      horarios: JSON.stringify(horarios),
+      senha: senhaAdminSessao
     }, function(resp) {
       if (resp.indexOf("Aviso") !== -1) {
         mostrarPopupPersonalizado({ titulo: "Erro", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" });
       } else {
         mostrarPopupPersonalizado({ titulo: "Troca Registada!", mensagem: resp, tipo: "sucesso" });
-        document.getElementById('nomeTrocaAusente').value = "";
-        document.getElementById('nomeTrocaSubstituto').value = "";
-        document.getElementById('dataTrocaInicio').value = "";
-        document.getElementById('dataTrocaFim').value = "";
-        document.getElementById('horarioTroca').value = "";
+        limparFormularioTroca();
       }
     });
+  }
+
+  function limparFormularioTroca() {
+    document.getElementById('nomeTrocaAusente').value = "";
+    document.getElementById('nomeTrocaSubstituto').value = "";
+    document.getElementById('dataTrocaInicio').value = "";
+    document.getElementById('dataTrocaFim').value = "";
+    ['horE1','horS1','horE2','horS2','horE3','horS3','horE4','horS4'].forEach(function(id) { document.getElementById(id).value = ""; });
+    document.getElementById('periodosExtra').style.display = 'none';
+    document.getElementById('btnAddPeriodo').innerText = '➕ Adicionar 3º / 4º período';
   }
 
   function registarPontoDiario() {
