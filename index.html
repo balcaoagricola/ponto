@@ -8,38 +8,78 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+
   <style>
-    :root { --primary: #0f172a; --primary-soft: #1e293b; --accent: #059669; --accent-light: #10b981; --accent-dark: #047857; --accent-glow: rgba(5, 150, 105, 0.35); --secondary: #0ea5e9; --text: #1e293b; --text-muted: #64748b; --text-light: #94a3b8; --surface: #ffffff; --surface-2: #f8fafc; --border: #e2e8f0; --border-strong: #cbd5e1; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --radius-xs: 10px; --radius-sm: 14px; --radius-md: 20px; --radius-lg: 28px; --radius-xl: 36px; --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06); --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04); --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.12), 0 8px 16px rgba(15, 23, 42, 0.06); --shadow-accent: 0 10px 28px rgba(5, 150, 105, 0.28), 0 4px 8px rgba(5, 150, 105, 0.15); --shadow-danger: 0 10px 28px rgba(239, 68, 68, 0.25), 0 4px 8px rgba(239, 68, 68, 0.12); }
+    :root {
+      --primary: #0f172a; --primary-soft: #1e293b;
+      --accent: #059669; --accent-light: #10b981; --accent-dark: #047857;
+      --accent-glow: rgba(5, 150, 105, 0.35);
+      --secondary: #0ea5e9;
+      --text: #1e293b; --text-muted: #64748b; --text-light: #94a3b8;
+      --surface: #ffffff; --surface-2: #f8fafc; --surface-3: #f1f5f9;
+      --border: #e2e8f0; --border-strong: #cbd5e1;
+      --success: #10b981; --danger: #ef4444; --warning: #f59e0b;
+      --radius-xs: 10px; --radius-sm: 14px; --radius-md: 20px; --radius-lg: 28px; --radius-xl: 36px;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04);
+      --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.08), 0 4px 8px rgba(15, 23, 42, 0.04);
+      --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.12), 0 8px 16px rgba(15, 23, 42, 0.06);
+      --shadow-accent: 0 10px 28px rgba(5, 150, 105, 0.28), 0 4px 8px rgba(5, 150, 105, 0.15);
+      --shadow-danger: 0 10px 28px rgba(239, 68, 68, 0.25), 0 4px 8px rgba(239, 68, 68, 0.12);
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
     html { min-height: 100%; background: #f8fafc; overflow-x: hidden; }
-    body { min-height: 100vh; background: radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.10) 0%, transparent 45%), radial-gradient(circle at 85% 80%, rgba(14, 165, 233, 0.10) 0%, transparent 45%), linear-gradient(135deg, #f8fafc 0%, #eef2f6 50%, #ecfdf5 100%); color: var(--text); padding: 14px; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; overflow-y: auto; -webkit-overflow-scrolling: touch; -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.10) 0%, transparent 45%), radial-gradient(circle at 85% 80%, rgba(14, 165, 233, 0.10) 0%, transparent 45%), linear-gradient(135deg, #f8fafc 0%, #eef2f6 50%, #ecfdf5 100%);
+      color: var(--text); padding: 14px; display: flex; flex-direction: column; align-items: center;
+      overflow-x: hidden; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      -webkit-font-smoothing: antialiased; letter-spacing: -0.01em;
+    }
     .container { width: 100%; max-width: 460px; background: var(--surface); border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); border: 1px solid rgba(255, 255, 255, 0.9); overflow: hidden; position: relative; margin-top: 8px; margin-bottom: 20px; flex-shrink: 0; }
     .header { padding: 32px 24px 22px; text-align: center; position: relative; background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); border-bottom: 1px solid var(--border); }
     .logo-wrapper { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 6px; padding: 0 8px; }
     .logo-empresa { width: 100%; max-height: 118px; object-fit: contain; mix-blend-mode: multiply; filter: contrast(1.18) saturate(1.1); display: block; user-select: none; -webkit-user-drag: none; }
     .header h2 { font-size: 1rem; font-weight: 800; margin-top: 6px; margin-bottom: 22px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--primary); white-space: nowrap; }
-    .live-clock-card { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: var(--radius-md); padding: 18px 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18), inset 0 1px 0 rgba(255,255,255,0.06); position: relative; overflow: hidden; }
-    .live-clock-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 60%); animation: rotate 20s linear infinite; pointer-events: none; }
-    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    .clock-time-row { display: inline-flex; align-items: center; gap: 14px; font-family: 'JetBrains Mono', monospace; font-size: 2.6rem; font-weight: 700; color: #ffffff; letter-spacing: -0.02em; line-height: 1; position: relative; z-index: 1; }
-    .clock-time-row #liveClockTime { background: linear-gradient(180deg, #ffffff 0%, #94a3b8 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 12px rgba(16, 185, 129, 0.15); }
-    .clock-date-row { font-size: 0.78rem; font-weight: 600; color: #94a3b8; letter-spacing: 0.18em; text-transform: uppercase; position: relative; z-index: 1; }
-    .gps-badge { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: rgba(16, 185, 129, 0.12); border-radius: 50%; }
-    .gps-pulse-dot { width: 10px; height: 10px; background: var(--accent-light); border-radius: 50%; position: relative; box-shadow: 0 0 12px rgba(16, 185, 129, 0.9); }
-    .gps-pulse-dot::after { content: ''; position: absolute; top: -2px; left: -2px; width: 14px; height: 14px; border-radius: 50%; background: var(--accent-light); opacity: 0.5; animation: pulseGps 2s infinite ease-out; }
-    @keyframes pulseGps { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(2.8); opacity: 0; } }
-    .gps-pulse-dot.offline { background: #ef4444; box-shadow: 0 0 12px rgba(239, 68, 68, 0.9); }
-    .gps-pulse-dot.offline::after { animation: none; background: #ef4444; }
+
+    /* RELÓGIO PREMIUM */
+    .live-clock-card { position: relative; background: linear-gradient(145deg, #0a1628 0%, #16283f 50%, #0d1f33 100%); border-radius: 26px; padding: 22px 20px 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; box-shadow: 0 24px 55px -14px rgba(10, 22, 40, 0.7), 0 0 0 1px rgba(148, 163, 184, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.06); overflow: hidden; isolation: isolate; }
+    .live-clock-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 15% 0%, rgba(16, 185, 129, 0.20), transparent 60%), radial-gradient(ellipse 70% 60% at 100% 100%, rgba(59, 130, 246, 0.14), transparent 65%); z-index: -1; animation: ambientShift 14s ease-in-out infinite alternate; }
+    .live-clock-card::after { content: ''; position: absolute; top: 0; left: 18%; right: 18%; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.9), transparent); filter: blur(1px); }
+    @keyframes ambientShift { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0.65; transform: scale(1.06); } }
+    .greeting-row { display: flex; align-items: center; gap: 7px; font-size: 0.68rem; font-weight: 800; color: rgba(148, 163, 184, 0.85); letter-spacing: 0.26em; text-transform: uppercase; }
+    .greeting-icon { font-size: 0.95rem; filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.55)); transition: transform 0.5s ease; }
+    .time-row { display: flex; align-items: baseline; gap: 2px; font-family: 'JetBrains Mono', monospace; font-weight: 700; line-height: 1; margin-top: 2px; }
+    .time-hours, .time-minutes { font-size: 3.5rem; background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 55%, #94a3b8 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.045em; filter: drop-shadow(0 4px 22px rgba(16, 185, 129, 0.22)); }
+    .time-sep { font-size: 2.9rem; color: #10b981; margin: 0 2px; animation: blinkColon 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes blinkColon { 0%, 45%, 55%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+    .time-seconds { font-size: 1.35rem; color: #10b981; font-weight: 700; margin-left: 5px; min-width: 2.4ch; display: inline-block; text-align: left; letter-spacing: -0.02em; text-shadow: 0 0 14px rgba(16, 185, 129, 0.35); }
+    .date-row { font-size: 0.76rem; font-weight: 600; color: #94a3b8; letter-spacing: 0.16em; text-transform: uppercase; text-align: center; }
+    .status-row { display: flex; justify-content: center; width: 100%; padding-top: 10px; margin-top: 2px; border-top: 1px solid rgba(148, 163, 184, 0.10); }
+    .status-badge { display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px 5px 10px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.22); border-radius: 100px; font-size: 0.66rem; font-weight: 800; color: #34d399; letter-spacing: 0.18em; text-transform: uppercase; transition: all 0.3s ease; }
+    .status-badge.offline { background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.25); color: #f87171; }
+    .status-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 14px #10b981, 0 0 4px rgba(16, 185, 129, 0.9); animation: pulseStatus 2.2s ease-in-out infinite; }
+    .status-badge .dot.offline { background: #ef4444; box-shadow: 0 0 14px #ef4444; animation: none; }
+    @keyframes pulseStatus { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } }
+
+    /* AVISO RGPD */
+    .rgpd-banner { margin-top: 16px; padding: 10px 14px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 1px solid #fbbf24; border-radius: 12px; font-size: 0.68rem; color: #78350f; font-weight: 600; line-height: 1.4; text-align: left; display: flex; gap: 8px; align-items: flex-start; }
+    .rgpd-banner::before { content: '🔒'; font-size: 0.95rem; flex-shrink: 0; }
+    .rgpd-banner a { color: #92400e; text-decoration: underline; font-weight: 700; }
+
     .content-section { padding: 24px 22px 30px; display: none; animation: fadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
     .content-section.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
     .form-group { margin-bottom: 20px; }
     .form-group label { display: block; margin-bottom: 9px; font-weight: 700; font-size: 0.82rem; color: var(--primary); letter-spacing: 0.01em; text-transform: uppercase; }
     .form-control { width: 100%; padding: 15px 18px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 16px; background-color: var(--surface); color: var(--text); font-weight: 600; outline: none; transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: var(--shadow-sm); }
+    .form-control:hover { border-color: var(--border-strong); }
     .form-control:focus { border-color: var(--accent); background-color: #ffffff; box-shadow: 0 0 0 4px var(--accent-glow), var(--shadow-sm); }
+    .form-control::placeholder { color: var(--text-light); font-weight: 500; }
     select.form-control { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 18px center; padding-right: 45px; cursor: pointer; }
     textarea.form-control { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; line-height: 1.5; }
     .badge-troca { display: inline-flex; align-items: center; gap: 7px; margin-top: 11px; padding: 7px 14px 7px 11px; background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); border: 1px solid #99f6e4; border-radius: 100px; font-size: 0.74rem; font-weight: 600; color: #0f766e; }
+    .badge-troca::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #14b8a6; box-shadow: 0 0 8px rgba(20, 184, 166, 0.6); flex-shrink: 0; }
     .hint-info { display: flex; align-items: flex-start; gap: 10px; padding: 12px 15px; margin-bottom: 18px; background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); border: 1.5px solid #5eead4; border-radius: var(--radius-sm); font-size: 0.82rem; color: #0f766e; font-weight: 500; line-height: 1.5; }
     .hint-info::before { content: '💡'; font-size: 1rem; flex-shrink: 0; }
     .periodo-hint { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.45; font-weight: 500; }
@@ -60,15 +100,23 @@
     .btn { width: 100%; padding: 17px 20px; border: none; border-radius: var(--radius-sm); font-size: 0.95rem; font-weight: 800; cursor: pointer; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1); margin-bottom: 14px; letter-spacing: 0.06em; text-transform: uppercase; position: relative; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
     .btn:active { transform: scale(0.97); }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
-    .btn-primary { background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 55%, var(--accent-dark) 100%); color: #ffffff; box-shadow: var(--shadow-accent); }
+    .btn-primary { background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 55%, var(--accent-dark) 100%); color: #ffffff; box-shadow: var(--shadow-accent); text-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+    .btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent); transition: left 0.6s ease; }
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(5, 150, 105, 0.35); }
+    .btn-primary:hover::before { left: 100%; }
     .btn-danger { background: linear-gradient(135deg, #f87171 0%, var(--danger) 60%, #dc2626 100%); color: #ffffff; box-shadow: var(--shadow-danger); }
+    .btn-danger:hover { transform: translateY(-2px); }
     .btn-nav-blue { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; border: 1.5px solid #93c5fd; }
+    .btn-nav-blue:hover { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-color: #60a5fa; color: #1e40af; transform: translateY(-2px); }
     .btn-nav-slate { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); color: #334155; border: 1.5px solid #cbd5e1; }
+    .btn-nav-slate:hover { background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%); border-color: #94a3b8; color: #0f172a; transform: translateY(-2px); }
     .btn-nav-red { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); color: #b91c1c; border: 1.5px solid #fca5a5; }
-    .top-action-btn { width: 44px; height: 44px; border-radius: 13px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.15rem; border: 1.5px solid; }
+    .btn-nav-red:hover { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-color: #f87171; color: #991b1b; transform: translateY(-2px); }
+    .top-action-btn { width: 44px; height: 44px; border-radius: 13px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.15rem; transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1); border: 1.5px solid; }
     .top-action-btn.calendar { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; border-color: #93c5fd; }
+    .top-action-btn.calendar:hover { border-color: #60a5fa; transform: translateY(-3px); }
     .top-action-btn.settings { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); color: #7e22ce; border-color: #d8b4fe; }
+    .top-action-btn.settings:hover { border-color: #c084fc; transform: translateY(-3px); }
     .admin-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 22px; margin-bottom: 18px; box-shadow: var(--shadow-sm); }
     .admin-card h3 { font-size: 1rem; margin-bottom: 16px; color: var(--primary); font-weight: 800; display: flex; align-items: center; gap: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
     .menu-admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -116,15 +164,34 @@
       <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo Balcão Agrícola">
     </div>
     <h2 id="headerTitle">CONTROLO DE ASSIDUIDADE</h2>
+
     <div class="live-clock-card" id="headerClockBox">
-      <div class="clock-time-row">
-        <div class="gps-badge"><div class="gps-pulse-dot" id="gpsIndicator"></div></div>
-        <span id="liveClockTime">00:00:00</span>
+      <div class="greeting-row">
+        <span class="greeting-icon" id="greetingIcon">☀️</span>
+        <span class="greeting-text" id="greetingText">Bom dia</span>
       </div>
-      <div class="clock-date-row" id="liveClockDate">A sincronizar data...</div>
+      <div class="time-row">
+        <span class="time-hours" id="clockHours">00</span>
+        <span class="time-sep">:</span>
+        <span class="time-minutes" id="clockMinutes">00</span>
+        <span class="time-seconds" id="clockSeconds">00</span>
+      </div>
+      <div class="date-row" id="clockFullDate">A sincronizar...</div>
+      <div class="status-row">
+        <div class="status-badge" id="statusBadge">
+          <span class="dot" id="gpsIndicator"></span>
+          <span id="gpsStatusText">GPS Ativo</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AVISO RGPD (Melhoria #15) -->
+    <div class="rgpd-banner" id="rgpdBanner">
+      <span>Ao registar o ponto, autoriza a recolha estrita de <b>coordenadas GPS, endereço IP e dispositivo</b> para efeitos de assiduidade laboral, nos termos do RGPD (Art. 6.º, n.º 1, al. b). Os dados são conservados pelo período legal aplicável.</span>
     </div>
   </div>
 
+  <!-- ECRÃ PONTO -->
   <div id="section-ponto" class="content-section active">
     <div class="form-group">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -152,13 +219,11 @@
     <button id="btnPonto" class="btn btn-primary" onclick="registarPontoDiario()">👆 Validar Registo de Ponto</button>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════
-       SECÇÃO: COMUNICAR AUSÊNCIA (FUNCIONÁRIO)
-       ═══════════════════════════════════════════════════════ -->
+  <!-- COMUNICAR AUSÊNCIA -->
   <div id="section-falta-func" class="content-section">
     <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
       <h3 style="margin-bottom: 8px; color: var(--primary); text-align: left; font-size: 1.05rem;">📅 Comunicar Ausência</h3>
-      <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 22px; line-height: 1.6; text-align: left;">Submeta os detalhes da sua ausência. O pedido será analisado pela gerência e, ao ser aprovado, o horário é <b>automaticamente aplicado ao mapa de ponto</b>.</p>
+      <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 22px; line-height: 1.6; text-align: left;">Submeta os detalhes da sua ausência. Ao ser aprovado, o horário é automaticamente aplicado ao seu mapa de ponto.</p>
       <div class="admin-card" style="margin-bottom: 0;">
         <div class="form-group"><label>O seu Nome <span class="campo-obrigatorio">*</span></label><select id="nomeFuncFalta" class="form-control" onchange="atualizarFiltroColegasTroca()"></select></div>
         <div class="form-group">
@@ -181,43 +246,22 @@
             <option value="🔄 Troca com Colega">🔄 Troca com Colega</option>
           </select>
         </div>
-
         <div class="form-group" id="grupoColegaTroca" style="display: none;">
           <label>Colega com quem vai trocar <span class="campo-obrigatorio">*</span></label>
-          <select id="colegaTrocaFunc" class="form-control">
-            <option value="">Selecione o colega</option>
-          </select>
+          <select id="colegaTrocaFunc" class="form-control"><option value="">Selecione o colega</option></select>
           <div class="badge-troca">O nome do colega será comunicado à gerência</div>
         </div>
-
-        <!-- HORÁRIOS PARA FALTAS SIMPLES (não-troca) -->
         <div class="form-group" id="grupoHorarioFunc" style="display: none;">
           <label>Horário que vai cumprir neste dia (opcional)</label>
           <p class="periodo-hint">Indique o horário que <b>vai cumprir</b> neste dia. Deixe em branco para assinalar ausência de <b>dia completo</b>.</p>
-          <div class="periodo-card">
-            <div class="periodo-num">1</div>
-            <div class="periodo-inputs">
-              <input type="time" id="fuE1" class="form-control periodo-input">
-              <span class="periodo-sep">→</span>
-              <input type="time" id="fuS1" class="form-control periodo-input">
-            </div>
-          </div>
-          <div class="periodo-card">
-            <div class="periodo-num">2</div>
-            <div class="periodo-inputs">
-              <input type="time" id="fuE2" class="form-control periodo-input">
-              <span class="periodo-sep">→</span>
-              <input type="time" id="fuS2" class="form-control periodo-input">
-            </div>
-          </div>
+          <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="fuE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="fuS1" class="form-control periodo-input"></div></div>
+          <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="fuE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="fuS2" class="form-control periodo-input"></div></div>
           <button type="button" class="btn-add-periodo" id="btnAddPeriodoFunc" onclick="togglePeriodosExtraFunc()">➕ Adicionar 3º / 4º período</button>
           <div id="periodosExtraFunc" style="display: none;">
             <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="fuE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="fuS3" class="form-control periodo-input"></div></div>
             <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="fuE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="fuS4" class="form-control periodo-input"></div></div>
           </div>
         </div>
-
-        <!-- HORÁRIOS DUPLOS PARA TROCA COM COLEGA -->
         <div id="grupoTrocaHorarios" style="display: none;">
           <div class="troca-bloco">
             <h4>👤 O SEU Horário Nestes Dias</h4>
@@ -240,13 +284,13 @@
             </div>
           </div>
         </div>
-
         <div class="form-group">
           <label>Observações / Justificação</label>
           <textarea id="obsFuncFalta" class="form-control" rows="4" placeholder="Detalhes adicionais (opcional)..." style="resize: vertical; min-height: 100px;"></textarea>
         </div>
-        <div class="form-group"><label>Data de Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncInicio" class="form-control"></div>
-        <div class="form-group"><label>Data de Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncFim" class="form-control"></div>
+        <div class="form-group"><label>Data de Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncInicio" class="form-control" onchange="validarDataFim()"></div>
+        <div class="form-group"><label>Data de Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncFim" class="form-control" onchange="validarDataFim()"></div>
+        <div id="erro-datas" class="erro-campo" style="display:none;"></div>
         <button class="btn btn-primary" onclick="submeterFaltaFuncionario()">Enviar Pedido à Gerência</button>
       </div>
       <div style="margin-top: 18px; padding-top: 20px;">
@@ -255,6 +299,7 @@
     </div>
   </div>
 
+  <!-- PAINEL ADMIN -->
   <div id="section-admin" class="content-section">
     <div id="admin-sub-menu">
       <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
@@ -275,7 +320,7 @@
     <div id="admin-sub-pedidos" style="display: none;">
       <div class="admin-card">
         <h3>📩 Pedidos Pendentes</h3>
-        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; text-align: left; line-height: 1.55;">Ao aprovar, o horário é <b>automaticamente aplicado ao mapa do colaborador</b> (e do colega, no caso de trocas). O colaborador é notificado por e-mail.</p>
+        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; text-align: left; line-height: 1.55;">Ao aprovar, o horário é automaticamente aplicado ao mapa.</p>
         <div id="listaPedidosContainer"><p style="text-align: center; color: var(--text-muted);">A carregar...</p></div>
       </div>
     </div>
@@ -298,7 +343,6 @@
         <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaFim" class="form-control"></div>
         <div class="form-group" style="margin-top: 24px;">
           <label>Horário (Opcional)</label>
-          <p class="periodo-hint">Se preencher o horário (em <b>1 único dia</b>), o sistema insere as picagens em vez de marcar a ausência completa.</p>
           <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="auE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="auS1" class="form-control periodo-input"></div></div>
           <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="auE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="auS2" class="form-control periodo-input"></div></div>
           <button type="button" class="btn-add-periodo" id="btnAddPeriodoAusencia" onclick="togglePeriodosExtraAusencia()">➕ Adicionar 3º / 4º período</button>
@@ -314,8 +358,7 @@
     <div id="admin-sub-troca" style="display: none;">
       <div class="admin-card">
         <h3>🔄 Registar Troca de Turno</h3>
-        <div class="hint-info">Preencha o horário que <b>cada colaborador</b> vai cumprir. Ambos os mapas são atualizados em simultâneo e ordenados por data.</div>
-
+        <div class="hint-info">Preencha o horário que cada colaborador vai cumprir.</div>
         <div class="form-group">
           <label>Colaborador que FALTA <span class="campo-obrigatorio">*</span></label>
           <select id="nomeTrocaAusente" class="form-control" onchange="atualizarFiltroSubstitutosTroca()">
@@ -330,10 +373,8 @@
         </div>
         <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataTrocaInicio" class="form-control"></div>
         <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataTrocaFim" class="form-control"></div>
-
         <div class="form-group" style="margin-top: 24px;">
           <label>Horário do Colaborador Ausente</label>
-          <p class="periodo-hint">Horário que o <b>colaborador ausente</b> irá cumprir. Deixe em branco se ficar efetivamente ausente.</p>
           <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="ausE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="ausS1" class="form-control periodo-input"></div></div>
           <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="ausE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="ausS2" class="form-control periodo-input"></div></div>
           <button type="button" class="btn-add-periodo" id="btnAddPeriodoAus" onclick="togglePeriodosExtraAus()">➕ Adicionar 3º / 4º período</button>
@@ -342,10 +383,8 @@
             <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="ausE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="ausS4" class="form-control periodo-input"></div></div>
           </div>
         </div>
-
         <div class="form-group" style="margin-top: 24px;">
           <label>Horário do Substituto</label>
-          <p class="periodo-hint">Horário que o <b>substituto</b> irá cumprir. Deixe em branco se picar ponto normalmente.</p>
           <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="horE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="horS1" class="form-control periodo-input"></div></div>
           <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="horE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="horS2" class="form-control periodo-input"></div></div>
           <button type="button" class="btn-add-periodo" id="btnAddPeriodo" onclick="togglePeriodosExtra()">➕ Adicionar 3º / 4º período</button>
@@ -354,7 +393,6 @@
             <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="horE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="horS4" class="form-control periodo-input"></div></div>
           </div>
         </div>
-
         <button class="btn btn-primary" onclick="submeterTrocaTurno()">Confirmar Troca de Turno</button>
       </div>
     </div>
@@ -362,7 +400,7 @@
     <div id="admin-sub-acordo" style="display: none;">
       <div class="admin-card">
         <h3>🤝 Acordo de Horas (1:1)</h3>
-        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55;">Indique os períodos que o colaborador <b>vai cumprir</b>.</p>
+        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55;">Banco de horas persistente entre semanas.</p>
         <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeAcordo" class="form-control"></select></div>
         <div class="form-group"><label>Data <span class="campo-obrigatorio">*</span></label><input type="date" id="dataAcordo" class="form-control"></div>
         <div class="form-group" style="margin-top: 24px;">
@@ -425,7 +463,7 @@
     </div>
   </div>
 
-  <div class="app-footer" id="appFooter"><p>© 2026 · Balcão Agrícola</p></div>
+  <div class="app-footer" id="appFooter"><p>© 2027 · Balcão Agrícola · RGPD Compliant</p></div>
 </div>
 
 <div id="toastOverlay" class="toast-overlay" onclick="fecharToastOverlay(event)">
@@ -440,25 +478,65 @@
 </div>
 
 <script>
+  // ============================================================
+  // ⚙️ CONFIGURAÇÃO
+  // ============================================================
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
-  var senhaAdminSessao = ""; var emProcessamento = false; var estaOnline = navigator.onLine;
+
+  var senhaAdminSessao = "";
+  var emProcessamento = false;
+  var estaOnline = navigator.onLine;
   var listaFuncionariosCache = [];
   var MODULOS_ADMIN = ['pedidos', 'ausencias', 'troca', 'acordo', 'corrigir', 'pdf', 'funcionario', 'remover'];
   var TIPOS_COM_HORARIO = ["📄 Falta Justificada", "⚠️ Falta Injustificada", "🤝 Acordo 1:1"];
+  var GPS_ACCURACY_MAX = 500; // Melhoria #13 — tolerância GPS aumentada
 
+  // ============================================================
+  // ⏰ RELÓGIO PREMIUM
+  // ============================================================
   function iniciarRelogio() {
-    setInterval(function() {
+    var diasSemanaExtenso = ["Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado"];
+    var mesesExtenso = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+    function atualizar() {
       var agora = new Date();
-      var horaStr = String(agora.getHours()).padStart(2, '0') + ':' + String(agora.getMinutes()).padStart(2, '0') + ':' + String(agora.getSeconds()).padStart(2, '0');
-      var meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-      var elTime = document.getElementById('liveClockTime'); var elDate = document.getElementById('liveClockDate');
-      if (elTime) elTime.innerText = horaStr;
-      if (elDate) elDate.innerText = String(agora.getDate()).padStart(2, '0') + ' ' + meses[agora.getMonth()] + ' ' + agora.getFullYear();
-    }, 1000);
+      var h = String(agora.getHours()).padStart(2, '0');
+      var m = String(agora.getMinutes()).padStart(2, '0');
+      var s = String(agora.getSeconds()).padStart(2, '0');
+      var elH = document.getElementById('clockHours');
+      var elM = document.getElementById('clockMinutes');
+      var elS = document.getElementById('clockSeconds');
+      var elD = document.getElementById('clockFullDate');
+      if (elH) elH.innerText = h;
+      if (elM) elM.innerText = m;
+      if (elS) elS.innerText = s;
+      if (elD) elD.innerText = diasSemanaExtenso[agora.getDay()] + ", " + agora.getDate() + " " + mesesExtenso[agora.getMonth()] + " " + agora.getFullYear();
+      var hora = agora.getHours();
+      var gT = document.getElementById('greetingText');
+      var gI = document.getElementById('greetingIcon');
+      if (gT && gI) {
+        if (hora >= 5 && hora < 12)       { gT.innerText = "Bom dia";   gI.innerText = "☀️"; }
+        else if (hora >= 12 && hora < 20) { gT.innerText = "Boa tarde"; gI.innerText = "🌤️"; }
+        else                               { gT.innerText = "Boa noite"; gI.innerText = "🌙"; }
+      }
+    }
+    atualizar();
+    setInterval(atualizar, 1000);
   }
 
-  window.addEventListener('online', function() { estaOnline = true; var g = document.getElementById('gpsIndicator'); if(g) g.classList.remove('offline'); mostrarPopupPersonalizado({ titulo: "Ligação Restabelecida", mensagem: "O dispositivo voltou a estar online.", tipo: "sucesso" }); });
-  window.addEventListener('offline', function() { estaOnline = false; var g = document.getElementById('gpsIndicator'); if(g) g.classList.add('offline'); mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Verifique a sua ligação à internet.", tipo: "erro" }); });
+  window.addEventListener('online', function() {
+    estaOnline = true;
+    var g = document.getElementById('gpsIndicator'); if (g) g.classList.remove('offline');
+    var badge = document.getElementById('statusBadge'); if (badge) badge.classList.remove('offline');
+    var txt = document.getElementById('gpsStatusText'); if (txt) txt.innerText = "GPS Ativo";
+    mostrarPopupPersonalizado({ titulo: "Ligação Restabelecida", mensagem: "O dispositivo voltou a estar online.", tipo: "sucesso" });
+  });
+  window.addEventListener('offline', function() {
+    estaOnline = false;
+    var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline');
+    var badge = document.getElementById('statusBadge'); if (badge) badge.classList.add('offline');
+    var txt = document.getElementById('gpsStatusText'); if (txt) txt.innerText = "Sem Rede";
+    mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Verifique a sua ligação à internet.", tipo: "erro" });
+  });
 
   function atualizarPinDisplay(inputId, containerId) {
     var input = document.getElementById(inputId); if (!input) return;
@@ -499,38 +577,75 @@
     var ua = navigator.userAgent; if (ua.indexOf("iPhone") !== -1) return "Apple iPhone"; if (ua.indexOf("Samsung") !== -1) return "Samsung Galaxy"; return navigator.platform || "Smartphone";
   }
 
-  function chamarAPIJsonp(params, callbackSucesso) {
-    if (!navigator.onLine) { emProcessamento = false; mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Verifique a sua ligação à internet.", tipo: "erro" }); return; }
-    var controller = new AbortController(); var timeoutId = setTimeout(function() { controller.abort(); }, 1200);
-    fetch('https://api.ipify.org?format=json', { signal: controller.signal })
-      .then(function(res) { return res.json(); }).then(function(data) { clearTimeout(timeoutId); params.ip = data.ip || "Não disponível"; enviarPedidoComIp(params, callbackSucesso); })
-      .catch(function() { clearTimeout(timeoutId); params.ip = "Não disponível"; enviarPedidoComIp(params, callbackSucesso); });
+  // ============================================================
+  // 🔐 COMUNICAÇÃO POST SEGURA (Melhoria #1)
+  // ============================================================
+  function chamarAPI(params, callbackSucesso) {
+    if (!navigator.onLine) {
+      emProcessamento = false;
+      mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Verifique a sua ligação à internet.", tipo: "erro" });
+      return;
+    }
+    // Envolver tudo em POST com content-type JSON (não expõe PINs nos URLs)
+    var payload = JSON.stringify(params);
+    fetch(APP_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // text/plain evita preflight CORS
+      body: payload,
+      redirect: 'follow'
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(dados) { if (callbackSucesso) callbackSucesso(dados); })
+    .catch(function(err) {
+      emProcessamento = false;
+      mostrarPopupPersonalizado({ titulo: "Erro de Comunicação", mensagem: "Não foi possível contactar o servidor. Verifique a ligação e tente novamente.", tipo: "erro" });
+    });
   }
 
-  function enviarPedidoComIp(params, callbackSucesso) {
-    var cbName = "jsonp_cb_" + Math.random().toString(36).substring(2, 9);
-    var script = document.createElement('script'); script.id = cbName;
-    window[cbName] = function(dados) { delete window[cbName]; if (script && script.parentNode) script.remove(); if (callbackSucesso) callbackSucesso(dados); };
-    var url = APP_SCRIPT_URL + "?";
-    for (var key in params) { if (params.hasOwnProperty(key)) url += encodeURIComponent(key) + "=" + encodeURIComponent(params[key]) + "&"; }
-    url += "callback=" + cbName; script.src = url;
-    script.onerror = function() { delete window[cbName]; if (script && script.parentNode) script.remove(); emProcessamento = false; mostrarPopupPersonalizado({ titulo: "Erro de Comunicação", mensagem: "Não foi possível contactar o servidor. Tente novamente.", tipo: "erro" }); };
-    document.body.appendChild(script);
+  // ============================================================
+  // ✅ VALIDAÇÃO CLIENT-SIDE (Melhoria #14)
+  // ============================================================
+  function validarDataFim() {
+    var dIni = document.getElementById('dataFaltaFuncInicio').value;
+    var dFim = document.getElementById('dataFaltaFuncFim').value;
+    var erro = document.getElementById('erro-datas');
+    if (dIni && dFim && dFim < dIni) {
+      erro.innerText = "A data de fim não pode ser anterior à data de início.";
+      erro.style.display = "flex";
+      document.getElementById('dataFaltaFuncFim').value = "";
+    } else {
+      erro.style.display = "none";
+    }
   }
 
-  window.addEventListener('load', function() { iniciarRelogio(); carregarFuncionariosEmTodosOsCampos(); if (!navigator.onLine) { var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); } });
+  // ============================================================
+  // 🚀 CARREGAMENTO
+  // ============================================================
+  window.addEventListener('load', function() {
+    iniciarRelogio();
+    carregarFuncionariosEmTodosOsCampos();
+    if (!navigator.onLine) {
+      var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline');
+      var badge = document.getElementById('statusBadge'); if (badge) badge.classList.add('offline');
+      var txt = document.getElementById('gpsStatusText'); if (txt) txt.innerText = "Sem Rede";
+    }
+  });
 
   function abrirModalSenhaAdmin() {
     mostrarPopupPersonalizado({
-      titulo: "Autenticação", mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.94rem;">Área reservada à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.35rem; letter-spacing:6px;" placeholder="••••" autofocus><button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️</button></div>', icone: "🔐",
+      titulo: "Autenticação",
+      mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.94rem;">Área reservada à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.35rem; letter-spacing:6px;" placeholder="••••" autofocus><button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️</button></div>',
+      icone: "🔐",
       botoes: [
         { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
         { texto: "Entrar", classe: "toast-btn-primary", acao: function() {
             var s = document.getElementById('inputSenhaPopup').value; if (!s) return;
             mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A verificar credenciais...", tipo: "processando" });
-            chamarAPIJsonp({ action: "verificarSenhaJsonp", senha: s }, function(resp) {
-              if (resp.indexOf("incorreta") !== -1 || resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Acesso Negado", mensagem: "A palavra-passe introduzida está incorreta.", tipo: "erro" }); }
-              else {
+            chamarAPI({ action: "verificarSenha", senha: s }, function(resp) {
+              var msg = typeof resp === 'string' ? resp : (resp && resp.msg ? resp.msg : "");
+              if (msg.indexOf("incorreta") !== -1 || msg.indexOf("Aviso") !== -1 || msg.indexOf("bloqueado") !== -1) {
+                mostrarPopupPersonalizado({ titulo: "Acesso Negado", mensagem: msg.replace("Aviso: ", ""), tipo: "erro" });
+              } else {
                 senhaAdminSessao = s; fecharToast();
                 document.getElementById('section-ponto').classList.remove('active');
                 document.getElementById('section-falta-func').classList.remove('active');
@@ -561,7 +676,7 @@
     document.getElementById('section-falta-func').classList.remove('active');
     document.getElementById('section-ponto').classList.add('active');
     document.getElementById('headerTitle').style.display = 'block';
-    document.getElementById('headerClockBox').style.display = 'inline-flex';
+    document.getElementById('headerClockBox').style.display = 'flex';
     voltarAoMenuCentralAdmin();
     limparFormularioFaltaCompleto();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -569,8 +684,10 @@
 
   function carregarFuncionariosEmTodosOsCampos() {
     if (!navigator.onLine) return;
-    chamarAPIJsonp({ action: "obterFuncionarios" }, function(lista) { if (lista && lista.length > 0) { listaFuncionariosCache = lista; preencherSelectsNomes(lista); } });
-    chamarAPIJsonp({ action: "obterTodosFuncionarios" }, function(listaCompleta) {
+    chamarAPI({ action: "obterFuncionarios" }, function(lista) {
+      if (lista && lista.length > 0) { listaFuncionariosCache = lista; preencherSelectsNomes(lista); }
+    });
+    chamarAPI({ action: "obterTodosFuncionarios" }, function(listaCompleta) {
       if (listaCompleta && listaCompleta.length > 0) {
         var sAdmin = document.getElementById('selecaoFuncionario');
         if (sAdmin) { sAdmin.innerHTML = '<option value="" disabled selected>Selecione</option><option value="TODOS">Exportar Todos</option>'; listaCompleta.forEach(function(n) { var o = document.createElement('option'); o.value = n; o.text = n; sAdmin.appendChild(o); }); }
@@ -599,15 +716,11 @@
     var grupo = document.getElementById('grupoColegaTroca');
     var grupoHorario = document.getElementById('grupoHorarioFunc');
     var grupoTrocaHorarios = document.getElementById('grupoTrocaHorarios');
-
     if (tipo === "🔄 Troca com Colega") {
-      grupo.style.display = "block";
-      grupoTrocaHorarios.style.display = "block";
-      grupoHorario.style.display = "none";
+      grupo.style.display = "block"; grupoTrocaHorarios.style.display = "block"; grupoHorario.style.display = "none";
       atualizarFiltroColegasTroca();
     } else {
-      grupo.style.display = "none";
-      grupoTrocaHorarios.style.display = "none";
+      grupo.style.display = "none"; grupoTrocaHorarios.style.display = "none";
       var s = document.getElementById('colegaTrocaFunc'); if (s) s.value = "";
       if (TIPOS_COM_HORARIO.indexOf(tipo) !== -1) grupoHorario.style.display = "block";
       else { grupoHorario.style.display = "none"; limparHorarioFunc(); }
@@ -643,49 +756,41 @@
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
     else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('fuE3').value = ""; document.getElementById('fuS3').value = ""; document.getElementById('fuE4').value = ""; document.getElementById('fuS4').value = ""; }
   }
-
   function togglePeriodosExtraTrPro() {
     var el = document.getElementById('periodosExtraTrPro'); var btn = document.getElementById('btnAddPeriodoTrPro');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
     else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('trProE3').value = ""; document.getElementById('trProS3').value = ""; document.getElementById('trProE4').value = ""; document.getElementById('trProS4').value = ""; }
   }
-
   function togglePeriodosExtraTrCol() {
     var el = document.getElementById('periodosExtraTrCol'); var btn = document.getElementById('btnAddPeriodoTrCol');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
     else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('trColE3').value = ""; document.getElementById('trColS3').value = ""; document.getElementById('trColE4').value = ""; document.getElementById('trColS4').value = ""; }
   }
-
   function limparHorarioFunc() {
     ['fuE1','fuS1','fuE2','fuS2','fuE3','fuS3','fuE4','fuS4'].forEach(function(id) { var e = document.getElementById(id); if(e) e.value = ""; });
     var el = document.getElementById('periodosExtraFunc'); var btn = document.getElementById('btnAddPeriodoFunc');
     if (el) el.style.display = 'none'; if (btn) btn.innerText = '➕ Adicionar 3º / 4º período';
   }
-
   function limparHorariosTrocaFunc() {
     ['trProE1','trProS1','trProE2','trProS2','trProE3','trProS3','trProE4','trProS4','trColE1','trColS1','trColE2','trColS2','trColE3','trColS3','trColE4','trColS4'].forEach(function(id) { var e = document.getElementById(id); if(e) e.value = ""; });
     var elP = document.getElementById('periodosExtraTrPro'); if (elP) elP.style.display = 'none';
     var elC = document.getElementById('periodosExtraTrCol'); if (elC) elC.style.display = 'none';
   }
-
   function togglePeriodosExtra() {
     var el = document.getElementById('periodosExtra'); var btn = document.getElementById('btnAddPeriodo');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
     else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('horE3').value = ""; document.getElementById('horS3').value = ""; document.getElementById('horE4').value = ""; document.getElementById('horS4').value = ""; }
   }
-
   function togglePeriodosExtraAus() {
     var el = document.getElementById('periodosExtraAus'); var btn = document.getElementById('btnAddPeriodoAus');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
     else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('ausE3').value = ""; document.getElementById('ausS3').value = ""; document.getElementById('ausE4').value = ""; document.getElementById('ausS4').value = ""; }
   }
-
   function togglePeriodosExtraAcordo() {
     var el = document.getElementById('periodosExtraAcordo'); var btn = document.getElementById('btnAddPeriodoAcordo');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
     else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('acE3').value = ""; document.getElementById('acS3').value = ""; document.getElementById('acE4').value = ""; document.getElementById('acS4').value = ""; }
   }
-
   function togglePeriodosExtraAusencia() {
     var el = document.getElementById('periodosExtraAusencia'); var btn = document.getElementById('btnAddPeriodoAusencia');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
@@ -701,7 +806,6 @@
     }
     return "";
   }
-
   function contarPeriodosAtivos(horarios) {
     if (!horarios || typeof horarios !== 'object') return 0;
     var c = 0;
@@ -716,6 +820,7 @@
     var dFim = document.getElementById('dataTrocaFim').value;
     if (!ausente || !substituto || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o colaborador ausente, o substituto e as datas.", tipo: "erro" }); return; }
     if (ausente === substituto) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O colaborador ausente e o substituto não podem ser a mesma pessoa.", tipo: "erro" }); return; }
+    if (dFim < dIni) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "A data de fim não pode ser anterior à data de início.", tipo: "erro" }); return; }
     var horAus = { e1: document.getElementById('ausE1').value, s1: document.getElementById('ausS1').value, e2: document.getElementById('ausE2').value, s2: document.getElementById('ausS2').value, e3: document.getElementById('ausE3').value, s3: document.getElementById('ausS3').value, e4: document.getElementById('ausE4').value, s4: document.getElementById('ausS4').value };
     var horSub = { e1: document.getElementById('horE1').value, s1: document.getElementById('horS1').value, e2: document.getElementById('horE2').value, s2: document.getElementById('horS2').value, e3: document.getElementById('horE3').value, s3: document.getElementById('horS3').value, e4: document.getElementById('horE4').value, s4: document.getElementById('horS4').value };
     var errAus = validarParesHorario(horAus); if (errAus) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (Ausente)", mensagem: errAus, tipo: "erro" }); return; }
@@ -735,9 +840,10 @@
 
   function executarSubmissaoTroca(ausente, substituto, dIni, dFim, horAus, horSub) {
     mostrarPopupPersonalizado({ titulo: "A Registar Troca", mensagem: "A lançar horários nos mapas de ambos os colaboradores...", tipo: "processando" });
-    chamarAPIJsonp({ action: "registarTrocaTurnoJsonp", nomeAusente: ausente, nomeSubstituto: substituto, dataInicio: dIni, dataFim: dFim, horariosAusente: JSON.stringify(horAus), horariosSubstituto: JSON.stringify(horSub), senha: senhaAdminSessao }, function(resp) {
-      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível Registar", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); }
-      else { mostrarPopupPersonalizado({ titulo: "Troca Registada", mensagem: resp, tipo: "sucesso" }); limparFormularioTroca(); }
+    chamarAPI({ action: "registarTrocaTurno", nomeAusente: ausente, nomeSubstituto: substituto, dataInicio: dIni, dataFim: dFim, horariosAusente: JSON.stringify(horAus), horariosSubstituto: JSON.stringify(horSub), senha: senhaAdminSessao }, function(resp) {
+      var msg = typeof resp === 'string' ? resp : (resp && resp.msg ? resp.msg : "Resposta inválida.");
+      if (msg.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível Registar", mensagem: msg.replace("Aviso: ", ""), tipo: "erro" }); }
+      else { mostrarPopupPersonalizado({ titulo: "Troca Registada", mensagem: msg, tipo: "sucesso" }); limparFormularioTroca(); }
     });
   }
 
@@ -758,9 +864,10 @@
     var horarios = { e1: document.getElementById('acE1').value, s1: document.getElementById('acS1').value, e2: document.getElementById('acE2').value, s2: document.getElementById('acS2').value, e3: document.getElementById('acE3').value, s3: document.getElementById('acS3').value, e4: document.getElementById('acE4').value, s4: document.getElementById('acS4').value };
     var erro = validarParesHorario(horarios); if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A aplicar o acordo de horas...", tipo: "processando" });
-    chamarAPIJsonp({ action: "marcarAcordoJsonp", nome: nome, data: d, horarios: JSON.stringify(horarios), senha: senhaAdminSessao }, function(resp) {
-      mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
-      if (resp.indexOf("Aviso") === -1) limparFormularioAcordo();
+    chamarAPI({ action: "marcarAcordo", nome: nome, data: d, horarios: JSON.stringify(horarios), senha: senhaAdminSessao }, function(resp) {
+      var msg = typeof resp === 'string' ? resp : (resp && resp.msg ? resp.msg : "Resposta inválida.");
+      mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: msg, tipo: msg.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+      if (msg.indexOf("Aviso") === -1) limparFormularioAcordo();
     });
   }
 
@@ -775,14 +882,16 @@
     var nome = document.getElementById('nomeFuncionarioFolga').value; var tipo = document.getElementById('tipoAusencia').value;
     var dIni = document.getElementById('dataFolgaInicio').value; var dFim = document.getElementById('dataFolgaFim').value;
     if (!nome || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios.", tipo: "erro" }); return; }
+    if (dFim < dIni) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "A data de fim não pode ser anterior à data de início.", tipo: "erro" }); return; }
     var horarios = { e1: document.getElementById('auE1').value, s1: document.getElementById('auS1').value, e2: document.getElementById('auE2').value, s2: document.getElementById('auS2').value, e3: document.getElementById('auE3').value, s3: document.getElementById('auS3').value, e4: document.getElementById('auE4').value, s4: document.getElementById('auS4').value };
     var erro = validarParesHorario(horarios); if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
     var numPeriodos = contarPeriodosAtivos(horarios); var isDiaUnico = (dIni === dFim);
     if (numPeriodos > 0 && !isDiaUnico) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O horário só pode ser aplicado a um único dia.", tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A lançar o registo no mapa do colaborador...", tipo: "processando" });
-    chamarAPIJsonp({ action: "lancarAusenciaAdminJsonp", nome: nome, tipo: tipo, dataInicio: dIni, dataFim: dFim, horarios: JSON.stringify(horarios), senha: senhaAdminSessao }, function(resp) {
-      mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
-      if (resp.indexOf("Aviso") === -1) limparFormularioAusencia();
+    chamarAPI({ action: "lancarAusenciaAdmin", nome: nome, tipo: tipo, dataInicio: dIni, dataFim: dFim, horarios: JSON.stringify(horarios), senha: senhaAdminSessao }, function(resp) {
+      var msg = typeof resp === 'string' ? resp : (resp && resp.msg ? resp.msg : "Resposta inválida.");
+      mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: msg, tipo: msg.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+      if (msg.indexOf("Aviso") === -1) limparFormularioAusencia();
     });
   }
 
@@ -802,26 +911,22 @@
     var dIni = document.getElementById('dataFaltaFuncInicio').value;
     var dFim = document.getElementById('dataFaltaFuncFim').value;
     var obs = document.getElementById('obsFuncFalta').value;
-
     if(!nome || !pin || !email || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios antes de submeter.", tipo: "erro" }); return; }
+    if (dFim < dIni) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "A data de fim não pode ser anterior à data de início.", tipo: "erro" }); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Introduza um endereço de e-mail válido.", tipo: "erro" }); return; }
 
     var pacoteExtras = "";
-
     if (tipo === "🔄 Troca com Colega") {
       var colega = document.getElementById('colegaTrocaFunc').value;
       if (!colega) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Selecione o colega com quem pretende efetuar a troca.", tipo: "erro" }); return; }
       if (colega === nome) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Não pode escolher-se a si próprio para a troca.", tipo: "erro" }); return; }
-
       var horProprio = { e1: document.getElementById('trProE1').value, s1: document.getElementById('trProS1').value, e2: document.getElementById('trProE2').value, s2: document.getElementById('trProS2').value, e3: document.getElementById('trProE3').value, s3: document.getElementById('trProS3').value, e4: document.getElementById('trProE4').value, s4: document.getElementById('trProS4').value };
       var horColega = { e1: document.getElementById('trColE1').value, s1: document.getElementById('trColS1').value, e2: document.getElementById('trColE2').value, s2: document.getElementById('trColS2').value, e3: document.getElementById('trColE3').value, s3: document.getElementById('trColS3').value, e4: document.getElementById('trColE4').value, s4: document.getElementById('trColS4').value };
-
       var errP = validarParesHorario(horProprio); if (errP) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (O seu)", mensagem: errP, tipo: "erro" }); return; }
       var errC = validarParesHorario(horColega); if (errC) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (Colega)", mensagem: errC, tipo: "erro" }); return; }
-
       var numP = contarPeriodosAtivos(horProprio); var numC = contarPeriodosAtivos(horColega);
       if (numP === 0 && numC === 0) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Preencha pelo menos o horário de um dos intervenientes.", tipo: "erro" }); return; }
       if (dIni !== dFim) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "A troca com colega só pode ser submetida para um único dia de cada vez.", tipo: "erro" }); return; }
-
       pacoteExtras = "|TROCA:" + JSON.stringify({ proprio: horProprio, colega: horColega, nomeColega: colega });
     }
 
@@ -833,15 +938,16 @@
     }
 
     mostrarPopupPersonalizado({ titulo: "A Enviar", mensagem: "A submeter o seu pedido à gerência...", tipo: "processando" });
-    chamarAPIJsonp({
-      action: "comunicarAusenciaFuncionarioJsonp",
+    chamarAPI({
+      action: "comunicarAusenciaFuncionario",
       nome: nome, pin: pin, email: email, tipo: tipo,
       dataInicio: dIni, dataFim: dFim, obs: obs,
       horarios: JSON.stringify(horarios),
       extras: pacoteExtras
     }, function(resp) {
-      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível Submeter", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); }
-      else { mostrarPopupPersonalizado({ titulo: "Pedido Enviado", mensagem: resp, tipo: "sucesso" }); setTimeout(voltarAoEcraPrincipal, 2500); }
+      var msg = typeof resp === 'string' ? resp : (resp && resp.msg ? resp.msg : "Resposta inválida.");
+      if (msg.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível Submeter", mensagem: msg.replace("Aviso: ", ""), tipo: "erro" }); }
+      else { mostrarPopupPersonalizado({ titulo: "Pedido Enviado", mensagem: msg, tipo: "sucesso" }); setTimeout(voltarAoEcraPrincipal, 2500); }
     });
   }
 
@@ -856,6 +962,7 @@
     var g1 = document.getElementById('grupoColegaTroca'); if (g1) g1.style.display = "none";
     var g2 = document.getElementById('grupoHorarioFunc'); if (g2) g2.style.display = "none";
     var g3 = document.getElementById('grupoTrocaHorarios'); if (g3) g3.style.display = "none";
+    var eDatas = document.getElementById('erro-datas'); if (eDatas) eDatas.style.display = "none";
     limparHorarioFunc();
     limparHorariosTrocaFunc();
   }
@@ -871,12 +978,24 @@
     mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A validar a sua localização...", tipo: "processando" });
     navigator.geolocation.getCurrentPosition(
       function(pos) {
-        if (pos.coords.accuracy > 150) { emProcessamento = false; document.getElementById('btnPonto').disabled = false; mostrarPopupPersonalizado({ titulo: "Sinal GPS Fraco", mensagem: "Aproxime-se de uma janela ou de uma zona com melhor cobertura e tente novamente.", tipo: "erro" }); return; }
-        chamarAPIJsonp({ action: "salvarPontoJsonp", nome: nome, lat: pos.coords.latitude, lon: pos.coords.longitude, pin: pin, isMock: pos.mocked || pos.coords.mocked, disp: obterDetalhesDispositivo(), ua: navigator.userAgent }, function(resposta) {
+        var precisao = pos.coords.accuracy;
+        if (precisao > GPS_ACCURACY_MAX) { emProcessamento = false; document.getElementById('btnPonto').disabled = false; mostrarPopupPersonalizado({ titulo: "Sinal GPS Muito Fraco", mensagem: "Precisão atual: " + Math.round(precisao) + "m. Aproxime-se de uma zona mais aberta e tente novamente.", tipo: "erro" }); return; }
+        chamarAPI({
+          action: "salvarPonto",
+          nome: nome,
+          lat: pos.coords.latitude,
+          lon: pos.coords.longitude,
+          pin: pin,
+          isMock: (pos.mocked || pos.coords.mocked) ? "true" : "false",
+          precisao: Math.round(precisao),
+          disp: obterDetalhesDispositivo(),
+          ua: navigator.userAgent
+        }, function(resposta) {
           document.getElementById('pinPonto').value = ""; atualizarPinDisplay('pinPonto', 'dotsPonto');
           emProcessamento = false; document.getElementById('btnPonto').disabled = false;
-          if (resposta.indexOf("Aviso") !== -1) { gerirErroCampo("erro-pin-ponto", resposta.replace("Aviso: ", "")); fecharToast(); }
-          else { mostrarPopupPersonalizado({ titulo: "Registo Validado", mensagem: resposta, tipo: "sucesso" }); }
+          var msg = typeof resposta === 'string' ? resposta : (resposta && resposta.msg ? resposta.msg : "Resposta inválida.");
+          if (msg.indexOf("Aviso") !== -1) { gerirErroCampo("erro-pin-ponto", msg.replace("Aviso: ", "")); fecharToast(); }
+          else { mostrarPopupPersonalizado({ titulo: "Registo Validado", mensagem: msg, tipo: "sucesso" }); }
         });
       },
       function() { emProcessamento = false; document.getElementById('btnPonto').disabled = false; mostrarPopupPersonalizado({ titulo: "Localização Indisponível", mensagem: "Autorize o acesso à localização nas configurações do dispositivo e tente novamente.", tipo: "erro" }); },
@@ -887,7 +1006,7 @@
   function carregarPedidosPendentes() {
     var container = document.getElementById('listaPedidosContainer');
     container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>A procurar pedidos pendentes...</p>";
-    chamarAPIJsonp({ action: "obterPedidosPendentes", senha: senhaAdminSessao }, function(resp) {
+    chamarAPI({ action: "obterPedidosPendentes", senha: senhaAdminSessao }, function(resp) {
       if(typeof resp === "string" && resp.indexOf("Aviso") !== -1) { container.innerHTML = "<p style='color:var(--danger); font-weight: 600; text-align: center;'>" + resp + "</p>"; return; }
       if(!resp || resp.length === 0) { container.innerHTML = "<p style='text-align:center; color:var(--text-muted); padding: 15px; font-weight: 600;'>Não existem pedidos pendentes.</p>"; return; }
       var html = "";
@@ -918,7 +1037,7 @@
     }
     mostrarPopupPersonalizado({
       titulo: "Aprovar Pedido",
-      mensagem: "O horário será <b>automaticamente aplicado ao mapa</b> de ponto do colaborador (e do colega, se aplicável).<br><br>Confirmar aprovação?",
+      mensagem: "O horário será automaticamente aplicado ao mapa de ponto do colaborador (e do colega, se aplicável).<br><br>Confirmar aprovação?",
       icone: "✅",
       botoes: [
         { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
@@ -929,9 +1048,10 @@
 
   function executarRespostaPedido(idPedido, decisao) {
     mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A aplicar horários e a notificar o colaborador...", tipo: "processando" });
-    chamarAPIJsonp({ action: "responderPedidoFaltaAdmin", idPedido: idPedido, decisao: decisao, senha: senhaAdminSessao }, function(resp) {
-      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); }
-      else { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: "sucesso" }); carregarPedidosPendentes(); }
+    chamarAPI({ action: "responderPedidoFaltaAdmin", idPedido: idPedido, decisao: decisao, senha: senhaAdminSessao }, function(resp) {
+      var msg = typeof resp === 'string' ? resp : (resp && resp.msg ? resp.msg : "Resposta inválida.");
+      if (msg.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível", mensagem: msg.replace("Aviso: ", ""), tipo: "erro" }); }
+      else { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: msg, tipo: "sucesso" }); carregarPedidosPendentes(); }
     });
   }
 
@@ -939,27 +1059,43 @@
     var nome = document.getElementById('nomeCorrigir').value; var d = document.getElementById('dataCorrigir').value; var h = document.getElementById('horaCorrigir').value;
     if(!nome || !d || !h) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o colaborador, a data e a hora.", tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Corrigir", mensagem: "A inserir a picagem e a reorganizar o turno...", tipo: "processando" });
-    chamarAPIJsonp({ action: "corrigirPicagemJsonp", nome: nome, data: d, hora: h, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
+    chamarAPI({ action: "corrigirPicagem", nome: nome, data: d, hora: h, senha: senhaAdminSessao }, function(resp) {
+      var msg = typeof resp === 'string' ? resp : (resp && resp.msg ? resp.msg : "Resposta inválida.");
+      mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: msg, tipo: msg.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+    });
   }
 
   function exportarRelatorioPDF() {
     var f = document.getElementById('selecaoFuncionario').value; var di = document.getElementById('dataInicio').value; var df = document.getElementById('dataFim').value;
     if(!f || !di || !df) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos.", tipo: "erro" }); return; }
+    if (df < di) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "A data final não pode ser anterior à inicial.", tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Exportar", mensagem: "A gerar o relatório em PDF...", tipo: "processando" });
-    chamarAPIJsonp({ action: "gerarPdfJsonp", funcionario: f, dataInicio: di, dataFim: df, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
+    chamarAPI({ action: "gerarPdf", funcionario: f, dataInicio: di, dataFim: df, senha: senhaAdminSessao }, function(resp) {
+      var msg = typeof resp === 'string' ? resp : (resp && resp.msg ? resp.msg : "Resposta inválida.");
+      mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: msg, tipo: msg.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+    });
   }
 
   function submeterNovoFuncionario() {
     var n = document.getElementById('nomeNovo').value; var p = document.getElementById('pinNovo').value; var f = document.getElementById('filialNovo').value;
     if(!n || !p) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o nome e o PIN.", tipo: "erro" }); return; }
+    if (!/^\d{4}$/.test(p)) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O PIN deve ter exatamente 4 dígitos.", tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Guardar", mensagem: "A registar o novo colaborador...", tipo: "processando" });
-    chamarAPIJsonp({ action: "adicionarFuncionarioJsonp", nome: n, pin: p, filial: f, senha: senhaAdminSessao }, function(resp) { carregarFuncionariosEmTodosOsCampos(); mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
+    chamarAPI({ action: "adicionarFuncionario", nome: n, pin: p, filial: f, senha: senhaAdminSessao }, function(resp) {
+      var msg = typeof resp === 'string' ? resp : (resp && resp.msg ? resp.msg : "Resposta inválida.");
+      carregarFuncionariosEmTodosOsCampos();
+      mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: msg, tipo: msg.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+    });
   }
 
   function submeterRemocaoFuncionario() {
     var n = document.getElementById('nomeRemover').value; if(!n) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Selecione um colaborador.", tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Atualizar", mensagem: "A inativar o colaborador...", tipo: "processando" });
-    chamarAPIJsonp({ action: "removerFuncionarioJsonp", nome: n, senha: senhaAdminSessao }, function(resp) { carregarFuncionariosEmTodosOsCampos(); mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
+    chamarAPI({ action: "removerFuncionario", nome: n, senha: senhaAdminSessao }, function(resp) {
+      var msg = typeof resp === 'string' ? resp : (resp && resp.msg ? resp.msg : "Resposta inválida.");
+      carregarFuncionariosEmTodosOsCampos();
+      mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: msg, tipo: msg.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+    });
   }
 
   function abrirSubModulo(id) {
