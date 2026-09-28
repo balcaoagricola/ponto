@@ -232,10 +232,10 @@
         </div>
 
         <div class="form-group" id="grupoHorarioFunc" style="display: none;">
-          <label>Horário Trabalhado (Opcional)</label>
+          <label>Horário Pretendido (Opcional)</label>
           <p class="periodo-hint">
-            Preencha os períodos em que <b>efetivamente trabalhou</b> nesse dia (ex: se só faltou de manhã).<br>
-            Deixe em branco para registar a ausência de dia completo.
+            Indique o horário que <b>pretende cumprir</b> neste dia (ex: se apenas vai faltar a uma parte do dia).<br>
+            Deixe em branco para registar a ausência de <b>dia completo</b>.
           </p>
           <div class="periodo-card">
             <div class="periodo-num">1</div>
@@ -383,10 +383,15 @@
       </div>
     </div>
 
+    <!-- ================= TROCA DE TURNO ================= -->
     <div id="admin-sub-troca" style="display: none;">
       <div class="admin-card">
         <h3>🔄 Registar Troca de Turno</h3>
-        <div class="hint-info">Lança a ausência no mapa do colaborador que falta e coloca as picagens do substituto nos sítios corretos.</div>
+        <div class="hint-info">
+          Registe os horários que <b>ambos os colaboradores</b> vão cumprir nos dias da troca.
+          Ambos os mapas serão atualizados simultaneamente e ordenados por data.
+        </div>
+
         <div class="form-group">
           <label>Colaborador que FALTA <span class="campo-obrigatorio">*</span></label>
           <select id="nomeTrocaAusente" class="form-control" onchange="atualizarFiltroSubstitutosTroca()">
@@ -402,11 +407,58 @@
         <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataTrocaInicio" class="form-control"></div>
         <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataTrocaFim" class="form-control"></div>
 
+        <!-- Horário do AUSENTE -->
+        <div class="form-group" style="margin-top: 24px;">
+          <label>Horário do Colaborador Ausente</label>
+          <p class="periodo-hint">
+            Horário que o <b>colaborador ausente</b> irá cumprir nestes dias.<br>
+            Deixe em branco se o colaborador ficar efetivamente ausente.
+          </p>
+          <div class="periodo-card">
+            <div class="periodo-num">1</div>
+            <div class="periodo-inputs">
+              <input type="time" id="ausE1" class="form-control periodo-input">
+              <span class="periodo-sep">→</span>
+              <input type="time" id="ausS1" class="form-control periodo-input">
+            </div>
+          </div>
+          <div class="periodo-card">
+            <div class="periodo-num">2</div>
+            <div class="periodo-inputs">
+              <input type="time" id="ausE2" class="form-control periodo-input">
+              <span class="periodo-sep">→</span>
+              <input type="time" id="ausS2" class="form-control periodo-input">
+            </div>
+          </div>
+          <button type="button" class="btn-add-periodo" id="btnAddPeriodoAus" onclick="togglePeriodosExtraAus()">
+            ➕ Adicionar 3º / 4º período
+          </button>
+          <div id="periodosExtraAus" style="display: none;">
+            <div class="periodo-card">
+              <div class="periodo-num">3</div>
+              <div class="periodo-inputs">
+                <input type="time" id="ausE3" class="form-control periodo-input">
+                <span class="periodo-sep">→</span>
+                <input type="time" id="ausS3" class="form-control periodo-input">
+              </div>
+            </div>
+            <div class="periodo-card">
+              <div class="periodo-num">4</div>
+              <div class="periodo-inputs">
+                <input type="time" id="ausE4" class="form-control periodo-input">
+                <span class="periodo-sep">→</span>
+                <input type="time" id="ausS4" class="form-control periodo-input">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Horário do SUBSTITUTO -->
         <div class="form-group" style="margin-top: 24px;">
           <label>Horário do Substituto</label>
           <p class="periodo-hint">
-            Preencha cada período com Entrada e Saída.<br>
-            Deixe em branco se o substituto pica ponto normalmente.
+            Horário que o <b>colaborador substituto</b> irá cumprir nestes dias.<br>
+            Deixe em branco se o substituto picar ponto normalmente.
           </p>
           <div class="periodo-card">
             <div class="periodo-num">1</div>
@@ -455,7 +507,7 @@
       <div class="admin-card">
         <h3>🤝 Acordo de Horas (1:1)</h3>
         <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55;">
-          Se preencher o horário, o sistema insere as picagens e o dia fica marcado com o total de horas em acordo.
+          Indique os períodos que o colaborador <b>vai cumprir</b> no âmbito deste acordo. O dia fica marcado com o total de horas em acordo.
         </p>
         <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeAcordo" class="form-control"></select></div>
         <div class="form-group"><label>Data do Trabalho Extra <span class="campo-obrigatorio">*</span></label><input type="date" id="dataAcordo" class="form-control"></div>
@@ -561,7 +613,7 @@
 <div id="toastOverlay" class="toast-overlay" onclick="fecharToastOverlay(event)">
   <div class="toast-card">
     <div id="toastIcon" class="toast-icon">🟢</div>
-    <div id="toastTitle" class="toast-title">CONCLUÍDO!</div>
+    <div id="toastTitle" class="toast-title">CONCLUÍDO</div>
     <div id="toastBody" class="toast-body">Operação processada.</div>
     <div id="toastActionsContainer" class="toast-actions">
       <button id="toastBtn" class="toast-btn toast-btn-primary" onclick="fecharToast()">Concluir</button>
@@ -589,8 +641,8 @@
     }, 1000);
   }
 
-  window.addEventListener('online', function() { estaOnline = true; var g = document.getElementById('gpsIndicator'); if(g) g.classList.remove('offline'); mostrarPopupPersonalizado({ titulo: "Online", mensagem: "Sinal retomado.", tipo: "sucesso" }); });
-  window.addEventListener('offline', function() { estaOnline = false; var g = document.getElementById('gpsIndicator'); if(g) g.classList.add('offline'); mostrarPopupPersonalizado({ titulo: "Offline", mensagem: "Sem ligação.", tipo: "erro" }); });
+  window.addEventListener('online', function() { estaOnline = true; var g = document.getElementById('gpsIndicator'); if(g) g.classList.remove('offline'); mostrarPopupPersonalizado({ titulo: "Ligação Restabelecida", mensagem: "O dispositivo voltou a estar online.", tipo: "sucesso" }); });
+  window.addEventListener('offline', function() { estaOnline = false; var g = document.getElementById('gpsIndicator'); if(g) g.classList.add('offline'); mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Verifique a sua ligação à internet.", tipo: "erro" }); });
 
   function atualizarPinDisplay(inputId, containerId) {
     var input = document.getElementById(inputId);
@@ -608,7 +660,12 @@
     document.getElementById('toastTitle').innerText = config.titulo || "Aviso";
     document.getElementById('toastBody').innerHTML = config.mensagem || "";
     var icon = document.getElementById('toastIcon');
-    if (config.tipo === "sucesso") icon.innerText = "✅"; else if (config.tipo === "erro") icon.innerText = "❌"; else if (config.tipo === "processando") { icon.className = "toast-icon ampulheta-animada"; icon.innerText = "⏳"; } else if (config.tipo === "aviso") { icon.innerText = config.icone || "⚠️"; } else icon.innerText = config.icone || "💬";
+    icon.className = "toast-icon";
+    if (config.tipo === "sucesso") { icon.innerText = "✅"; }
+    else if (config.tipo === "erro") { icon.innerText = "❌"; }
+    else if (config.tipo === "processando") { icon.className = "toast-icon ampulheta-animada"; icon.innerText = "⏳"; }
+    else if (config.tipo === "aviso") { icon.innerText = config.icone || "⚠️"; }
+    else { icon.innerText = config.icone || "💬"; }
     var acts = document.getElementById('toastActionsContainer'); acts.innerHTML = "";
     if (config.tipo === "processando") acts.style.display = "none";
     else {
@@ -629,7 +686,7 @@
   }
 
   function chamarAPIJsonp(params, callbackSucesso) {
-    if (!navigator.onLine) { emProcessamento = false; mostrarPopupPersonalizado({ titulo: "Sem Conexão", mensagem: "Offline.", tipo: "erro" }); return; }
+    if (!navigator.onLine) { emProcessamento = false; mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Verifique a sua ligação à internet.", tipo: "erro" }); return; }
     var controller = new AbortController(); var timeoutId = setTimeout(function() { controller.abort(); }, 1200);
     fetch('https://api.ipify.org?format=json', { signal: controller.signal })
       .then(function(res) { return res.json(); }).then(function(data) { clearTimeout(timeoutId); params.ip = data.ip || "Não disponível"; enviarPedidoComIp(params, callbackSucesso); })
@@ -643,7 +700,7 @@
     var url = APP_SCRIPT_URL + "?";
     for (var key in params) { if (params.hasOwnProperty(key)) url += encodeURIComponent(key) + "=" + encodeURIComponent(params[key]) + "&"; }
     url += "callback=" + cbName; script.src = url;
-    script.onerror = function() { delete window[cbName]; if (script && script.parentNode) script.remove(); emProcessamento = false; mostrarPopupPersonalizado({ titulo: "Erro", mensagem: "Falha no servidor.", tipo: "erro" }); };
+    script.onerror = function() { delete window[cbName]; if (script && script.parentNode) script.remove(); emProcessamento = false; mostrarPopupPersonalizado({ titulo: "Erro de Comunicação", mensagem: "Não foi possível contactar o servidor. Tente novamente.", tipo: "erro" }); };
     document.body.appendChild(script);
   }
 
@@ -660,10 +717,10 @@
         { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
         { texto: "Entrar", classe: "toast-btn-primary", acao: function() {
             var s = document.getElementById('inputSenhaPopup').value; if (!s) return;
-            mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A verificar...", tipo: "processando" });
+            mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A verificar credenciais...", tipo: "processando" });
             chamarAPIJsonp({ action: "verificarSenhaJsonp", senha: s }, function(resp) {
               if (resp.indexOf("incorreta") !== -1 || resp.indexOf("Aviso") !== -1) { 
-                mostrarPopupPersonalizado({ titulo: "Acesso Negado", mensagem: "Senha incorreta.", tipo: "erro" }); 
+                mostrarPopupPersonalizado({ titulo: "Acesso Negado", mensagem: "A palavra-passe introduzida está incorreta.", tipo: "erro" }); 
               } else { 
                 senhaAdminSessao = s; fecharToast(); 
                 document.getElementById('section-ponto').classList.remove('active'); 
@@ -790,6 +847,15 @@
       document.getElementById('horE4').value = ""; document.getElementById('horS4').value = ""; }
   }
 
+  function togglePeriodosExtraAus() {
+    var el = document.getElementById('periodosExtraAus');
+    var btn = document.getElementById('btnAddPeriodoAus');
+    if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
+    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período';
+      document.getElementById('ausE3').value = ""; document.getElementById('ausS3').value = "";
+      document.getElementById('ausE4').value = ""; document.getElementById('ausS4').value = ""; }
+  }
+
   function togglePeriodosExtraAcordo() {
     var el = document.getElementById('periodosExtraAcordo');
     var btn = document.getElementById('btnAddPeriodoAcordo');
@@ -826,52 +892,97 @@
     return c;
   }
 
+  // ================= TROCA DE TURNO =================
   function submeterTrocaTurno() {
     var ausente = document.getElementById('nomeTrocaAusente').value;
     var substituto = document.getElementById('nomeTrocaSubstituto').value;
     var dIni = document.getElementById('dataTrocaInicio').value;
     var dFim = document.getElementById('dataTrocaFim').value;
-    if (!ausente || !substituto || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha o colaborador ausente, o substituto e as datas.", tipo: "erro" }); return; }
-    if (ausente === substituto) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "O colaborador ausente e o substituto não podem ser o mesmo.", tipo: "erro" }); return; }
-    var horarios = { e1: document.getElementById('horE1').value, s1: document.getElementById('horS1').value, e2: document.getElementById('horE2').value, s2: document.getElementById('horS2').value, e3: document.getElementById('horE3').value, s3: document.getElementById('horS3').value, e4: document.getElementById('horE4').value, s4: document.getElementById('horS4').value };
-    var erro = validarParesHorario(horarios);
-    if (erro) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: erro, tipo: "erro" }); return; }
-    if (contarPeriodosAtivos(horarios) === 0) {
-      mostrarPopupPersonalizado({ titulo: "Horário Vazio", mensagem: "Não preencheu nenhum período. O substituto terá de picar ponto normalmente. Deseja continuar?", icone: "⚠️",
+    if (!ausente || !substituto || !dIni || !dFim) {
+      mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o colaborador ausente, o substituto e as datas.", tipo: "erro" });
+      return;
+    }
+    if (ausente === substituto) {
+      mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O colaborador ausente e o substituto não podem ser a mesma pessoa.", tipo: "erro" });
+      return;
+    }
+    var horAus = {
+      e1: document.getElementById('ausE1').value, s1: document.getElementById('ausS1').value,
+      e2: document.getElementById('ausE2').value, s2: document.getElementById('ausS2').value,
+      e3: document.getElementById('ausE3').value, s3: document.getElementById('ausS3').value,
+      e4: document.getElementById('ausE4').value, s4: document.getElementById('ausS4').value
+    };
+    var horSub = {
+      e1: document.getElementById('horE1').value, s1: document.getElementById('horS1').value,
+      e2: document.getElementById('horE2').value, s2: document.getElementById('horS2').value,
+      e3: document.getElementById('horE3').value, s3: document.getElementById('horS3').value,
+      e4: document.getElementById('horE4').value, s4: document.getElementById('horS4').value
+    };
+    var errAus = validarParesHorario(horAus);
+    if (errAus) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (Ausente)", mensagem: errAus, tipo: "erro" }); return; }
+    var errSub = validarParesHorario(horSub);
+    if (errSub) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (Substituto)", mensagem: errSub, tipo: "erro" }); return; }
+
+    var numAus = contarPeriodosAtivos(horAus);
+    var numSub = contarPeriodosAtivos(horSub);
+
+    if (numAus === 0 && numSub === 0) {
+      mostrarPopupPersonalizado({
+        titulo: "Sem Horários Definidos",
+        mensagem: "Não preencheu nenhum período. O colaborador ausente será marcado como ausente e o substituto terá de picar ponto normalmente.<br><br>Pretende continuar?",
+        icone: "⚠️",
         botoes: [
           { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
-          { texto: "Continuar", classe: "toast-btn-primary", acao: function() { executarSubmissaoTroca(ausente, substituto, dIni, dFim, horarios); } }
+          { texto: "Continuar", classe: "toast-btn-primary", acao: function() { executarSubmissaoTroca(ausente, substituto, dIni, dFim, horAus, horSub); } }
         ]
       });
       return;
     }
-    executarSubmissaoTroca(ausente, substituto, dIni, dFim, horarios);
+    executarSubmissaoTroca(ausente, substituto, dIni, dFim, horAus, horSub);
   }
 
-  function executarSubmissaoTroca(ausente, substituto, dIni, dFim, horarios) {
-    mostrarPopupPersonalizado({ titulo: "A Registar Troca...", mensagem: "A lançar ausência e turno do substituto...", tipo: "processando" });
-    chamarAPIJsonp({ action: "registarTrocaTurnoJsonp", nomeAusente: ausente, nomeSubstituto: substituto, dataInicio: dIni, dataFim: dFim, horarios: JSON.stringify(horarios), senha: senhaAdminSessao }, function(resp) {
-      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Erro", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); }
-      else { mostrarPopupPersonalizado({ titulo: "Troca Registada!", mensagem: resp, tipo: "sucesso" }); limparFormularioTroca(); }
+  function executarSubmissaoTroca(ausente, substituto, dIni, dFim, horAus, horSub) {
+    mostrarPopupPersonalizado({ titulo: "A Registar Troca", mensagem: "A lançar horários nos mapas de ambos os colaboradores...", tipo: "processando" });
+    chamarAPIJsonp({
+      action: "registarTrocaTurnoJsonp",
+      nomeAusente: ausente,
+      nomeSubstituto: substituto,
+      dataInicio: dIni,
+      dataFim: dFim,
+      horariosAusente: JSON.stringify(horAus),
+      horariosSubstituto: JSON.stringify(horSub),
+      senha: senhaAdminSessao
+    }, function(resp) {
+      if (resp.indexOf("Aviso") !== -1) {
+        mostrarPopupPersonalizado({ titulo: "Não Foi Possível Registar", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" });
+      } else {
+        mostrarPopupPersonalizado({ titulo: "Troca Registada", mensagem: resp, tipo: "sucesso" });
+        limparFormularioTroca();
+      }
     });
   }
 
   function limparFormularioTroca() {
-    document.getElementById('nomeTrocaAusente').value = ""; document.getElementById('nomeTrocaSubstituto').value = "";
-    document.getElementById('dataTrocaInicio').value = ""; document.getElementById('dataTrocaFim').value = "";
-    ['horE1','horS1','horE2','horS2','horE3','horS3','horE4','horS4'].forEach(function(id) { document.getElementById(id).value = ""; });
-    document.getElementById('periodosExtra').style.display = 'none';
-    document.getElementById('btnAddPeriodo').innerText = '➕ Adicionar 3º / 4º período';
+    document.getElementById('nomeTrocaAusente').value = "";
+    document.getElementById('nomeTrocaSubstituto').value = "";
+    document.getElementById('dataTrocaInicio').value = "";
+    document.getElementById('dataTrocaFim').value = "";
+    ['ausE1','ausS1','ausE2','ausS2','ausE3','ausS3','ausE4','ausS4'].forEach(function(id) { var e = document.getElementById(id); if (e) e.value = ""; });
+    ['horE1','horS1','horE2','horS2','horE3','horS3','horE4','horS4'].forEach(function(id) { var e = document.getElementById(id); if (e) e.value = ""; });
+    var pe = document.getElementById('periodosExtra'); if (pe) pe.style.display = 'none';
+    var bp = document.getElementById('btnAddPeriodo'); if (bp) bp.innerText = '➕ Adicionar 3º / 4º período';
+    var pea = document.getElementById('periodosExtraAus'); if (pea) pea.style.display = 'none';
+    var bpa = document.getElementById('btnAddPeriodoAus'); if (bpa) bpa.innerText = '➕ Adicionar 3º / 4º período';
   }
 
   function submeterAcordo() {
     var nome = document.getElementById('nomeAcordo').value;
     var d = document.getElementById('dataAcordo').value;
-    if (!nome || !d) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha o colaborador e a data.", tipo: "erro" }); return; }
+    if (!nome || !d) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o colaborador e a data.", tipo: "erro" }); return; }
     var horarios = { e1: document.getElementById('acE1').value, s1: document.getElementById('acS1').value, e2: document.getElementById('acE2').value, s2: document.getElementById('acS2').value, e3: document.getElementById('acE3').value, s3: document.getElementById('acS3').value, e4: document.getElementById('acE4').value, s4: document.getElementById('acS4').value };
     var erro = validarParesHorario(horarios);
-    if (erro) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: erro, tipo: "erro" }); return; }
-    mostrarPopupPersonalizado({ titulo: "A Executar...", mensagem: "A aplicar acordo de horas...", tipo: "processando" });
+    if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A aplicar o acordo de horas...", tipo: "processando" });
     chamarAPIJsonp({ action: "marcarAcordoJsonp", nome: nome, data: d, horarios: JSON.stringify(horarios), senha: senhaAdminSessao }, function(resp) { 
       mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
       if (resp.indexOf("Aviso") === -1) limparFormularioAcordo();
@@ -890,14 +1001,14 @@
     var tipo = document.getElementById('tipoAusencia').value;
     var dIni = document.getElementById('dataFolgaInicio').value;
     var dFim = document.getElementById('dataFolgaFim').value;
-    if (!nome || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Campos obrigatórios.", tipo: "erro" }); return; }
+    if (!nome || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios.", tipo: "erro" }); return; }
     var horarios = { e1: document.getElementById('auE1').value, s1: document.getElementById('auS1').value, e2: document.getElementById('auE2').value, s2: document.getElementById('auS2').value, e3: document.getElementById('auE3').value, s3: document.getElementById('auS3').value, e4: document.getElementById('auE4').value, s4: document.getElementById('auS4').value };
     var erro = validarParesHorario(horarios);
-    if (erro) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: erro, tipo: "erro" }); return; }
+    if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
     var numPeriodos = contarPeriodosAtivos(horarios);
     var isDiaUnico = (dIni === dFim);
-    if (numPeriodos > 0 && !isDiaUnico) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "O horário só é suportado para um único dia.", tipo: "erro" }); return; }
-    mostrarPopupPersonalizado({ titulo: "A Executar...", mensagem: "A processar...", tipo: "processando" });
+    if (numPeriodos > 0 && !isDiaUnico) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O horário só pode ser aplicado a um único dia.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A lançar o registo no mapa do colaborador...", tipo: "processando" });
     chamarAPIJsonp({ action: "lancarAusenciaAdminJsonp", nome: nome, tipo: tipo, dataInicio: dIni, dataFim: dFim, horarios: JSON.stringify(horarios), senha: senhaAdminSessao }, function(resp) { 
       mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
       if (resp.indexOf("Aviso") === -1) limparFormularioAusencia();
@@ -922,14 +1033,14 @@
     var obs = document.getElementById('obsFuncFalta').value;
     
     if(!nome || !pin || !email || !tipo || !dIni || !dFim) { 
-      mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha todos os campos obrigatórios.", tipo: "erro" }); 
+      mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios antes de submeter.", tipo: "erro" }); 
       return; 
     }
 
     if (tipo === "🔄 Troca com Colega") {
       var colega = document.getElementById('colegaTrocaFunc').value;
-      if (!colega) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione o colega com quem vai efetuar a troca.", tipo: "erro" }); return; }
-      if (colega === nome) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Não pode escolher-se a si próprio para a troca.", tipo: "erro" }); return; }
+      if (!colega) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Selecione o colega com quem pretende efetuar a troca.", tipo: "erro" }); return; }
+      if (colega === nome) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Não pode escolher-se a si próprio para a troca.", tipo: "erro" }); return; }
       var notaTroca = "🔄 Troca com o colega: " + colega;
       obs = obs && obs.trim() !== "" ? (notaTroca + " | Obs: " + obs) : notaTroca;
     }
@@ -943,14 +1054,14 @@
         e4: document.getElementById('fuE4').value, s4: document.getElementById('fuS4').value
       };
       var erro = validarParesHorario(horarios);
-      if (erro) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: erro, tipo: "erro" }); return; }
+      if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
       if (contarPeriodosAtivos(horarios) > 0 && dIni !== dFim) {
-        mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "O horário só pode ser preenchido para 1 único dia.", tipo: "erro" });
+        mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O horário só pode ser preenchido para um único dia.", tipo: "erro" });
         return;
       }
     }
     
-    mostrarPopupPersonalizado({ titulo: "A Enviar...", mensagem: "A processar...", tipo: "processando" });
+    mostrarPopupPersonalizado({ titulo: "A Enviar", mensagem: "A submeter o seu pedido à gerência...", tipo: "processando" });
     
     chamarAPIJsonp({ 
       action: "comunicarAusenciaFuncionarioJsonp", 
@@ -959,9 +1070,9 @@
       horarios: JSON.stringify(horarios)
     }, function(resp) {
       if (resp.indexOf("Aviso") !== -1) { 
-        mostrarPopupPersonalizado({ titulo: "Erro", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); 
+        mostrarPopupPersonalizado({ titulo: "Não Foi Possível Submeter", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); 
       } else { 
-        mostrarPopupPersonalizado({ titulo: "Pedido Enviado!", mensagem: resp, tipo: "sucesso" }); 
+        mostrarPopupPersonalizado({ titulo: "Pedido Enviado", mensagem: resp, tipo: "sucesso" }); 
         setTimeout(voltarAoEcraPrincipal, 2500); 
       }
     });
@@ -982,22 +1093,44 @@
 
   function registarPontoDiario() {
     if (emProcessamento) return;
-    var nome = document.getElementById('nomeFuncionario').value; var pin = document.getElementById('pinPonto').value;
-    if(!nome) { gerirErroCampo("erro-nome-ponto", "Selecione o nome."); return; }
-    if(!pin || pin.trim().length !== 4) { gerirErroCampo("erro-pin-ponto", "Insira o PIN (4 dígitos)."); return; }
-    emProcessamento = true; document.getElementById('btnPonto').disabled = true;
-    mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A obter localização...", tipo: "processando" });
+    var nome = document.getElementById('nomeFuncionario').value;
+    var pin = document.getElementById('pinPonto').value;
+    if (!nome) { gerirErroCampo("erro-nome-ponto", "Selecione o seu nome na lista."); return; }
+    if (!pin || pin.trim().length !== 4) { gerirErroCampo("erro-pin-ponto", "Introduza o PIN de 4 dígitos."); return; }
+    emProcessamento = true;
+    document.getElementById('btnPonto').disabled = true;
+    mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A validar a sua localização...", tipo: "processando" });
     navigator.geolocation.getCurrentPosition(
-        function(pos) {
-            if (pos.coords.accuracy > 150) { emProcessamento = false; document.getElementById('btnPonto').disabled = false; mostrarPopupPersonalizado({ titulo: "Sinal Fraco", mensagem: "Aproxime-se de uma janela.", tipo: "erro" }); return; }
-            chamarAPIJsonp({ action: "salvarPontoJsonp", nome: nome, lat: pos.coords.latitude, lon: pos.coords.longitude, pin: pin, isMock: pos.mocked || pos.coords.mocked, disp: obterDetalhesDispositivo(), ua: navigator.userAgent }, function(resposta) {
-                document.getElementById('pinPonto').value = ""; atualizarPinDisplay('pinPonto', 'dotsPonto');
-                emProcessamento = false; document.getElementById('btnPonto').disabled = false;
-                if (resposta.indexOf("Aviso") !== -1) { gerirErroCampo("erro-pin-ponto", resposta.replace("Aviso: ", "")); fecharToast(); } else { mostrarPopupPersonalizado({ titulo: "Registo Validado!", mensagem: resposta, tipo: "sucesso" }); }
-            });
-        }, 
-        function(erro) { emProcessamento = false; document.getElementById('btnPonto').disabled = false; mostrarPopupPersonalizado({ titulo: "Sem GPS", mensagem: "Autorize a localização.", tipo: "erro" }); }, 
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      function(pos) {
+        if (pos.coords.accuracy > 150) {
+          emProcessamento = false; document.getElementById('btnPonto').disabled = false;
+          mostrarPopupPersonalizado({ titulo: "Sinal GPS Fraco", mensagem: "Aproxime-se de uma janela ou de uma zona com melhor cobertura e tente novamente.", tipo: "erro" });
+          return;
+        }
+        chamarAPIJsonp({
+          action: "salvarPontoJsonp", nome: nome,
+          lat: pos.coords.latitude, lon: pos.coords.longitude,
+          pin: pin, isMock: pos.mocked || pos.coords.mocked,
+          disp: obterDetalhesDispositivo(), ua: navigator.userAgent
+        }, function(resposta) {
+          document.getElementById('pinPonto').value = "";
+          atualizarPinDisplay('pinPonto', 'dotsPonto');
+          emProcessamento = false;
+          document.getElementById('btnPonto').disabled = false;
+          if (resposta.indexOf("Aviso") !== -1) {
+            gerirErroCampo("erro-pin-ponto", resposta.replace("Aviso: ", ""));
+            fecharToast();
+          } else {
+            mostrarPopupPersonalizado({ titulo: "Registo Validado", mensagem: resposta, tipo: "sucesso" });
+          }
+        });
+      },
+      function() {
+        emProcessamento = false;
+        document.getElementById('btnPonto').disabled = false;
+        mostrarPopupPersonalizado({ titulo: "Localização Indisponível", mensagem: "Autorize o acesso à localização nas configurações do dispositivo e tente novamente.", tipo: "erro" });
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
   }
 
@@ -1006,7 +1139,7 @@
     container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>A procurar pedidos pendentes...</p>";
     chamarAPIJsonp({ action: "obterPedidosPendentes", senha: senhaAdminSessao }, function(resp) {
       if(typeof resp === "string" && resp.indexOf("Aviso") !== -1) { container.innerHTML = "<p style='color:var(--danger); font-weight: 600; text-align: center;'>" + resp + "</p>"; return; }
-      if(!resp || resp.length === 0) { container.innerHTML = "<p style='text-align:center; color:var(--text-muted); padding: 15px; font-weight: 600;'>Tudo limpo! Não há pedidos pendentes.</p>"; return; }
+      if(!resp || resp.length === 0) { container.innerHTML = "<p style='text-align:center; color:var(--text-muted); padding: 15px; font-weight: 600;'>Não existem pedidos pendentes.</p>"; return; }
       var html = "";
       resp.forEach(function(p) {
         html += '<div class="pedido-item"><p><strong>Colaborador:</strong> ' + p.nome + '</p><p><strong>Pedido:</strong> ' + p.detalhes + '</p>' +
@@ -1021,37 +1154,37 @@
   }
 
   function responderPedidoFaltaAdmin(idPedido, decisao) {
-    mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A notificar o colaborador por email...", tipo: "processando" });
+    mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A notificar o colaborador por email...", tipo: "processando" });
     chamarAPIJsonp({ action: "responderPedidoFaltaAdmin", idPedido: idPedido, decisao: decisao, senha: senhaAdminSessao }, function(resp) {
-      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Erro", mensagem: resp, tipo: "erro" }); }
-      else { mostrarPopupPersonalizado({ titulo: "Concluído!", mensagem: resp, tipo: "sucesso" }); carregarPedidosPendentes(); }
+      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível", mensagem: resp, tipo: "erro" }); }
+      else { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: "sucesso" }); carregarPedidosPendentes(); }
     });
   }
 
   function submeterCorrecao() {
     var nome = document.getElementById('nomeCorrigir').value; var d = document.getElementById('dataCorrigir').value; var h = document.getElementById('horaCorrigir').value;
-    if(!nome || !d || !h) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha o colaborador, a data e a hora.", tipo: "erro" }); return; }
-    mostrarPopupPersonalizado({ titulo: "A Corrigir...", mensagem: "A inserir picagem e a organizar turnos...", tipo: "processando" });
+    if(!nome || !d || !h) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o colaborador, a data e a hora.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Corrigir", mensagem: "A inserir a picagem e a reorganizar o turno...", tipo: "processando" });
     chamarAPIJsonp({ action: "corrigirPicagemJsonp", nome: nome, data: d, hora: h, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
 
   function exportarRelatorioPDF() {
     var f = document.getElementById('selecaoFuncionario').value; var di = document.getElementById('dataInicio').value; var df = document.getElementById('dataFim').value;
-    if(!f || !di || !df) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha todos os campos.", tipo: "erro" }); return; }
-    mostrarPopupPersonalizado({ titulo: "A Exportar...", mensagem: "A gerar PDF...", tipo: "processando" });
+    if(!f || !di || !df) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Exportar", mensagem: "A gerar o relatório em PDF...", tipo: "processando" });
     chamarAPIJsonp({ action: "gerarPdfJsonp", funcionario: f, dataInicio: di, dataFim: df, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
 
   function submeterNovoFuncionario() {
     var n = document.getElementById('nomeNovo').value; var p = document.getElementById('pinNovo').value; var f = document.getElementById('filialNovo').value;
-    if(!n || !p) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Preencha o nome e o PIN.", tipo: "erro" }); return; }
-    mostrarPopupPersonalizado({ titulo: "A Guardar...", mensagem: "...", tipo: "processando" });
+    if(!n || !p) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o nome e o PIN.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Guardar", mensagem: "A registar o novo colaborador...", tipo: "processando" });
     chamarAPIJsonp({ action: "adicionarFuncionarioJsonp", nome: n, pin: p, filial: f, senha: senhaAdminSessao }, function(resp) { carregarFuncionariosEmTodosOsCampos(); mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
 
   function submeterRemocaoFuncionario() {
-    var n = document.getElementById('nomeRemover').value; if(!n) { mostrarPopupPersonalizado({ titulo: "Atenção", mensagem: "Selecione um colaborador.", tipo: "erro" }); return; }
-    mostrarPopupPersonalizado({ titulo: "A Atualizar...", mensagem: "...", tipo: "processando" });
+    var n = document.getElementById('nomeRemover').value; if(!n) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Selecione um colaborador.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Atualizar", mensagem: "A inativar o colaborador...", tipo: "processando" });
     chamarAPIJsonp({ action: "removerFuncionarioJsonp", nome: n, senha: senhaAdminSessao }, function(resp) { carregarFuncionariosEmTodosOsCampos(); mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
 
