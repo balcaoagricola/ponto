@@ -1,335 +1,135 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-<meta charset="UTF-8">
-<title>Registo de Ponto · Balcão Agrícola</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#065f46">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --primary: #0f172a;
-  --accent: #059669; --accent-light: #10b981; --accent-dark: #047857;
-  --accent-glow: rgba(5,150,105,0.30);
-  --text: #1e293b; --text-muted: #64748b; --text-light: #94a3b8;
-  --surface: #ffffff; --surface-2: #f8fafc;
-  --border: #e2e8f0; --border-strong: #cbd5e1;
-  --danger: #ef4444;
-  --shadow-accent: 0 8px 20px rgba(5,150,105,0.28);
-  --shadow-card: 0 20px 40px rgba(15,23,42,0.12);
-}
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
-html { height: 100%; font-size: 16px; }
-body {
-  height: 100%;
-  background: var(--surface-2);
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  -webkit-font-smoothing: antialiased;
-  overflow: hidden; /* O container tratará do scroll */
-}
-
-/* ══════════════════════════════════════════════════
-   CONTAINER PRINCIPAL (Comportamento Nativo)
-   ══════════════════════════════════════════════════ */
-.container {
-  width: 100%;
-  max-width: 480px;
-  background: var(--surface);
-  display: flex;
-  flex-direction: column;
-  height: 100dvh; /* Ocupa a tela inteira no telemóvel */
-  position: relative;
-}
-
-@media (min-width: 481px) {
-  body {
-    background: radial-gradient(circle at 15% 15%, rgba(16,185,129,0.10) 0%, transparent 45%), radial-gradient(circle at 85% 80%, rgba(14,165,233,0.10) 0%, transparent 45%), linear-gradient(135deg, #f8fafc 0%, #eef2f6 50%, #ecfdf5 100%);
-    padding: 20px;
-  }
-  .container {
-    height: 90dvh;
-    border-radius: 24px;
-    box-shadow: var(--shadow-card);
-    border: 1px solid rgba(255,255,255,0.9);
-  }
-}
-
-/* ══════════════════════════════════════════════════
-   HEADER
-   ══════════════════════════════════════════════════ */
-.header {
-  padding: 20px 24px 16px;
-  text-align: center;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-  z-index: 10;
-}
-.logo-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 6px;
-}
-.logo-empresa {
-  max-height: 50px;
-  width: auto;
-  object-fit: contain;
-  mix-blend-mode: multiply;
-  display: block;
-}
-.header h2 {
-  font-size: 0.85rem;
-  font-weight: 800;
-  margin-bottom: 16px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--primary);
-}
-
-/* ══════════════════════════════════════════════════
-   RELÓGIO PREMIUM
-   ══════════════════════════════════════════════════ */
-.live-clock-card {
-  position: relative;
-  background: linear-gradient(145deg, #0a1628 0%, #16283f 50%, #0d1f33 100%);
-  border-radius: 20px;
-  padding: 18px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  width: 100%;
-  box-shadow: 0 12px 28px -8px rgba(10,22,40,0.6);
-  overflow: hidden;
-  isolation: isolate;
-}
-.live-clock-card::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 15% 0%, rgba(16,185,129,0.20), transparent 60%), radial-gradient(ellipse 70% 60% at 100% 100%, rgba(59,130,246,0.14), transparent 65%);
-  z-index: -1;
-}
-.greeting-row {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 0.75rem; font-weight: 800; color: rgba(148,163,184,0.85);
-  letter-spacing: 0.2em; text-transform: uppercase;
-}
-.greeting-icon { font-size: 0.9rem; filter: drop-shadow(0 0 6px rgba(251,191,36,0.55)); }
-.time-row {
-  display: flex; align-items: baseline; gap: 4px;
-  font-family: 'JetBrains Mono', monospace; font-weight: 700; line-height: 1;
-}
-.time-hours, .time-minutes {
-  font-size: 3.2rem;
-  background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 55%, #94a3b8 100%);
-  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-  letter-spacing: -0.04em; filter: drop-shadow(0 3px 14px rgba(16,185,129,0.22));
-}
-.time-sep { font-size: 2.5rem; color: #10b981; animation: blinkColon 2s infinite; }
-@keyframes blinkColon { 0%,45%,55%,100%{opacity:1} 50%{opacity:0.25} }
-.time-seconds { font-size: 1.2rem; color: #10b981; font-weight: 700; margin-left: 4px; }
-.date-row { font-size: 0.85rem; font-weight: 600; color: #94a3b8; letter-spacing: 0.05em; text-transform: uppercase; text-align: center; }
-.status-row { display: flex; justify-content: center; width: 100%; padding-top: 10px; border-top: 1px solid rgba(148,163,184,0.10); }
-.status-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 5px 12px; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.22);
-  border-radius: 100px; font-size: 0.7rem; font-weight: 800; color: #34d399; letter-spacing: 0.1em; text-transform: uppercase;
-}
-.status-badge.offline { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.25); color: #f87171; }
-.status-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; animation: pulseStatus 2s infinite; }
-.status-badge .dot.offline { background: #ef4444; box-shadow: 0 0 10px #ef4444; animation: none; }
-@keyframes pulseStatus { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.85)} }
-
-/* ══════════════════════════════════════════════════
-   ÁREA DE CONTEÚDO (Permite Scroll Suave)
-   ══════════════════════════════════════════════════ */
-.content-section {
-  flex: 1; /* Ocupa o restante do ecrã */
-  padding: 24px 24px;
-  display: none;
-  flex-direction: column;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* Scroll suave no iOS */
-  animation: fadeIn 0.3s ease;
-}
-.content-section.active { display: flex; }
-#section-ponto { gap: 20px; }
-@keyframes fadeIn { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
-
-/* ══════════════════════════════════════════════════
-   FORMULÁRIOS & INPUTS (Maior usabilidade)
-   ══════════════════════════════════════════════════ */
-.form-group { margin-bottom: 0; }
-.form-group label {
-  display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.85rem;
-  color: var(--primary); letter-spacing: 0.04em; text-transform: uppercase;
-}
-.form-control {
-  width: 100%; padding: 16px; border: 1.5px solid var(--border);
-  border-radius: 14px; font-size: 16px; /* 16px impede o zoom automático no iOS */
-  background-color: var(--surface); color: var(--text); font-weight: 600;
-  outline: none; transition: all 0.2s ease;
-}
-.form-control:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-glow); }
-select.form-control {
-  -webkit-appearance: none; appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px;
-}
-textarea.form-control { line-height: 1.5; font-weight: 500; }
-
-/* ══════════════════════════════════════════════════
-   PIN (Toque confortável)
-   ══════════════════════════════════════════════════ */
-.pin-box-wrapper { position: relative; width: 100%; }
-.pin-hidden-input {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  opacity: 0; z-index: 10; cursor: pointer; font-size: 16px;
-}
-.pin-dots-container {
-  display: flex; justify-content: center; align-items: center; gap: 24px;
-  padding: 20px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: 14px;
-}
-.pin-hidden-input:focus + .pin-dots-container { border-color: var(--accent); background: #ffffff; box-shadow: 0 0 0 4px var(--accent-glow); }
-.pin-dot {
-  width: 16px; height: 16px; border-radius: 50%; border: 3px solid var(--border-strong);
-  background: transparent; transition: all 0.2s ease;
-}
-.pin-dot.filled {
-  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent-dark) 100%);
-  border-color: var(--accent); transform: scale(1.3); box-shadow: 0 3px 10px var(--accent-glow);
-}
-
-/* ══════════════════════════════════════════════════
-   BOTÕES (Acessíveis e ergonómicos)
-   ══════════════════════════════════════════════════ */
-.btn {
-  width: 100%; padding: 18px 16px; border: none; border-radius: 14px;
-  font-size: 1rem; font-weight: 800; cursor: pointer; text-align: center;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  transition: all 0.2s ease; letter-spacing: 0.05em; text-transform: uppercase;
-}
-.btn:active { transform: scale(0.97); }
-.btn:disabled { opacity: 0.6; cursor: not-allowed; }
-.btn-primary { background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 55%, var(--accent-dark) 100%); color: #ffffff; box-shadow: var(--shadow-accent); }
-.btn-danger { background: linear-gradient(135deg, #f87171 0%, var(--danger) 60%, #dc2626 100%); color: #ffffff; }
-.btn-nav-blue { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; border: 1.5px solid #93c5fd; }
-.btn-nav-slate { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); color: #334155; border: 1.5px solid #cbd5e1; }
-.btn-nav-red { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); color: #b91c1c; border: 1.5px solid #fca5a5; }
-
-/* AÇÕES TOPO */
-.top-action-btn {
-  width: 44px; height: 44px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center;
-  font-size: 1.2rem; cursor: pointer; border: 1.5px solid;
-}
-.top-action-btn.calendar { background: #eff6ff; color: #1d4ed8; border-color: #93c5fd; }
-.top-action-btn.settings { background: #f3e8ff; color: #7e22ce; border-color: #d8b4fe; }
-
-/* ══════════════════════════════════════════════════
-   PAINEL ADMIN E OUTRAS CLASSES
-   ══════════════════════════════════════════════════ */
-.admin-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
-.admin-card h3 { font-size: 1rem; margin-bottom: 16px; color: var(--primary); font-weight: 800; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
-.menu-admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.menu-admin-grid .btn { padding: 20px 10px; font-size: 0.85rem; flex-direction: column; gap: 8px; border: 1.5px solid; }
-.menu-admin-grid .btn span { font-size: 1.8rem; display: block; }
-.tile-blue{background:#eff6ff;color:#1d4ed8;border-color:#93c5fd}
-.tile-amber{background:#fffbeb;color:#b45309;border-color:#fcd34d}
-.tile-violet{background:#faf5ff;color:#7e22ce;border-color:#d8b4fe}
-.tile-cyan{background:#ecfeff;color:#0e7490;border-color:#67e8f9}
-.tile-rose{background:#fff1f2;color:#be123c;border-color:#fda4af}
-.tile-emerald{background:#ecfdf5;color:#047857;border-color:#6ee7b7}
-.tile-red{background:#fef2f2;color:#b91c1c;border-color:#fca5a5}
-.tile-teal{background:#f0fdfa;color:#0f766e;border-color:#5eead4}
-
-/* Períodos */
-.periodo-hint { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; }
-.periodo-card { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding: 10px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: 12px; }
-.periodo-num { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: #fff; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.periodo-inputs { display: flex; align-items: center; gap: 6px; flex: 1; }
-.periodo-input { padding: 12px 6px !important; font-size: 16px !important; text-align: center !important; flex: 1; }
-.periodo-sep { color: var(--text-muted); font-weight: 700; font-size: 1rem; }
-
-/* Mensagens de erro e helpers */
-.campo-obrigatorio { color: var(--danger); }
-.erro-campo { color: var(--danger); font-size: 0.85rem; font-weight: 600; margin-top: 6px; display: none; align-items: center; gap: 4px; }
-.badge-troca { display: inline-flex; margin-top: 8px; padding: 6px 12px; background: #f0fdfa; border: 1px solid #5eead4; border-radius: 100px; font-size: 0.75rem; font-weight: 600; color: #0f766e; }
-.pedido-item { background: var(--surface); border: 1.5px solid var(--border); padding: 16px; border-radius: 14px; margin-bottom: 12px; border-left: 4px solid var(--accent); }
-.pedido-item p { margin-bottom: 6px; font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; }
-.pedido-item p strong { color: var(--primary); font-weight: 700; }
-.password-eye-wrapper { position: relative; width: 100%; }
-.eye-toggle-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: #ecfdf5; border: 1.5px solid #a7f3d0; padding: 6px 10px; border-radius: 8px; color: var(--accent); font-size: 1rem; cursor: pointer; }
-
-/* ══════════════════════════════════════════════════
-   TOASTS (Popups)
-   ══════════════════════════════════════════════════ */
-.toast-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(8px); z-index: 100000; justify-content: center; align-items: center; padding: 24px; }
-.toast-card { background: #ffffff; border-radius: 24px; padding: 30px 24px 24px; max-width: 360px; width: 100%; text-align: center; animation: popModal 0.35s cubic-bezier(0.16,1,0.3,1); }
-@keyframes popModal { from{transform:scale(0.92) translateY(24px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
-.toast-icon { font-size: 3rem; margin-bottom: 12px; display: inline-block; }
-.ampulheta-animada { animation: rodarAmpulheta 2s infinite; }
-@keyframes rodarAmpulheta { 0%{transform:rotate(0deg)} 50%{transform:rotate(180deg)} 100%{transform:rotate(360deg)} }
-.toast-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; color: var(--primary); text-transform: uppercase; }
-.toast-body { font-size: 1rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; font-weight: 500; }
-.toast-actions { display: flex; gap: 12px; }
-.toast-btn { flex: 1; padding: 16px; border: none; border-radius: 14px; font-weight: 800; font-size: 0.95rem; cursor: pointer; text-transform: uppercase; }
-.toast-btn-primary { background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent-dark) 100%); color: #ffffff; }
-.toast-btn-secondary { background: #f1f5f9; color: #334155; border: 1.5px solid #cbd5e1; }
-
-/* ══════════════════════════════════════════════════
-   FOOTER
-   ══════════════════════════════════════════════════ */
-.app-footer {
-  text-align: center; font-size: 0.75rem; font-weight: 600; color: var(--text-light);
-  padding: 12px 16px; border-top: 1px solid var(--border); background: var(--surface-2); flex-shrink: 0;
-}
-.app-footer p { margin-bottom: 4px; }
-.app-footer p:last-child { margin-bottom: 0; font-size: 0.65rem; opacity: 0.8; }
-</style>
+  <meta charset="UTF-8">
+  <title>Registo de Ponto · Balcão Agrícola</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#065f46">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --primary: #0f172a; --primary-soft: #1e293b; --accent: #059669; --accent-light: #10b981; --accent-dark: #047857; --accent-glow: rgba(5, 150, 105, 0.35); --secondary: #0ea5e9; --text: #1e293b; --text-muted: #64748b; --text-light: #94a3b8; --surface: #ffffff; --surface-2: #f8fafc; --border: #e2e8f0; --border-strong: #cbd5e1; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --radius-xs: 10px; --radius-sm: 14px; --radius-md: 20px; --radius-lg: 28px; --radius-xl: 36px; --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06); --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04); --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.12), 0 8px 16px rgba(15, 23, 42, 0.06); --shadow-accent: 0 10px 28px rgba(5, 150, 105, 0.28), 0 4px 8px rgba(5, 150, 105, 0.15); --shadow-danger: 0 10px 28px rgba(239, 68, 68, 0.25), 0 4px 8px rgba(239, 68, 68, 0.12); }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+    html { min-height: 100%; background: #f8fafc; overflow-x: hidden; }
+    body { min-height: 100vh; background: radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.10) 0%, transparent 45%), radial-gradient(circle at 85% 80%, rgba(14, 165, 233, 0.10) 0%, transparent 45%), linear-gradient(135deg, #f8fafc 0%, #eef2f6 50%, #ecfdf5 100%); color: var(--text); padding: 14px; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; overflow-y: auto; -webkit-overflow-scrolling: touch; -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+    .container { width: 100%; max-width: 460px; background: var(--surface); border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); border: 1px solid rgba(255, 255, 255, 0.9); overflow: hidden; position: relative; margin-top: 8px; margin-bottom: 20px; flex-shrink: 0; }
+    .header { padding: 32px 24px 22px; text-align: center; position: relative; background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); border-bottom: 1px solid var(--border); }
+    .logo-wrapper { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 6px; padding: 0 8px; }
+    .logo-empresa { width: 100%; max-height: 118px; object-fit: contain; mix-blend-mode: multiply; filter: contrast(1.18) saturate(1.1); display: block; user-select: none; -webkit-user-drag: none; }
+    .header h2 { font-size: 1rem; font-weight: 800; margin-top: 6px; margin-bottom: 22px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--primary); white-space: nowrap; }
+    .live-clock-card { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: var(--radius-md); padding: 18px 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18), inset 0 1px 0 rgba(255,255,255,0.06); position: relative; overflow: hidden; }
+    .live-clock-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 60%); animation: rotate 20s linear infinite; pointer-events: none; }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .clock-time-row { display: inline-flex; align-items: center; gap: 14px; font-family: 'JetBrains Mono', monospace; font-size: 2.6rem; font-weight: 700; color: #ffffff; letter-spacing: -0.02em; line-height: 1; position: relative; z-index: 1; }
+    .clock-time-row #liveClockTime { background: linear-gradient(180deg, #ffffff 0%, #94a3b8 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 12px rgba(16, 185, 129, 0.15); }
+    .clock-date-row { font-size: 0.78rem; font-weight: 600; color: #94a3b8; letter-spacing: 0.18em; text-transform: uppercase; position: relative; z-index: 1; }
+    .gps-badge { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: rgba(16, 185, 129, 0.12); border-radius: 50%; }
+    .gps-pulse-dot { width: 10px; height: 10px; background: var(--accent-light); border-radius: 50%; position: relative; box-shadow: 0 0 12px rgba(16, 185, 129, 0.9); }
+    .gps-pulse-dot::after { content: ''; position: absolute; top: -2px; left: -2px; width: 14px; height: 14px; border-radius: 50%; background: var(--accent-light); opacity: 0.5; animation: pulseGps 2s infinite ease-out; }
+    @keyframes pulseGps { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(2.8); opacity: 0; } }
+    .gps-pulse-dot.offline { background: #ef4444; box-shadow: 0 0 12px rgba(239, 68, 68, 0.9); }
+    .gps-pulse-dot.offline::after { animation: none; background: #ef4444; }
+    .content-section { padding: 24px 22px 30px; display: none; animation: fadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
+    .content-section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 9px; font-weight: 700; font-size: 0.82rem; color: var(--primary); letter-spacing: 0.01em; text-transform: uppercase; }
+    .form-control { width: 100%; padding: 15px 18px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 16px; background-color: var(--surface); color: var(--text); font-weight: 600; outline: none; transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: var(--shadow-sm); }
+    .form-control:focus { border-color: var(--accent); background-color: #ffffff; box-shadow: 0 0 0 4px var(--accent-glow), var(--shadow-sm); }
+    select.form-control { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 18px center; padding-right: 45px; cursor: pointer; }
+    textarea.form-control { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; line-height: 1.5; }
+    .badge-troca { display: inline-flex; align-items: center; gap: 7px; margin-top: 11px; padding: 7px 14px 7px 11px; background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); border: 1px solid #99f6e4; border-radius: 100px; font-size: 0.74rem; font-weight: 600; color: #0f766e; }
+    .hint-info { display: flex; align-items: flex-start; gap: 10px; padding: 12px 15px; margin-bottom: 18px; background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); border: 1.5px solid #5eead4; border-radius: var(--radius-sm); font-size: 0.82rem; color: #0f766e; font-weight: 500; line-height: 1.5; }
+    .hint-info::before { content: '💡'; font-size: 1rem; flex-shrink: 0; }
+    .periodo-hint { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.45; font-weight: 500; }
+    .periodo-card { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; padding: 10px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); }
+    .periodo-card:focus-within { border-color: var(--accent); background: #ffffff; box-shadow: 0 0 0 3px var(--accent-glow); }
+    .periodo-num { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: #ffffff; font-weight: 800; font-size: 0.82rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .periodo-inputs { display: flex; align-items: center; gap: 4px; flex: 1 1 0; min-width: 0; }
+    .periodo-input { flex: 1 1 0 !important; min-width: 0 !important; width: 0 !important; max-width: 100% !important; padding: 10px 2px !important; font-size: 0.85rem !important; text-align: center !important; font-weight: 700 !important; }
+    .periodo-sep { color: var(--text-muted); font-weight: 700; font-size: 0.88rem; flex-shrink: 0; }
+    .btn-add-periodo { width: 100%; padding: 11px; background: transparent; border: 1.5px dashed var(--border-strong); border-radius: var(--radius-sm); color: var(--text-muted); font-weight: 700; font-size: 0.76rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Plus Jakarta Sans', sans-serif; margin-bottom: 8px; }
+    .btn-add-periodo:hover { border-color: var(--accent); color: var(--accent); background: rgba(5, 150, 105, 0.05); }
+    .pin-box-wrapper { position: relative; width: 100%; margin-bottom: 8px; }
+    .pin-hidden-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; font-size: 16px; }
+    .pin-dots-container { display: flex; justify-content: center; align-items: center; gap: 22px; padding: 24px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); }
+    .pin-hidden-input:focus + .pin-dots-container { border-color: var(--accent); background: #ffffff; box-shadow: 0 0 0 4px var(--accent-glow); }
+    .pin-dot { width: 15px; height: 15px; border-radius: 50%; border: 2px solid var(--border-strong); background: transparent; transition: all 0.32s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .pin-dot.filled { background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent-dark) 100%); border-color: var(--accent); transform: scale(1.35); box-shadow: 0 4px 12px var(--accent-glow); }
+    .btn { width: 100%; padding: 17px 20px; border: none; border-radius: var(--radius-sm); font-size: 0.95rem; font-weight: 800; cursor: pointer; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1); margin-bottom: 14px; letter-spacing: 0.06em; text-transform: uppercase; position: relative; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+    .btn-primary { background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 55%, var(--accent-dark) 100%); color: #ffffff; box-shadow: var(--shadow-accent); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(5, 150, 105, 0.35); }
+    .btn-danger { background: linear-gradient(135deg, #f87171 0%, var(--danger) 60%, #dc2626 100%); color: #ffffff; box-shadow: var(--shadow-danger); }
+    .btn-nav-blue { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; border: 1.5px solid #93c5fd; }
+    .btn-nav-slate { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); color: #334155; border: 1.5px solid #cbd5e1; }
+    .btn-nav-red { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); color: #b91c1c; border: 1.5px solid #fca5a5; }
+    .top-action-btn { width: 44px; height: 44px; border-radius: 13px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.15rem; border: 1.5px solid; }
+    .top-action-btn.calendar { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; border-color: #93c5fd; }
+    .top-action-btn.settings { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); color: #7e22ce; border-color: #d8b4fe; }
+    .admin-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 22px; margin-bottom: 18px; box-shadow: var(--shadow-sm); }
+    .admin-card h3 { font-size: 1rem; margin-bottom: 16px; color: var(--primary); font-weight: 800; display: flex; align-items: center; gap: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .menu-admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .menu-admin-grid .btn { padding: 22px 10px 20px; font-size: 0.78rem; font-weight: 800; flex-direction: column; gap: 10px; border-radius: var(--radius-md); border: 1.5px solid; margin-bottom: 0; }
+    .menu-admin-grid .btn span { font-size: 1.7rem; display: block; }
+    .tile-blue { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; border-color: #93c5fd; }
+    .tile-amber { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); color: #b45309; border-color: #fcd34d; }
+    .tile-violet { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); color: #7e22ce; border-color: #d8b4fe; }
+    .tile-cyan { background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%); color: #0e7490; border-color: #67e8f9; }
+    .tile-rose { background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); color: #be123c; border-color: #fda4af; }
+    .tile-emerald { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); color: #047857; border-color: #6ee7b7; }
+    .tile-red { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); color: #b91c1c; border-color: #fca5a5; }
+    .tile-teal { background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); color: #0f766e; border-color: #5eead4; }
+    .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(10px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; }
+    .toast-card { background: #ffffff; border-radius: var(--radius-xl); padding: 36px 26px 26px; max-width: 380px; width: 100%; text-align: center; box-shadow: 0 32px 64px -12px rgba(15, 23, 42, 0.35); animation: popModal 0.42s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes popModal { from { transform: scale(0.92) translateY(24px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+    .toast-icon { font-size: 3.2rem; margin-bottom: 14px; display: inline-block; }
+    .ampulheta-animada { display: inline-block; animation: rodarAmpulheta 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+    @keyframes rodarAmpulheta { 0% { transform: rotate(0deg); } 50% { transform: rotate(180deg); } 100% { transform: rotate(360deg); } }
+    .toast-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 8px; color: var(--primary); letter-spacing: 0.05em; text-transform: uppercase; }
+    .toast-body { font-size: 0.94rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.55; font-weight: 500; }
+    .toast-actions { display: flex; gap: 10px; }
+    .toast-btn { flex: 1; padding: 15px 16px; border: none; border-radius: var(--radius-sm); font-weight: 800; font-size: 0.88rem; cursor: pointer; letter-spacing: 0.06em; text-transform: uppercase; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .toast-btn-primary { background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent-dark) 100%); color: #ffffff; }
+    .toast-btn-secondary { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); color: #334155; border: 1.5px solid #cbd5e1; }
+    .app-footer { text-align: center; font-size: 0.8rem; font-weight: 600; color: var(--text-light); padding: 18px; border-top: 1px solid var(--border); background: var(--surface-2); }
+    .campo-obrigatorio { color: var(--danger); font-weight: 800; margin-left: 3px; }
+    .erro-campo { color: var(--danger); font-size: 0.84rem; font-weight: 600; margin-top: 8px; display: none; align-items: center; gap: 6px; }
+    .erro-campo::before { content: '⚠'; font-size: 0.95rem; }
+    .password-eye-wrapper { position: relative; width: 100%; }
+    .password-eye-wrapper .form-control { padding-right: 55px; }
+    .eye-toggle-btn { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: rgba(16, 185, 129, 0.10); border: 1.5px solid rgba(16, 185, 129, 0.25); cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; z-index: 10; color: var(--accent); padding: 6px 8px; border-radius: 10px; }
+    .pedido-item { background: var(--surface); border: 1.5px solid var(--border); padding: 18px 20px; border-radius: var(--radius-md); margin-bottom: 14px; text-align: left; box-shadow: var(--shadow-sm); border-left: 4px solid var(--accent); }
+    .pedido-item p { margin-bottom: 6px; font-size: 0.92rem; color: var(--text-muted); font-weight: 500; line-height: 1.5; }
+    .pedido-item p strong { color: var(--primary); font-weight: 700; }
+    .troca-bloco { padding: 14px; background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%); border: 1.5px solid #5eead4; border-radius: var(--radius-sm); margin-bottom: 14px; }
+    .troca-bloco h4 { font-size: 0.82rem; font-weight: 800; color: #0f766e; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+  </style>
 </head>
 <body>
 
-<div class="container" id="mainContainer">
-
-  <!-- HEADER -->
+<div class="container">
   <div class="header">
     <div class="logo-wrapper">
-      <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo">
+      <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.display='none'" class="logo-empresa" alt="Logotipo Balcão Agrícola">
     </div>
     <h2 id="headerTitle">CONTROLO DE ASSIDUIDADE</h2>
-
     <div class="live-clock-card" id="headerClockBox">
-      <div class="greeting-row">
-        <span class="greeting-icon" id="greetingIcon">☀️</span>
-        <span class="greeting-text" id="greetingText">Bom dia</span>
+      <div class="clock-time-row">
+        <div class="gps-badge"><div class="gps-pulse-dot" id="gpsIndicator"></div></div>
+        <span id="liveClockTime">00:00:00</span>
       </div>
-      <div class="time-row">
-        <span class="time-hours" id="clockHours">00</span>
-        <span class="time-sep">:</span>
-        <span class="time-minutes" id="clockMinutes">00</span>
-        <span class="time-seconds" id="clockSeconds">00</span>
-      </div>
-      <div class="date-row" id="clockFullDate">A sincronizar...</div>
-      <div class="status-row">
-        <div class="status-badge" id="statusBadge">
-          <span class="dot" id="gpsIndicator"></span>
-          <span id="gpsStatusText">GPS Ativo</span>
-        </div>
-      </div>
+      <div class="clock-date-row" id="liveClockDate">A sincronizar data...</div>
     </div>
   </div>
 
-  <!-- SECÇÃO PONTO -->
   <div id="section-ponto" class="content-section active">
     <div class="form-group">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <label for="nomeFuncionario" style="margin-bottom:0;">O seu Nome <span class="campo-obrigatorio">*</span></label>
-        <div style="display:flex;gap:8px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <label for="nomeFuncionario" style="margin-bottom: 0;">O seu Nome <span class="campo-obrigatorio">*</span></label>
+        <div style="display: flex; gap: 8px;">
           <button type="button" class="top-action-btn calendar" onclick="abrirEcraFaltaFuncionario()" title="Comunicar Ausência">📅</button>
           <button type="button" class="top-action-btn settings" onclick="abrirModalSenhaAdmin()" title="Painel de Gestão">⚙️</button>
         </div>
@@ -339,229 +139,295 @@ textarea.form-control { line-height: 1.5; font-weight: 500; }
       </select>
       <div id="erro-nome-ponto" class="erro-campo" style="display:none;"></div>
     </div>
-
-    <div class="form-group">
-      <label for="pinPonto">PIN de Acesso <span class="campo-obrigatorio">*</span></label>
+    <div class="form-group" style="margin-bottom: 28px;">
+      <label for="pinPonto" style="margin-bottom: 12px;">PIN de Acesso <span class="campo-obrigatorio">*</span></label>
       <div class="pin-box-wrapper">
-        <input type="password" id="pinPonto" class="pin-hidden-input" maxlength="4" inputmode="numeric" oninput="atualizarPinDisplay('pinPonto','dotsPonto'); limparFeedbackPonto();">
+        <input type="password" id="pinPonto" class="pin-hidden-input" maxlength="4" inputmode="numeric" oninput="atualizarPinDisplay('pinPonto', 'dotsPonto'); limparFeedbackPonto();">
         <div id="dotsPonto" class="pin-dots-container" onclick="document.getElementById('pinPonto').focus()">
           <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
         </div>
       </div>
       <div id="erro-pin-ponto" class="erro-campo" style="display:none;"></div>
     </div>
-
-    <button id="btnPonto" class="btn btn-primary" onclick="registarPontoDiario()">👆 Validar Registo</button>
+    <button id="btnPonto" class="btn btn-primary" onclick="registarPontoDiario()">👆 Validar Registo de Ponto</button>
   </div>
 
-  <!-- COMUNICAR AUSÊNCIA -->
+  <!-- ═══════════════════════════════════════════════════════
+       SECÇÃO: COMUNICAR AUSÊNCIA (FUNCIONÁRIO)
+       ═══════════════════════════════════════════════════════ -->
   <div id="section-falta-func" class="content-section">
-    <h3 style="margin-bottom:10px;color:var(--primary);font-size:1.1rem;font-weight:800;">📅 Comunicar Ausência</h3>
-    <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:20px;">Ao ser aprovado, o horário é aplicado automaticamente ao mapa.</p>
-
-    <div class="admin-card">
-      <div class="form-group" style="margin-bottom:16px;">
-        <label>Nome <span class="campo-obrigatorio">*</span></label>
-        <select id="nomeFuncFalta" class="form-control" onchange="atualizarFiltroColegasTroca()"></select>
-      </div>
-      <div class="form-group" style="margin-bottom:16px;">
-        <label>PIN <span class="campo-obrigatorio">*</span></label>
-        <div class="password-eye-wrapper">
-          <input type="password" id="pinFuncFalta" class="form-control" maxlength="4" inputmode="numeric" placeholder="••••" style="letter-spacing:10px;text-align:center;">
-          <button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput('pinFuncFalta',this)">👁️</button>
-        </div>
-      </div>
-      <div class="form-group" style="margin-bottom:16px;">
-        <label>E-mail <span class="campo-obrigatorio">*</span></label>
-        <input type="email" id="emailFuncFalta" class="form-control" placeholder="email@exemplo.com">
-      </div>
-      <div class="form-group" style="margin-bottom:16px;">
-        <label>Motivo <span class="campo-obrigatorio">*</span></label>
-        <select id="tipoFaltaFunc" class="form-control" onchange="alternarCampoTrocaColega()">
-          <option value="" disabled selected>Selecione o motivo</option>
-          <option value="🏖️ Férias">🏖️ Férias</option>
-          <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
-          <option value="📄 Falta Justificada">📄 Falta Justificada</option>
-          <option value="⚠️ Falta Injustificada">⚠️ Falta Injustificada</option>
-          <option value="🤝 Acordo 1:1">🤝 Acordo 1:1</option>
-          <option value="🔄 Troca com Colega">🔄 Troca com Colega</option>
-        </select>
-      </div>
-      <div class="form-group" id="grupoColegaTroca" style="display:none;margin-bottom:16px;">
-        <label>Colega <span class="campo-obrigatorio">*</span></label>
-        <select id="colegaTrocaFunc" class="form-control"><option value="">Selecione</option></select>
-        <div class="badge-troca">Comunicado à gerência</div>
-      </div>
-
-      <div class="form-group" id="grupoHorarioFunc" style="display:none;margin-bottom:16px;">
-        <label>Horário (opcional)</label>
-        <p class="periodo-hint">Deixe vazio para ausência de <b>dia completo</b>.</p>
-        <div class="periodo-card">
-          <div class="periodo-num">1</div>
-          <div class="periodo-inputs">
-            <input type="time" id="fuE1" class="form-control periodo-input">
-            <span class="periodo-sep">→</span>
-            <input type="time" id="fuS1" class="form-control periodo-input">
+    <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
+      <h3 style="margin-bottom: 8px; color: var(--primary); text-align: left; font-size: 1.05rem;">📅 Comunicar Ausência</h3>
+      <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 22px; line-height: 1.6; text-align: left;">Submeta os detalhes da sua ausência. O pedido será analisado pela gerência e, ao ser aprovado, o horário é <b>automaticamente aplicado ao mapa de ponto</b>.</p>
+      <div class="admin-card" style="margin-bottom: 0;">
+        <div class="form-group"><label>O seu Nome <span class="campo-obrigatorio">*</span></label><select id="nomeFuncFalta" class="form-control" onchange="atualizarFiltroColegasTroca()"></select></div>
+        <div class="form-group">
+          <label>PIN de Acesso (4 dígitos) <span class="campo-obrigatorio">*</span></label>
+          <div class="password-eye-wrapper">
+            <input type="password" id="pinFuncFalta" class="form-control" maxlength="4" inputmode="numeric" placeholder="••••" style="letter-spacing: 8px; text-align: center; font-size: 1.25rem;">
+            <button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput('pinFuncFalta', this)">👁️</button>
           </div>
         </div>
-        <div class="periodo-card">
-          <div class="periodo-num">2</div>
-          <div class="periodo-inputs">
-            <input type="time" id="fuE2" class="form-control periodo-input">
-            <span class="periodo-sep">→</span>
-            <input type="time" id="fuS2" class="form-control periodo-input">
+        <div class="form-group"><label>O seu E-mail <span class="campo-obrigatorio">*</span></label><input type="email" id="emailFuncFalta" class="form-control" placeholder="ex: email@email.com"></div>
+        <div class="form-group">
+          <label>Motivo da Ausência <span class="campo-obrigatorio">*</span></label>
+          <select id="tipoFaltaFunc" class="form-control" onchange="alternarCampoTrocaColega()">
+            <option value="" disabled selected>Selecione o motivo</option>
+            <option value="🏖️ Férias">🏖️ Férias</option>
+            <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
+            <option value="📄 Falta Justificada">📄 Falta Justificada</option>
+            <option value="⚠️ Falta Injustificada">⚠️ Falta Injustificada</option>
+            <option value="🤝 Acordo 1:1">🤝 Acordo 1:1</option>
+            <option value="🔄 Troca com Colega">🔄 Troca com Colega</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="grupoColegaTroca" style="display: none;">
+          <label>Colega com quem vai trocar <span class="campo-obrigatorio">*</span></label>
+          <select id="colegaTrocaFunc" class="form-control">
+            <option value="">Selecione o colega</option>
+          </select>
+          <div class="badge-troca">O nome do colega será comunicado à gerência</div>
+        </div>
+
+        <!-- HORÁRIOS PARA FALTAS SIMPLES (não-troca) -->
+        <div class="form-group" id="grupoHorarioFunc" style="display: none;">
+          <label>Horário que vai cumprir neste dia (opcional)</label>
+          <p class="periodo-hint">Indique o horário que <b>vai cumprir</b> neste dia. Deixe em branco para assinalar ausência de <b>dia completo</b>.</p>
+          <div class="periodo-card">
+            <div class="periodo-num">1</div>
+            <div class="periodo-inputs">
+              <input type="time" id="fuE1" class="form-control periodo-input">
+              <span class="periodo-sep">→</span>
+              <input type="time" id="fuS1" class="form-control periodo-input">
+            </div>
+          </div>
+          <div class="periodo-card">
+            <div class="periodo-num">2</div>
+            <div class="periodo-inputs">
+              <input type="time" id="fuE2" class="form-control periodo-input">
+              <span class="periodo-sep">→</span>
+              <input type="time" id="fuS2" class="form-control periodo-input">
+            </div>
+          </div>
+          <button type="button" class="btn-add-periodo" id="btnAddPeriodoFunc" onclick="togglePeriodosExtraFunc()">➕ Adicionar 3º / 4º período</button>
+          <div id="periodosExtraFunc" style="display: none;">
+            <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="fuE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="fuS3" class="form-control periodo-input"></div></div>
+            <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="fuE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="fuS4" class="form-control periodo-input"></div></div>
           </div>
         </div>
-      </div>
 
-      <!-- TROCA BLOCKS REMOVED FOR BREVITY - Kept the structural CSS identical -->
-      <div id="grupoTrocaHorarios" style="display:none;">
-        <div class="troca-bloco" style="padding:12px; background:#f0fdfa; border:1px solid #5eead4; border-radius:14px; margin-bottom:12px;">
-          <h4 style="font-size:0.85rem; color:#0f766e; margin-bottom:8px; text-transform:uppercase;">👤 O SEU Horário</h4>
-          <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="trProE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trProS1" class="form-control periodo-input"></div></div>
-          <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="trProE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trProS2" class="form-control periodo-input"></div></div>
+        <!-- HORÁRIOS DUPLOS PARA TROCA COM COLEGA -->
+        <div id="grupoTrocaHorarios" style="display: none;">
+          <div class="troca-bloco">
+            <h4>👤 O SEU Horário Nestes Dias</h4>
+            <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="trProE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trProS1" class="form-control periodo-input"></div></div>
+            <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="trProE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trProS2" class="form-control periodo-input"></div></div>
+            <button type="button" class="btn-add-periodo" id="btnAddPeriodoTrPro" onclick="togglePeriodosExtraTrPro()">➕ Adicionar 3º / 4º período</button>
+            <div id="periodosExtraTrPro" style="display: none;">
+              <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="trProE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trProS3" class="form-control periodo-input"></div></div>
+              <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="trProE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trProS4" class="form-control periodo-input"></div></div>
+            </div>
+          </div>
+          <div class="troca-bloco">
+            <h4>👥 Horário do COLEGA Nestes Dias</h4>
+            <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="trColE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trColS1" class="form-control periodo-input"></div></div>
+            <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="trColE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trColS2" class="form-control periodo-input"></div></div>
+            <button type="button" class="btn-add-periodo" id="btnAddPeriodoTrCol" onclick="togglePeriodosExtraTrCol()">➕ Adicionar 3º / 4º período</button>
+            <div id="periodosExtraTrCol" style="display: none;">
+              <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="trColE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trColS3" class="form-control periodo-input"></div></div>
+              <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="trColE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trColS4" class="form-control periodo-input"></div></div>
+            </div>
+          </div>
         </div>
-        <div class="troca-bloco" style="padding:12px; background:#f0fdfa; border:1px solid #5eead4; border-radius:14px; margin-bottom:12px;">
-          <h4 style="font-size:0.85rem; color:#0f766e; margin-bottom:8px; text-transform:uppercase;">👥 Horário do COLEGA</h4>
-          <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="trColE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trColS1" class="form-control periodo-input"></div></div>
-          <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="trColE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trColS2" class="form-control periodo-input"></div></div>
+
+        <div class="form-group">
+          <label>Observações / Justificação</label>
+          <textarea id="obsFuncFalta" class="form-control" rows="4" placeholder="Detalhes adicionais (opcional)..." style="resize: vertical; min-height: 100px;"></textarea>
         </div>
+        <div class="form-group"><label>Data de Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncInicio" class="form-control"></div>
+        <div class="form-group"><label>Data de Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncFim" class="form-control"></div>
+        <button class="btn btn-primary" onclick="submeterFaltaFuncionario()">Enviar Pedido à Gerência</button>
       </div>
-
-      <div class="form-group" style="margin-bottom:16px;">
-        <label>Observações</label>
-        <textarea id="obsFuncFalta" class="form-control" rows="3" placeholder="Detalhes (opcional)"></textarea>
+      <div style="margin-top: 18px; padding-top: 20px;">
+        <button class="btn btn-nav-blue" onclick="voltarAoEcraPrincipal()">⬅️ Voltar ao Início</button>
       </div>
-      <div class="form-group" style="margin-bottom:16px;">
-        <label>Data Início <span class="campo-obrigatorio">*</span></label>
-        <input type="date" id="dataFaltaFuncInicio" class="form-control" onchange="validarDataFim()">
-      </div>
-      <div class="form-group" style="margin-bottom:16px;">
-        <label>Data Fim <span class="campo-obrigatorio">*</span></label>
-        <input type="date" id="dataFaltaFuncFim" class="form-control" onchange="validarDataFim()">
-      </div>
-      <div id="erro-datas" class="erro-campo" style="display:none;"></div>
-
-      <button class="btn btn-primary" style="margin-top:20px;" onclick="submeterFaltaFuncionario()">Enviar Pedido</button>
     </div>
-
-    <button class="btn btn-nav-blue" onclick="voltarAoEcraPrincipal()">⬅️ Voltar ao Início</button>
   </div>
 
-  <!-- PAINEL ADMIN -->
   <div id="section-admin" class="content-section">
-
     <div id="admin-sub-menu">
-      <h3 style="margin-bottom:20px;color:var(--primary);text-align:center;font-size:1.2rem;font-weight:800;">⚙️ Painel de Gestão</h3>
-      <div class="menu-admin-grid">
-        <button class="btn tile-blue" onclick="abrirSubModulo('pedidos'); carregarPedidosPendentes();"><span>📩</span> Pedidos</button>
-        <button class="btn tile-amber" onclick="abrirSubModulo('ausencias')"><span>📅</span> Faltas</button>
-        <button class="btn tile-teal" onclick="abrirSubModulo('troca')"><span>🔄</span> Troca</button>
-        <button class="btn tile-violet" onclick="abrirSubModulo('acordo')"><span>🤝</span> Acordo</button>
-        <button class="btn tile-cyan" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
-        <button class="btn tile-rose" onclick="abrirSubModulo('pdf')"><span>📄</span> Exportar</button>
-        <button class="btn tile-emerald" onclick="abrirSubModulo('funcionario')"><span>➕</span> Novo</button>
-        <button class="btn tile-red" onclick="abrirSubModulo('remover')"><span>❌</span> Inativar</button>
+      <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
+        <h3 style="margin-bottom: 22px; color: var(--primary); text-align: center; justify-content: center; font-size: 1.15rem;">⚙️ Painel de Gestão</h3>
+        <div class="menu-admin-grid">
+          <button class="btn tile-blue" onclick="abrirSubModulo('pedidos'); carregarPedidosPendentes();"><span>📩</span> Pedidos</button>
+          <button class="btn tile-amber" onclick="abrirSubModulo('ausencias')"><span>📅</span> Lançar Faltas</button>
+          <button class="btn tile-teal" onclick="abrirSubModulo('troca')"><span>🔄</span> Troca Turno</button>
+          <button class="btn tile-violet" onclick="abrirSubModulo('acordo')"><span>🤝</span> Acordo 1:1</button>
+          <button class="btn tile-cyan" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
+          <button class="btn tile-rose" onclick="abrirSubModulo('pdf')"><span>📄</span> Exportar PDF</button>
+          <button class="btn tile-emerald" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar Colab.</button>
+          <button class="btn tile-red" onclick="abrirSubModulo('remover')"><span>❌</span> Inativar Colab.</button>
+        </div>
       </div>
     </div>
 
-    <!-- Sub-módulos Admin (Estrutura idêntica, com classes adaptadas aos novos espaçamentos) -->
-    <div id="admin-sub-pedidos" style="display:none;">
+    <div id="admin-sub-pedidos" style="display: none;">
       <div class="admin-card">
         <h3>📩 Pedidos Pendentes</h3>
-        <div id="listaPedidosContainer"><p style="text-align:center;color:var(--text-muted);font-size:0.9rem;">A carregar...</p></div>
+        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; text-align: left; line-height: 1.55;">Ao aprovar, o horário é <b>automaticamente aplicado ao mapa do colaborador</b> (e do colega, no caso de trocas). O colaborador é notificado por e-mail.</p>
+        <div id="listaPedidosContainer"><p style="text-align: center; color: var(--text-muted);">A carregar...</p></div>
       </div>
     </div>
 
-    <div id="admin-sub-ausencias" style="display:none;">
+    <div id="admin-sub-ausencias" style="display: none;">
       <div class="admin-card">
-        <h3>📅 Lançar Falta</h3>
-        <div class="form-group" style="margin-bottom:16px;"><label>Colaborador</label><select id="nomeFuncionarioFolga" class="form-control"></select></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>Motivo</label><select id="tipoAusencia" class="form-control"><option value="" disabled selected>Selecione</option><option value="🏖️ Férias">🏖️ Férias</option><option value="🩺 Baixa Médica">🩺 Baixa Médica</option><option value="📄 Falta Justificada">📄 Justificada</option><option value="⚠️ Falta Injustificada">⚠️ Injustificada</option><option value="⚖️ Compensação de Horas">⚖️ Compensação</option></select></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaInicio" class="form-control"></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaFim" class="form-control"></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>Horário (Opcional)</label><div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="auE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="auS1" class="form-control periodo-input"></div></div><div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="auE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="auS2" class="form-control periodo-input"></div></div></div>
-        <button class="btn btn-primary" onclick="submeterAusenciaAdministrativa()">Confirmar</button>
+        <h3>📅 Lançar Registo Manual</h3>
+        <div class="form-group"><label>Colaborador</label><select id="nomeFuncionarioFolga" class="form-control"></select></div>
+        <div class="form-group"><label>Motivo</label>
+          <select id="tipoAusencia" class="form-control">
+            <option value="" disabled selected>Selecione o motivo</option>
+            <option value="🏖️ Férias">🏖️ Férias</option>
+            <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
+            <option value="📄 Falta Justificada">📄 Falta Justificada</option>
+            <option value="⚠️ Falta Injustificada">⚠️ Falta Injustificada</option>
+            <option value="⚖️ Compensação de Horas">⚖️ Compensação de Horas</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaInicio" class="form-control"></div>
+        <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaFim" class="form-control"></div>
+        <div class="form-group" style="margin-top: 24px;">
+          <label>Horário (Opcional)</label>
+          <p class="periodo-hint">Se preencher o horário (em <b>1 único dia</b>), o sistema insere as picagens em vez de marcar a ausência completa.</p>
+          <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="auE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="auS1" class="form-control periodo-input"></div></div>
+          <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="auE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="auS2" class="form-control periodo-input"></div></div>
+          <button type="button" class="btn-add-periodo" id="btnAddPeriodoAusencia" onclick="togglePeriodosExtraAusencia()">➕ Adicionar 3º / 4º período</button>
+          <div id="periodosExtraAusencia" style="display: none;">
+            <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="auE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="auS3" class="form-control periodo-input"></div></div>
+            <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="auE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="auS4" class="form-control periodo-input"></div></div>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="submeterAusenciaAdministrativa()">Confirmar Lançamento</button>
       </div>
     </div>
 
-    <div id="admin-sub-troca" style="display:none;">
+    <div id="admin-sub-troca" style="display: none;">
       <div class="admin-card">
-        <h3>🔄 Troca de Turno</h3>
-        <div class="form-group" style="margin-bottom:16px;"><label>Ausente <span class="campo-obrigatorio">*</span></label><select id="nomeTrocaAusente" class="form-control" onchange="atualizarFiltroSubstitutosTroca()"><option value="" disabled selected>Selecione</option></select></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>Substituto <span class="campo-obrigatorio">*</span></label><select id="nomeTrocaSubstituto" class="form-control"><option value="" disabled selected>Selecione</option></select></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataTrocaInicio" class="form-control"></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataTrocaFim" class="form-control"></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>Horário do Ausente</label><div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="ausE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="ausS1" class="form-control periodo-input"></div></div><div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="ausE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="ausS2" class="form-control periodo-input"></div></div></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>Horário do Substituto</label><div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="horE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="horS1" class="form-control periodo-input"></div></div><div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="horE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="horS2" class="form-control periodo-input"></div></div></div>
-        <button class="btn btn-primary" onclick="submeterTrocaTurno()">Confirmar</button>
+        <h3>🔄 Registar Troca de Turno</h3>
+        <div class="hint-info">Preencha o horário que <b>cada colaborador</b> vai cumprir. Ambos os mapas são atualizados em simultâneo e ordenados por data.</div>
+
+        <div class="form-group">
+          <label>Colaborador que FALTA <span class="campo-obrigatorio">*</span></label>
+          <select id="nomeTrocaAusente" class="form-control" onchange="atualizarFiltroSubstitutosTroca()">
+            <option value="" disabled selected>Selecione o colaborador ausente</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Colaborador SUBSTITUTO <span class="campo-obrigatorio">*</span></label>
+          <select id="nomeTrocaSubstituto" class="form-control">
+            <option value="" disabled selected>Selecione o colega substituto</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataTrocaInicio" class="form-control"></div>
+        <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataTrocaFim" class="form-control"></div>
+
+        <div class="form-group" style="margin-top: 24px;">
+          <label>Horário do Colaborador Ausente</label>
+          <p class="periodo-hint">Horário que o <b>colaborador ausente</b> irá cumprir. Deixe em branco se ficar efetivamente ausente.</p>
+          <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="ausE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="ausS1" class="form-control periodo-input"></div></div>
+          <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="ausE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="ausS2" class="form-control periodo-input"></div></div>
+          <button type="button" class="btn-add-periodo" id="btnAddPeriodoAus" onclick="togglePeriodosExtraAus()">➕ Adicionar 3º / 4º período</button>
+          <div id="periodosExtraAus" style="display: none;">
+            <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="ausE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="ausS3" class="form-control periodo-input"></div></div>
+            <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="ausE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="ausS4" class="form-control periodo-input"></div></div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 24px;">
+          <label>Horário do Substituto</label>
+          <p class="periodo-hint">Horário que o <b>substituto</b> irá cumprir. Deixe em branco se picar ponto normalmente.</p>
+          <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="horE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="horS1" class="form-control periodo-input"></div></div>
+          <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="horE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="horS2" class="form-control periodo-input"></div></div>
+          <button type="button" class="btn-add-periodo" id="btnAddPeriodo" onclick="togglePeriodosExtra()">➕ Adicionar 3º / 4º período</button>
+          <div id="periodosExtra" style="display: none;">
+            <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="horE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="horS3" class="form-control periodo-input"></div></div>
+            <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="horE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="horS4" class="form-control periodo-input"></div></div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="submeterTrocaTurno()">Confirmar Troca de Turno</button>
       </div>
     </div>
 
-    <div id="admin-sub-acordo" style="display:none;">
+    <div id="admin-sub-acordo" style="display: none;">
       <div class="admin-card">
-        <h3>🤝 Acordo 1:1</h3>
-        <div class="form-group" style="margin-bottom:16px;"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeAcordo" class="form-control"></select></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>Data <span class="campo-obrigatorio">*</span></label><input type="date" id="dataAcordo" class="form-control"></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>Horário (Opcional)</label><div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="acE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="acS1" class="form-control periodo-input"></div></div><div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="acE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="acS2" class="form-control periodo-input"></div></div></div>
-        <button class="btn btn-primary" onclick="submeterAcordo()">Aplicar</button>
+        <h3>🤝 Acordo de Horas (1:1)</h3>
+        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55;">Indique os períodos que o colaborador <b>vai cumprir</b>.</p>
+        <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeAcordo" class="form-control"></select></div>
+        <div class="form-group"><label>Data <span class="campo-obrigatorio">*</span></label><input type="date" id="dataAcordo" class="form-control"></div>
+        <div class="form-group" style="margin-top: 24px;">
+          <label>Horário (Opcional)</label>
+          <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="acE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="acS1" class="form-control periodo-input"></div></div>
+          <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="acE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="acS2" class="form-control periodo-input"></div></div>
+          <button type="button" class="btn-add-periodo" id="btnAddPeriodoAcordo" onclick="togglePeriodosExtraAcordo()">➕ Adicionar 3º / 4º período</button>
+          <div id="periodosExtraAcordo" style="display: none;">
+            <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="acE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="acS3" class="form-control periodo-input"></div></div>
+            <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="acE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="acS4" class="form-control periodo-input"></div></div>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="submeterAcordo()">Aplicar Acordo</button>
       </div>
     </div>
 
-    <div id="admin-sub-corrigir" style="display:none;">
+    <div id="admin-sub-corrigir" style="display: none;">
       <div class="admin-card">
         <h3>✏️ Corrigir Picagem</h3>
-        <div class="form-group" style="margin-bottom:16px;"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeCorrigir" class="form-control"></select></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>Data <span class="campo-obrigatorio">*</span></label><input type="date" id="dataCorrigir" class="form-control"></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>Hora <span class="campo-obrigatorio">*</span></label><input type="time" id="horaCorrigir" class="form-control"></div>
-        <button class="btn btn-primary" onclick="submeterCorrecao()">Inserir</button>
+        <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeCorrigir" class="form-control"></select></div>
+        <div class="form-group"><label>Data <span class="campo-obrigatorio">*</span></label><input type="date" id="dataCorrigir" class="form-control"></div>
+        <div class="form-group"><label>Hora <span class="campo-obrigatorio">*</span></label><input type="time" id="horaCorrigir" class="form-control"></div>
+        <button class="btn btn-primary" onclick="submeterCorrecao()">Inserir Picagem</button>
       </div>
     </div>
 
-    <div id="admin-sub-pdf" style="display:none;">
+    <div id="admin-sub-pdf" style="display: none;">
       <div class="admin-card">
-        <h3>📄 Exportar PDF</h3>
-        <div class="form-group" style="margin-bottom:16px;"><label>Colaborador</label><select id="selecaoFuncionario" class="form-control"></select></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>De:</label><input type="date" id="dataInicio" class="form-control"></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>Até:</label><input type="date" id="dataFim" class="form-control"></div>
+        <h3>📄 Exportar Relatório</h3>
+        <div class="form-group"><label>Colaborador</label><select id="selecaoFuncionario" class="form-control"></select></div>
+        <div class="form-group"><label>De:</label><input type="date" id="dataInicio" class="form-control"></div>
+        <div class="form-group"><label>Até:</label><input type="date" id="dataFim" class="form-control"></div>
         <button class="btn btn-primary" onclick="exportarRelatorioPDF()">Gerar PDF</button>
       </div>
     </div>
 
-    <div id="admin-sub-funcionario" style="display:none;">
+    <div id="admin-sub-funcionario" style="display: none;">
       <div class="admin-card">
         <h3>➕ Adicionar Colaborador</h3>
-        <div class="form-group" style="margin-bottom:16px;"><label>Nome <span class="campo-obrigatorio">*</span></label><input type="text" id="nomeNovo" class="form-control" placeholder="Ex: Ana Silva"></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>PIN (4 dígitos)</label><input type="text" id="pinNovo" class="form-control" maxlength="4" placeholder="0000" inputmode="numeric"></div>
-        <div class="form-group" style="margin-bottom:16px;"><label>Filial</label><select id="filialNovo" class="form-control"><option value="PATAIAS">Pataias</option><option value="GARCIA">Garcia</option></select></div>
-        <button class="btn btn-primary" onclick="submeterNovoFuncionario()">Registar</button>
+        <div class="form-group"><label>Nome <span class="campo-obrigatorio">*</span></label><input type="text" id="nomeNovo" class="form-control" placeholder="Ex: Ana Silva"></div>
+        <div class="form-group"><label>PIN (4 dígitos)</label><input type="text" id="pinNovo" class="form-control" maxlength="4" placeholder="0000" inputmode="numeric"></div>
+        <div class="form-group"><label>Filial</label><select id="filialNovo" class="form-control"><option value="PATAIAS">Pataias</option><option value="GARCIA">Garcia</option></select></div>
+        <button class="btn btn-primary" onclick="submeterNovoFuncionario()">Registar Colaborador</button>
       </div>
     </div>
 
-    <div id="admin-sub-remover" style="display:none;">
+    <div id="admin-sub-remover" style="display: none;">
       <div class="admin-card">
         <h3 style="color:var(--danger);">❌ Inativar Colaborador</h3>
-        <div class="form-group" style="margin-bottom:16px;"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeRemover" class="form-control"></select></div>
-        <button class="btn btn-danger" onclick="submeterRemocaoFuncionario()">Confirmar</button>
+        <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeRemover" class="form-control"></select></div>
+        <button class="btn btn-danger" onclick="submeterRemocaoFuncionario()">Confirmar Inativação</button>
       </div>
     </div>
 
-    <div id="adminNavigationGroup" style="display:none;margin-bottom:16px;">
+    <div class="nav-navigation-block" id="adminNavigationGroup" style="display: none; margin-bottom: 18px;">
       <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()">⬅️ Voltar ao Menu</button>
     </div>
-    <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
-      <button class="btn btn-nav-red" onclick="voltarAoEcraPrincipal()">🚪 Sair do Painel</button>
+    <div style="margin-top: 18px; padding-top: 20px; border-top: 1px solid var(--border);">
+      <button class="btn btn-nav-red" onclick="voltarAoEcraPrincipal()">🚪 Sair do Painel Admin</button>
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <div class="app-footer">
-    <p>© 2027 · Balcão Agrícola</p>
-    <p>🔒 GPS/IP recolhidos apenas para assiduidade (RGPD Art. 6.º)</p>
-  </div>
+  <div class="app-footer" id="appFooter"><p>© 2026 · Balcão Agrícola</p></div>
 </div>
 
-<!-- TOAST -->
 <div id="toastOverlay" class="toast-overlay" onclick="fecharToastOverlay(event)">
   <div class="toast-card">
     <div id="toastIcon" class="toast-icon">🟢</div>
@@ -573,13 +439,549 @@ textarea.form-control { line-height: 1.5; font-weight: 500; }
   </div>
 </div>
 
-<!-- O SCRIPT JAVASCRIPT PERMANECE EXATAMENTE O MESMO -->
-<!-- Adicione aqui a tag <script> com todo o seu código JavaScript anterior -->
-
 <script>
-// --- COLE AQUI DENTRO O SEU SCRIPT JAVASCRIPT EXISTENTE ---
-// A lógica JavaScript não precisou de nenhuma alteração para corrigir o layout.
-</script>
+  var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
+  var senhaAdminSessao = ""; var emProcessamento = false; var estaOnline = navigator.onLine;
+  var listaFuncionariosCache = [];
+  var MODULOS_ADMIN = ['pedidos', 'ausencias', 'troca', 'acordo', 'corrigir', 'pdf', 'funcionario', 'remover'];
+  var TIPOS_COM_HORARIO = ["📄 Falta Justificada", "⚠️ Falta Injustificada", "🤝 Acordo 1:1"];
 
+  function iniciarRelogio() {
+    setInterval(function() {
+      var agora = new Date();
+      var horaStr = String(agora.getHours()).padStart(2, '0') + ':' + String(agora.getMinutes()).padStart(2, '0') + ':' + String(agora.getSeconds()).padStart(2, '0');
+      var meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+      var elTime = document.getElementById('liveClockTime'); var elDate = document.getElementById('liveClockDate');
+      if (elTime) elTime.innerText = horaStr;
+      if (elDate) elDate.innerText = String(agora.getDate()).padStart(2, '0') + ' ' + meses[agora.getMonth()] + ' ' + agora.getFullYear();
+    }, 1000);
+  }
+
+  window.addEventListener('online', function() { estaOnline = true; var g = document.getElementById('gpsIndicator'); if(g) g.classList.remove('offline'); mostrarPopupPersonalizado({ titulo: "Ligação Restabelecida", mensagem: "O dispositivo voltou a estar online.", tipo: "sucesso" }); });
+  window.addEventListener('offline', function() { estaOnline = false; var g = document.getElementById('gpsIndicator'); if(g) g.classList.add('offline'); mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Verifique a sua ligação à internet.", tipo: "erro" }); });
+
+  function atualizarPinDisplay(inputId, containerId) {
+    var input = document.getElementById(inputId); if (!input) return;
+    input.value = input.value.replace(/[^0-9]/g, '');
+    var container = document.getElementById(containerId); if (!container) return;
+    var dots = container.children;
+    for (var i = 0; i < 4; i++) { if (dots[i]) { if (i < input.value.length) dots[i].classList.add('filled'); else dots[i].classList.remove('filled'); } }
+  }
+  function focarPin(inputId) { var input = document.getElementById(inputId); if (input) input.focus(); }
+
+  function mostrarPopupPersonalizado(config) {
+    var overlay = document.getElementById('toastOverlay');
+    document.getElementById('toastTitle').innerText = config.titulo || "Aviso";
+    document.getElementById('toastBody').innerHTML = config.mensagem || "";
+    var icon = document.getElementById('toastIcon');
+    icon.className = "toast-icon";
+    if (config.tipo === "sucesso") icon.innerText = "✅";
+    else if (config.tipo === "erro") icon.innerText = "❌";
+    else if (config.tipo === "processando") { icon.className = "toast-icon ampulheta-animada"; icon.innerText = "⏳"; }
+    else if (config.tipo === "aviso") icon.innerText = config.icone || "⚠️";
+    else icon.innerText = config.icone || "💬";
+    var acts = document.getElementById('toastActionsContainer'); acts.innerHTML = "";
+    if (config.tipo === "processando") acts.style.display = "none";
+    else {
+      acts.style.display = "flex";
+      if (config.botoes) config.botoes.forEach(function(b) { var btn = document.createElement('button'); btn.className = "toast-btn " + (b.classe || "toast-btn-primary"); btn.innerText = b.texto; btn.onclick = b.acao; acts.appendChild(btn); });
+      else { var btn = document.createElement('button'); btn.className = "toast-btn toast-btn-primary"; btn.innerText = "Concluir"; btn.onclick = fecharToast; acts.appendChild(btn); }
+    }
+    overlay.style.display = "flex";
+  }
+
+  function fecharToast() { document.getElementById('toastOverlay').style.display = "none"; emProcessamento = false; var btn = document.getElementById('btnPonto'); if (btn) btn.disabled = false; }
+  function fecharToastOverlay(e) {}
+  function alternarVisibilidadeSenhaInput(inputId, btnEye) { var ip = document.getElementById(inputId); if (!ip) return; if (ip.type === "password") { ip.type = "text"; if (btnEye) btnEye.innerText = "🙈"; } else { ip.type = "password"; if (btnEye) btnEye.innerText = "👁️"; } }
+
+  function obterDetalhesDispositivo() {
+    try { if (window.AndroidBridge && typeof window.AndroidBridge.getDeviceModel === "function") { var m = window.AndroidBridge.getDeviceModel(); if (m) return m; } } catch(e) {}
+    var ua = navigator.userAgent; if (ua.indexOf("iPhone") !== -1) return "Apple iPhone"; if (ua.indexOf("Samsung") !== -1) return "Samsung Galaxy"; return navigator.platform || "Smartphone";
+  }
+
+  function chamarAPIJsonp(params, callbackSucesso) {
+    if (!navigator.onLine) { emProcessamento = false; mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Verifique a sua ligação à internet.", tipo: "erro" }); return; }
+    var controller = new AbortController(); var timeoutId = setTimeout(function() { controller.abort(); }, 1200);
+    fetch('https://api.ipify.org?format=json', { signal: controller.signal })
+      .then(function(res) { return res.json(); }).then(function(data) { clearTimeout(timeoutId); params.ip = data.ip || "Não disponível"; enviarPedidoComIp(params, callbackSucesso); })
+      .catch(function() { clearTimeout(timeoutId); params.ip = "Não disponível"; enviarPedidoComIp(params, callbackSucesso); });
+  }
+
+  function enviarPedidoComIp(params, callbackSucesso) {
+    var cbName = "jsonp_cb_" + Math.random().toString(36).substring(2, 9);
+    var script = document.createElement('script'); script.id = cbName;
+    window[cbName] = function(dados) { delete window[cbName]; if (script && script.parentNode) script.remove(); if (callbackSucesso) callbackSucesso(dados); };
+    var url = APP_SCRIPT_URL + "?";
+    for (var key in params) { if (params.hasOwnProperty(key)) url += encodeURIComponent(key) + "=" + encodeURIComponent(params[key]) + "&"; }
+    url += "callback=" + cbName; script.src = url;
+    script.onerror = function() { delete window[cbName]; if (script && script.parentNode) script.remove(); emProcessamento = false; mostrarPopupPersonalizado({ titulo: "Erro de Comunicação", mensagem: "Não foi possível contactar o servidor. Tente novamente.", tipo: "erro" }); };
+    document.body.appendChild(script);
+  }
+
+  window.addEventListener('load', function() { iniciarRelogio(); carregarFuncionariosEmTodosOsCampos(); if (!navigator.onLine) { var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); } });
+
+  function abrirModalSenhaAdmin() {
+    mostrarPopupPersonalizado({
+      titulo: "Autenticação", mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.94rem;">Área reservada à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.35rem; letter-spacing:6px;" placeholder="••••" autofocus><button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️</button></div>', icone: "🔐",
+      botoes: [
+        { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
+        { texto: "Entrar", classe: "toast-btn-primary", acao: function() {
+            var s = document.getElementById('inputSenhaPopup').value; if (!s) return;
+            mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A verificar credenciais...", tipo: "processando" });
+            chamarAPIJsonp({ action: "verificarSenhaJsonp", senha: s }, function(resp) {
+              if (resp.indexOf("incorreta") !== -1 || resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Acesso Negado", mensagem: "A palavra-passe introduzida está incorreta.", tipo: "erro" }); }
+              else {
+                senhaAdminSessao = s; fecharToast();
+                document.getElementById('section-ponto').classList.remove('active');
+                document.getElementById('section-falta-func').classList.remove('active');
+                document.getElementById('section-admin').classList.add('active');
+                document.getElementById('headerTitle').style.display = 'none';
+                document.getElementById('headerClockBox').style.display = 'none';
+                voltarAoMenuCentralAdmin();
+              }
+            });
+          }
+        }
+      ]
+    });
+  }
+
+  function abrirEcraFaltaFuncionario() {
+    document.getElementById('section-ponto').classList.remove('active');
+    document.getElementById('section-admin').classList.remove('active');
+    document.getElementById('section-falta-func').classList.add('active');
+    document.getElementById('headerTitle').style.display = 'none';
+    document.getElementById('headerClockBox').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function voltarAoEcraPrincipal() {
+    senhaAdminSessao = "";
+    document.getElementById('section-admin').classList.remove('active');
+    document.getElementById('section-falta-func').classList.remove('active');
+    document.getElementById('section-ponto').classList.add('active');
+    document.getElementById('headerTitle').style.display = 'block';
+    document.getElementById('headerClockBox').style.display = 'inline-flex';
+    voltarAoMenuCentralAdmin();
+    limparFormularioFaltaCompleto();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function carregarFuncionariosEmTodosOsCampos() {
+    if (!navigator.onLine) return;
+    chamarAPIJsonp({ action: "obterFuncionarios" }, function(lista) { if (lista && lista.length > 0) { listaFuncionariosCache = lista; preencherSelectsNomes(lista); } });
+    chamarAPIJsonp({ action: "obterTodosFuncionarios" }, function(listaCompleta) {
+      if (listaCompleta && listaCompleta.length > 0) {
+        var sAdmin = document.getElementById('selecaoFuncionario');
+        if (sAdmin) { sAdmin.innerHTML = '<option value="" disabled selected>Selecione</option><option value="TODOS">Exportar Todos</option>'; listaCompleta.forEach(function(n) { var o = document.createElement('option'); o.value = n; o.text = n; sAdmin.appendChild(o); }); }
+      }
+    });
+  }
+
+  function preencherSelectsNomes(lista) {
+    ['nomeFuncionario', 'nomeFuncionarioFolga', 'nomeRemover', 'nomeFuncFalta', 'nomeAcordo', 'nomeCorrigir', 'colegaTrocaFunc', 'nomeTrocaAusente', 'nomeTrocaSubstituto'].forEach(function(id) {
+      var sel = document.getElementById(id);
+      if (sel) {
+        var valorAtual = sel.value;
+        var placeholder = (id === 'colegaTrocaFunc') ? '<option value="">Selecione o colega</option>' :
+                          (id === 'nomeTrocaAusente') ? '<option value="" disabled selected>Selecione o colaborador ausente</option>' :
+                          (id === 'nomeTrocaSubstituto') ? '<option value="" disabled selected>Selecione o colega substituto</option>' :
+                          '<option value="" disabled selected>Selecione o colaborador</option>';
+        sel.innerHTML = placeholder;
+        lista.forEach(function(n) { var o = document.createElement('option'); o.value = n; o.text = n; sel.appendChild(o); });
+        if (valorAtual) sel.value = valorAtual;
+      }
+    });
+  }
+
+  function alternarCampoTrocaColega() {
+    var tipo = document.getElementById('tipoFaltaFunc').value;
+    var grupo = document.getElementById('grupoColegaTroca');
+    var grupoHorario = document.getElementById('grupoHorarioFunc');
+    var grupoTrocaHorarios = document.getElementById('grupoTrocaHorarios');
+
+    if (tipo === "🔄 Troca com Colega") {
+      grupo.style.display = "block";
+      grupoTrocaHorarios.style.display = "block";
+      grupoHorario.style.display = "none";
+      atualizarFiltroColegasTroca();
+    } else {
+      grupo.style.display = "none";
+      grupoTrocaHorarios.style.display = "none";
+      var s = document.getElementById('colegaTrocaFunc'); if (s) s.value = "";
+      if (TIPOS_COM_HORARIO.indexOf(tipo) !== -1) grupoHorario.style.display = "block";
+      else { grupoHorario.style.display = "none"; limparHorarioFunc(); }
+    }
+  }
+
+  function atualizarFiltroColegasTroca() {
+    var selectColega = document.getElementById('colegaTrocaFunc');
+    var nomeProprio = document.getElementById('nomeFuncFalta').value;
+    if (!selectColega) return;
+    selectColega.innerHTML = '<option value="">Selecione o colega</option>';
+    listaFuncionariosCache.forEach(function(n) {
+      var o = document.createElement('option'); o.value = n; o.text = n;
+      if (n === nomeProprio) { o.disabled = true; o.text = n + " (você mesmo)"; }
+      selectColega.appendChild(o);
+    });
+  }
+
+  function atualizarFiltroSubstitutosTroca() {
+    var selectSub = document.getElementById('nomeTrocaSubstituto');
+    var nomeAusente = document.getElementById('nomeTrocaAusente').value;
+    if (!selectSub) return;
+    selectSub.innerHTML = '<option value="" disabled selected>Selecione o colega substituto</option>';
+    listaFuncionariosCache.forEach(function(n) {
+      var o = document.createElement('option'); o.value = n; o.text = n;
+      if (n === nomeAusente) { o.disabled = true; o.text = n + " (o próprio)"; }
+      selectSub.appendChild(o);
+    });
+  }
+
+  function togglePeriodosExtraFunc() {
+    var el = document.getElementById('periodosExtraFunc'); var btn = document.getElementById('btnAddPeriodoFunc');
+    if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
+    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('fuE3').value = ""; document.getElementById('fuS3').value = ""; document.getElementById('fuE4').value = ""; document.getElementById('fuS4').value = ""; }
+  }
+
+  function togglePeriodosExtraTrPro() {
+    var el = document.getElementById('periodosExtraTrPro'); var btn = document.getElementById('btnAddPeriodoTrPro');
+    if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
+    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('trProE3').value = ""; document.getElementById('trProS3').value = ""; document.getElementById('trProE4').value = ""; document.getElementById('trProS4').value = ""; }
+  }
+
+  function togglePeriodosExtraTrCol() {
+    var el = document.getElementById('periodosExtraTrCol'); var btn = document.getElementById('btnAddPeriodoTrCol');
+    if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
+    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('trColE3').value = ""; document.getElementById('trColS3').value = ""; document.getElementById('trColE4').value = ""; document.getElementById('trColS4').value = ""; }
+  }
+
+  function limparHorarioFunc() {
+    ['fuE1','fuS1','fuE2','fuS2','fuE3','fuS3','fuE4','fuS4'].forEach(function(id) { var e = document.getElementById(id); if(e) e.value = ""; });
+    var el = document.getElementById('periodosExtraFunc'); var btn = document.getElementById('btnAddPeriodoFunc');
+    if (el) el.style.display = 'none'; if (btn) btn.innerText = '➕ Adicionar 3º / 4º período';
+  }
+
+  function limparHorariosTrocaFunc() {
+    ['trProE1','trProS1','trProE2','trProS2','trProE3','trProS3','trProE4','trProS4','trColE1','trColS1','trColE2','trColS2','trColE3','trColS3','trColE4','trColS4'].forEach(function(id) { var e = document.getElementById(id); if(e) e.value = ""; });
+    var elP = document.getElementById('periodosExtraTrPro'); if (elP) elP.style.display = 'none';
+    var elC = document.getElementById('periodosExtraTrCol'); if (elC) elC.style.display = 'none';
+  }
+
+  function togglePeriodosExtra() {
+    var el = document.getElementById('periodosExtra'); var btn = document.getElementById('btnAddPeriodo');
+    if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
+    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('horE3').value = ""; document.getElementById('horS3').value = ""; document.getElementById('horE4').value = ""; document.getElementById('horS4').value = ""; }
+  }
+
+  function togglePeriodosExtraAus() {
+    var el = document.getElementById('periodosExtraAus'); var btn = document.getElementById('btnAddPeriodoAus');
+    if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
+    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('ausE3').value = ""; document.getElementById('ausS3').value = ""; document.getElementById('ausE4').value = ""; document.getElementById('ausS4').value = ""; }
+  }
+
+  function togglePeriodosExtraAcordo() {
+    var el = document.getElementById('periodosExtraAcordo'); var btn = document.getElementById('btnAddPeriodoAcordo');
+    if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
+    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('acE3').value = ""; document.getElementById('acS3').value = ""; document.getElementById('acE4').value = ""; document.getElementById('acS4').value = ""; }
+  }
+
+  function togglePeriodosExtraAusencia() {
+    var el = document.getElementById('periodosExtraAusencia'); var btn = document.getElementById('btnAddPeriodoAusencia');
+    if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
+    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('auE3').value = ""; document.getElementById('auS3').value = ""; document.getElementById('auE4').value = ""; document.getElementById('auS4').value = ""; }
+  }
+
+  function validarParesHorario(horarios) {
+    if (!horarios || typeof horarios !== 'object') return "";
+    for (var i = 1; i <= 4; i++) {
+      var e = horarios['e' + i]; var s = horarios['s' + i];
+      if ((e && !s) || (!e && s)) return "No " + i + "º período, preencha a entrada E a saída (ou deixe ambos vazios).";
+      if (e && s && e >= s) return "No " + i + "º período, a saída tem de ser posterior à entrada.";
+    }
+    return "";
+  }
+
+  function contarPeriodosAtivos(horarios) {
+    if (!horarios || typeof horarios !== 'object') return 0;
+    var c = 0;
+    for (var i = 1; i <= 4; i++) { if (horarios['e' + i] && horarios['s' + i]) c++; }
+    return c;
+  }
+
+  function submeterTrocaTurno() {
+    var ausente = document.getElementById('nomeTrocaAusente').value;
+    var substituto = document.getElementById('nomeTrocaSubstituto').value;
+    var dIni = document.getElementById('dataTrocaInicio').value;
+    var dFim = document.getElementById('dataTrocaFim').value;
+    if (!ausente || !substituto || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o colaborador ausente, o substituto e as datas.", tipo: "erro" }); return; }
+    if (ausente === substituto) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O colaborador ausente e o substituto não podem ser a mesma pessoa.", tipo: "erro" }); return; }
+    var horAus = { e1: document.getElementById('ausE1').value, s1: document.getElementById('ausS1').value, e2: document.getElementById('ausE2').value, s2: document.getElementById('ausS2').value, e3: document.getElementById('ausE3').value, s3: document.getElementById('ausS3').value, e4: document.getElementById('ausE4').value, s4: document.getElementById('ausS4').value };
+    var horSub = { e1: document.getElementById('horE1').value, s1: document.getElementById('horS1').value, e2: document.getElementById('horE2').value, s2: document.getElementById('horS2').value, e3: document.getElementById('horE3').value, s3: document.getElementById('horS3').value, e4: document.getElementById('horE4').value, s4: document.getElementById('horS4').value };
+    var errAus = validarParesHorario(horAus); if (errAus) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (Ausente)", mensagem: errAus, tipo: "erro" }); return; }
+    var errSub = validarParesHorario(horSub); if (errSub) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (Substituto)", mensagem: errSub, tipo: "erro" }); return; }
+    var numAus = contarPeriodosAtivos(horAus); var numSub = contarPeriodosAtivos(horSub);
+    if (numAus === 0 && numSub === 0) {
+      mostrarPopupPersonalizado({
+        titulo: "Sem Horários Definidos",
+        mensagem: "Não preencheu nenhum período. O ausente será marcado como ausente e o substituto pica normalmente. Pretende continuar?",
+        icone: "⚠️",
+        botoes: [ { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast }, { texto: "Continuar", classe: "toast-btn-primary", acao: function() { executarSubmissaoTroca(ausente, substituto, dIni, dFim, horAus, horSub); } } ]
+      });
+      return;
+    }
+    executarSubmissaoTroca(ausente, substituto, dIni, dFim, horAus, horSub);
+  }
+
+  function executarSubmissaoTroca(ausente, substituto, dIni, dFim, horAus, horSub) {
+    mostrarPopupPersonalizado({ titulo: "A Registar Troca", mensagem: "A lançar horários nos mapas de ambos os colaboradores...", tipo: "processando" });
+    chamarAPIJsonp({ action: "registarTrocaTurnoJsonp", nomeAusente: ausente, nomeSubstituto: substituto, dataInicio: dIni, dataFim: dFim, horariosAusente: JSON.stringify(horAus), horariosSubstituto: JSON.stringify(horSub), senha: senhaAdminSessao }, function(resp) {
+      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível Registar", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); }
+      else { mostrarPopupPersonalizado({ titulo: "Troca Registada", mensagem: resp, tipo: "sucesso" }); limparFormularioTroca(); }
+    });
+  }
+
+  function limparFormularioTroca() {
+    document.getElementById('nomeTrocaAusente').value = ""; document.getElementById('nomeTrocaSubstituto').value = "";
+    document.getElementById('dataTrocaInicio').value = ""; document.getElementById('dataTrocaFim').value = "";
+    ['ausE1','ausS1','ausE2','ausS2','ausE3','ausS3','ausE4','ausS4'].forEach(function(id) { var e = document.getElementById(id); if (e) e.value = ""; });
+    ['horE1','horS1','horE2','horS2','horE3','horS3','horE4','horS4'].forEach(function(id) { var e = document.getElementById(id); if (e) e.value = ""; });
+    var pe = document.getElementById('periodosExtra'); if (pe) pe.style.display = 'none';
+    var bp = document.getElementById('btnAddPeriodo'); if (bp) bp.innerText = '➕ Adicionar 3º / 4º período';
+    var pea = document.getElementById('periodosExtraAus'); if (pea) pea.style.display = 'none';
+    var bpa = document.getElementById('btnAddPeriodoAus'); if (bpa) bpa.innerText = '➕ Adicionar 3º / 4º período';
+  }
+
+  function submeterAcordo() {
+    var nome = document.getElementById('nomeAcordo').value; var d = document.getElementById('dataAcordo').value;
+    if (!nome || !d) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o colaborador e a data.", tipo: "erro" }); return; }
+    var horarios = { e1: document.getElementById('acE1').value, s1: document.getElementById('acS1').value, e2: document.getElementById('acE2').value, s2: document.getElementById('acS2').value, e3: document.getElementById('acE3').value, s3: document.getElementById('acS3').value, e4: document.getElementById('acE4').value, s4: document.getElementById('acS4').value };
+    var erro = validarParesHorario(horarios); if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A aplicar o acordo de horas...", tipo: "processando" });
+    chamarAPIJsonp({ action: "marcarAcordoJsonp", nome: nome, data: d, horarios: JSON.stringify(horarios), senha: senhaAdminSessao }, function(resp) {
+      mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+      if (resp.indexOf("Aviso") === -1) limparFormularioAcordo();
+    });
+  }
+
+  function limparFormularioAcordo() {
+    document.getElementById('nomeAcordo').value = ""; document.getElementById('dataAcordo').value = "";
+    ['acE1','acS1','acE2','acS2','acE3','acS3','acE4','acS4'].forEach(function(id) { document.getElementById(id).value = ""; });
+    document.getElementById('periodosExtraAcordo').style.display = 'none';
+    document.getElementById('btnAddPeriodoAcordo').innerText = '➕ Adicionar 3º / 4º período';
+  }
+
+  function submeterAusenciaAdministrativa() {
+    var nome = document.getElementById('nomeFuncionarioFolga').value; var tipo = document.getElementById('tipoAusencia').value;
+    var dIni = document.getElementById('dataFolgaInicio').value; var dFim = document.getElementById('dataFolgaFim').value;
+    if (!nome || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios.", tipo: "erro" }); return; }
+    var horarios = { e1: document.getElementById('auE1').value, s1: document.getElementById('auS1').value, e2: document.getElementById('auE2').value, s2: document.getElementById('auS2').value, e3: document.getElementById('auE3').value, s3: document.getElementById('auS3').value, e4: document.getElementById('auE4').value, s4: document.getElementById('auS4').value };
+    var erro = validarParesHorario(horarios); if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
+    var numPeriodos = contarPeriodosAtivos(horarios); var isDiaUnico = (dIni === dFim);
+    if (numPeriodos > 0 && !isDiaUnico) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O horário só pode ser aplicado a um único dia.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A lançar o registo no mapa do colaborador...", tipo: "processando" });
+    chamarAPIJsonp({ action: "lancarAusenciaAdminJsonp", nome: nome, tipo: tipo, dataInicio: dIni, dataFim: dFim, horarios: JSON.stringify(horarios), senha: senhaAdminSessao }, function(resp) {
+      mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+      if (resp.indexOf("Aviso") === -1) limparFormularioAusencia();
+    });
+  }
+
+  function limparFormularioAusencia() {
+    document.getElementById('nomeFuncionarioFolga').value = ""; document.getElementById('tipoAusencia').value = "";
+    document.getElementById('dataFolgaInicio').value = ""; document.getElementById('dataFolgaFim').value = "";
+    ['auE1','auS1','auE2','auS2','auE3','auS3','auE4','auS4'].forEach(function(id) { document.getElementById(id).value = ""; });
+    document.getElementById('periodosExtraAusencia').style.display = 'none';
+    document.getElementById('btnAddPeriodoAusencia').innerText = '➕ Adicionar 3º / 4º período';
+  }
+
+  function submeterFaltaFuncionario() {
+    var nome = document.getElementById('nomeFuncFalta').value;
+    var pin = document.getElementById('pinFuncFalta').value;
+    var email = document.getElementById('emailFuncFalta').value;
+    var tipo = document.getElementById('tipoFaltaFunc').value;
+    var dIni = document.getElementById('dataFaltaFuncInicio').value;
+    var dFim = document.getElementById('dataFaltaFuncFim').value;
+    var obs = document.getElementById('obsFuncFalta').value;
+
+    if(!nome || !pin || !email || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios antes de submeter.", tipo: "erro" }); return; }
+
+    var pacoteExtras = "";
+
+    if (tipo === "🔄 Troca com Colega") {
+      var colega = document.getElementById('colegaTrocaFunc').value;
+      if (!colega) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Selecione o colega com quem pretende efetuar a troca.", tipo: "erro" }); return; }
+      if (colega === nome) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Não pode escolher-se a si próprio para a troca.", tipo: "erro" }); return; }
+
+      var horProprio = { e1: document.getElementById('trProE1').value, s1: document.getElementById('trProS1').value, e2: document.getElementById('trProE2').value, s2: document.getElementById('trProS2').value, e3: document.getElementById('trProE3').value, s3: document.getElementById('trProS3').value, e4: document.getElementById('trProE4').value, s4: document.getElementById('trProS4').value };
+      var horColega = { e1: document.getElementById('trColE1').value, s1: document.getElementById('trColS1').value, e2: document.getElementById('trColE2').value, s2: document.getElementById('trColS2').value, e3: document.getElementById('trColE3').value, s3: document.getElementById('trColS3').value, e4: document.getElementById('trColE4').value, s4: document.getElementById('trColS4').value };
+
+      var errP = validarParesHorario(horProprio); if (errP) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (O seu)", mensagem: errP, tipo: "erro" }); return; }
+      var errC = validarParesHorario(horColega); if (errC) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (Colega)", mensagem: errC, tipo: "erro" }); return; }
+
+      var numP = contarPeriodosAtivos(horProprio); var numC = contarPeriodosAtivos(horColega);
+      if (numP === 0 && numC === 0) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Preencha pelo menos o horário de um dos intervenientes.", tipo: "erro" }); return; }
+      if (dIni !== dFim) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "A troca com colega só pode ser submetida para um único dia de cada vez.", tipo: "erro" }); return; }
+
+      pacoteExtras = "|TROCA:" + JSON.stringify({ proprio: horProprio, colega: horColega, nomeColega: colega });
+    }
+
+    var horarios = { e1: "", s1: "", e2: "", s2: "", e3: "", s3: "", e4: "", s4: "" };
+    if (TIPOS_COM_HORARIO.indexOf(tipo) !== -1) {
+      horarios = { e1: document.getElementById('fuE1').value, s1: document.getElementById('fuS1').value, e2: document.getElementById('fuE2').value, s2: document.getElementById('fuS2').value, e3: document.getElementById('fuE3').value, s3: document.getElementById('fuS3').value, e4: document.getElementById('fuE4').value, s4: document.getElementById('fuS4').value };
+      var erro = validarParesHorario(horarios); if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
+      if (contarPeriodosAtivos(horarios) > 0 && dIni !== dFim) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O horário só pode ser preenchido para um único dia.", tipo: "erro" }); return; }
+    }
+
+    mostrarPopupPersonalizado({ titulo: "A Enviar", mensagem: "A submeter o seu pedido à gerência...", tipo: "processando" });
+    chamarAPIJsonp({
+      action: "comunicarAusenciaFuncionarioJsonp",
+      nome: nome, pin: pin, email: email, tipo: tipo,
+      dataInicio: dIni, dataFim: dFim, obs: obs,
+      horarios: JSON.stringify(horarios),
+      extras: pacoteExtras
+    }, function(resp) {
+      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível Submeter", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); }
+      else { mostrarPopupPersonalizado({ titulo: "Pedido Enviado", mensagem: resp, tipo: "sucesso" }); setTimeout(voltarAoEcraPrincipal, 2500); }
+    });
+  }
+
+  function limparFormularioFaltaCompleto() {
+    var el1 = document.getElementById('nomeFuncFalta'); if (el1) el1.value = "";
+    var el2 = document.getElementById('pinFuncFalta'); if (el2) el2.value = "";
+    var el3 = document.getElementById('emailFuncFalta'); if (el3) el3.value = "";
+    var el4 = document.getElementById('tipoFaltaFunc'); if (el4) el4.value = "";
+    var el5 = document.getElementById('obsFuncFalta'); if (el5) el5.value = "";
+    var el6 = document.getElementById('dataFaltaFuncInicio'); if (el6) el6.value = "";
+    var el7 = document.getElementById('dataFaltaFuncFim'); if (el7) el7.value = "";
+    var g1 = document.getElementById('grupoColegaTroca'); if (g1) g1.style.display = "none";
+    var g2 = document.getElementById('grupoHorarioFunc'); if (g2) g2.style.display = "none";
+    var g3 = document.getElementById('grupoTrocaHorarios'); if (g3) g3.style.display = "none";
+    limparHorarioFunc();
+    limparHorariosTrocaFunc();
+  }
+
+  function registarPontoDiario() {
+    if (emProcessamento) return;
+    var nome = document.getElementById('nomeFuncionario').value;
+    var pin = document.getElementById('pinPonto').value;
+    if (!nome) { gerirErroCampo("erro-nome-ponto", "Selecione o seu nome na lista."); return; }
+    if (!pin || pin.trim().length !== 4) { gerirErroCampo("erro-pin-ponto", "Introduza o PIN de 4 dígitos."); return; }
+    emProcessamento = true;
+    document.getElementById('btnPonto').disabled = true;
+    mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A validar a sua localização...", tipo: "processando" });
+    navigator.geolocation.getCurrentPosition(
+      function(pos) {
+        if (pos.coords.accuracy > 150) { emProcessamento = false; document.getElementById('btnPonto').disabled = false; mostrarPopupPersonalizado({ titulo: "Sinal GPS Fraco", mensagem: "Aproxime-se de uma janela ou de uma zona com melhor cobertura e tente novamente.", tipo: "erro" }); return; }
+        chamarAPIJsonp({ action: "salvarPontoJsonp", nome: nome, lat: pos.coords.latitude, lon: pos.coords.longitude, pin: pin, isMock: pos.mocked || pos.coords.mocked, disp: obterDetalhesDispositivo(), ua: navigator.userAgent }, function(resposta) {
+          document.getElementById('pinPonto').value = ""; atualizarPinDisplay('pinPonto', 'dotsPonto');
+          emProcessamento = false; document.getElementById('btnPonto').disabled = false;
+          if (resposta.indexOf("Aviso") !== -1) { gerirErroCampo("erro-pin-ponto", resposta.replace("Aviso: ", "")); fecharToast(); }
+          else { mostrarPopupPersonalizado({ titulo: "Registo Validado", mensagem: resposta, tipo: "sucesso" }); }
+        });
+      },
+      function() { emProcessamento = false; document.getElementById('btnPonto').disabled = false; mostrarPopupPersonalizado({ titulo: "Localização Indisponível", mensagem: "Autorize o acesso à localização nas configurações do dispositivo e tente novamente.", tipo: "erro" }); },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+    );
+  }
+
+  function carregarPedidosPendentes() {
+    var container = document.getElementById('listaPedidosContainer');
+    container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>A procurar pedidos pendentes...</p>";
+    chamarAPIJsonp({ action: "obterPedidosPendentes", senha: senhaAdminSessao }, function(resp) {
+      if(typeof resp === "string" && resp.indexOf("Aviso") !== -1) { container.innerHTML = "<p style='color:var(--danger); font-weight: 600; text-align: center;'>" + resp + "</p>"; return; }
+      if(!resp || resp.length === 0) { container.innerHTML = "<p style='text-align:center; color:var(--text-muted); padding: 15px; font-weight: 600;'>Não existem pedidos pendentes.</p>"; return; }
+      var html = "";
+      resp.forEach(function(p) {
+        html += '<div class="pedido-item"><p><strong>Colaborador:</strong> ' + p.nome + '</p><p><strong>Pedido:</strong> ' + p.detalhes + '</p>' +
+          (p.obs ? '<p><strong>Detalhes:</strong> <i>' + p.obs + '</i></p>' : '') +
+          '<div style="display:flex; gap:10px; margin-top:16px;">' +
+            '<button class="btn btn-primary" style="padding:13px; margin:0; font-size:0.82rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'aprovar\')">✅ Aprovar</button>' +
+            '<button class="btn btn-danger" style="padding:13px; margin:0; font-size:0.82rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'recusar\')">❌ Recusar</button>' +
+          '</div></div>';
+      });
+      container.innerHTML = html;
+    });
+  }
+
+  function responderPedidoFaltaAdmin(idPedido, decisao) {
+    if (decisao === "recusar") {
+      mostrarPopupPersonalizado({
+        titulo: "Confirmar Recusa",
+        mensagem: "Tem a certeza de que pretende <b>recusar</b> este pedido? O colaborador será notificado por email.",
+        icone: "❌",
+        botoes: [
+          { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
+          { texto: "Confirmar Recusa", classe: "toast-btn-primary", acao: function() { executarRespostaPedido(idPedido, "recusar"); } }
+        ]
+      });
+      return;
+    }
+    mostrarPopupPersonalizado({
+      titulo: "Aprovar Pedido",
+      mensagem: "O horário será <b>automaticamente aplicado ao mapa</b> de ponto do colaborador (e do colega, se aplicável).<br><br>Confirmar aprovação?",
+      icone: "✅",
+      botoes: [
+        { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
+        { texto: "Aprovar e Aplicar", classe: "toast-btn-primary", acao: function() { executarRespostaPedido(idPedido, "aprovar"); } }
+      ]
+    });
+  }
+
+  function executarRespostaPedido(idPedido, decisao) {
+    mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A aplicar horários e a notificar o colaborador...", tipo: "processando" });
+    chamarAPIJsonp({ action: "responderPedidoFaltaAdmin", idPedido: idPedido, decisao: decisao, senha: senhaAdminSessao }, function(resp) {
+      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); }
+      else { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: "sucesso" }); carregarPedidosPendentes(); }
+    });
+  }
+
+  function submeterCorrecao() {
+    var nome = document.getElementById('nomeCorrigir').value; var d = document.getElementById('dataCorrigir').value; var h = document.getElementById('horaCorrigir').value;
+    if(!nome || !d || !h) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o colaborador, a data e a hora.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Corrigir", mensagem: "A inserir a picagem e a reorganizar o turno...", tipo: "processando" });
+    chamarAPIJsonp({ action: "corrigirPicagemJsonp", nome: nome, data: d, hora: h, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
+  }
+
+  function exportarRelatorioPDF() {
+    var f = document.getElementById('selecaoFuncionario').value; var di = document.getElementById('dataInicio').value; var df = document.getElementById('dataFim').value;
+    if(!f || !di || !df) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Exportar", mensagem: "A gerar o relatório em PDF...", tipo: "processando" });
+    chamarAPIJsonp({ action: "gerarPdfJsonp", funcionario: f, dataInicio: di, dataFim: df, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
+  }
+
+  function submeterNovoFuncionario() {
+    var n = document.getElementById('nomeNovo').value; var p = document.getElementById('pinNovo').value; var f = document.getElementById('filialNovo').value;
+    if(!n || !p) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o nome e o PIN.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Guardar", mensagem: "A registar o novo colaborador...", tipo: "processando" });
+    chamarAPIJsonp({ action: "adicionarFuncionarioJsonp", nome: n, pin: p, filial: f, senha: senhaAdminSessao }, function(resp) { carregarFuncionariosEmTodosOsCampos(); mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
+  }
+
+  function submeterRemocaoFuncionario() {
+    var n = document.getElementById('nomeRemover').value; if(!n) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Selecione um colaborador.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Atualizar", mensagem: "A inativar o colaborador...", tipo: "processando" });
+    chamarAPIJsonp({ action: "removerFuncionarioJsonp", nome: n, senha: senhaAdminSessao }, function(resp) { carregarFuncionariosEmTodosOsCampos(); mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
+  }
+
+  function abrirSubModulo(id) {
+    document.getElementById('admin-sub-menu').style.display = 'none';
+    MODULOS_ADMIN.forEach(function(m) { var el = document.getElementById('admin-sub-' + m); if (el) el.style.display = (m === id) ? 'block' : 'none'; });
+    document.getElementById('adminNavigationGroup').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function voltarAoMenuCentralAdmin() {
+    MODULOS_ADMIN.forEach(function(m) { var el = document.getElementById('admin-sub-' + m); if (el) el.style.display = 'none'; });
+    document.getElementById('admin-sub-menu').style.display = 'block';
+    document.getElementById('adminNavigationGroup').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function limparFeedbackPonto() { gerirErroCampo("erro-nome-ponto", ""); gerirErroCampo("erro-pin-ponto", ""); }
+  function gerirErroCampo(id, msg) {
+    var cp = document.getElementById(id); if (!cp) return;
+    if (msg) { cp.innerHTML = msg; cp.style.display = "flex"; var f = cp.parentElement.querySelector('.form-control') || cp.parentElement.querySelector('.pin-dots-container'); if(f) { f.style.borderColor = 'var(--danger)'; setTimeout(function(){ f.style.borderColor='var(--border)'; }, 3000); } }
+    else { cp.style.display = "none"; }
+  }
+</script>
 </body>
 </html>
