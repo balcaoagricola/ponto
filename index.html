@@ -8,33 +8,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
-
   <style>
-    :root {
-      --primary: #0f172a; --primary-soft: #1e293b;
-      --accent: #059669; --accent-light: #10b981; --accent-dark: #047857;
-      --accent-glow: rgba(5, 150, 105, 0.35);
-      --secondary: #0ea5e9; --secondary-dark: #0284c7;
-      --text: #1e293b; --text-muted: #64748b; --text-light: #94a3b8;
-      --surface: #ffffff; --surface-2: #f8fafc; --surface-3: #f1f5f9;
-      --border: #e2e8f0; --border-strong: #cbd5e1; --border-focus: #059669;
-      --success: #10b981; --danger: #ef4444; --warning: #f59e0b;
-      --radius-xs: 10px; --radius-sm: 14px; --radius-md: 20px; --radius-lg: 28px; --radius-xl: 36px;
-      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
-      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04);
-      --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.08), 0 4px 8px rgba(15, 23, 42, 0.04);
-      --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.12), 0 8px 16px rgba(15, 23, 42, 0.06);
-      --shadow-accent: 0 10px 28px rgba(5, 150, 105, 0.28), 0 4px 8px rgba(5, 150, 105, 0.15);
-      --shadow-danger: 0 10px 28px rgba(239, 68, 68, 0.25), 0 4px 8px rgba(239, 68, 68, 0.12);
-    }
+    :root { --primary: #0f172a; --primary-soft: #1e293b; --accent: #059669; --accent-light: #10b981; --accent-dark: #047857; --accent-glow: rgba(5, 150, 105, 0.35); --secondary: #0ea5e9; --text: #1e293b; --text-muted: #64748b; --text-light: #94a3b8; --surface: #ffffff; --surface-2: #f8fafc; --border: #e2e8f0; --border-strong: #cbd5e1; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --radius-xs: 10px; --radius-sm: 14px; --radius-md: 20px; --radius-lg: 28px; --radius-xl: 36px; --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06); --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04); --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.12), 0 8px 16px rgba(15, 23, 42, 0.06); --shadow-accent: 0 10px 28px rgba(5, 150, 105, 0.28), 0 4px 8px rgba(5, 150, 105, 0.15); --shadow-danger: 0 10px 28px rgba(239, 68, 68, 0.25), 0 4px 8px rgba(239, 68, 68, 0.12); }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
     html { min-height: 100%; background: #f8fafc; overflow-x: hidden; }
-    body { min-height: 100vh;
-      background: radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.10) 0%, transparent 45%), radial-gradient(circle at 85% 80%, rgba(14, 165, 233, 0.10) 0%, transparent 45%), linear-gradient(135deg, #f8fafc 0%, #eef2f6 50%, #ecfdf5 100%);
-      color: var(--text); padding: 14px; display: flex; flex-direction: column; align-items: center; 
-      overflow-x: hidden; overflow-y: auto; -webkit-overflow-scrolling: touch;
-      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; letter-spacing: -0.01em;
-    }
+    body { min-height: 100vh; background: radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.10) 0%, transparent 45%), radial-gradient(circle at 85% 80%, rgba(14, 165, 233, 0.10) 0%, transparent 45%), linear-gradient(135deg, #f8fafc 0%, #eef2f6 50%, #ecfdf5 100%); color: var(--text); padding: 14px; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; overflow-y: auto; -webkit-overflow-scrolling: touch; -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
     .container { width: 100%; max-width: 460px; background: var(--surface); border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); border: 1px solid rgba(255, 255, 255, 0.9); overflow: hidden; position: relative; margin-top: 8px; margin-bottom: 20px; flex-shrink: 0; }
     .header { padding: 32px 24px 22px; text-align: center; position: relative; background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); border-bottom: 1px solid var(--border); }
     .logo-wrapper { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 6px; padding: 0 8px; }
@@ -50,7 +28,7 @@
     .gps-pulse-dot { width: 10px; height: 10px; background: var(--accent-light); border-radius: 50%; position: relative; box-shadow: 0 0 12px rgba(16, 185, 129, 0.9); }
     .gps-pulse-dot::after { content: ''; position: absolute; top: -2px; left: -2px; width: 14px; height: 14px; border-radius: 50%; background: var(--accent-light); opacity: 0.5; animation: pulseGps 2s infinite ease-out; }
     @keyframes pulseGps { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(2.8); opacity: 0; } }
-    .gps-pulse-dot.offline { background: #ef4444; box-shadow: 0 0 12px rgba(239, 68, 68, 0.9); } 
+    .gps-pulse-dot.offline { background: #ef4444; box-shadow: 0 0 12px rgba(239, 68, 68, 0.9); }
     .gps-pulse-dot.offline::after { animation: none; background: #ef4444; }
     .content-section { padding: 24px 22px 30px; display: none; animation: fadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
     .content-section.active { display: block; }
@@ -58,98 +36,76 @@
     .form-group { margin-bottom: 20px; }
     .form-group label { display: block; margin-bottom: 9px; font-weight: 700; font-size: 0.82rem; color: var(--primary); letter-spacing: 0.01em; text-transform: uppercase; }
     .form-control { width: 100%; padding: 15px 18px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 16px; background-color: var(--surface); color: var(--text); font-weight: 600; outline: none; transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: var(--shadow-sm); }
-    .form-control:hover { border-color: var(--border-strong); }
     .form-control:focus { border-color: var(--accent); background-color: #ffffff; box-shadow: 0 0 0 4px var(--accent-glow), var(--shadow-sm); }
-    .form-control::placeholder { color: var(--text-light); font-weight: 500; }
     select.form-control { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 18px center; padding-right: 45px; cursor: pointer; }
     textarea.form-control { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; line-height: 1.5; }
-    .badge-troca { display: inline-flex; align-items: center; gap: 7px; margin-top: 11px; padding: 7px 14px 7px 11px; background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); border: 1px solid #99f6e4; border-radius: 100px; font-size: 0.74rem; font-weight: 600; color: #0f766e; letter-spacing: 0.01em; line-height: 1.2; }
-    .badge-troca::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #14b8a6; box-shadow: 0 0 8px rgba(20, 184, 166, 0.6); flex-shrink: 0; }
+    .badge-troca { display: inline-flex; align-items: center; gap: 7px; margin-top: 11px; padding: 7px 14px 7px 11px; background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); border: 1px solid #99f6e4; border-radius: 100px; font-size: 0.74rem; font-weight: 600; color: #0f766e; }
     .hint-info { display: flex; align-items: flex-start; gap: 10px; padding: 12px 15px; margin-bottom: 18px; background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); border: 1.5px solid #5eead4; border-radius: var(--radius-sm); font-size: 0.82rem; color: #0f766e; font-weight: 500; line-height: 1.5; }
     .hint-info::before { content: '💡'; font-size: 1rem; flex-shrink: 0; }
     .periodo-hint { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.45; font-weight: 500; }
-    .periodo-card { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; padding: 10px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); transition: all 0.22s ease; overflow: hidden; box-sizing: border-box; }
+    .periodo-card { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; padding: 10px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); }
     .periodo-card:focus-within { border-color: var(--accent); background: #ffffff; box-shadow: 0 0 0 3px var(--accent-glow); }
-    .periodo-num { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: #ffffff; font-weight: 800; font-size: 0.82rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 3px 8px rgba(20, 184, 166, 0.35); }
+    .periodo-num { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: #ffffff; font-weight: 800; font-size: 0.82rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .periodo-inputs { display: flex; align-items: center; gap: 4px; flex: 1 1 0; min-width: 0; }
-    .periodo-input { flex: 1 1 0 !important; min-width: 0 !important; width: 0 !important; max-width: 100% !important; padding: 10px 2px !important; font-size: 0.85rem !important; text-align: center !important; font-weight: 700 !important; letter-spacing: 0 !important; box-sizing: border-box !important; }
-    .periodo-sep { color: var(--text-muted); font-weight: 700; font-size: 0.88rem; flex-shrink: 0; user-select: none; }
-    .btn-add-periodo { width: 100%; padding: 11px; background: transparent; border: 1.5px dashed var(--border-strong); border-radius: var(--radius-sm); color: var(--text-muted); font-weight: 700; font-size: 0.76rem; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Plus Jakarta Sans', sans-serif; margin-bottom: 8px; }
+    .periodo-input { flex: 1 1 0 !important; min-width: 0 !important; width: 0 !important; max-width: 100% !important; padding: 10px 2px !important; font-size: 0.85rem !important; text-align: center !important; font-weight: 700 !important; }
+    .periodo-sep { color: var(--text-muted); font-weight: 700; font-size: 0.88rem; flex-shrink: 0; }
+    .btn-add-periodo { width: 100%; padding: 11px; background: transparent; border: 1.5px dashed var(--border-strong); border-radius: var(--radius-sm); color: var(--text-muted); font-weight: 700; font-size: 0.76rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Plus Jakarta Sans', sans-serif; margin-bottom: 8px; }
     .btn-add-periodo:hover { border-color: var(--accent); color: var(--accent); background: rgba(5, 150, 105, 0.05); }
     .pin-box-wrapper { position: relative; width: 100%; margin-bottom: 8px; }
     .pin-hidden-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; font-size: 16px; }
-    .pin-dots-container { display: flex; justify-content: center; align-items: center; gap: 22px; padding: 24px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); transition: all 0.22s ease; box-shadow: var(--shadow-sm); }
-    .pin-hidden-input:focus + .pin-dots-container { border-color: var(--accent); background: #ffffff; box-shadow: 0 0 0 4px var(--accent-glow), var(--shadow-sm); }
+    .pin-dots-container { display: flex; justify-content: center; align-items: center; gap: 22px; padding: 24px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); }
+    .pin-hidden-input:focus + .pin-dots-container { border-color: var(--accent); background: #ffffff; box-shadow: 0 0 0 4px var(--accent-glow); }
     .pin-dot { width: 15px; height: 15px; border-radius: 50%; border: 2px solid var(--border-strong); background: transparent; transition: all 0.32s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .pin-dot.filled { background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent-dark) 100%); border-color: var(--accent); transform: scale(1.35); box-shadow: 0 4px 12px var(--accent-glow); }
     .btn { width: 100%; padding: 17px 20px; border: none; border-radius: var(--radius-sm); font-size: 0.95rem; font-weight: 800; cursor: pointer; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1); margin-bottom: 14px; letter-spacing: 0.06em; text-transform: uppercase; position: relative; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
     .btn:active { transform: scale(0.97); }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
-    .btn-primary { background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 55%, var(--accent-dark) 100%); color: #ffffff; box-shadow: var(--shadow-accent); text-shadow: 0 1px 2px rgba(0,0,0,0.08); }
-    .btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent); transition: left 0.6s ease; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(5, 150, 105, 0.35), 0 6px 12px rgba(5, 150, 105, 0.18); }
-    .btn-primary:hover::before { left: 100%; }
+    .btn-primary { background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 55%, var(--accent-dark) 100%); color: #ffffff; box-shadow: var(--shadow-accent); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(5, 150, 105, 0.35); }
     .btn-danger { background: linear-gradient(135deg, #f87171 0%, var(--danger) 60%, #dc2626 100%); color: #ffffff; box-shadow: var(--shadow-danger); }
-    .btn-danger:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(239, 68, 68, 0.35), 0 6px 12px rgba(239, 68, 68, 0.18); }
-    .btn-nav-blue { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; border: 1.5px solid #93c5fd; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15); }
-    .btn-nav-blue:hover { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-color: #60a5fa; color: #1e40af; transform: translateY(-2px); box-shadow: 0 10px 22px rgba(59, 130, 246, 0.25); }
-    .btn-nav-slate { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); color: #334155; border: 1.5px solid #cbd5e1; box-shadow: 0 4px 12px rgba(51, 65, 85, 0.1); }
-    .btn-nav-slate:hover { background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%); border-color: #94a3b8; color: #0f172a; transform: translateY(-2px); box-shadow: 0 10px 22px rgba(51, 65, 85, 0.18); }
-    .btn-nav-red { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); color: #b91c1c; border: 1.5px solid #fca5a5; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.12); }
-    .btn-nav-red:hover { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-color: #f87171; color: #991b1b; transform: translateY(-2px); box-shadow: 0 10px 22px rgba(239, 68, 68, 0.25); }
-    .top-action-btn { width: 44px; height: 44px; border-radius: 13px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.15rem; transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1); border: 1.5px solid; }
-    .top-action-btn.calendar { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; border-color: #93c5fd; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15); }
-    .top-action-btn.calendar:hover { border-color: #60a5fa; transform: translateY(-3px); box-shadow: 0 10px 22px rgba(59, 130, 246, 0.25); }
-    .top-action-btn.settings { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); color: #7e22ce; border-color: #d8b4fe; box-shadow: 0 4px 12px rgba(168, 85, 247, 0.15); }
-    .top-action-btn.settings:hover { border-color: #c084fc; transform: translateY(-3px); box-shadow: 0 10px 22px rgba(168, 85, 247, 0.25); }
+    .btn-nav-blue { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; border: 1.5px solid #93c5fd; }
+    .btn-nav-slate { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); color: #334155; border: 1.5px solid #cbd5e1; }
+    .btn-nav-red { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); color: #b91c1c; border: 1.5px solid #fca5a5; }
+    .top-action-btn { width: 44px; height: 44px; border-radius: 13px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.15rem; border: 1.5px solid; }
+    .top-action-btn.calendar { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; border-color: #93c5fd; }
+    .top-action-btn.settings { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); color: #7e22ce; border-color: #d8b4fe; }
     .admin-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 22px; margin-bottom: 18px; box-shadow: var(--shadow-sm); }
     .admin-card h3 { font-size: 1rem; margin-bottom: 16px; color: var(--primary); font-weight: 800; display: flex; align-items: center; gap: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
     .menu-admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .menu-admin-grid .btn { padding: 22px 10px 20px; font-size: 0.78rem; font-weight: 800; flex-direction: column; gap: 10px; border-radius: var(--radius-md); border: 1.5px solid; margin-bottom: 0; letter-spacing: 0.05em; text-transform: uppercase; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
-    .menu-admin-grid .btn span { font-size: 1.7rem; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: block; }
-    .menu-admin-grid .btn:hover span { transform: scale(1.18) translateY(-3px); }
-    .tile-blue { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; border-color: #93c5fd; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.12); }
-    .tile-blue:hover { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-color: #60a5fa; color: #1e40af; transform: translateY(-3px); box-shadow: 0 12px 24px rgba(59, 130, 246, 0.28); }
-    .tile-amber { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); color: #b45309; border-color: #fcd34d; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.12); }
-    .tile-amber:hover { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-color: #fbbf24; color: #92400e; transform: translateY(-3px); box-shadow: 0 12px 24px rgba(245, 158, 11, 0.28); }
-    .tile-violet { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); color: #7e22ce; border-color: #d8b4fe; box-shadow: 0 4px 12px rgba(168, 85, 247, 0.12); }
-    .tile-violet:hover { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); border-color: #c084fc; color: #6b21a8; transform: translateY(-3px); box-shadow: 0 12px 24px rgba(168, 85, 247, 0.28); }
-    .tile-cyan { background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%); color: #0e7490; border-color: #67e8f9; box-shadow: 0 4px 12px rgba(6, 182, 212, 0.12); }
-    .tile-cyan:hover { background: linear-gradient(135deg, #cffafe 0%, #a5f3fc 100%); border-color: #22d3ee; color: #155e75; transform: translateY(-3px); box-shadow: 0 12px 24px rgba(6, 182, 212, 0.28); }
-    .tile-rose { background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); color: #be123c; border-color: #fda4af; box-shadow: 0 4px 12px rgba(244, 63, 94, 0.12); }
-    .tile-rose:hover { background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%); border-color: #fb7185; color: #9f1239; transform: translateY(-3px); box-shadow: 0 12px 24px rgba(244, 63, 94, 0.28); }
-    .tile-emerald { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); color: #047857; border-color: #6ee7b7; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12); }
-    .tile-emerald:hover { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-color: #34d399; color: #065f46; transform: translateY(-3px); box-shadow: 0 12px 24px rgba(16, 185, 129, 0.28); }
-    .tile-red { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); color: #b91c1c; border-color: #fca5a5; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.12); }
-    .tile-red:hover { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-color: #f87171; color: #991b1b; transform: translateY(-3px); box-shadow: 0 12px 24px rgba(239, 68, 68, 0.28); }
-    .tile-teal { background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); color: #0f766e; border-color: #5eead4; box-shadow: 0 4px 12px rgba(20, 184, 166, 0.12); }
-    .tile-teal:hover { background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%); border-color: #2dd4bf; color: #115e59; transform: translateY(-3px); box-shadow: 0 12px 24px rgba(20, 184, 166, 0.28); }
-    .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; }
-    .toast-card { background: #ffffff; border-radius: var(--radius-xl); padding: 36px 26px 26px; max-width: 380px; width: 100%; text-align: center; box-shadow: 0 32px 64px -12px rgba(15, 23, 42, 0.35), 0 8px 16px rgba(15, 23, 42, 0.15); animation: popModal 0.42s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(255, 255, 255, 0.9); }
+    .menu-admin-grid .btn { padding: 22px 10px 20px; font-size: 0.78rem; font-weight: 800; flex-direction: column; gap: 10px; border-radius: var(--radius-md); border: 1.5px solid; margin-bottom: 0; }
+    .menu-admin-grid .btn span { font-size: 1.7rem; display: block; }
+    .tile-blue { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; border-color: #93c5fd; }
+    .tile-amber { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); color: #b45309; border-color: #fcd34d; }
+    .tile-violet { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); color: #7e22ce; border-color: #d8b4fe; }
+    .tile-cyan { background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%); color: #0e7490; border-color: #67e8f9; }
+    .tile-rose { background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); color: #be123c; border-color: #fda4af; }
+    .tile-emerald { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); color: #047857; border-color: #6ee7b7; }
+    .tile-red { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); color: #b91c1c; border-color: #fca5a5; }
+    .tile-teal { background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); color: #0f766e; border-color: #5eead4; }
+    .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(10px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; }
+    .toast-card { background: #ffffff; border-radius: var(--radius-xl); padding: 36px 26px 26px; max-width: 380px; width: 100%; text-align: center; box-shadow: 0 32px 64px -12px rgba(15, 23, 42, 0.35); animation: popModal 0.42s cubic-bezier(0.16, 1, 0.3, 1); }
     @keyframes popModal { from { transform: scale(0.92) translateY(24px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
-    .toast-icon { font-size: 3.2rem; margin-bottom: 14px; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.12)); display: inline-block; }
+    .toast-icon { font-size: 3.2rem; margin-bottom: 14px; display: inline-block; }
     .ampulheta-animada { display: inline-block; animation: rodarAmpulheta 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
     @keyframes rodarAmpulheta { 0% { transform: rotate(0deg); } 50% { transform: rotate(180deg); } 100% { transform: rotate(360deg); } }
     .toast-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 8px; color: var(--primary); letter-spacing: 0.05em; text-transform: uppercase; }
     .toast-body { font-size: 0.94rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.55; font-weight: 500; }
     .toast-actions { display: flex; gap: 10px; }
-    .toast-btn { flex: 1; padding: 15px 16px; border: none; border-radius: var(--radius-sm); font-weight: 800; font-size: 0.88rem; cursor: pointer; transition: all 0.22s ease; letter-spacing: 0.06em; text-transform: uppercase; font-family: 'Plus Jakarta Sans', sans-serif; }
-    .toast-btn-primary { background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent-dark) 100%); color: #ffffff; box-shadow: var(--shadow-accent); }
-    .toast-btn-primary:hover { transform: translateY(-2px); }
+    .toast-btn { flex: 1; padding: 15px 16px; border: none; border-radius: var(--radius-sm); font-weight: 800; font-size: 0.88rem; cursor: pointer; letter-spacing: 0.06em; text-transform: uppercase; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .toast-btn-primary { background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent-dark) 100%); color: #ffffff; }
     .toast-btn-secondary { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); color: #334155; border: 1.5px solid #cbd5e1; }
-    .toast-btn-secondary:hover { background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%); border-color: #94a3b8; }
-    .app-footer { text-align: center; font-size: 0.8rem; font-weight: 600; color: var(--text-light); padding: 18px; border-top: 1px solid var(--border); background: var(--surface-2); letter-spacing: 0.04em; }
+    .app-footer { text-align: center; font-size: 0.8rem; font-weight: 600; color: var(--text-light); padding: 18px; border-top: 1px solid var(--border); background: var(--surface-2); }
     .campo-obrigatorio { color: var(--danger); font-weight: 800; margin-left: 3px; }
     .erro-campo { color: var(--danger); font-size: 0.84rem; font-weight: 600; margin-top: 8px; display: none; align-items: center; gap: 6px; }
     .erro-campo::before { content: '⚠'; font-size: 0.95rem; }
     .password-eye-wrapper { position: relative; width: 100%; }
     .password-eye-wrapper .form-control { padding-right: 55px; }
-    .eye-toggle-btn { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: rgba(16, 185, 129, 0.10); border: 1.5px solid rgba(16, 185, 129, 0.25); cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; z-index: 10; color: var(--accent); transition: all 0.22s ease; padding: 6px 8px; border-radius: 10px; }
-    .eye-toggle-btn:hover { background: rgba(16, 185, 129, 0.18); border-color: var(--accent); transform: translateY(-50%) scale(1.05); }
-    .pedido-item { background: var(--surface); border: 1.5px solid var(--border); padding: 18px 20px; border-radius: var(--radius-md); margin-bottom: 14px; text-align: left; box-shadow: var(--shadow-sm); border-left: 4px solid var(--accent); transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1); }
-    .pedido-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-left-color: var(--accent-light); }
+    .eye-toggle-btn { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: rgba(16, 185, 129, 0.10); border: 1.5px solid rgba(16, 185, 129, 0.25); cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; z-index: 10; color: var(--accent); padding: 6px 8px; border-radius: 10px; }
+    .pedido-item { background: var(--surface); border: 1.5px solid var(--border); padding: 18px 20px; border-radius: var(--radius-md); margin-bottom: 14px; text-align: left; box-shadow: var(--shadow-sm); border-left: 4px solid var(--accent); }
     .pedido-item p { margin-bottom: 6px; font-size: 0.92rem; color: var(--text-muted); font-weight: 500; line-height: 1.5; }
     .pedido-item p strong { color: var(--primary); font-weight: 700; }
+    .troca-bloco { padding: 14px; background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%); border: 1.5px solid #5eead4; border-radius: var(--radius-sm); margin-bottom: 14px; }
+    .troca-bloco h4 { font-size: 0.82rem; font-weight: 800; color: #0f766e; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
   </style>
 </head>
 <body>
@@ -168,7 +124,7 @@
       <div class="clock-date-row" id="liveClockDate">A sincronizar data...</div>
     </div>
   </div>
-  
+
   <div id="section-ponto" class="content-section active">
     <div class="form-group">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -196,10 +152,13 @@
     <button id="btnPonto" class="btn btn-primary" onclick="registarPontoDiario()">👆 Validar Registo de Ponto</button>
   </div>
 
+  <!-- ═══════════════════════════════════════════════════════
+       SECÇÃO: COMUNICAR AUSÊNCIA (FUNCIONÁRIO)
+       ═══════════════════════════════════════════════════════ -->
   <div id="section-falta-func" class="content-section">
     <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
       <h3 style="margin-bottom: 8px; color: var(--primary); text-align: left; font-size: 1.05rem;">📅 Comunicar Ausência</h3>
-      <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 22px; line-height: 1.6; text-align: left;">Submeta os detalhes da sua ausência. O pedido será analisado pela gerência e, se aprovado, o registo é lançado no sistema de assiduidade pelo administrador.</p>
+      <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 22px; line-height: 1.6; text-align: left;">Submeta os detalhes da sua ausência. O pedido será analisado pela gerência e, ao ser aprovado, o horário é <b>automaticamente aplicado ao mapa de ponto</b>.</p>
       <div class="admin-card" style="margin-bottom: 0;">
         <div class="form-group"><label>O seu Nome <span class="campo-obrigatorio">*</span></label><select id="nomeFuncFalta" class="form-control" onchange="atualizarFiltroColegasTroca()"></select></div>
         <div class="form-group">
@@ -228,15 +187,13 @@
           <select id="colegaTrocaFunc" class="form-control">
             <option value="">Selecione o colega</option>
           </select>
-          <div class="badge-troca">O nome do colega será enviado à gerência</div>
+          <div class="badge-troca">O nome do colega será comunicado à gerência</div>
         </div>
 
+        <!-- HORÁRIOS PARA FALTAS SIMPLES (não-troca) -->
         <div class="form-group" id="grupoHorarioFunc" style="display: none;">
-          <label>Horário Pretendido (Opcional)</label>
-          <p class="periodo-hint">
-            Indique o horário que <b>pretende cumprir</b> neste dia (ex: se apenas vai faltar a uma parte do dia).<br>
-            Deixe em branco para registar a ausência de <b>dia completo</b>.
-          </p>
+          <label>Horário que vai cumprir neste dia (opcional)</label>
+          <p class="periodo-hint">Indique o horário que <b>vai cumprir</b> neste dia. Deixe em branco para assinalar ausência de <b>dia completo</b>.</p>
           <div class="periodo-card">
             <div class="periodo-num">1</div>
             <div class="periodo-inputs">
@@ -253,25 +210,33 @@
               <input type="time" id="fuS2" class="form-control periodo-input">
             </div>
           </div>
-          <button type="button" class="btn-add-periodo" id="btnAddPeriodoFunc" onclick="togglePeriodosExtraFunc()">
-            ➕ Adicionar 3º / 4º período
-          </button>
+          <button type="button" class="btn-add-periodo" id="btnAddPeriodoFunc" onclick="togglePeriodosExtraFunc()">➕ Adicionar 3º / 4º período</button>
           <div id="periodosExtraFunc" style="display: none;">
-            <div class="periodo-card">
-              <div class="periodo-num">3</div>
-              <div class="periodo-inputs">
-                <input type="time" id="fuE3" class="form-control periodo-input">
-                <span class="periodo-sep">→</span>
-                <input type="time" id="fuS3" class="form-control periodo-input">
-              </div>
+            <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="fuE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="fuS3" class="form-control periodo-input"></div></div>
+            <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="fuE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="fuS4" class="form-control periodo-input"></div></div>
+          </div>
+        </div>
+
+        <!-- HORÁRIOS DUPLOS PARA TROCA COM COLEGA -->
+        <div id="grupoTrocaHorarios" style="display: none;">
+          <div class="troca-bloco">
+            <h4>👤 O SEU Horário Nestes Dias</h4>
+            <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="trProE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trProS1" class="form-control periodo-input"></div></div>
+            <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="trProE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trProS2" class="form-control periodo-input"></div></div>
+            <button type="button" class="btn-add-periodo" id="btnAddPeriodoTrPro" onclick="togglePeriodosExtraTrPro()">➕ Adicionar 3º / 4º período</button>
+            <div id="periodosExtraTrPro" style="display: none;">
+              <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="trProE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trProS3" class="form-control periodo-input"></div></div>
+              <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="trProE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trProS4" class="form-control periodo-input"></div></div>
             </div>
-            <div class="periodo-card">
-              <div class="periodo-num">4</div>
-              <div class="periodo-inputs">
-                <input type="time" id="fuE4" class="form-control periodo-input">
-                <span class="periodo-sep">→</span>
-                <input type="time" id="fuS4" class="form-control periodo-input">
-              </div>
+          </div>
+          <div class="troca-bloco">
+            <h4>👥 Horário do COLEGA Nestes Dias</h4>
+            <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="trColE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trColS1" class="form-control periodo-input"></div></div>
+            <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="trColE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trColS2" class="form-control periodo-input"></div></div>
+            <button type="button" class="btn-add-periodo" id="btnAddPeriodoTrCol" onclick="togglePeriodosExtraTrCol()">➕ Adicionar 3º / 4º período</button>
+            <div id="periodosExtraTrCol" style="display: none;">
+              <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="trColE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trColS3" class="form-control periodo-input"></div></div>
+              <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="trColE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="trColS4" class="form-control periodo-input"></div></div>
             </div>
           </div>
         </div>
@@ -289,7 +254,7 @@
       </div>
     </div>
   </div>
-  
+
   <div id="section-admin" class="content-section">
     <div id="admin-sub-menu">
       <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
@@ -310,10 +275,8 @@
     <div id="admin-sub-pedidos" style="display: none;">
       <div class="admin-card">
         <h3>📩 Pedidos Pendentes</h3>
-        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; text-align: left; line-height: 1.55;">Avalie os pedidos submetidos pelos colaboradores. Ao aprovar, o colaborador é notificado por e-mail. O lançamento no mapa de ponto deve ser efetuado pelo administrador no módulo <b>📅 Lançar Faltas</b>.</p>
-        <div id="listaPedidosContainer">
-          <p style="text-align: center; color: var(--text-muted);">A carregar...</p>
-        </div>
+        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; text-align: left; line-height: 1.55;">Ao aprovar, o horário é <b>automaticamente aplicado ao mapa do colaborador</b> (e do colega, no caso de trocas). O colaborador é notificado por e-mail.</p>
+        <div id="listaPedidosContainer"><p style="text-align: center; color: var(--text-muted);">A carregar...</p></div>
       </div>
     </div>
 
@@ -321,8 +284,7 @@
       <div class="admin-card">
         <h3>📅 Lançar Registo Manual</h3>
         <div class="form-group"><label>Colaborador</label><select id="nomeFuncionarioFolga" class="form-control"></select></div>
-        <div class="form-group">
-          <label>Motivo</label>
+        <div class="form-group"><label>Motivo</label>
           <select id="tipoAusencia" class="form-control">
             <option value="" disabled selected>Selecione o motivo</option>
             <option value="🏖️ Férias">🏖️ Férias</option>
@@ -334,63 +296,25 @@
         </div>
         <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaInicio" class="form-control"></div>
         <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaFim" class="form-control"></div>
-
         <div class="form-group" style="margin-top: 24px;">
           <label>Horário (Opcional)</label>
-          <p class="periodo-hint">
-            Se preencher o horário (em <b>1 único dia</b>), o sistema insere as picagens em vez de marcar a ausência completa.
-          </p>
-          <div class="periodo-card">
-            <div class="periodo-num">1</div>
-            <div class="periodo-inputs">
-              <input type="time" id="auE1" class="form-control periodo-input">
-              <span class="periodo-sep">→</span>
-              <input type="time" id="auS1" class="form-control periodo-input">
-            </div>
-          </div>
-          <div class="periodo-card">
-            <div class="periodo-num">2</div>
-            <div class="periodo-inputs">
-              <input type="time" id="auE2" class="form-control periodo-input">
-              <span class="periodo-sep">→</span>
-              <input type="time" id="auS2" class="form-control periodo-input">
-            </div>
-          </div>
-          <button type="button" class="btn-add-periodo" id="btnAddPeriodoAusencia" onclick="togglePeriodosExtraAusencia()">
-            ➕ Adicionar 3º / 4º período
-          </button>
+          <p class="periodo-hint">Se preencher o horário (em <b>1 único dia</b>), o sistema insere as picagens em vez de marcar a ausência completa.</p>
+          <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="auE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="auS1" class="form-control periodo-input"></div></div>
+          <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="auE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="auS2" class="form-control periodo-input"></div></div>
+          <button type="button" class="btn-add-periodo" id="btnAddPeriodoAusencia" onclick="togglePeriodosExtraAusencia()">➕ Adicionar 3º / 4º período</button>
           <div id="periodosExtraAusencia" style="display: none;">
-            <div class="periodo-card">
-              <div class="periodo-num">3</div>
-              <div class="periodo-inputs">
-                <input type="time" id="auE3" class="form-control periodo-input">
-                <span class="periodo-sep">→</span>
-                <input type="time" id="auS3" class="form-control periodo-input">
-              </div>
-            </div>
-            <div class="periodo-card">
-              <div class="periodo-num">4</div>
-              <div class="periodo-inputs">
-                <input type="time" id="auE4" class="form-control periodo-input">
-                <span class="periodo-sep">→</span>
-                <input type="time" id="auS4" class="form-control periodo-input">
-              </div>
-            </div>
+            <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="auE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="auS3" class="form-control periodo-input"></div></div>
+            <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="auE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="auS4" class="form-control periodo-input"></div></div>
           </div>
         </div>
-
         <button class="btn btn-primary" onclick="submeterAusenciaAdministrativa()">Confirmar Lançamento</button>
       </div>
     </div>
 
-    <!-- ================= TROCA DE TURNO ================= -->
     <div id="admin-sub-troca" style="display: none;">
       <div class="admin-card">
         <h3>🔄 Registar Troca de Turno</h3>
-        <div class="hint-info">
-          Registe os horários que <b>ambos os colaboradores</b> vão cumprir nos dias da troca.
-          Ambos os mapas serão atualizados simultaneamente e ordenados por data.
-        </div>
+        <div class="hint-info">Preencha o horário que <b>cada colaborador</b> vai cumprir. Ambos os mapas são atualizados em simultâneo e ordenados por data.</div>
 
         <div class="form-group">
           <label>Colaborador que FALTA <span class="campo-obrigatorio">*</span></label>
@@ -407,95 +331,27 @@
         <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataTrocaInicio" class="form-control"></div>
         <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataTrocaFim" class="form-control"></div>
 
-        <!-- Horário do AUSENTE -->
         <div class="form-group" style="margin-top: 24px;">
           <label>Horário do Colaborador Ausente</label>
-          <p class="periodo-hint">
-            Horário que o <b>colaborador ausente</b> irá cumprir nestes dias.<br>
-            Deixe em branco se o colaborador ficar efetivamente ausente.
-          </p>
-          <div class="periodo-card">
-            <div class="periodo-num">1</div>
-            <div class="periodo-inputs">
-              <input type="time" id="ausE1" class="form-control periodo-input">
-              <span class="periodo-sep">→</span>
-              <input type="time" id="ausS1" class="form-control periodo-input">
-            </div>
-          </div>
-          <div class="periodo-card">
-            <div class="periodo-num">2</div>
-            <div class="periodo-inputs">
-              <input type="time" id="ausE2" class="form-control periodo-input">
-              <span class="periodo-sep">→</span>
-              <input type="time" id="ausS2" class="form-control periodo-input">
-            </div>
-          </div>
-          <button type="button" class="btn-add-periodo" id="btnAddPeriodoAus" onclick="togglePeriodosExtraAus()">
-            ➕ Adicionar 3º / 4º período
-          </button>
+          <p class="periodo-hint">Horário que o <b>colaborador ausente</b> irá cumprir. Deixe em branco se ficar efetivamente ausente.</p>
+          <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="ausE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="ausS1" class="form-control periodo-input"></div></div>
+          <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="ausE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="ausS2" class="form-control periodo-input"></div></div>
+          <button type="button" class="btn-add-periodo" id="btnAddPeriodoAus" onclick="togglePeriodosExtraAus()">➕ Adicionar 3º / 4º período</button>
           <div id="periodosExtraAus" style="display: none;">
-            <div class="periodo-card">
-              <div class="periodo-num">3</div>
-              <div class="periodo-inputs">
-                <input type="time" id="ausE3" class="form-control periodo-input">
-                <span class="periodo-sep">→</span>
-                <input type="time" id="ausS3" class="form-control periodo-input">
-              </div>
-            </div>
-            <div class="periodo-card">
-              <div class="periodo-num">4</div>
-              <div class="periodo-inputs">
-                <input type="time" id="ausE4" class="form-control periodo-input">
-                <span class="periodo-sep">→</span>
-                <input type="time" id="ausS4" class="form-control periodo-input">
-              </div>
-            </div>
+            <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="ausE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="ausS3" class="form-control periodo-input"></div></div>
+            <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="ausE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="ausS4" class="form-control periodo-input"></div></div>
           </div>
         </div>
 
-        <!-- Horário do SUBSTITUTO -->
         <div class="form-group" style="margin-top: 24px;">
           <label>Horário do Substituto</label>
-          <p class="periodo-hint">
-            Horário que o <b>colaborador substituto</b> irá cumprir nestes dias.<br>
-            Deixe em branco se o substituto picar ponto normalmente.
-          </p>
-          <div class="periodo-card">
-            <div class="periodo-num">1</div>
-            <div class="periodo-inputs">
-              <input type="time" id="horE1" class="form-control periodo-input">
-              <span class="periodo-sep">→</span>
-              <input type="time" id="horS1" class="form-control periodo-input">
-            </div>
-          </div>
-          <div class="periodo-card">
-            <div class="periodo-num">2</div>
-            <div class="periodo-inputs">
-              <input type="time" id="horE2" class="form-control periodo-input">
-              <span class="periodo-sep">→</span>
-              <input type="time" id="horS2" class="form-control periodo-input">
-            </div>
-          </div>
-          <button type="button" class="btn-add-periodo" id="btnAddPeriodo" onclick="togglePeriodosExtra()">
-            ➕ Adicionar 3º / 4º período
-          </button>
+          <p class="periodo-hint">Horário que o <b>substituto</b> irá cumprir. Deixe em branco se picar ponto normalmente.</p>
+          <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="horE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="horS1" class="form-control periodo-input"></div></div>
+          <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="horE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="horS2" class="form-control periodo-input"></div></div>
+          <button type="button" class="btn-add-periodo" id="btnAddPeriodo" onclick="togglePeriodosExtra()">➕ Adicionar 3º / 4º período</button>
           <div id="periodosExtra" style="display: none;">
-            <div class="periodo-card">
-              <div class="periodo-num">3</div>
-              <div class="periodo-inputs">
-                <input type="time" id="horE3" class="form-control periodo-input">
-                <span class="periodo-sep">→</span>
-                <input type="time" id="horS3" class="form-control periodo-input">
-              </div>
-            </div>
-            <div class="periodo-card">
-              <div class="periodo-num">4</div>
-              <div class="periodo-inputs">
-                <input type="time" id="horE4" class="form-control periodo-input">
-                <span class="periodo-sep">→</span>
-                <input type="time" id="horS4" class="form-control periodo-input">
-              </div>
-            </div>
+            <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="horE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="horS3" class="form-control periodo-input"></div></div>
+            <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="horE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="horS4" class="form-control periodo-input"></div></div>
           </div>
         </div>
 
@@ -506,56 +362,19 @@
     <div id="admin-sub-acordo" style="display: none;">
       <div class="admin-card">
         <h3>🤝 Acordo de Horas (1:1)</h3>
-        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55;">
-          Indique os períodos que o colaborador <b>vai cumprir</b> no âmbito deste acordo. O dia fica marcado com o total de horas em acordo.
-        </p>
+        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55;">Indique os períodos que o colaborador <b>vai cumprir</b>.</p>
         <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeAcordo" class="form-control"></select></div>
-        <div class="form-group"><label>Data do Trabalho Extra <span class="campo-obrigatorio">*</span></label><input type="date" id="dataAcordo" class="form-control"></div>
-
+        <div class="form-group"><label>Data <span class="campo-obrigatorio">*</span></label><input type="date" id="dataAcordo" class="form-control"></div>
         <div class="form-group" style="margin-top: 24px;">
           <label>Horário (Opcional)</label>
-          <p class="periodo-hint">
-            Preencha cada período. Deixe em branco para aplicar apenas "🤝 Acordo (Banco 1:1)".
-          </p>
-          <div class="periodo-card">
-            <div class="periodo-num">1</div>
-            <div class="periodo-inputs">
-              <input type="time" id="acE1" class="form-control periodo-input">
-              <span class="periodo-sep">→</span>
-              <input type="time" id="acS1" class="form-control periodo-input">
-            </div>
-          </div>
-          <div class="periodo-card">
-            <div class="periodo-num">2</div>
-            <div class="periodo-inputs">
-              <input type="time" id="acE2" class="form-control periodo-input">
-              <span class="periodo-sep">→</span>
-              <input type="time" id="acS2" class="form-control periodo-input">
-            </div>
-          </div>
-          <button type="button" class="btn-add-periodo" id="btnAddPeriodoAcordo" onclick="togglePeriodosExtraAcordo()">
-            ➕ Adicionar 3º / 4º período
-          </button>
+          <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="acE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="acS1" class="form-control periodo-input"></div></div>
+          <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="acE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="acS2" class="form-control periodo-input"></div></div>
+          <button type="button" class="btn-add-periodo" id="btnAddPeriodoAcordo" onclick="togglePeriodosExtraAcordo()">➕ Adicionar 3º / 4º período</button>
           <div id="periodosExtraAcordo" style="display: none;">
-            <div class="periodo-card">
-              <div class="periodo-num">3</div>
-              <div class="periodo-inputs">
-                <input type="time" id="acE3" class="form-control periodo-input">
-                <span class="periodo-sep">→</span>
-                <input type="time" id="acS3" class="form-control periodo-input">
-              </div>
-            </div>
-            <div class="periodo-card">
-              <div class="periodo-num">4</div>
-              <div class="periodo-inputs">
-                <input type="time" id="acE4" class="form-control periodo-input">
-                <span class="periodo-sep">→</span>
-                <input type="time" id="acS4" class="form-control periodo-input">
-              </div>
-            </div>
+            <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="acE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="acS3" class="form-control periodo-input"></div></div>
+            <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="acE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="acS4" class="form-control periodo-input"></div></div>
           </div>
         </div>
-
         <button class="btn btn-primary" onclick="submeterAcordo()">Aplicar Acordo</button>
       </div>
     </div>
@@ -563,11 +382,10 @@
     <div id="admin-sub-corrigir" style="display: none;">
       <div class="admin-card">
         <h3>✏️ Corrigir Picagem</h3>
-        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55;">Introduza a hora de entrada ou saída em falta.</p>
         <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeCorrigir" class="form-control"></select></div>
-        <div class="form-group"><label>Data do Esquecimento <span class="campo-obrigatorio">*</span></label><input type="date" id="dataCorrigir" class="form-control"></div>
-        <div class="form-group"><label>Hora (HH:mm) <span class="campo-obrigatorio">*</span></label><input type="time" id="horaCorrigir" class="form-control"></div>
-        <button class="btn btn-primary" onclick="submeterCorrecao()">Inserir Picagem Em Falta</button>
+        <div class="form-group"><label>Data <span class="campo-obrigatorio">*</span></label><input type="date" id="dataCorrigir" class="form-control"></div>
+        <div class="form-group"><label>Hora <span class="campo-obrigatorio">*</span></label><input type="time" id="horaCorrigir" class="form-control"></div>
+        <button class="btn btn-primary" onclick="submeterCorrecao()">Inserir Picagem</button>
       </div>
     </div>
 
@@ -584,7 +402,7 @@
     <div id="admin-sub-funcionario" style="display: none;">
       <div class="admin-card">
         <h3>➕ Adicionar Colaborador</h3>
-        <div class="form-group"><label>Primeiro e Último Nome <span class="campo-obrigatorio">*</span></label><input type="text" id="nomeNovo" class="form-control" placeholder="Ex: Ana Silva"></div>
+        <div class="form-group"><label>Nome <span class="campo-obrigatorio">*</span></label><input type="text" id="nomeNovo" class="form-control" placeholder="Ex: Ana Silva"></div>
         <div class="form-group"><label>PIN (4 dígitos)</label><input type="text" id="pinNovo" class="form-control" maxlength="4" placeholder="0000" inputmode="numeric"></div>
         <div class="form-group"><label>Filial</label><select id="filialNovo" class="form-control"><option value="PATAIAS">Pataias</option><option value="GARCIA">Garcia</option></select></div>
         <button class="btn btn-primary" onclick="submeterNovoFuncionario()">Registar Colaborador</button>
@@ -594,11 +412,11 @@
     <div id="admin-sub-remover" style="display: none;">
       <div class="admin-card">
         <h3 style="color:var(--danger);">❌ Inativar Colaborador</h3>
-        <div class="form-group"><label>Selecione o Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeRemover" class="form-control"></select></div>
+        <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeRemover" class="form-control"></select></div>
         <button class="btn btn-danger" onclick="submeterRemocaoFuncionario()">Confirmar Inativação</button>
       </div>
     </div>
-    
+
     <div class="nav-navigation-block" id="adminNavigationGroup" style="display: none; margin-bottom: 18px;">
       <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()">⬅️ Voltar ao Menu</button>
     </div>
@@ -623,19 +441,17 @@
 
 <script>
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
-  
   var senhaAdminSessao = ""; var emProcessamento = false; var estaOnline = navigator.onLine;
   var listaFuncionariosCache = [];
   var MODULOS_ADMIN = ['pedidos', 'ausencias', 'troca', 'acordo', 'corrigir', 'pdf', 'funcionario', 'remover'];
-  var TIPOS_COM_HORARIO = ["📄 Falta Justificada", "⚠️ Falta Injustificada", "🤝 Acordo 1:1", "🔄 Troca com Colega"];
+  var TIPOS_COM_HORARIO = ["📄 Falta Justificada", "⚠️ Falta Injustificada", "🤝 Acordo 1:1"];
 
   function iniciarRelogio() {
     setInterval(function() {
       var agora = new Date();
       var horaStr = String(agora.getHours()).padStart(2, '0') + ':' + String(agora.getMinutes()).padStart(2, '0') + ':' + String(agora.getSeconds()).padStart(2, '0');
       var meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-      var elTime = document.getElementById('liveClockTime');
-      var elDate = document.getElementById('liveClockDate');
+      var elTime = document.getElementById('liveClockTime'); var elDate = document.getElementById('liveClockDate');
       if (elTime) elTime.innerText = horaStr;
       if (elDate) elDate.innerText = String(agora.getDate()).padStart(2, '0') + ' ' + meses[agora.getMonth()] + ' ' + agora.getFullYear();
     }, 1000);
@@ -645,11 +461,9 @@
   window.addEventListener('offline', function() { estaOnline = false; var g = document.getElementById('gpsIndicator'); if(g) g.classList.add('offline'); mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Verifique a sua ligação à internet.", tipo: "erro" }); });
 
   function atualizarPinDisplay(inputId, containerId) {
-    var input = document.getElementById(inputId);
-    if (!input) return;
+    var input = document.getElementById(inputId); if (!input) return;
     input.value = input.value.replace(/[^0-9]/g, '');
-    var container = document.getElementById(containerId);
-    if (!container) return;
+    var container = document.getElementById(containerId); if (!container) return;
     var dots = container.children;
     for (var i = 0; i < 4; i++) { if (dots[i]) { if (i < input.value.length) dots[i].classList.add('filled'); else dots[i].classList.remove('filled'); } }
   }
@@ -661,11 +475,11 @@
     document.getElementById('toastBody').innerHTML = config.mensagem || "";
     var icon = document.getElementById('toastIcon');
     icon.className = "toast-icon";
-    if (config.tipo === "sucesso") { icon.innerText = "✅"; }
-    else if (config.tipo === "erro") { icon.innerText = "❌"; }
+    if (config.tipo === "sucesso") icon.innerText = "✅";
+    else if (config.tipo === "erro") icon.innerText = "❌";
     else if (config.tipo === "processando") { icon.className = "toast-icon ampulheta-animada"; icon.innerText = "⏳"; }
-    else if (config.tipo === "aviso") { icon.innerText = config.icone || "⚠️"; }
-    else { icon.innerText = config.icone || "💬"; }
+    else if (config.tipo === "aviso") icon.innerText = config.icone || "⚠️";
+    else icon.innerText = config.icone || "💬";
     var acts = document.getElementById('toastActionsContainer'); acts.innerHTML = "";
     if (config.tipo === "processando") acts.style.display = "none";
     else {
@@ -677,7 +491,7 @@
   }
 
   function fecharToast() { document.getElementById('toastOverlay').style.display = "none"; emProcessamento = false; var btn = document.getElementById('btnPonto'); if (btn) btn.disabled = false; }
-  function fecharToastOverlay(e) { if (e.target.id === 'toastOverlay') {} }
+  function fecharToastOverlay(e) {}
   function alternarVisibilidadeSenhaInput(inputId, btnEye) { var ip = document.getElementById(inputId); if (!ip) return; if (ip.type === "password") { ip.type = "text"; if (btnEye) btnEye.innerText = "🙈"; } else { ip.type = "password"; if (btnEye) btnEye.innerText = "👁️"; } }
 
   function obterDetalhesDispositivo() {
@@ -704,11 +518,7 @@
     document.body.appendChild(script);
   }
 
-  window.addEventListener('load', function() { 
-    iniciarRelogio(); 
-    carregarFuncionariosEmTodosOsCampos(); 
-    if (!navigator.onLine) { var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); }
-  });
+  window.addEventListener('load', function() { iniciarRelogio(); carregarFuncionariosEmTodosOsCampos(); if (!navigator.onLine) { var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); } });
 
   function abrirModalSenhaAdmin() {
     mostrarPopupPersonalizado({
@@ -719,16 +529,15 @@
             var s = document.getElementById('inputSenhaPopup').value; if (!s) return;
             mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A verificar credenciais...", tipo: "processando" });
             chamarAPIJsonp({ action: "verificarSenhaJsonp", senha: s }, function(resp) {
-              if (resp.indexOf("incorreta") !== -1 || resp.indexOf("Aviso") !== -1) { 
-                mostrarPopupPersonalizado({ titulo: "Acesso Negado", mensagem: "A palavra-passe introduzida está incorreta.", tipo: "erro" }); 
-              } else { 
-                senhaAdminSessao = s; fecharToast(); 
-                document.getElementById('section-ponto').classList.remove('active'); 
-                document.getElementById('section-falta-func').classList.remove('active'); 
-                document.getElementById('section-admin').classList.add('active'); 
-                document.getElementById('headerTitle').style.display = 'none'; 
-                document.getElementById('headerClockBox').style.display = 'none'; 
-                voltarAoMenuCentralAdmin(); 
+              if (resp.indexOf("incorreta") !== -1 || resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Acesso Negado", mensagem: "A palavra-passe introduzida está incorreta.", tipo: "erro" }); }
+              else {
+                senhaAdminSessao = s; fecharToast();
+                document.getElementById('section-ponto').classList.remove('active');
+                document.getElementById('section-falta-func').classList.remove('active');
+                document.getElementById('section-admin').classList.add('active');
+                document.getElementById('headerTitle').style.display = 'none';
+                document.getElementById('headerClockBox').style.display = 'none';
+                voltarAoMenuCentralAdmin();
               }
             });
           }
@@ -738,21 +547,21 @@
   }
 
   function abrirEcraFaltaFuncionario() {
-    document.getElementById('section-ponto').classList.remove('active'); 
-    document.getElementById('section-admin').classList.remove('active'); 
+    document.getElementById('section-ponto').classList.remove('active');
+    document.getElementById('section-admin').classList.remove('active');
     document.getElementById('section-falta-func').classList.add('active');
-    document.getElementById('headerTitle').style.display = 'none'; 
+    document.getElementById('headerTitle').style.display = 'none';
     document.getElementById('headerClockBox').style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  
+
   function voltarAoEcraPrincipal() {
-    senhaAdminSessao = ""; 
-    document.getElementById('section-admin').classList.remove('active'); 
-    document.getElementById('section-falta-func').classList.remove('active'); 
+    senhaAdminSessao = "";
+    document.getElementById('section-admin').classList.remove('active');
+    document.getElementById('section-falta-func').classList.remove('active');
     document.getElementById('section-ponto').classList.add('active');
-    document.getElementById('headerTitle').style.display = 'block'; 
-    document.getElementById('headerClockBox').style.display = 'inline-flex'; 
+    document.getElementById('headerTitle').style.display = 'block';
+    document.getElementById('headerClockBox').style.display = 'inline-flex';
     voltarAoMenuCentralAdmin();
     limparFormularioFaltaCompleto();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -772,14 +581,14 @@
   function preencherSelectsNomes(lista) {
     ['nomeFuncionario', 'nomeFuncionarioFolga', 'nomeRemover', 'nomeFuncFalta', 'nomeAcordo', 'nomeCorrigir', 'colegaTrocaFunc', 'nomeTrocaAusente', 'nomeTrocaSubstituto'].forEach(function(id) {
       var sel = document.getElementById(id);
-      if (sel) { 
+      if (sel) {
         var valorAtual = sel.value;
-        var placeholder = (id === 'colegaTrocaFunc') ? '<option value="">Selecione o colega</option>' : 
+        var placeholder = (id === 'colegaTrocaFunc') ? '<option value="">Selecione o colega</option>' :
                           (id === 'nomeTrocaAusente') ? '<option value="" disabled selected>Selecione o colaborador ausente</option>' :
                           (id === 'nomeTrocaSubstituto') ? '<option value="" disabled selected>Selecione o colega substituto</option>' :
                           '<option value="" disabled selected>Selecione o colaborador</option>';
-        sel.innerHTML = placeholder; 
-        lista.forEach(function(n) { var o = document.createElement('option'); o.value = n; o.text = n; sel.appendChild(o); }); 
+        sel.innerHTML = placeholder;
+        lista.forEach(function(n) { var o = document.createElement('option'); o.value = n; o.text = n; sel.appendChild(o); });
         if (valorAtual) sel.value = valorAtual;
       }
     });
@@ -789,12 +598,20 @@
     var tipo = document.getElementById('tipoFaltaFunc').value;
     var grupo = document.getElementById('grupoColegaTroca');
     var grupoHorario = document.getElementById('grupoHorarioFunc');
-    
-    if (tipo === "🔄 Troca com Colega") { grupo.style.display = "block"; atualizarFiltroColegasTroca(); }
-    else { grupo.style.display = "none"; var s = document.getElementById('colegaTrocaFunc'); if (s) s.value = ""; }
-    
-    if (TIPOS_COM_HORARIO.indexOf(tipo) !== -1) { grupoHorario.style.display = "block"; }
-    else { grupoHorario.style.display = "none"; limparHorarioFunc(); }
+    var grupoTrocaHorarios = document.getElementById('grupoTrocaHorarios');
+
+    if (tipo === "🔄 Troca com Colega") {
+      grupo.style.display = "block";
+      grupoTrocaHorarios.style.display = "block";
+      grupoHorario.style.display = "none";
+      atualizarFiltroColegasTroca();
+    } else {
+      grupo.style.display = "none";
+      grupoTrocaHorarios.style.display = "none";
+      var s = document.getElementById('colegaTrocaFunc'); if (s) s.value = "";
+      if (TIPOS_COM_HORARIO.indexOf(tipo) !== -1) grupoHorario.style.display = "block";
+      else { grupoHorario.style.display = "none"; limparHorarioFunc(); }
+    }
   }
 
   function atualizarFiltroColegasTroca() {
@@ -802,10 +619,10 @@
     var nomeProprio = document.getElementById('nomeFuncFalta').value;
     if (!selectColega) return;
     selectColega.innerHTML = '<option value="">Selecione o colega</option>';
-    listaFuncionariosCache.forEach(function(n) { 
-      var o = document.createElement('option'); o.value = n; o.text = n; 
+    listaFuncionariosCache.forEach(function(n) {
+      var o = document.createElement('option'); o.value = n; o.text = n;
       if (n === nomeProprio) { o.disabled = true; o.text = n + " (você mesmo)"; }
-      selectColega.appendChild(o); 
+      selectColega.appendChild(o);
     });
   }
 
@@ -814,71 +631,71 @@
     var nomeAusente = document.getElementById('nomeTrocaAusente').value;
     if (!selectSub) return;
     selectSub.innerHTML = '<option value="" disabled selected>Selecione o colega substituto</option>';
-    listaFuncionariosCache.forEach(function(n) { 
-      var o = document.createElement('option'); o.value = n; o.text = n; 
+    listaFuncionariosCache.forEach(function(n) {
+      var o = document.createElement('option'); o.value = n; o.text = n;
       if (n === nomeAusente) { o.disabled = true; o.text = n + " (o próprio)"; }
-      selectSub.appendChild(o); 
+      selectSub.appendChild(o);
     });
   }
 
   function togglePeriodosExtraFunc() {
-    var el = document.getElementById('periodosExtraFunc');
-    var btn = document.getElementById('btnAddPeriodoFunc');
+    var el = document.getElementById('periodosExtraFunc'); var btn = document.getElementById('btnAddPeriodoFunc');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
-    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período';
-      document.getElementById('fuE3').value = ""; document.getElementById('fuS3').value = "";
-      document.getElementById('fuE4').value = ""; document.getElementById('fuS4').value = ""; }
+    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('fuE3').value = ""; document.getElementById('fuS3').value = ""; document.getElementById('fuE4').value = ""; document.getElementById('fuS4').value = ""; }
+  }
+
+  function togglePeriodosExtraTrPro() {
+    var el = document.getElementById('periodosExtraTrPro'); var btn = document.getElementById('btnAddPeriodoTrPro');
+    if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
+    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('trProE3').value = ""; document.getElementById('trProS3').value = ""; document.getElementById('trProE4').value = ""; document.getElementById('trProS4').value = ""; }
+  }
+
+  function togglePeriodosExtraTrCol() {
+    var el = document.getElementById('periodosExtraTrCol'); var btn = document.getElementById('btnAddPeriodoTrCol');
+    if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
+    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('trColE3').value = ""; document.getElementById('trColS3').value = ""; document.getElementById('trColE4').value = ""; document.getElementById('trColS4').value = ""; }
   }
 
   function limparHorarioFunc() {
     ['fuE1','fuS1','fuE2','fuS2','fuE3','fuS3','fuE4','fuS4'].forEach(function(id) { var e = document.getElementById(id); if(e) e.value = ""; });
-    var el = document.getElementById('periodosExtraFunc');
-    var btn = document.getElementById('btnAddPeriodoFunc');
-    if (el) el.style.display = 'none';
-    if (btn) btn.innerText = '➕ Adicionar 3º / 4º período';
+    var el = document.getElementById('periodosExtraFunc'); var btn = document.getElementById('btnAddPeriodoFunc');
+    if (el) el.style.display = 'none'; if (btn) btn.innerText = '➕ Adicionar 3º / 4º período';
+  }
+
+  function limparHorariosTrocaFunc() {
+    ['trProE1','trProS1','trProE2','trProS2','trProE3','trProS3','trProE4','trProS4','trColE1','trColS1','trColE2','trColS2','trColE3','trColS3','trColE4','trColS4'].forEach(function(id) { var e = document.getElementById(id); if(e) e.value = ""; });
+    var elP = document.getElementById('periodosExtraTrPro'); if (elP) elP.style.display = 'none';
+    var elC = document.getElementById('periodosExtraTrCol'); if (elC) elC.style.display = 'none';
   }
 
   function togglePeriodosExtra() {
-    var el = document.getElementById('periodosExtra');
-    var btn = document.getElementById('btnAddPeriodo');
+    var el = document.getElementById('periodosExtra'); var btn = document.getElementById('btnAddPeriodo');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
-    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período';
-      document.getElementById('horE3').value = ""; document.getElementById('horS3').value = "";
-      document.getElementById('horE4').value = ""; document.getElementById('horS4').value = ""; }
+    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('horE3').value = ""; document.getElementById('horS3').value = ""; document.getElementById('horE4').value = ""; document.getElementById('horS4').value = ""; }
   }
 
   function togglePeriodosExtraAus() {
-    var el = document.getElementById('periodosExtraAus');
-    var btn = document.getElementById('btnAddPeriodoAus');
+    var el = document.getElementById('periodosExtraAus'); var btn = document.getElementById('btnAddPeriodoAus');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
-    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período';
-      document.getElementById('ausE3').value = ""; document.getElementById('ausS3').value = "";
-      document.getElementById('ausE4').value = ""; document.getElementById('ausS4').value = ""; }
+    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('ausE3').value = ""; document.getElementById('ausS3').value = ""; document.getElementById('ausE4').value = ""; document.getElementById('ausS4').value = ""; }
   }
 
   function togglePeriodosExtraAcordo() {
-    var el = document.getElementById('periodosExtraAcordo');
-    var btn = document.getElementById('btnAddPeriodoAcordo');
+    var el = document.getElementById('periodosExtraAcordo'); var btn = document.getElementById('btnAddPeriodoAcordo');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
-    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período';
-      document.getElementById('acE3').value = ""; document.getElementById('acS3').value = "";
-      document.getElementById('acE4').value = ""; document.getElementById('acS4').value = ""; }
+    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('acE3').value = ""; document.getElementById('acS3').value = ""; document.getElementById('acE4').value = ""; document.getElementById('acS4').value = ""; }
   }
 
   function togglePeriodosExtraAusencia() {
-    var el = document.getElementById('periodosExtraAusencia');
-    var btn = document.getElementById('btnAddPeriodoAusencia');
+    var el = document.getElementById('periodosExtraAusencia'); var btn = document.getElementById('btnAddPeriodoAusencia');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
-    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período';
-      document.getElementById('auE3').value = ""; document.getElementById('auS3').value = "";
-      document.getElementById('auE4').value = ""; document.getElementById('auS4').value = ""; }
+    else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('auE3').value = ""; document.getElementById('auS3').value = ""; document.getElementById('auE4').value = ""; document.getElementById('auS4').value = ""; }
   }
 
   function validarParesHorario(horarios) {
     if (!horarios || typeof horarios !== 'object') return "";
     for (var i = 1; i <= 4; i++) {
-      var e = horarios['e' + i];
-      var s = horarios['s' + i];
+      var e = horarios['e' + i]; var s = horarios['s' + i];
       if ((e && !s) || (!e && s)) return "No " + i + "º período, preencha a entrada E a saída (ou deixe ambos vazios).";
       if (e && s && e >= s) return "No " + i + "º período, a saída tem de ser posterior à entrada.";
     }
@@ -892,49 +709,24 @@
     return c;
   }
 
-  // ================= TROCA DE TURNO =================
   function submeterTrocaTurno() {
     var ausente = document.getElementById('nomeTrocaAusente').value;
     var substituto = document.getElementById('nomeTrocaSubstituto').value;
     var dIni = document.getElementById('dataTrocaInicio').value;
     var dFim = document.getElementById('dataTrocaFim').value;
-    if (!ausente || !substituto || !dIni || !dFim) {
-      mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o colaborador ausente, o substituto e as datas.", tipo: "erro" });
-      return;
-    }
-    if (ausente === substituto) {
-      mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O colaborador ausente e o substituto não podem ser a mesma pessoa.", tipo: "erro" });
-      return;
-    }
-    var horAus = {
-      e1: document.getElementById('ausE1').value, s1: document.getElementById('ausS1').value,
-      e2: document.getElementById('ausE2').value, s2: document.getElementById('ausS2').value,
-      e3: document.getElementById('ausE3').value, s3: document.getElementById('ausS3').value,
-      e4: document.getElementById('ausE4').value, s4: document.getElementById('ausS4').value
-    };
-    var horSub = {
-      e1: document.getElementById('horE1').value, s1: document.getElementById('horS1').value,
-      e2: document.getElementById('horE2').value, s2: document.getElementById('horS2').value,
-      e3: document.getElementById('horE3').value, s3: document.getElementById('horS3').value,
-      e4: document.getElementById('horE4').value, s4: document.getElementById('horS4').value
-    };
-    var errAus = validarParesHorario(horAus);
-    if (errAus) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (Ausente)", mensagem: errAus, tipo: "erro" }); return; }
-    var errSub = validarParesHorario(horSub);
-    if (errSub) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (Substituto)", mensagem: errSub, tipo: "erro" }); return; }
-
-    var numAus = contarPeriodosAtivos(horAus);
-    var numSub = contarPeriodosAtivos(horSub);
-
+    if (!ausente || !substituto || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o colaborador ausente, o substituto e as datas.", tipo: "erro" }); return; }
+    if (ausente === substituto) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O colaborador ausente e o substituto não podem ser a mesma pessoa.", tipo: "erro" }); return; }
+    var horAus = { e1: document.getElementById('ausE1').value, s1: document.getElementById('ausS1').value, e2: document.getElementById('ausE2').value, s2: document.getElementById('ausS2').value, e3: document.getElementById('ausE3').value, s3: document.getElementById('ausS3').value, e4: document.getElementById('ausE4').value, s4: document.getElementById('ausS4').value };
+    var horSub = { e1: document.getElementById('horE1').value, s1: document.getElementById('horS1').value, e2: document.getElementById('horE2').value, s2: document.getElementById('horS2').value, e3: document.getElementById('horE3').value, s3: document.getElementById('horS3').value, e4: document.getElementById('horE4').value, s4: document.getElementById('horS4').value };
+    var errAus = validarParesHorario(horAus); if (errAus) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (Ausente)", mensagem: errAus, tipo: "erro" }); return; }
+    var errSub = validarParesHorario(horSub); if (errSub) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (Substituto)", mensagem: errSub, tipo: "erro" }); return; }
+    var numAus = contarPeriodosAtivos(horAus); var numSub = contarPeriodosAtivos(horSub);
     if (numAus === 0 && numSub === 0) {
       mostrarPopupPersonalizado({
         titulo: "Sem Horários Definidos",
-        mensagem: "Não preencheu nenhum período. O colaborador ausente será marcado como ausente e o substituto terá de picar ponto normalmente.<br><br>Pretende continuar?",
+        mensagem: "Não preencheu nenhum período. O ausente será marcado como ausente e o substituto pica normalmente. Pretende continuar?",
         icone: "⚠️",
-        botoes: [
-          { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
-          { texto: "Continuar", classe: "toast-btn-primary", acao: function() { executarSubmissaoTroca(ausente, substituto, dIni, dFim, horAus, horSub); } }
-        ]
+        botoes: [ { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast }, { texto: "Continuar", classe: "toast-btn-primary", acao: function() { executarSubmissaoTroca(ausente, substituto, dIni, dFim, horAus, horSub); } } ]
       });
       return;
     }
@@ -943,30 +735,15 @@
 
   function executarSubmissaoTroca(ausente, substituto, dIni, dFim, horAus, horSub) {
     mostrarPopupPersonalizado({ titulo: "A Registar Troca", mensagem: "A lançar horários nos mapas de ambos os colaboradores...", tipo: "processando" });
-    chamarAPIJsonp({
-      action: "registarTrocaTurnoJsonp",
-      nomeAusente: ausente,
-      nomeSubstituto: substituto,
-      dataInicio: dIni,
-      dataFim: dFim,
-      horariosAusente: JSON.stringify(horAus),
-      horariosSubstituto: JSON.stringify(horSub),
-      senha: senhaAdminSessao
-    }, function(resp) {
-      if (resp.indexOf("Aviso") !== -1) {
-        mostrarPopupPersonalizado({ titulo: "Não Foi Possível Registar", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" });
-      } else {
-        mostrarPopupPersonalizado({ titulo: "Troca Registada", mensagem: resp, tipo: "sucesso" });
-        limparFormularioTroca();
-      }
+    chamarAPIJsonp({ action: "registarTrocaTurnoJsonp", nomeAusente: ausente, nomeSubstituto: substituto, dataInicio: dIni, dataFim: dFim, horariosAusente: JSON.stringify(horAus), horariosSubstituto: JSON.stringify(horSub), senha: senhaAdminSessao }, function(resp) {
+      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível Registar", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); }
+      else { mostrarPopupPersonalizado({ titulo: "Troca Registada", mensagem: resp, tipo: "sucesso" }); limparFormularioTroca(); }
     });
   }
 
   function limparFormularioTroca() {
-    document.getElementById('nomeTrocaAusente').value = "";
-    document.getElementById('nomeTrocaSubstituto').value = "";
-    document.getElementById('dataTrocaInicio').value = "";
-    document.getElementById('dataTrocaFim').value = "";
+    document.getElementById('nomeTrocaAusente').value = ""; document.getElementById('nomeTrocaSubstituto').value = "";
+    document.getElementById('dataTrocaInicio').value = ""; document.getElementById('dataTrocaFim').value = "";
     ['ausE1','ausS1','ausE2','ausS2','ausE3','ausS3','ausE4','ausS4'].forEach(function(id) { var e = document.getElementById(id); if (e) e.value = ""; });
     ['horE1','horS1','horE2','horS2','horE3','horS3','horE4','horS4'].forEach(function(id) { var e = document.getElementById(id); if (e) e.value = ""; });
     var pe = document.getElementById('periodosExtra'); if (pe) pe.style.display = 'none';
@@ -976,14 +753,12 @@
   }
 
   function submeterAcordo() {
-    var nome = document.getElementById('nomeAcordo').value;
-    var d = document.getElementById('dataAcordo').value;
+    var nome = document.getElementById('nomeAcordo').value; var d = document.getElementById('dataAcordo').value;
     if (!nome || !d) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o colaborador e a data.", tipo: "erro" }); return; }
     var horarios = { e1: document.getElementById('acE1').value, s1: document.getElementById('acS1').value, e2: document.getElementById('acE2').value, s2: document.getElementById('acS2').value, e3: document.getElementById('acE3').value, s3: document.getElementById('acS3').value, e4: document.getElementById('acE4').value, s4: document.getElementById('acS4').value };
-    var erro = validarParesHorario(horarios);
-    if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
+    var erro = validarParesHorario(horarios); if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A aplicar o acordo de horas...", tipo: "processando" });
-    chamarAPIJsonp({ action: "marcarAcordoJsonp", nome: nome, data: d, horarios: JSON.stringify(horarios), senha: senhaAdminSessao }, function(resp) { 
+    chamarAPIJsonp({ action: "marcarAcordoJsonp", nome: nome, data: d, horarios: JSON.stringify(horarios), senha: senhaAdminSessao }, function(resp) {
       mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
       if (resp.indexOf("Aviso") === -1) limparFormularioAcordo();
     });
@@ -997,19 +772,15 @@
   }
 
   function submeterAusenciaAdministrativa() {
-    var nome = document.getElementById('nomeFuncionarioFolga').value;
-    var tipo = document.getElementById('tipoAusencia').value;
-    var dIni = document.getElementById('dataFolgaInicio').value;
-    var dFim = document.getElementById('dataFolgaFim').value;
+    var nome = document.getElementById('nomeFuncionarioFolga').value; var tipo = document.getElementById('tipoAusencia').value;
+    var dIni = document.getElementById('dataFolgaInicio').value; var dFim = document.getElementById('dataFolgaFim').value;
     if (!nome || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios.", tipo: "erro" }); return; }
     var horarios = { e1: document.getElementById('auE1').value, s1: document.getElementById('auS1').value, e2: document.getElementById('auE2').value, s2: document.getElementById('auS2').value, e3: document.getElementById('auE3').value, s3: document.getElementById('auS3').value, e4: document.getElementById('auE4').value, s4: document.getElementById('auS4').value };
-    var erro = validarParesHorario(horarios);
-    if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
-    var numPeriodos = contarPeriodosAtivos(horarios);
-    var isDiaUnico = (dIni === dFim);
+    var erro = validarParesHorario(horarios); if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
+    var numPeriodos = contarPeriodosAtivos(horarios); var isDiaUnico = (dIni === dFim);
     if (numPeriodos > 0 && !isDiaUnico) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O horário só pode ser aplicado a um único dia.", tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A lançar o registo no mapa do colaborador...", tipo: "processando" });
-    chamarAPIJsonp({ action: "lancarAusenciaAdminJsonp", nome: nome, tipo: tipo, dataInicio: dIni, dataFim: dFim, horarios: JSON.stringify(horarios), senha: senhaAdminSessao }, function(resp) { 
+    chamarAPIJsonp({ action: "lancarAusenciaAdminJsonp", nome: nome, tipo: tipo, dataInicio: dIni, dataFim: dFim, horarios: JSON.stringify(horarios), senha: senhaAdminSessao }, function(resp) {
       mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
       if (resp.indexOf("Aviso") === -1) limparFormularioAusencia();
     });
@@ -1024,57 +795,53 @@
   }
 
   function submeterFaltaFuncionario() {
-    var nome = document.getElementById('nomeFuncFalta').value; 
-    var pin = document.getElementById('pinFuncFalta').value; 
+    var nome = document.getElementById('nomeFuncFalta').value;
+    var pin = document.getElementById('pinFuncFalta').value;
     var email = document.getElementById('emailFuncFalta').value;
-    var tipo = document.getElementById('tipoFaltaFunc').value; 
-    var dIni = document.getElementById('dataFaltaFuncInicio').value; 
+    var tipo = document.getElementById('tipoFaltaFunc').value;
+    var dIni = document.getElementById('dataFaltaFuncInicio').value;
     var dFim = document.getElementById('dataFaltaFuncFim').value;
     var obs = document.getElementById('obsFuncFalta').value;
-    
-    if(!nome || !pin || !email || !tipo || !dIni || !dFim) { 
-      mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios antes de submeter.", tipo: "erro" }); 
-      return; 
-    }
+
+    if(!nome || !pin || !email || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios antes de submeter.", tipo: "erro" }); return; }
+
+    var pacoteExtras = "";
 
     if (tipo === "🔄 Troca com Colega") {
       var colega = document.getElementById('colegaTrocaFunc').value;
       if (!colega) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Selecione o colega com quem pretende efetuar a troca.", tipo: "erro" }); return; }
       if (colega === nome) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Não pode escolher-se a si próprio para a troca.", tipo: "erro" }); return; }
-      var notaTroca = "🔄 Troca com o colega: " + colega;
-      obs = obs && obs.trim() !== "" ? (notaTroca + " | Obs: " + obs) : notaTroca;
+
+      var horProprio = { e1: document.getElementById('trProE1').value, s1: document.getElementById('trProS1').value, e2: document.getElementById('trProE2').value, s2: document.getElementById('trProS2').value, e3: document.getElementById('trProE3').value, s3: document.getElementById('trProS3').value, e4: document.getElementById('trProE4').value, s4: document.getElementById('trProS4').value };
+      var horColega = { e1: document.getElementById('trColE1').value, s1: document.getElementById('trColS1').value, e2: document.getElementById('trColE2').value, s2: document.getElementById('trColS2').value, e3: document.getElementById('trColE3').value, s3: document.getElementById('trColS3').value, e4: document.getElementById('trColE4').value, s4: document.getElementById('trColS4').value };
+
+      var errP = validarParesHorario(horProprio); if (errP) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (O seu)", mensagem: errP, tipo: "erro" }); return; }
+      var errC = validarParesHorario(horColega); if (errC) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (Colega)", mensagem: errC, tipo: "erro" }); return; }
+
+      var numP = contarPeriodosAtivos(horProprio); var numC = contarPeriodosAtivos(horColega);
+      if (numP === 0 && numC === 0) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Preencha pelo menos o horário de um dos intervenientes.", tipo: "erro" }); return; }
+      if (dIni !== dFim) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "A troca com colega só pode ser submetida para um único dia de cada vez.", tipo: "erro" }); return; }
+
+      pacoteExtras = "|TROCA:" + JSON.stringify({ proprio: horProprio, colega: horColega, nomeColega: colega });
     }
 
     var horarios = { e1: "", s1: "", e2: "", s2: "", e3: "", s3: "", e4: "", s4: "" };
     if (TIPOS_COM_HORARIO.indexOf(tipo) !== -1) {
-      horarios = {
-        e1: document.getElementById('fuE1').value, s1: document.getElementById('fuS1').value,
-        e2: document.getElementById('fuE2').value, s2: document.getElementById('fuS2').value,
-        e3: document.getElementById('fuE3').value, s3: document.getElementById('fuS3').value,
-        e4: document.getElementById('fuE4').value, s4: document.getElementById('fuS4').value
-      };
-      var erro = validarParesHorario(horarios);
-      if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
-      if (contarPeriodosAtivos(horarios) > 0 && dIni !== dFim) {
-        mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O horário só pode ser preenchido para um único dia.", tipo: "erro" });
-        return;
-      }
+      horarios = { e1: document.getElementById('fuE1').value, s1: document.getElementById('fuS1').value, e2: document.getElementById('fuE2').value, s2: document.getElementById('fuS2').value, e3: document.getElementById('fuE3').value, s3: document.getElementById('fuS3').value, e4: document.getElementById('fuE4').value, s4: document.getElementById('fuS4').value };
+      var erro = validarParesHorario(horarios); if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
+      if (contarPeriodosAtivos(horarios) > 0 && dIni !== dFim) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O horário só pode ser preenchido para um único dia.", tipo: "erro" }); return; }
     }
-    
+
     mostrarPopupPersonalizado({ titulo: "A Enviar", mensagem: "A submeter o seu pedido à gerência...", tipo: "processando" });
-    
-    chamarAPIJsonp({ 
-      action: "comunicarAusenciaFuncionarioJsonp", 
-      nome: nome, pin: pin, email: email, tipo: tipo, 
+    chamarAPIJsonp({
+      action: "comunicarAusenciaFuncionarioJsonp",
+      nome: nome, pin: pin, email: email, tipo: tipo,
       dataInicio: dIni, dataFim: dFim, obs: obs,
-      horarios: JSON.stringify(horarios)
+      horarios: JSON.stringify(horarios),
+      extras: pacoteExtras
     }, function(resp) {
-      if (resp.indexOf("Aviso") !== -1) { 
-        mostrarPopupPersonalizado({ titulo: "Não Foi Possível Submeter", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); 
-      } else { 
-        mostrarPopupPersonalizado({ titulo: "Pedido Enviado", mensagem: resp, tipo: "sucesso" }); 
-        setTimeout(voltarAoEcraPrincipal, 2500); 
-      }
+      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível Submeter", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); }
+      else { mostrarPopupPersonalizado({ titulo: "Pedido Enviado", mensagem: resp, tipo: "sucesso" }); setTimeout(voltarAoEcraPrincipal, 2500); }
     });
   }
 
@@ -1088,7 +855,9 @@
     var el7 = document.getElementById('dataFaltaFuncFim'); if (el7) el7.value = "";
     var g1 = document.getElementById('grupoColegaTroca'); if (g1) g1.style.display = "none";
     var g2 = document.getElementById('grupoHorarioFunc'); if (g2) g2.style.display = "none";
+    var g3 = document.getElementById('grupoTrocaHorarios'); if (g3) g3.style.display = "none";
     limparHorarioFunc();
+    limparHorariosTrocaFunc();
   }
 
   function registarPontoDiario() {
@@ -1102,34 +871,15 @@
     mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A validar a sua localização...", tipo: "processando" });
     navigator.geolocation.getCurrentPosition(
       function(pos) {
-        if (pos.coords.accuracy > 150) {
+        if (pos.coords.accuracy > 150) { emProcessamento = false; document.getElementById('btnPonto').disabled = false; mostrarPopupPersonalizado({ titulo: "Sinal GPS Fraco", mensagem: "Aproxime-se de uma janela ou de uma zona com melhor cobertura e tente novamente.", tipo: "erro" }); return; }
+        chamarAPIJsonp({ action: "salvarPontoJsonp", nome: nome, lat: pos.coords.latitude, lon: pos.coords.longitude, pin: pin, isMock: pos.mocked || pos.coords.mocked, disp: obterDetalhesDispositivo(), ua: navigator.userAgent }, function(resposta) {
+          document.getElementById('pinPonto').value = ""; atualizarPinDisplay('pinPonto', 'dotsPonto');
           emProcessamento = false; document.getElementById('btnPonto').disabled = false;
-          mostrarPopupPersonalizado({ titulo: "Sinal GPS Fraco", mensagem: "Aproxime-se de uma janela ou de uma zona com melhor cobertura e tente novamente.", tipo: "erro" });
-          return;
-        }
-        chamarAPIJsonp({
-          action: "salvarPontoJsonp", nome: nome,
-          lat: pos.coords.latitude, lon: pos.coords.longitude,
-          pin: pin, isMock: pos.mocked || pos.coords.mocked,
-          disp: obterDetalhesDispositivo(), ua: navigator.userAgent
-        }, function(resposta) {
-          document.getElementById('pinPonto').value = "";
-          atualizarPinDisplay('pinPonto', 'dotsPonto');
-          emProcessamento = false;
-          document.getElementById('btnPonto').disabled = false;
-          if (resposta.indexOf("Aviso") !== -1) {
-            gerirErroCampo("erro-pin-ponto", resposta.replace("Aviso: ", ""));
-            fecharToast();
-          } else {
-            mostrarPopupPersonalizado({ titulo: "Registo Validado", mensagem: resposta, tipo: "sucesso" });
-          }
+          if (resposta.indexOf("Aviso") !== -1) { gerirErroCampo("erro-pin-ponto", resposta.replace("Aviso: ", "")); fecharToast(); }
+          else { mostrarPopupPersonalizado({ titulo: "Registo Validado", mensagem: resposta, tipo: "sucesso" }); }
         });
       },
-      function() {
-        emProcessamento = false;
-        document.getElementById('btnPonto').disabled = false;
-        mostrarPopupPersonalizado({ titulo: "Localização Indisponível", mensagem: "Autorize o acesso à localização nas configurações do dispositivo e tente novamente.", tipo: "erro" });
-      },
+      function() { emProcessamento = false; document.getElementById('btnPonto').disabled = false; mostrarPopupPersonalizado({ titulo: "Localização Indisponível", mensagem: "Autorize o acesso à localização nas configurações do dispositivo e tente novamente.", tipo: "erro" }); },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
   }
@@ -1143,7 +893,7 @@
       var html = "";
       resp.forEach(function(p) {
         html += '<div class="pedido-item"><p><strong>Colaborador:</strong> ' + p.nome + '</p><p><strong>Pedido:</strong> ' + p.detalhes + '</p>' +
-          (p.obs ? '<p><strong>Obs:</strong> <i>' + p.obs + '</i></p>' : '') +
+          (p.obs ? '<p><strong>Detalhes:</strong> <i>' + p.obs + '</i></p>' : '') +
           '<div style="display:flex; gap:10px; margin-top:16px;">' +
             '<button class="btn btn-primary" style="padding:13px; margin:0; font-size:0.82rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'aprovar\')">✅ Aprovar</button>' +
             '<button class="btn btn-danger" style="padding:13px; margin:0; font-size:0.82rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'recusar\')">❌ Recusar</button>' +
@@ -1154,9 +904,33 @@
   }
 
   function responderPedidoFaltaAdmin(idPedido, decisao) {
-    mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A notificar o colaborador por email...", tipo: "processando" });
+    if (decisao === "recusar") {
+      mostrarPopupPersonalizado({
+        titulo: "Confirmar Recusa",
+        mensagem: "Tem a certeza de que pretende <b>recusar</b> este pedido? O colaborador será notificado por email.",
+        icone: "❌",
+        botoes: [
+          { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
+          { texto: "Confirmar Recusa", classe: "toast-btn-primary", acao: function() { executarRespostaPedido(idPedido, "recusar"); } }
+        ]
+      });
+      return;
+    }
+    mostrarPopupPersonalizado({
+      titulo: "Aprovar Pedido",
+      mensagem: "O horário será <b>automaticamente aplicado ao mapa</b> de ponto do colaborador (e do colega, se aplicável).<br><br>Confirmar aprovação?",
+      icone: "✅",
+      botoes: [
+        { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
+        { texto: "Aprovar e Aplicar", classe: "toast-btn-primary", acao: function() { executarRespostaPedido(idPedido, "aprovar"); } }
+      ]
+    });
+  }
+
+  function executarRespostaPedido(idPedido, decisao) {
+    mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A aplicar horários e a notificar o colaborador...", tipo: "processando" });
     chamarAPIJsonp({ action: "responderPedidoFaltaAdmin", idPedido: idPedido, decisao: decisao, senha: senhaAdminSessao }, function(resp) {
-      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível", mensagem: resp, tipo: "erro" }); }
+      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); }
       else { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: "sucesso" }); carregarPedidosPendentes(); }
     });
   }
@@ -1194,18 +968,19 @@
     document.getElementById('adminNavigationGroup').style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  
+
   function voltarAoMenuCentralAdmin() {
     MODULOS_ADMIN.forEach(function(m) { var el = document.getElementById('admin-sub-' + m); if (el) el.style.display = 'none'; });
-    document.getElementById('admin-sub-menu').style.display = 'block'; 
+    document.getElementById('admin-sub-menu').style.display = 'block';
     document.getElementById('adminNavigationGroup').style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  
+
   function limparFeedbackPonto() { gerirErroCampo("erro-nome-ponto", ""); gerirErroCampo("erro-pin-ponto", ""); }
   function gerirErroCampo(id, msg) {
     var cp = document.getElementById(id); if (!cp) return;
-    if (msg) { cp.innerHTML = msg; cp.style.display = "flex"; var f = cp.parentElement.querySelector('.form-control') || cp.parentElement.querySelector('.pin-dots-container'); if(f) { f.style.borderColor = 'var(--danger)'; setTimeout(function(){ f.style.borderColor='var(--border)'; }, 3000); } } else { cp.style.display = "none"; }
+    if (msg) { cp.innerHTML = msg; cp.style.display = "flex"; var f = cp.parentElement.querySelector('.form-control') || cp.parentElement.querySelector('.pin-dots-container'); if(f) { f.style.borderColor = 'var(--danger)'; setTimeout(function(){ f.style.borderColor='var(--border)'; }, 3000); } }
+    else { cp.style.display = "none"; }
   }
 </script>
 </body>
