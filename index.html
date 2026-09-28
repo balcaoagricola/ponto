@@ -68,12 +68,12 @@
     .hint-info { display: flex; align-items: flex-start; gap: 10px; padding: 12px 15px; margin-bottom: 18px; background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); border: 1.5px solid #5eead4; border-radius: var(--radius-sm); font-size: 0.82rem; color: #0f766e; font-weight: 500; line-height: 1.5; }
     .hint-info::before { content: '💡'; font-size: 1rem; flex-shrink: 0; }
     .periodo-hint { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.45; font-weight: 500; }
-    .periodo-card { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding: 10px 12px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); transition: all 0.22s ease; }
+    .periodo-card { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; padding: 10px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); transition: all 0.22s ease; overflow: hidden; box-sizing: border-box; }
     .periodo-card:focus-within { border-color: var(--accent); background: #ffffff; box-shadow: 0 0 0 3px var(--accent-glow); }
-    .periodo-num { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: #ffffff; font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 3px 8px rgba(20, 184, 166, 0.35); }
-    .periodo-inputs { display: flex; align-items: center; gap: 6px; flex: 1; }
-    .periodo-input { padding: 9px 6px !important; font-size: 0.92rem !important; text-align: center; font-weight: 700 !important; letter-spacing: 0.02em; min-width: 0; }
-    .periodo-sep { color: var(--text-muted); font-weight: 700; font-size: 0.95rem; flex-shrink: 0; user-select: none; }
+    .periodo-num { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: #ffffff; font-weight: 800; font-size: 0.82rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 3px 8px rgba(20, 184, 166, 0.35); }
+    .periodo-inputs { display: flex; align-items: center; gap: 4px; flex: 1 1 0; min-width: 0; }
+    .periodo-input { flex: 1 1 0 !important; min-width: 0 !important; width: 0 !important; max-width: 100% !important; padding: 10px 2px !important; font-size: 0.85rem !important; text-align: center !important; font-weight: 700 !important; letter-spacing: 0 !important; box-sizing: border-box !important; }
+    .periodo-sep { color: var(--text-muted); font-weight: 700; font-size: 0.88rem; flex-shrink: 0; user-select: none; }
     .btn-add-periodo { width: 100%; padding: 11px; background: transparent; border: 1.5px dashed var(--border-strong); border-radius: var(--radius-sm); color: var(--text-muted); font-weight: 700; font-size: 0.76rem; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Plus Jakarta Sans', sans-serif; margin-bottom: 8px; }
     .btn-add-periodo:hover { border-color: var(--accent); color: var(--accent); background: rgba(5, 150, 105, 0.05); }
     .pin-box-wrapper { position: relative; width: 100%; margin-bottom: 8px; }
@@ -199,7 +199,7 @@
   <div id="section-falta-func" class="content-section">
     <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
       <h3 style="margin-bottom: 8px; color: var(--primary); text-align: left; font-size: 1.05rem;">📅 Comunicar Ausência</h3>
-      <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 22px; line-height: 1.6; text-align: left;">Submeta os detalhes da sua ausência à gerência.</p>
+      <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 22px; line-height: 1.6; text-align: left;">Submeta os detalhes da sua ausência. O pedido será analisado pela gerência e, se aprovado, o registo é lançado no sistema de assiduidade pelo administrador.</p>
       <div class="admin-card" style="margin-bottom: 0;">
         <div class="form-group"><label>O seu Nome <span class="campo-obrigatorio">*</span></label><select id="nomeFuncFalta" class="form-control" onchange="atualizarFiltroColegasTroca()"></select></div>
         <div class="form-group">
@@ -282,7 +282,7 @@
         </div>
         <div class="form-group"><label>Data de Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncInicio" class="form-control"></div>
         <div class="form-group"><label>Data de Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncFim" class="form-control"></div>
-        <button class="btn btn-primary" onclick="submeterFaltaFuncionario()">Enviar Pedido</button>
+        <button class="btn btn-primary" onclick="submeterFaltaFuncionario()">Enviar Pedido à Gerência</button>
       </div>
       <div style="margin-top: 18px; padding-top: 20px;">
         <button class="btn btn-nav-blue" onclick="voltarAoEcraPrincipal()">⬅️ Voltar ao Início</button>
@@ -310,7 +310,7 @@
     <div id="admin-sub-pedidos" style="display: none;">
       <div class="admin-card">
         <h3>📩 Pedidos Pendentes</h3>
-        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; text-align: left; line-height: 1.55;">Avalie as ausências submetidas. Ao aprovar, o sistema insere <b>automaticamente no mapa de ponto</b>.</p>
+        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; text-align: left; line-height: 1.55;">Avalie os pedidos submetidos pelos colaboradores. Ao aprovar, o colaborador é notificado por e-mail. O lançamento no mapa de ponto deve ser efetuado pelo administrador no módulo <b>📅 Lançar Faltas</b>.</p>
         <div id="listaPedidosContainer">
           <p style="text-align: center; color: var(--text-muted);">A carregar...</p>
         </div>
@@ -961,7 +961,7 @@
       if (resp.indexOf("Aviso") !== -1) { 
         mostrarPopupPersonalizado({ titulo: "Erro", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); 
       } else { 
-        mostrarPopupPersonalizado({ titulo: "Sucesso!", mensagem: resp, tipo: "sucesso" }); 
+        mostrarPopupPersonalizado({ titulo: "Pedido Enviado!", mensagem: resp, tipo: "sucesso" }); 
         setTimeout(voltarAoEcraPrincipal, 2500); 
       }
     });
