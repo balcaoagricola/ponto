@@ -129,72 +129,19 @@
     }
     .hint-info::before { content: '💡'; font-size: 1rem; flex-shrink: 0; }
 
-    /* ══════════ PERÍODOS DE HORÁRIO (Troca Turno) ══════════ */
-    .periodo-hint {
-      font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;
-      line-height: 1.45; font-weight: 500;
-    }
-    .periodo-card {
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 10px; padding: 10px 12px;
-      background: var(--surface-2);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      transition: all 0.22s ease;
-    }
-    .periodo-card:focus-within {
-      border-color: var(--accent);
-      background: #ffffff;
-      box-shadow: 0 0 0 3px var(--accent-glow);
-    }
-    .periodo-num {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
-      color: #ffffff; font-weight: 800; font-size: 0.85rem;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; box-shadow: 0 3px 8px rgba(20, 184, 166, 0.35);
-    }
-    .periodo-inputs {
-      display: flex; align-items: center; gap: 6px; flex: 1;
-    }
-    .periodo-input {
-      padding: 9px 6px !important;
-      font-size: 0.92rem !important;
-      text-align: center;
-      font-weight: 700 !important;
-      letter-spacing: 0.02em;
-      min-width: 0;
-    }
-    .periodo-sep {
-      color: var(--text-muted);
-      font-weight: 700;
-      font-size: 0.95rem;
-      flex-shrink: 0;
-      user-select: none;
-    }
-    .btn-add-periodo {
-      width: 100%; padding: 11px;
-      background: transparent;
-      border: 1.5px dashed var(--border-strong);
-      border-radius: var(--radius-sm);
-      color: var(--text-muted); font-weight: 700; font-size: 0.76rem;
-      cursor: pointer; transition: all 0.2s ease;
-      text-transform: uppercase; letter-spacing: 0.05em;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      margin-bottom: 8px;
-    }
-    .btn-add-periodo:hover {
-      border-color: var(--accent); color: var(--accent);
-      background: rgba(5, 150, 105, 0.05);
-    }
+    .periodo-hint { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.45; font-weight: 500; }
+    .periodo-card { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding: 10px 12px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); transition: all 0.22s ease; }
+    .periodo-card:focus-within { border-color: var(--accent); background: #ffffff; box-shadow: 0 0 0 3px var(--accent-glow); }
+    .periodo-num { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: #ffffff; font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 3px 8px rgba(20, 184, 166, 0.35); }
+    .periodo-inputs { display: flex; align-items: center; gap: 6px; flex: 1; }
+    .periodo-input { padding: 9px 6px !important; font-size: 0.92rem !important; text-align: center; font-weight: 700 !important; letter-spacing: 0.02em; min-width: 0; }
+    .periodo-sep { color: var(--text-muted); font-weight: 700; font-size: 0.95rem; flex-shrink: 0; user-select: none; }
+    .btn-add-periodo { width: 100%; padding: 11px; background: transparent; border: 1.5px dashed var(--border-strong); border-radius: var(--radius-sm); color: var(--text-muted); font-weight: 700; font-size: 0.76rem; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Plus Jakarta Sans', sans-serif; margin-bottom: 8px; }
+    .btn-add-periodo:hover { border-color: var(--accent); color: var(--accent); background: rgba(5, 150, 105, 0.05); }
 
     .pin-box-wrapper { position: relative; width: 100%; margin-bottom: 8px; }
     .pin-hidden-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; font-size: 16px; }
-    .pin-dots-container { 
-      display: flex; justify-content: center; align-items: center; gap: 22px; 
-      padding: 24px; background: var(--surface-2); border: 1.5px solid var(--border); 
-      border-radius: var(--radius-sm); transition: all 0.22s ease; box-shadow: var(--shadow-sm);
-    }
+    .pin-dots-container { display: flex; justify-content: center; align-items: center; gap: 22px; padding: 24px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); transition: all 0.22s ease; box-shadow: var(--shadow-sm); }
     .pin-hidden-input:focus + .pin-dots-container { border-color: var(--accent); background: #ffffff; box-shadow: 0 0 0 4px var(--accent-glow), var(--shadow-sm); }
     .pin-dot { width: 15px; height: 15px; border-radius: 50%; border: 2px solid var(--border-strong); background: transparent; transition: all 0.32s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .pin-dot.filled { background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent-dark) 100%); border-color: var(--accent); transform: scale(1.35); box-shadow: 0 4px 12px var(--accent-glow); }
@@ -210,15 +157,8 @@
     .btn:active { transform: scale(0.97); }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
 
-    .btn-primary { 
-      background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 55%, var(--accent-dark) 100%);
-      color: #ffffff; box-shadow: var(--shadow-accent); text-shadow: 0 1px 2px rgba(0,0,0,0.08);
-    }
-    .btn-primary::before {
-      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-      transition: left 0.6s ease;
-    }
+    .btn-primary { background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 55%, var(--accent-dark) 100%); color: #ffffff; box-shadow: var(--shadow-accent); text-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+    .btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent); transition: left 0.6s ease; }
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(5, 150, 105, 0.35), 0 6px 12px rgba(5, 150, 105, 0.18); }
     .btn-primary:hover::before { left: 100%; }
 
@@ -456,7 +396,6 @@
       </div>
     </div>
 
-    <!-- ══════════ TROCA DE TURNO (com períodos estruturados) ══════════ -->
     <div id="admin-sub-troca" style="display: none;">
       <div class="admin-card">
         <h3>🔄 Registar Troca de Turno</h3>
@@ -688,9 +627,19 @@
         { texto: "Entrar", classe: "toast-btn-primary", acao: function() {
             var s = document.getElementById('inputSenhaPopup').value; if (!s) return;
             mostrarPopupPersonalizado({ titulo: "A Processar...", mensagem: "A verificar...", tipo: "processando" });
-            chamarAPIJsonp({ action: "gerarPdfJsonp", funcionario: "TESTE", dataInicio: "2026-01-01", dataFim: "2026-01-01", senha: s }, function(resp) {
-              if (resp.indexOf("incorreta") !== -1) { mostrarPopupPersonalizado({ titulo: "Acesso Negado", mensagem: "Senha incorreta.", tipo: "erro" }); } 
-              else { senhaAdminSessao = s; fecharToast(); document.getElementById('section-ponto').classList.remove('active'); document.getElementById('section-falta-func').classList.remove('active'); document.getElementById('section-admin').classList.add('active'); document.getElementById('headerTitle').style.display = 'none'; document.getElementById('headerClockBox').style.display = 'none'; voltarAoMenuCentralAdmin(); }
+            chamarAPIJsonp({ action: "verificarSenhaJsonp", senha: s }, function(resp) {
+              if (resp.indexOf("incorreta") !== -1 || resp.indexOf("Aviso") !== -1) { 
+                mostrarPopupPersonalizado({ titulo: "Acesso Negado", mensagem: "Senha incorreta.", tipo: "erro" }); 
+              } else { 
+                senhaAdminSessao = s; 
+                fecharToast(); 
+                document.getElementById('section-ponto').classList.remove('active'); 
+                document.getElementById('section-falta-func').classList.remove('active'); 
+                document.getElementById('section-admin').classList.add('active'); 
+                document.getElementById('headerTitle').style.display = 'none'; 
+                document.getElementById('headerClockBox').style.display = 'none'; 
+                voltarAoMenuCentralAdmin(); 
+              }
             });
           }
         }
@@ -778,7 +727,6 @@
     });
   }
 
-  // ══════════ TROCA TURNO — período extra toggle ══════════
   function togglePeriodosExtra() {
     var el = document.getElementById('periodosExtra');
     var btn = document.getElementById('btnAddPeriodo');
@@ -795,7 +743,6 @@
     }
   }
 
-  // ══════════ TROCA TURNO — submissão ══════════
   function submeterTrocaTurno() {
     var ausente = document.getElementById('nomeTrocaAusente').value;
     var substituto = document.getElementById('nomeTrocaSubstituto').value;
@@ -822,7 +769,6 @@
       s4: document.getElementById('horS4').value
     };
     
-    // Validar pares (entrada + saída ou ambos vazios)
     var periodoAtivo = 0;
     for (var i = 1; i <= 4; i++) {
       var e = horarios['e' + i];
