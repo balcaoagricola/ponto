@@ -184,11 +184,11 @@
 
         <div id="avisoAcordo11" class="hint-info" style="display: none; background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%); border-color: #f0abfc; color: #86198f;">
           <span><b>💡 Como funciona o Acordo 1:1?</b><br><br>
-          <b>1. Para GANHAR horas (Trabalhar extra):</b><br>
-          Não precisa de pedir aqui. Basta picar o ponto no terminal! O sistema deteta o tempo extra e guarda-o automaticamente no seu Banco.<br>
-          <i>(Só use este formulário se se esqueceu de picar o ponto. Nesse caso preencha as datas e horas abaixo).</i><br><br>
+          <b>1. Para GANHAR horas (Trabalhar para compensar depois):</b><br>
+          Se vai fazer horas extra propositadamente para alimentar o seu Banco, selecione o motivo <b>Acordo 1:1</b> e preencha as horas que vai cumprir. Assim, o sistema separa estas horas das horas extra pagas normais.<br><br>
           <b>2. Para GASTAR horas (Tirar folga):</b><br>
-          Selecione a data em que quer descansar e <b>deixe os horários em branco</b>. O sistema vai descontar 8 horas ao seu Banco de Acordo.</span>
+          • <b>Dia Todo:</b> Escolha a data e deixe os horários em branco (desconta 8h ao Banco).<br>
+          • <b>Parcial:</b> Preencha o horário em que vai trabalhar (ex: 09:00 às 13:00) e o sistema desconta apenas o restante ao Banco.</span>
         </div>
 
         <div class="form-group" id="grupoColegaTroca" style="display: none;">
@@ -296,7 +296,7 @@
         <div class="form-group"><label>Motivo</label>
           <select id="tipoAusencia" class="form-control">
             <option value="" disabled selected>Selecione o motivo</option>
-            <option value="🏖️ Férias">🏖️ Férias</option>
+            <option value="🏖️️ Férias">🏖️ Férias</option>
             <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
             <option value="📄 Falta Justificada">📄 Falta Justificada</option>
             <option value="⚠️ Falta Injustificada">⚠️ Falta Injustificada</option>
@@ -455,9 +455,6 @@
   var MODULOS_ADMIN = ['pedidos', 'ausencias', 'troca', 'acordo', 'corrigir', 'pdf', 'funcionario', 'remover'];
   var TIPOS_COM_HORARIO = ["📄 Falta Justificada", "⚠️ Falta Injustificada", "🤝 Acordo 1:1"];
 
-  // -------------------------------------------------------------------------
-  // 1. AUTOMAÇÃO E INTELIGÊNCIA DE DATAS
-  // -------------------------------------------------------------------------
   function configurarComportamentoDatas() {
     function ligarSincronizacao(idIni, idFim) {
       var elIni = document.getElementById(idIni);
@@ -500,7 +497,6 @@
     }, 1000);
   }
 
-  // Inicialização Inteligente e Memória de E-mail
   window.addEventListener('load', function() { 
     iniciarRelogio(); 
     carregarFuncionariosEmTodosOsCampos(); 
@@ -527,7 +523,6 @@
   }
   function focarPin(inputId) { var input = document.getElementById(inputId); if (input) input.focus(); }
 
-  // Sistema de Popup Inteligente e Proteção contra Spam de Cliques
   function mostrarPopupPersonalizado(config) {
     var overlay = document.getElementById('toastOverlay');
     document.getElementById('toastTitle').innerText = config.titulo || "Aviso";
@@ -562,10 +557,8 @@
   function fecharToast() { 
     document.getElementById('toastOverlay').style.display = "none"; 
     emProcessamento = false; 
-    
     var btnPonto = document.getElementById('btnPonto'); 
     if (btnPonto) { btnPonto.disabled = false; btnPonto.style.opacity = '1'; }
-    
     var botoesPrimarios = document.querySelectorAll('.btn-primary');
     botoesPrimarios.forEach(function(b){ b.disabled = false; b.style.opacity = '1'; });
   }
@@ -590,7 +583,6 @@
     var cbName = "jsonp_cb_" + Math.random().toString(36).substring(2, 9);
     var script = document.createElement('script'); script.id = cbName;
     
-    // Timeout alargado de segurança - 35 Segundos
     var timeoutReq = setTimeout(function() {
       if (window[cbName]) {
         delete window[cbName];
