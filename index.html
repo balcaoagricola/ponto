@@ -165,7 +165,7 @@
           <label>PIN de Acesso (4 dígitos) <span class="campo-obrigatorio">*</span></label>
           <div class="password-eye-wrapper">
             <input type="password" id="pinFuncFalta" class="form-control" maxlength="4" inputmode="numeric" placeholder="••••" style="letter-spacing: 8px; text-align: center; font-size: 1.25rem;">
-            <button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput('pinFuncFalta', this)">👁</button>
+            <button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput('pinFuncFalta', this)">👁️</button>
           </div>
         </div>
         <div class="form-group"><label>O seu E-mail <span class="campo-obrigatorio">*</span></label><input type="email" id="emailFuncFalta" class="form-control" placeholder="ex: email@email.com"></div>
@@ -314,8 +314,6 @@
     <div id="admin-sub-troca" style="display: none;">
       <div class="admin-card">
         <h3>🔄 Registar Troca de Turno</h3>
-        
-        <!-- CORREÇÃO DA CAIXA VISUAL (span adicionado para manter texto junto) -->
         <div class="hint-info"><span>Preencha o horário que <b>cada colaborador</b> vai cumprir. Ambos os mapas são atualizados em simultâneo e ordenados por data.</span></div>
 
         <div class="form-group">
@@ -449,7 +447,7 @@
   var TIPOS_COM_HORARIO = ["📄 Falta Justificada", "⚠️ Falta Injustificada", "🤝 Acordo 1:1"];
 
   // -------------------------------------------------------------------------
-  // AUTOMAÇÃO E INTELIGÊNCIA DE DATAS
+  // 1. AUTOMAÇÃO E INTELIGÊNCIA DE DATAS
   // -------------------------------------------------------------------------
   function configurarComportamentoDatas() {
     function ligarSincronizacao(idIni, idFim) {
@@ -493,13 +491,21 @@
     }, 1000);
   }
 
+  // Inicialização Inteligente e Memória de E-mail
   window.addEventListener('load', function() { 
     iniciarRelogio(); 
     carregarFuncionariosEmTodosOsCampos(); 
-    configurarComportamentoDatas();
+    configurarComportamentoDatas(); 
+    
+    var emailGuardado = localStorage.getItem('emailColaboradorBA');
+    var campoEmail = document.getElementById('emailFuncFalta');
+    if (emailGuardado && campoEmail) {
+      campoEmail.value = emailGuardado;
+    }
+
     if (!navigator.onLine) { var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); } 
   });
-  
+
   window.addEventListener('online', function() { estaOnline = true; var g = document.getElementById('gpsIndicator'); if(g) g.classList.remove('offline'); mostrarPopupPersonalizado({ titulo: "Ligação Restabelecida", mensagem: "O dispositivo voltou a estar online.", tipo: "sucesso" }); });
   window.addEventListener('offline', function() { estaOnline = false; var g = document.getElementById('gpsIndicator'); if(g) g.classList.add('offline'); mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Verifique a sua ligação à internet.", tipo: "erro" }); });
 
@@ -512,6 +518,7 @@
   }
   function focarPin(inputId) { var input = document.getElementById(inputId); if (input) input.focus(); }
 
+  // Sistema de Popup Inteligente e Proteção contra Spam de Cliques
   function mostrarPopupPersonalizado(config) {
     var overlay = document.getElementById('toastOverlay');
     document.getElementById('toastTitle').innerText = config.titulo || "Aviso";
@@ -546,8 +553,10 @@
   function fecharToast() { 
     document.getElementById('toastOverlay').style.display = "none"; 
     emProcessamento = false; 
+    
     var btnPonto = document.getElementById('btnPonto'); 
     if (btnPonto) { btnPonto.disabled = false; btnPonto.style.opacity = '1'; }
+    
     var botoesPrimarios = document.querySelectorAll('.btn-primary');
     botoesPrimarios.forEach(function(b){ b.disabled = false; b.style.opacity = '1'; });
   }
@@ -572,7 +581,7 @@
     var cbName = "jsonp_cb_" + Math.random().toString(36).substring(2, 9);
     var script = document.createElement('script'); script.id = cbName;
     
-    // Timeout alargado para 35 segundos para suportar o tempo de recálculo da Google
+    // Timeout alargado de segurança - 35 Segundos
     var timeoutReq = setTimeout(function() {
       if (window[cbName]) {
         delete window[cbName];
@@ -895,7 +904,12 @@
     var dFim = document.getElementById('dataFaltaFuncFim').value;
     var obs = document.getElementById('obsFuncFalta').value;
 
-    if(!nome || !pin || !email || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios antes de submeter.", tipo: "erro" }); return; }
+    if(!nome || !pin || !email || !tipo || !dIni || !dFim) { 
+      mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios antes de submeter.", tipo: "erro" }); 
+      return; 
+    }
+
+    localStorage.setItem('emailColaboradorBA', email.trim());
 
     var pacoteExtras = "";
 
@@ -918,6 +932,7 @@
     }
 
     var horarios = { e1: "", s1: "", e2: "", s2: "", e3: "", s3: "", e4: "", s4: "" };
+    
     if (TIPOS_COM_HORARIO.indexOf(tipo) !== -1) {
       horarios = { e1: document.getElementById('fuE1').value, s1: document.getElementById('fuS1').value, e2: document.getElementById('fuE2').value, s2: document.getElementById('fuS2').value, e3: document.getElementById('fuE3').value, s3: document.getElementById('fuS3').value, e4: document.getElementById('fuE4').value, s4: document.getElementById('fuS4').value };
       var erro = validarParesHorario(horarios); if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
@@ -925,6 +940,7 @@
     }
 
     mostrarPopupPersonalizado({ titulo: "A Enviar", mensagem: "A submeter o seu pedido à gerência...", tipo: "processando" });
+    
     chamarAPIJsonp({
       action: "comunicarAusenciaFuncionarioJsonp",
       nome: nome, pin: pin, email: email, tipo: tipo,
@@ -932,15 +948,18 @@
       horarios: JSON.stringify(horarios),
       extras: pacoteExtras
     }, function(resp) {
-      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível Submeter", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); }
-      else { mostrarPopupPersonalizado({ titulo: "Pedido Enviado", mensagem: resp, tipo: "sucesso" }); setTimeout(voltarAoEcraPrincipal, 2500); }
+      if (resp.indexOf("Aviso") !== -1) { 
+        mostrarPopupPersonalizado({ titulo: "Não Foi Possível Submeter", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); 
+      } else { 
+        mostrarPopupPersonalizado({ titulo: "Pedido Enviado", mensagem: resp, tipo: "sucesso" }); 
+        setTimeout(voltarAoEcraPrincipal, 2500); 
+      }
     });
   }
 
   function limparFormularioFaltaCompleto() {
     var el1 = document.getElementById('nomeFuncFalta'); if (el1) el1.value = "";
     var el2 = document.getElementById('pinFuncFalta'); if (el2) el2.value = "";
-    var el3 = document.getElementById('emailFuncFalta'); if (el3) el3.value = "";
     var el4 = document.getElementById('tipoFaltaFunc'); if (el4) el4.value = "";
     var el5 = document.getElementById('obsFuncFalta'); if (el5) el5.value = "";
     var el6 = document.getElementById('dataFaltaFuncInicio'); if (el6) el6.value = "";
@@ -1067,7 +1086,6 @@
     document.getElementById('adminNavigationGroup').style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    // Limpeza automática ao sair
     try { limparFormularioAusencia(); } catch(e){}
     try { limparFormularioTroca(); } catch(e){}
     try { limparFormularioAcordo(); } catch(e){}
