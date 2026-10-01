@@ -314,7 +314,9 @@
     <div id="admin-sub-troca" style="display: none;">
       <div class="admin-card">
         <h3>🔄 Registar Troca de Turno</h3>
-        <div class="hint-info">Preencha o horário que <b>cada colaborador</b> vai cumprir. Ambos os mapas são atualizados em simultâneo e ordenados por data.</div>
+        
+        <!-- CORREÇÃO DA CAIXA VISUAL (span adicionado para manter texto junto) -->
+        <div class="hint-info"><span>Preencha o horário que <b>cada colaborador</b> vai cumprir. Ambos os mapas são atualizados em simultâneo e ordenados por data.</span></div>
 
         <div class="form-group">
           <label>Colaborador que FALTA <span class="campo-obrigatorio">*</span></label>
@@ -446,6 +448,40 @@
   var MODULOS_ADMIN = ['pedidos', 'ausencias', 'troca', 'acordo', 'corrigir', 'pdf', 'funcionario', 'remover'];
   var TIPOS_COM_HORARIO = ["📄 Falta Justificada", "⚠️ Falta Injustificada", "🤝 Acordo 1:1"];
 
+  // -------------------------------------------------------------------------
+  // AUTOMAÇÃO E INTELIGÊNCIA DE DATAS
+  // -------------------------------------------------------------------------
+  function configurarComportamentoDatas() {
+    function ligarSincronizacao(idIni, idFim) {
+      var elIni = document.getElementById(idIni);
+      var elFim = document.getElementById(idFim);
+      if (elIni && elFim) {
+        elIni.addEventListener('change', function() {
+          elFim.min = this.value; 
+          if (!elFim.value || elFim.value < this.value) {
+            elFim.value = this.value; 
+          }
+        });
+      }
+    }
+    ligarSincronizacao('dataFaltaFuncInicio', 'dataFaltaFuncFim');
+    ligarSincronizacao('dataFolgaInicio', 'dataFolgaFim');
+    ligarSincronizacao('dataTrocaInicio', 'dataTrocaFim');
+
+    var hoje = new Date();
+    var hojeStr = hoje.toISOString().split('T')[0];
+    
+    var campoCorrigir = document.getElementById('dataCorrigir');
+    if(campoCorrigir) campoCorrigir.value = hojeStr;
+
+    var dataInicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    var dataInicioMesStr = dataInicioMes.toISOString().split('T')[0];
+    var campoPdfIni = document.getElementById('dataInicio');
+    var campoPdfFim = document.getElementById('dataFim');
+    if(campoPdfIni) campoPdfIni.value = dataInicioMesStr;
+    if(campoPdfFim) campoPdfFim.value = hojeStr;
+  }
+
   function iniciarRelogio() {
     setInterval(function() {
       var agora = new Date();
@@ -457,6 +493,13 @@
     }, 1000);
   }
 
+  window.addEventListener('load', function() { 
+    iniciarRelogio(); 
+    carregarFuncionariosEmTodosOsCampos(); 
+    configurarComportamentoDatas();
+    if (!navigator.onLine) { var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); } 
+  });
+  
   window.addEventListener('online', function() { estaOnline = true; var g = document.getElementById('gpsIndicator'); if(g) g.classList.remove('offline'); mostrarPopupPersonalizado({ titulo: "Ligação Restabelecida", mensagem: "O dispositivo voltou a estar online.", tipo: "sucesso" }); });
   window.addEventListener('offline', function() { estaOnline = false; var g = document.getElementById('gpsIndicator'); if(g) g.classList.add('offline'); mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Verifique a sua ligação à internet.", tipo: "erro" }); });
 
@@ -475,22 +518,40 @@
     document.getElementById('toastBody').innerHTML = config.mensagem || "";
     var icon = document.getElementById('toastIcon');
     icon.className = "toast-icon";
+    
+    var botoesPrimarios = document.querySelectorAll('.content-section.active .btn-primary');
+
     if (config.tipo === "sucesso") icon.innerText = "✅";
     else if (config.tipo === "erro") icon.innerText = "❌";
-    else if (config.tipo === "processando") { icon.className = "toast-icon ampulheta-animada"; icon.innerText = "⏳"; }
+    else if (config.tipo === "processando") { 
+      icon.className = "toast-icon ampulheta-animada"; 
+      icon.innerText = "⏳"; 
+      botoesPrimarios.forEach(function(b){ b.disabled = true; b.style.opacity = '0.5'; });
+    }
     else if (config.tipo === "aviso") icon.innerText = config.icone || "⚠️";
     else icon.innerText = config.icone || "💬";
+    
     var acts = document.getElementById('toastActionsContainer'); acts.innerHTML = "";
     if (config.tipo === "processando") acts.style.display = "none";
     else {
       acts.style.display = "flex";
+      botoesPrimarios.forEach(function(b){ b.disabled = false; b.style.opacity = '1'; });
+      
       if (config.botoes) config.botoes.forEach(function(b) { var btn = document.createElement('button'); btn.className = "toast-btn " + (b.classe || "toast-btn-primary"); btn.innerText = b.texto; btn.onclick = b.acao; acts.appendChild(btn); });
       else { var btn = document.createElement('button'); btn.className = "toast-btn toast-btn-primary"; btn.innerText = "Concluir"; btn.onclick = fecharToast; acts.appendChild(btn); }
     }
     overlay.style.display = "flex";
   }
 
-  function fecharToast() { document.getElementById('toastOverlay').style.display = "none"; emProcessamento = false; var btn = document.getElementById('btnPonto'); if (btn) btn.disabled = false; }
+  function fecharToast() { 
+    document.getElementById('toastOverlay').style.display = "none"; 
+    emProcessamento = false; 
+    var btnPonto = document.getElementById('btnPonto'); 
+    if (btnPonto) { btnPonto.disabled = false; btnPonto.style.opacity = '1'; }
+    var botoesPrimarios = document.querySelectorAll('.btn-primary');
+    botoesPrimarios.forEach(function(b){ b.disabled = false; b.style.opacity = '1'; });
+  }
+
   function fecharToastOverlay(e) {}
   function alternarVisibilidadeSenhaInput(inputId, btnEye) { var ip = document.getElementById(inputId); if (!ip) return; if (ip.type === "password") { ip.type = "text"; if (btnEye) btnEye.innerText = "🙈"; } else { ip.type = "password"; if (btnEye) btnEye.innerText = "👁️"; } }
 
@@ -551,11 +612,9 @@
     document.body.appendChild(script);
   }
 
-  window.addEventListener('load', function() { iniciarRelogio(); carregarFuncionariosEmTodosOsCampos(); if (!navigator.onLine) { var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); } });
-
   function abrirModalSenhaAdmin() {
     mostrarPopupPersonalizado({
-      titulo: "Autenticação", mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.94rem;">Área reservada à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.35rem; letter-spacing:6px;" placeholder="••••" autofocus><button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁</button></div>', icone: "🔐",
+      titulo: "Autenticação", mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.94rem;">Área reservada à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.35rem; letter-spacing:6px;" placeholder="••••" autofocus><button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️</button></div>', icone: "🔐",
       botoes: [
         { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
         { texto: "Entrar", classe: "toast-btn-primary", acao: function() {
@@ -1007,6 +1066,14 @@
     document.getElementById('admin-sub-menu').style.display = 'block';
     document.getElementById('adminNavigationGroup').style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Limpeza automática ao sair
+    try { limparFormularioAusencia(); } catch(e){}
+    try { limparFormularioTroca(); } catch(e){}
+    try { limparFormularioAcordo(); } catch(e){}
+    var pNovo = document.getElementById('pinNovo'); if(pNovo) pNovo.value = "";
+    var nNovo = document.getElementById('nomeNovo'); if(nNovo) nNovo.value = "";
+    var hCor = document.getElementById('horaCorrigir'); if(hCor) hCor.value = "";
   }
 
   function limparFeedbackPonto() { gerirErroCampo("erro-nome-ponto", ""); gerirErroCampo("erro-pin-ponto", ""); }
