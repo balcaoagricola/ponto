@@ -508,15 +508,44 @@
   }
 
   function enviarPedidoComIp(params, callbackSucesso) {
-    var cbName = "jsonp_cb_" + Math.random().toString(36).substring(2, 9);
-    var script = document.createElement('script'); script.id = cbName;
-    window[cbName] = function(dados) { delete window[cbName]; if (script && script.parentNode) script.remove(); if (callbackSucesso) callbackSucesso(dados); };
-    var url = APP_SCRIPT_URL + "?";
-    for (var key in params) { if (params.hasOwnProperty(key)) url += encodeURIComponent(key) + "=" + encodeURIComponent(params[key]) + "&"; }
-    url += "callback=" + cbName; script.src = url;
-    script.onerror = function() { delete window[cbName]; if (script && script.parentNode) script.remove(); emProcessamento = false; mostrarPopupPersonalizado({ titulo: "Erro de Comunicação", mensagem: "Não foi possível contactar o servidor. Tente novamente.", tipo: "erro" }); };
-    document.body.appendChild(script);
-  }
+  var cbName = "jsonp_cb_" + Math.random().toString(36).substring(2, 9);
+  var script = document.createElement('script'); script.id = cbName;
+  
+  // Timeout de 15 segundos para desbloquear a App caso o servidor da Google falhe 
+  var timeoutReq = setTimeout(function() {
+    if (window[cbName]) {
+      delete window[cbName];
+      if (script && script.parentNode) script.remove();
+      emProcessamento = false;
+      var btn = document.getElementById('btnPonto');
+      if (btn) btn.disabled = false;
+      mostrarPopupPersonalizado({ titulo: "Tempo Esgotado", mensagem: "A rede demorou muito a responder. Verifique se recebeu notificação da picagem, caso contrário tente novamente.", tipo: "erro" });
+    }
+  }, 15000);
+
+  window[cbName] = function(dados) {
+    clearTimeout(timeoutReq);
+    delete window[cbName]; 
+    if (script && script.parentNode) script.remove(); 
+    if (callbackSucesso) callbackSucesso(dados); 
+  };
+  
+  var url = APP_SCRIPT_URL + "?";
+  for (var key in params) { if (params.hasOwnProperty(key)) url += encodeURIComponent(key) + "=" + encodeURIComponent(params[key]) + "&"; }
+  url += "callback=" + cbName; script.src = url;
+  
+  script.onerror = function() { 
+    clearTimeout(timeoutReq);
+    delete window[cbName]; 
+    if (script && script.parentNode) script.remove(); 
+    emProcessamento = false; 
+    var btn = document.getElementById('btnPonto');
+    if (btn) btn.disabled = false;
+    mostrarPopupPersonalizado({ titulo: "Erro de Comunicação", mensagem: "Não foi possível contactar o servidor. Tente novamente.", tipo: "erro" }); 
+  };
+  
+  document.body.appendChild(script);
+}
 
   window.addEventListener('load', function() { iniciarRelogio(); carregarFuncionariosEmTodosOsCampos(); if (!navigator.onLine) { var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); } });
 
