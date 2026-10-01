@@ -165,7 +165,7 @@
           <label>PIN de Acesso (4 dígitos) <span class="campo-obrigatorio">*</span></label>
           <div class="password-eye-wrapper">
             <input type="password" id="pinFuncFalta" class="form-control" maxlength="4" inputmode="numeric" placeholder="••••" style="letter-spacing: 8px; text-align: center; font-size: 1.25rem;">
-            <button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput('pinFuncFalta', this)">👁️</button>
+            <button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput('pinFuncFalta', this)">👁️️</button>
           </div>
         </div>
         <div class="form-group"><label>O seu E-mail <span class="campo-obrigatorio">*</span></label><input type="email" id="emailFuncFalta" class="form-control" placeholder="ex: email@email.com"></div>
@@ -511,7 +511,7 @@
     var cbName = "jsonp_cb_" + Math.random().toString(36).substring(2, 9);
     var script = document.createElement('script'); script.id = cbName;
     
-    // Timeout de 15 segundos para desbloquear a App caso o servidor da Google falhe 
+    // Timeout alargado para 35 segundos para suportar o tempo de recálculo da Google
     var timeoutReq = setTimeout(function() {
       if (window[cbName]) {
         delete window[cbName];
@@ -519,9 +519,13 @@
         emProcessamento = false;
         var btn = document.getElementById('btnPonto');
         if (btn) btn.disabled = false;
-        mostrarPopupPersonalizado({ titulo: "Tempo Esgotado", mensagem: "A rede demorou muito a responder. Verifique se recebeu notificação da picagem, caso contrário tente novamente.", tipo: "erro" });
+        mostrarPopupPersonalizado({ 
+          titulo: "Tempo Esgotado", 
+          mensagem: "A operação demorou demasiado tempo. Aguarde uns minutos para verificar se o ponto foi gravado antes de tentar novamente.", 
+          tipo: "erro" 
+        });
       }
-    }, 15000);
+    }, 35000);
 
     window[cbName] = function(dados) {
       clearTimeout(timeoutReq);
@@ -551,7 +555,7 @@
 
   function abrirModalSenhaAdmin() {
     mostrarPopupPersonalizado({
-      titulo: "Autenticação", mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.94rem;">Área reservada à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.35rem; letter-spacing:6px;" placeholder="••••" autofocus><button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️</button></div>', icone: "🔐",
+      titulo: "Autenticação", mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.94rem;">Área reservada à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.35rem; letter-spacing:6px;" placeholder="••••" autofocus><button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️️</button></div>', icone: "🔐",
       botoes: [
         { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
         { texto: "Entrar", classe: "toast-btn-primary", acao: function() {
