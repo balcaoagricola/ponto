@@ -182,6 +182,15 @@
           </select>
         </div>
 
+        <div id="avisoAcordo11" class="hint-info" style="display: none; background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%); border-color: #f0abfc; color: #86198f;">
+          <span><b>💡 Como funciona o Acordo 1:1?</b><br><br>
+          <b>1. Para GANHAR horas (Trabalhar extra):</b><br>
+          Não precisa de pedir aqui. Basta picar o ponto no terminal! O sistema deteta o tempo extra e guarda-o automaticamente no seu Banco.<br>
+          <i>(Só use este formulário se se esqueceu de picar o ponto. Nesse caso preencha as datas e horas abaixo).</i><br><br>
+          <b>2. Para GASTAR horas (Tirar folga):</b><br>
+          Selecione a data em que quer descansar e <b>deixe os horários em branco</b>. O sistema vai descontar 8 horas ao seu Banco de Acordo.</span>
+        </div>
+
         <div class="form-group" id="grupoColegaTroca" style="display: none;">
           <label>Colega com quem vai trocar <span class="campo-obrigatorio">*</span></label>
           <select id="colegaTrocaFunc" class="form-control">
@@ -700,6 +709,11 @@
     var grupo = document.getElementById('grupoColegaTroca');
     var grupoHorario = document.getElementById('grupoHorarioFunc');
     var grupoTrocaHorarios = document.getElementById('grupoTrocaHorarios');
+    var avisoAcordo = document.getElementById('avisoAcordo11');
+
+    if (avisoAcordo) {
+      avisoAcordo.style.display = (tipo === "🤝 Acordo 1:1") ? "flex" : "none";
+    }
 
     if (tipo === "🔄 Troca com Colega") {
       grupo.style.display = "block";
@@ -967,6 +981,7 @@
     var g1 = document.getElementById('grupoColegaTroca'); if (g1) g1.style.display = "none";
     var g2 = document.getElementById('grupoHorarioFunc'); if (g2) g2.style.display = "none";
     var g3 = document.getElementById('grupoTrocaHorarios'); if (g3) g3.style.display = "none";
+    var avisoAcordo = document.getElementById('avisoAcordo11'); if (avisoAcordo) avisoAcordo.style.display = "none";
     limparHorarioFunc();
     limparHorariosTrocaFunc();
   }
