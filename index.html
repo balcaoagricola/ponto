@@ -82,6 +82,7 @@
     .tile-emerald { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); color: #047857; border-color: #6ee7b7; }
     .tile-red { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); color: #b91c1c; border-color: #fca5a5; }
     .tile-teal { background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); color: #0f766e; border-color: #5eead4; }
+    .tile-purple { background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); color: #6d28d9; border-color: #c4b5fd; }
     .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(10px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; }
     .toast-card { background: #ffffff; border-radius: var(--radius-xl); padding: 36px 26px 26px; max-width: 380px; width: 100%; text-align: center; box-shadow: 0 32px 64px -12px rgba(15, 23, 42, 0.35); animation: popModal 0.42s cubic-bezier(0.16, 1, 0.3, 1); }
     @keyframes popModal { from { transform: scale(0.92) translateY(24px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
@@ -152,9 +153,6 @@
     <button id="btnPonto" class="btn btn-primary" onclick="registarPontoDiario()">👆 Validar Registo de Ponto</button>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════
-       SECÇÃO: COMUNICAR AUSÊNCIA (FUNCIONÁRIO)
-       ═══════════════════════════════════════════════════════ -->
   <div id="section-falta-func" class="content-section">
     <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
       <h3 style="margin-bottom: 8px; color: var(--primary); text-align: left; font-size: 1.05rem;">📅 Comunicar Ausência</h3>
@@ -185,40 +183,23 @@
         <div id="avisoAcordo11" class="hint-info" style="display: none; background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%); border-color: #f0abfc; color: #86198f;">
           <span><b>💡 Como funciona o Acordo 1:1?</b><br><br>
           <b>1. Para GANHAR horas (Trabalhar para compensar depois):</b><br>
-          Se vai fazer horas extra propositadamente para alimentar o seu Banco, selecione o motivo <b>Acordo 1:1</b> e preencha as horas que vai cumprir. Assim, o sistema separa estas horas das horas extra pagas normais.<br><br>
+          Se vai fazer horas extra propositadamente para alimentar o seu Banco, selecione o motivo <b>Acordo 1:1</b> e preencha as horas que vai cumprir.<br><br>
           <b>2. Para GASTAR horas (Tirar folga):</b><br>
-          • <b>Dia Todo:</b> Escolha a data e deixe os horários em branco (desconta 8h ao Banco).<br>
-          • <b>Parcial:</b> Preencha o horário em que vai trabalhar (ex: 09:00 às 13:00) e o sistema desconta apenas o restante ao Banco.</span>
+          • <b>Dia Todo:</b> Escolha a data e deixe os horários em branco.<br>
+          • <b>Parcial:</b> Preencha o horário que vai trabalhar.</span>
         </div>
 
         <div class="form-group" id="grupoColegaTroca" style="display: none;">
           <label>Colega com quem vai trocar <span class="campo-obrigatorio">*</span></label>
-          <select id="colegaTrocaFunc" class="form-control">
-            <option value="">Selecione o colega</option>
-          </select>
+          <select id="colegaTrocaFunc" class="form-control"><option value="">Selecione o colega</option></select>
           <div class="badge-troca">O nome do colega será comunicado à gerência</div>
         </div>
 
-        <!-- HORÁRIOS PARA FALTAS SIMPLES (não-troca) -->
         <div class="form-group" id="grupoHorarioFunc" style="display: none;">
           <label>Horário que vai cumprir neste dia (opcional)</label>
           <p class="periodo-hint">Indique o horário que <b>vai cumprir</b> neste dia. Deixe em branco para assinalar ausência de <b>dia completo</b>.</p>
-          <div class="periodo-card">
-            <div class="periodo-num">1</div>
-            <div class="periodo-inputs">
-              <input type="time" id="fuE1" class="form-control periodo-input">
-              <span class="periodo-sep">→</span>
-              <input type="time" id="fuS1" class="form-control periodo-input">
-            </div>
-          </div>
-          <div class="periodo-card">
-            <div class="periodo-num">2</div>
-            <div class="periodo-inputs">
-              <input type="time" id="fuE2" class="form-control periodo-input">
-              <span class="periodo-sep">→</span>
-              <input type="time" id="fuS2" class="form-control periodo-input">
-            </div>
-          </div>
+          <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="fuE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="fuS1" class="form-control periodo-input"></div></div>
+          <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="fuE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="fuS2" class="form-control periodo-input"></div></div>
           <button type="button" class="btn-add-periodo" id="btnAddPeriodoFunc" onclick="togglePeriodosExtraFunc()">➕ Adicionar 3º / 4º período</button>
           <div id="periodosExtraFunc" style="display: none;">
             <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="fuE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="fuS3" class="form-control periodo-input"></div></div>
@@ -226,7 +207,6 @@
           </div>
         </div>
 
-        <!-- HORÁRIOS DUPLOS PARA TROCA COM COLEGA -->
         <div id="grupoTrocaHorarios" style="display: none;">
           <div class="troca-bloco">
             <h4>👤 O SEU Horário Nestes Dias</h4>
@@ -273,6 +253,7 @@
           <button class="btn tile-amber" onclick="abrirSubModulo('ausencias')"><span>📅</span> Lançar Faltas</button>
           <button class="btn tile-teal" onclick="abrirSubModulo('troca')"><span>🔄</span> Troca Turno</button>
           <button class="btn tile-violet" onclick="abrirSubModulo('acordo')"><span>🤝</span> Acordo 1:1</button>
+          <button class="btn tile-purple" onclick="abrirSubModulo('cativas1a1'); carregarCativas1a1();"><span>💰</span> Cativas 1:1</button>
           <button class="btn tile-cyan" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
           <button class="btn tile-rose" onclick="abrirSubModulo('pdf')"><span>📄</span> Exportar PDF</button>
           <button class="btn tile-emerald" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar Colab.</button>
@@ -306,8 +287,8 @@
         </div>
         <div class="hint-info" id="infoFaltaJustificada" style="display:none;">
           <span><b>ℹ️ Como decidir?</b><br>
-          • <b>📄 Falta Justificada (desconta meta)</b> — usa quando a falta deve reduzir a meta semanal do colaborador (ex: consulta médica sem atestado, doença comprovada sem baixa formal, ou outras faltas justificadas que a empresa não vai pagar).<br><br>
-          • <b>📄 Falta Justificada (NÃO desconta meta)</b> — usa quando a falta é legalmente protegida e NÃO deve reduzir a meta semanal (ex: casamento, falecimento de familiar, acompanhamento de filho, doação de sangue, etc. — Art.º 255.º CT).</span>
+          • <b>📄 Falta Justificada (desconta meta)</b> — usa quando a falta deve reduzir a meta semanal do colaborador.<br><br>
+          • <b>📄 Falta Justificada (NÃO desconta meta)</b> — usa quando a falta é legalmente protegida e NÃO deve reduzir a meta semanal (Art.º 255.º CT).</span>
         </div>
         <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaInicio" class="form-control"></div>
         <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaFim" class="form-control"></div>
@@ -329,26 +310,13 @@
     <div id="admin-sub-troca" style="display: none;">
       <div class="admin-card">
         <h3>🔄 Registar Troca de Turno</h3>
-        <div class="hint-info"><span>Preencha o horário que <b>cada colaborador</b> vai cumprir. Ambos os mapas são atualizados em simultâneo e ordenados por data.</span></div>
-
-        <div class="form-group">
-          <label>Colaborador que FALTA <span class="campo-obrigatorio">*</span></label>
-          <select id="nomeTrocaAusente" class="form-control" onchange="atualizarFiltroSubstitutosTroca()">
-            <option value="" disabled selected>Selecione o colaborador ausente</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Colaborador SUBSTITUTO <span class="campo-obrigatorio">*</span></label>
-          <select id="nomeTrocaSubstituto" class="form-control">
-            <option value="" disabled selected>Selecione o colega substituto</option>
-          </select>
-        </div>
+        <div class="hint-info"><span>Preencha o horário que <b>cada colaborador</b> vai cumprir. Ambos os mapas são atualizados em simultâneo.</span></div>
+        <div class="form-group"><label>Colaborador que FALTA <span class="campo-obrigatorio">*</span></label><select id="nomeTrocaAusente" class="form-control" onchange="atualizarFiltroSubstitutosTroca()"><option value="" disabled selected>Selecione o colaborador ausente</option></select></div>
+        <div class="form-group"><label>Colaborador SUBSTITUTO <span class="campo-obrigatorio">*</span></label><select id="nomeTrocaSubstituto" class="form-control"><option value="" disabled selected>Selecione o colega substituto</option></select></div>
         <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataTrocaInicio" class="form-control"></div>
         <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataTrocaFim" class="form-control"></div>
-
         <div class="form-group" style="margin-top: 24px;">
           <label>Horário do Colaborador Ausente</label>
-          <p class="periodo-hint">Horário que o <b>colaborador ausente</b> irá cumprir. Deixe em branco se ficar efetivamente ausente.</p>
           <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="ausE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="ausS1" class="form-control periodo-input"></div></div>
           <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="ausE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="ausS2" class="form-control periodo-input"></div></div>
           <button type="button" class="btn-add-periodo" id="btnAddPeriodoAus" onclick="togglePeriodosExtraAus()">➕ Adicionar 3º / 4º período</button>
@@ -357,10 +325,8 @@
             <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="ausE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="ausS4" class="form-control periodo-input"></div></div>
           </div>
         </div>
-
         <div class="form-group" style="margin-top: 24px;">
           <label>Horário do Substituto</label>
-          <p class="periodo-hint">Horário que o <b>substituto</b> irá cumprir. Deixe em branco se picar ponto normalmente.</p>
           <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="horE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="horS1" class="form-control periodo-input"></div></div>
           <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="horE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="horS2" class="form-control periodo-input"></div></div>
           <button type="button" class="btn-add-periodo" id="btnAddPeriodo" onclick="togglePeriodosExtra()">➕ Adicionar 3º / 4º período</button>
@@ -369,7 +335,6 @@
             <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="horE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="horS4" class="form-control periodo-input"></div></div>
           </div>
         </div>
-
         <button class="btn btn-primary" onclick="submeterTrocaTurno()">Confirmar Troca de Turno</button>
       </div>
     </div>
@@ -391,6 +356,48 @@
           </div>
         </div>
         <button class="btn btn-primary" onclick="submeterAcordo()">Aplicar Acordo</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         ★ NOVO v2026.48N — SECÇÃO: CATIVAS 1:1
+         ═══════════════════════════════════════════════════════ -->
+    <div id="admin-sub-cativas1a1" style="display: none;">
+      <div class="admin-card">
+        <h3>💰 Cativas 1:1 — Conceder</h3>
+        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55;">
+          Registe as horas que ficam em <b>banco de cativas</b> para serem compensadas em data futura.
+          Estas horas <b>NÃO</b> geram bónus extra.
+        </p>
+        <div class="hint-info" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-color: #c4b5fd; color: #6d28d9;">
+          <span>
+            <b>💡 Como funciona?</b><br>
+            Ex: Maria trabalhou 1h extra acordada com a entidade patronal em 12/10. Essa hora NÃO gera bónus — fica <b>guardada</b> para usar como folga. Quando a Maria usar, o sistema <b>desconta automaticamente</b> do banco de cativas.
+          </span>
+        </div>
+        <div class="form-group">
+          <label>Colaborador <span class="campo-obrigatorio">*</span></label>
+          <select id="nomeCativa" class="form-control"></select>
+        </div>
+        <div class="form-group">
+          <label>Data de referência <span class="campo-obrigatorio">*</span></label>
+          <input type="date" id="dataCativa" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Horas a conceder <span class="campo-obrigatorio">*</span></label>
+          <input type="number" id="horasCativa" class="form-control" step="0.25" min="0.25" placeholder="Ex: 1">
+          <p class="periodo-hint" style="margin-top:8px;">Ex: <b>1</b> = 1h · <b>1.5</b> = 1h30 · <b>0.5</b> = 30 min</p>
+        </div>
+        <div class="form-group">
+          <label>Motivo (opcional)</label>
+          <textarea id="notaCativa" class="form-control" rows="2" placeholder="Ex: 1h acordada com a entidade patronal"></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="submeterCativa1a1()">Conceder Cativas</button>
+
+        <div style="margin-top: 28px; padding-top: 22px; border-top: 1.5px solid var(--border);">
+          <h4 style="font-size: 0.92rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px;">📋 Cativas Registadas</h4>
+          <div id="listaCativas1a1Container"><p style="text-align: center; color: var(--text-muted);">A carregar...</p></div>
+        </div>
       </div>
     </div>
 
@@ -458,7 +465,7 @@
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
   var senhaAdminSessao = ""; var emProcessamento = false; var estaOnline = navigator.onLine;
   var listaFuncionariosCache = [];
-  var MODULOS_ADMIN = ['pedidos', 'ausencias', 'troca', 'acordo', 'corrigir', 'pdf', 'funcionario', 'remover'];
+  var MODULOS_ADMIN = ['pedidos', 'ausencias', 'troca', 'acordo', 'cativas1a1', 'corrigir', 'pdf', 'funcionario', 'remover'];
   var TIPOS_COM_HORARIO = ["📄 Falta Justificada", "⚠️ Falta Injustificada", "🤝 Acordo 1:1"];
 
   function configurarComportamentoDatas() {
@@ -467,10 +474,8 @@
       var elFim = document.getElementById(idFim);
       if (elIni && elFim) {
         elIni.addEventListener('change', function() {
-          elFim.min = this.value; 
-          if (!elFim.value || elFim.value < this.value) {
-            elFim.value = this.value; 
-          }
+          elFim.min = this.value;
+          if (!elFim.value || elFim.value < this.value) { elFim.value = this.value; }
         });
       }
     }
@@ -480,16 +485,16 @@
 
     var hoje = new Date();
     var hojeStr = hoje.toISOString().split('T')[0];
-    
     var campoCorrigir = document.getElementById('dataCorrigir');
-    if(campoCorrigir) campoCorrigir.value = hojeStr;
-
+    if (campoCorrigir) campoCorrigir.value = hojeStr;
+    var campoCativa = document.getElementById('dataCativa');
+    if (campoCativa) campoCativa.value = hojeStr;
     var dataInicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
     var dataInicioMesStr = dataInicioMes.toISOString().split('T')[0];
     var campoPdfIni = document.getElementById('dataInicio');
     var campoPdfFim = document.getElementById('dataFim');
-    if(campoPdfIni) campoPdfIni.value = dataInicioMesStr;
-    if(campoPdfFim) campoPdfFim.value = hojeStr;
+    if (campoPdfIni) campoPdfIni.value = dataInicioMesStr;
+    if (campoPdfFim) campoPdfFim.value = hojeStr;
   }
 
   function iniciarRelogio() {
@@ -503,22 +508,18 @@
     }, 1000);
   }
 
-  window.addEventListener('load', function() { 
-    iniciarRelogio(); 
-    carregarFuncionariosEmTodosOsCampos(); 
-    configurarComportamentoDatas(); 
-    
+  window.addEventListener('load', function() {
+    iniciarRelogio();
+    carregarFuncionariosEmTodosOsCampos();
+    configurarComportamentoDatas();
     var emailGuardado = localStorage.getItem('emailColaboradorBA');
     var campoEmail = document.getElementById('emailFuncFalta');
-    if (emailGuardado && campoEmail) {
-      campoEmail.value = emailGuardado;
-    }
-
-    if (!navigator.onLine) { var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); } 
+    if (emailGuardado && campoEmail) { campoEmail.value = emailGuardado; }
+    if (!navigator.onLine) { var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); }
   });
 
-  window.addEventListener('online', function() { estaOnline = true; var g = document.getElementById('gpsIndicator'); if(g) g.classList.remove('offline'); mostrarPopupPersonalizado({ titulo: "Ligação Restabelecida", mensagem: "O dispositivo voltou a estar online.", tipo: "sucesso" }); });
-  window.addEventListener('offline', function() { estaOnline = false; var g = document.getElementById('gpsIndicator'); if(g) g.classList.add('offline'); mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Verifique a sua ligação à internet.", tipo: "erro" }); });
+  window.addEventListener('online', function() { estaOnline = true; var g = document.getElementById('gpsIndicator'); if (g) g.classList.remove('offline'); mostrarPopupPersonalizado({ titulo: "Ligação Restabelecida", mensagem: "O dispositivo voltou a estar online.", tipo: "sucesso" }); });
+  window.addEventListener('offline', function() { estaOnline = false; var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Verifique a sua ligação à internet.", tipo: "erro" }); });
 
   function atualizarPinDisplay(inputId, containerId) {
     var input = document.getElementById(inputId); if (!input) return;
@@ -535,40 +536,31 @@
     document.getElementById('toastBody').innerHTML = config.mensagem || "";
     var icon = document.getElementById('toastIcon');
     icon.className = "toast-icon";
-    
     var botoesPrimarios = document.querySelectorAll('.content-section.active .btn-primary');
-
     if (config.tipo === "sucesso") icon.innerText = "✅";
     else if (config.tipo === "erro") icon.innerText = "❌";
-    else if (config.tipo === "processando") { 
-      icon.className = "toast-icon ampulheta-animada"; 
-      icon.innerText = "⏳"; 
-      botoesPrimarios.forEach(function(b){ b.disabled = true; b.style.opacity = '0.5'; });
-    }
+    else if (config.tipo === "processando") { icon.className = "toast-icon ampulheta-animada"; icon.innerText = "⏳"; botoesPrimarios.forEach(function(b){ b.disabled = true; b.style.opacity = '0.5'; }); }
     else if (config.tipo === "aviso") icon.innerText = config.icone || "⚠️";
     else icon.innerText = config.icone || "💬";
-    
     var acts = document.getElementById('toastActionsContainer'); acts.innerHTML = "";
     if (config.tipo === "processando") acts.style.display = "none";
     else {
       acts.style.display = "flex";
       botoesPrimarios.forEach(function(b){ b.disabled = false; b.style.opacity = '1'; });
-      
       if (config.botoes) config.botoes.forEach(function(b) { var btn = document.createElement('button'); btn.className = "toast-btn " + (b.classe || "toast-btn-primary"); btn.innerText = b.texto; btn.onclick = b.acao; acts.appendChild(btn); });
       else { var btn = document.createElement('button'); btn.className = "toast-btn toast-btn-primary"; btn.innerText = "Concluir"; btn.onclick = fecharToast; acts.appendChild(btn); }
     }
     overlay.style.display = "flex";
   }
 
-  function fecharToast() { 
-    document.getElementById('toastOverlay').style.display = "none"; 
-    emProcessamento = false; 
-    var btnPonto = document.getElementById('btnPonto'); 
+  function fecharToast() {
+    document.getElementById('toastOverlay').style.display = "none";
+    emProcessamento = false;
+    var btnPonto = document.getElementById('btnPonto');
     if (btnPonto) { btnPonto.disabled = false; btnPonto.style.opacity = '1'; }
     var botoesPrimarios = document.querySelectorAll('.btn-primary');
     botoesPrimarios.forEach(function(b){ b.disabled = false; b.style.opacity = '1'; });
   }
-
   function fecharToastOverlay(e) {}
   function alternarVisibilidadeSenhaInput(inputId, btnEye) { var ip = document.getElementById(inputId); if (!ip) return; if (ip.type === "password") { ip.type = "text"; if (btnEye) btnEye.innerText = "🙈"; } else { ip.type = "password"; if (btnEye) btnEye.innerText = "👁️"; } }
 
@@ -588,7 +580,6 @@
   function enviarPedidoComIp(params, callbackSucesso) {
     var cbName = "jsonp_cb_" + Math.random().toString(36).substring(2, 9);
     var script = document.createElement('script'); script.id = cbName;
-    
     var timeoutReq = setTimeout(function() {
       if (window[cbName]) {
         delete window[cbName];
@@ -596,35 +587,27 @@
         emProcessamento = false;
         var btn = document.getElementById('btnPonto');
         if (btn) btn.disabled = false;
-        mostrarPopupPersonalizado({ 
-          titulo: "Tempo Esgotado", 
-          mensagem: "A operação demorou demasiado tempo. Aguarde uns minutos para verificar se o ponto foi gravado antes de tentar novamente.", 
-          tipo: "erro" 
-        });
+        mostrarPopupPersonalizado({ titulo: "Tempo Esgotado", mensagem: "A operação demorou demasiado tempo.", tipo: "erro" });
       }
     }, 35000);
-
     window[cbName] = function(dados) {
       clearTimeout(timeoutReq);
-      delete window[cbName]; 
-      if (script && script.parentNode) script.remove(); 
-      if (callbackSucesso) callbackSucesso(dados); 
+      delete window[cbName];
+      if (script && script.parentNode) script.remove();
+      if (callbackSucesso) callbackSucesso(dados);
     };
-    
     var url = APP_SCRIPT_URL + "?";
     for (var key in params) { if (params.hasOwnProperty(key)) url += encodeURIComponent(key) + "=" + encodeURIComponent(params[key]) + "&"; }
     url += "callback=" + cbName; script.src = url;
-    
-    script.onerror = function() { 
+    script.onerror = function() {
       clearTimeout(timeoutReq);
-      delete window[cbName]; 
-      if (script && script.parentNode) script.remove(); 
-      emProcessamento = false; 
+      delete window[cbName];
+      if (script && script.parentNode) script.remove();
+      emProcessamento = false;
       var btn = document.getElementById('btnPonto');
       if (btn) btn.disabled = false;
-      mostrarPopupPersonalizado({ titulo: "Erro de Comunicação", mensagem: "Não foi possível contactar o servidor. Tente novamente.", tipo: "erro" }); 
+      mostrarPopupPersonalizado({ titulo: "Erro de Comunicação", mensagem: "Não foi possível contactar o servidor.", tipo: "erro" });
     };
-    
     document.body.appendChild(script);
   }
 
@@ -687,7 +670,7 @@
   }
 
   function preencherSelectsNomes(lista) {
-    ['nomeFuncionario', 'nomeFuncionarioFolga', 'nomeRemover', 'nomeFuncFalta', 'nomeAcordo', 'nomeCorrigir', 'colegaTrocaFunc', 'nomeTrocaAusente', 'nomeTrocaSubstituto'].forEach(function(id) {
+    ['nomeFuncionario', 'nomeFuncionarioFolga', 'nomeRemover', 'nomeFuncFalta', 'nomeAcordo', 'nomeCorrigir', 'colegaTrocaFunc', 'nomeTrocaAusente', 'nomeTrocaSubstituto', 'nomeCativa'].forEach(function(id) {
       var sel = document.getElementById(id);
       if (sel) {
         var valorAtual = sel.value;
@@ -708,26 +691,18 @@
     var grupoHorario = document.getElementById('grupoHorarioFunc');
     var grupoTrocaHorarios = document.getElementById('grupoTrocaHorarios');
     var avisoAcordo = document.getElementById('avisoAcordo11');
-
-    if (avisoAcordo) {
-      avisoAcordo.style.display = (tipo === "🤝 Acordo 1:1") ? "flex" : "none";
-    }
-
+    if (avisoAcordo) { avisoAcordo.style.display = (tipo === "🤝 Acordo 1:1") ? "flex" : "none"; }
     if (tipo === "🔄 Troca com Colega") {
-      grupo.style.display = "block";
-      grupoTrocaHorarios.style.display = "block";
-      grupoHorario.style.display = "none";
+      grupo.style.display = "block"; grupoTrocaHorarios.style.display = "block"; grupoHorario.style.display = "none";
       atualizarFiltroColegasTroca();
     } else {
-      grupo.style.display = "none";
-      grupoTrocaHorarios.style.display = "none";
+      grupo.style.display = "none"; grupoTrocaHorarios.style.display = "none";
       var s = document.getElementById('colegaTrocaFunc'); if (s) s.value = "";
       if (TIPOS_COM_HORARIO.indexOf(tipo) !== -1) grupoHorario.style.display = "block";
       else { grupoHorario.style.display = "none"; limparHorarioFunc(); }
     }
   }
 
-  // ★ v2026.44M — Mostra/esconde o hint explicativo sobre "Falta Justificada (desconta/não desconta)"
   function alternarOpcaoNaoDesconta() {
     var sel = document.getElementById('tipoAusencia');
     var info = document.getElementById('infoFaltaJustificada');
@@ -766,49 +741,41 @@
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
     else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('fuE3').value = ""; document.getElementById('fuS3').value = ""; document.getElementById('fuE4').value = ""; document.getElementById('fuS4').value = ""; }
   }
-
   function togglePeriodosExtraTrPro() {
     var el = document.getElementById('periodosExtraTrPro'); var btn = document.getElementById('btnAddPeriodoTrPro');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
     else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('trProE3').value = ""; document.getElementById('trProS3').value = ""; document.getElementById('trProE4').value = ""; document.getElementById('trProS4').value = ""; }
   }
-
   function togglePeriodosExtraTrCol() {
     var el = document.getElementById('periodosExtraTrCol'); var btn = document.getElementById('btnAddPeriodoTrCol');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
     else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('trColE3').value = ""; document.getElementById('trColS3').value = ""; document.getElementById('trColE4').value = ""; document.getElementById('trColS4').value = ""; }
   }
-
   function limparHorarioFunc() {
     ['fuE1','fuS1','fuE2','fuS2','fuE3','fuS3','fuE4','fuS4'].forEach(function(id) { var e = document.getElementById(id); if(e) e.value = ""; });
     var el = document.getElementById('periodosExtraFunc'); var btn = document.getElementById('btnAddPeriodoFunc');
     if (el) el.style.display = 'none'; if (btn) btn.innerText = '➕ Adicionar 3º / 4º período';
   }
-
   function limparHorariosTrocaFunc() {
     ['trProE1','trProS1','trProE2','trProS2','trProE3','trProS3','trProE4','trProS4','trColE1','trColS1','trColE2','trColS2','trColE3','trColS3','trColE4','trColS4'].forEach(function(id) { var e = document.getElementById(id); if(e) e.value = ""; });
     var elP = document.getElementById('periodosExtraTrPro'); if (elP) elP.style.display = 'none';
     var elC = document.getElementById('periodosExtraTrCol'); if (elC) elC.style.display = 'none';
   }
-
   function togglePeriodosExtra() {
     var el = document.getElementById('periodosExtra'); var btn = document.getElementById('btnAddPeriodo');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
     else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('horE3').value = ""; document.getElementById('horS3').value = ""; document.getElementById('horE4').value = ""; document.getElementById('horS4').value = ""; }
   }
-
   function togglePeriodosExtraAus() {
     var el = document.getElementById('periodosExtraAus'); var btn = document.getElementById('btnAddPeriodoAus');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
     else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('ausE3').value = ""; document.getElementById('ausS3').value = ""; document.getElementById('ausE4').value = ""; document.getElementById('ausS4').value = ""; }
   }
-
   function togglePeriodosExtraAcordo() {
     var el = document.getElementById('periodosExtraAcordo'); var btn = document.getElementById('btnAddPeriodoAcordo');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
     else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('acE3').value = ""; document.getElementById('acS3').value = ""; document.getElementById('acE4').value = ""; document.getElementById('acS4').value = ""; }
   }
-
   function togglePeriodosExtraAusencia() {
     var el = document.getElementById('periodosExtraAusencia'); var btn = document.getElementById('btnAddPeriodoAusencia');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
@@ -824,7 +791,6 @@
     }
     return "";
   }
-
   function contarPeriodosAtivos(horarios) {
     if (!horarios || typeof horarios !== 'object') return 0;
     var c = 0;
@@ -894,6 +860,67 @@
     document.getElementById('btnAddPeriodoAcordo').innerText = '➕ Adicionar 3º / 4º período';
   }
 
+  // ★ NOVO v2026.48N — Cativas 1:1
+  function carregarCativas1a1() {
+    var container = document.getElementById('listaCativas1a1Container');
+    if (container) container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>A carregar...</p>";
+    chamarAPIJsonp({ action: "listarCativas1a1Jsonp", senha: senhaAdminSessao }, function(resp) {
+      if (typeof resp === "string" && resp.indexOf("Aviso") !== -1) { if (container) container.innerHTML = "<p style='color:var(--danger); text-align:center;'>" + resp + "</p>"; return; }
+      if (!resp || resp.length === 0) { if (container) container.innerHTML = "<p style='text-align:center; color:var(--text-muted); font-weight: 600; padding: 15px;'>Sem cativas registadas.</p>"; return; }
+      var html = "";
+      resp.forEach(function(c) {
+        var h = Math.floor(c.minutos / 60), m = c.minutos % 60;
+        var hStr = (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m;
+        var dataFmt = c.data.split('-').reverse().join('/');
+        html += '<div class="pedido-item" style="border-left-color:#7e22ce;">';
+        html += '<p><strong>👤 Colaborador:</strong> ' + c.nome + '</p>';
+        html += '<p><strong>📅 Data:</strong> ' + dataFmt + '</p>';
+        html += '<p><strong>⏱️ Horas:</strong> ' + hStr + '</p>';
+        if (c.nota) html += '<p><strong>📝 Motivo:</strong> <i>' + c.nota + '</i></p>';
+        html += '<div style="margin-top:12px;"><button class="btn btn-danger" style="padding:11px; margin:0; font-size:0.78rem;" onclick="removerCativa1a1(\'' + c.key + '\')">🗑️ Remover</button></div>';
+        html += '</div>';
+      });
+      if (container) container.innerHTML = html;
+    });
+  }
+
+  function submeterCativa1a1() {
+    var nome = document.getElementById('nomeCativa').value;
+    var data = document.getElementById('dataCativa').value;
+    var horas = parseFloat((document.getElementById('horasCativa').value || '').replace(',', '.'));
+    var nota = document.getElementById('notaCativa').value.trim();
+    if (!nome) { mostrarPopupPersonalizado({ titulo: "Campo Obrigatório", mensagem: "Selecione o colaborador.", tipo: "erro" }); return; }
+    if (!data) { mostrarPopupPersonalizado({ titulo: "Campo Obrigatório", mensagem: "Indique a data de referência.", tipo: "erro" }); return; }
+    if (isNaN(horas) || horas <= 0) { mostrarPopupPersonalizado({ titulo: "Valor Inválido", mensagem: "Indique as horas a conceder (ex: 1 ou 1.5).", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A conceder cativas...", tipo: "processando" });
+    chamarAPIJsonp({ action: "concederCativa1a1Jsonp", nome: nome, data: data, minutos: Math.round(horas * 60), nota: nota, senha: senhaAdminSessao }, function(resp) {
+      mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+      if (resp.indexOf("Aviso") === -1) {
+        document.getElementById('horasCativa').value = "";
+        document.getElementById('notaCativa').value = "";
+        carregarCativas1a1();
+      }
+    });
+  }
+
+  function removerCativa1a1(chave) {
+    mostrarPopupPersonalizado({
+      titulo: "Confirmar Remoção",
+      mensagem: "Tem a certeza que quer remover esta cativa?<br><br>O banco de cativas do colaborador será recalculado.",
+      icone: "⚠️",
+      botoes: [
+        { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
+        { texto: "Remover", classe: "toast-btn-primary", acao: function() {
+            mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A remover cativa...", tipo: "processando" });
+            chamarAPIJsonp({ action: "removerCativa1a1Jsonp", chave: chave, senha: senhaAdminSessao }, function(resp) {
+              mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+              if (resp.indexOf("Aviso") === -1) carregarCativas1a1();
+            });
+        }}
+      ]
+    });
+  }
+
   function submeterAusenciaAdministrativa() {
     var nome = document.getElementById('nomeFuncionarioFolga').value; var tipo = document.getElementById('tipoAusencia').value;
     var dIni = document.getElementById('dataFolgaInicio').value; var dFim = document.getElementById('dataFolgaFim').value;
@@ -926,57 +953,32 @@
     var dIni = document.getElementById('dataFaltaFuncInicio').value;
     var dFim = document.getElementById('dataFaltaFuncFim').value;
     var obs = document.getElementById('obsFuncFalta').value;
-
-    if(!nome || !pin || !email || !tipo || !dIni || !dFim) { 
-      mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios antes de submeter.", tipo: "erro" }); 
-      return; 
-    }
-
+    if (!nome || !pin || !email || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios antes de submeter.", tipo: "erro" }); return; }
     localStorage.setItem('emailColaboradorBA', email.trim());
-
     var pacoteExtras = "";
-
     if (tipo === "🔄 Troca com Colega") {
       var colega = document.getElementById('colegaTrocaFunc').value;
       if (!colega) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Selecione o colega com quem pretende efetuar a troca.", tipo: "erro" }); return; }
       if (colega === nome) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Não pode escolher-se a si próprio para a troca.", tipo: "erro" }); return; }
-
       var horProprio = { e1: document.getElementById('trProE1').value, s1: document.getElementById('trProS1').value, e2: document.getElementById('trProE2').value, s2: document.getElementById('trProS2').value, e3: document.getElementById('trProE3').value, s3: document.getElementById('trProS3').value, e4: document.getElementById('trProE4').value, s4: document.getElementById('trProS4').value };
       var horColega = { e1: document.getElementById('trColE1').value, s1: document.getElementById('trColS1').value, e2: document.getElementById('trColE2').value, s2: document.getElementById('trColS2').value, e3: document.getElementById('trColE3').value, s3: document.getElementById('trColS3').value, e4: document.getElementById('trColE4').value, s4: document.getElementById('trColS4').value };
-
       var errP = validarParesHorario(horProprio); if (errP) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (O seu)", mensagem: errP, tipo: "erro" }); return; }
       var errC = validarParesHorario(horColega); if (errC) { mostrarPopupPersonalizado({ titulo: "Horário Inválido (Colega)", mensagem: errC, tipo: "erro" }); return; }
-
       var numP = contarPeriodosAtivos(horProprio); var numC = contarPeriodosAtivos(horColega);
       if (numP === 0 && numC === 0) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Preencha pelo menos o horário de um dos intervenientes.", tipo: "erro" }); return; }
       if (dIni !== dFim) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "A troca com colega só pode ser submetida para um único dia de cada vez.", tipo: "erro" }); return; }
-
       pacoteExtras = "|TROCA:" + JSON.stringify({ proprio: horProprio, colega: horColega, nomeColega: colega });
     }
-
     var horarios = { e1: "", s1: "", e2: "", s2: "", e3: "", s3: "", e4: "", s4: "" };
-    
     if (TIPOS_COM_HORARIO.indexOf(tipo) !== -1) {
       horarios = { e1: document.getElementById('fuE1').value, s1: document.getElementById('fuS1').value, e2: document.getElementById('fuE2').value, s2: document.getElementById('fuS2').value, e3: document.getElementById('fuE3').value, s3: document.getElementById('fuS3').value, e4: document.getElementById('fuE4').value, s4: document.getElementById('fuS4').value };
       var erro = validarParesHorario(horarios); if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
       if (contarPeriodosAtivos(horarios) > 0 && dIni !== dFim) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O horário só pode ser preenchido para um único dia.", tipo: "erro" }); return; }
     }
-
     mostrarPopupPersonalizado({ titulo: "A Enviar", mensagem: "A submeter o seu pedido à gerência...", tipo: "processando" });
-    
-    chamarAPIJsonp({
-      action: "comunicarAusenciaFuncionarioJsonp",
-      nome: nome, pin: pin, email: email, tipo: tipo,
-      dataInicio: dIni, dataFim: dFim, obs: obs,
-      horarios: JSON.stringify(horarios),
-      extras: pacoteExtras
-    }, function(resp) {
-      if (resp.indexOf("Aviso") !== -1) { 
-        mostrarPopupPersonalizado({ titulo: "Não Foi Possível Submeter", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); 
-      } else { 
-        mostrarPopupPersonalizado({ titulo: "Pedido Enviado", mensagem: resp, tipo: "sucesso" }); 
-        setTimeout(voltarAoEcraPrincipal, 2500); 
-      }
+    chamarAPIJsonp({ action: "comunicarAusenciaFuncionarioJsonp", nome: nome, pin: pin, email: email, tipo: tipo, dataInicio: dIni, dataFim: dFim, obs: obs, horarios: JSON.stringify(horarios), extras: pacoteExtras }, function(resp) {
+      if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível Submeter", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); }
+      else { mostrarPopupPersonalizado({ titulo: "Pedido Enviado", mensagem: resp, tipo: "sucesso" }); setTimeout(voltarAoEcraPrincipal, 2500); }
     });
   }
 
@@ -1109,7 +1111,6 @@
     document.getElementById('admin-sub-menu').style.display = 'block';
     document.getElementById('adminNavigationGroup').style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    
     try { limparFormularioAusencia(); } catch(e){}
     try { limparFormularioTroca(); } catch(e){}
     try { limparFormularioAcordo(); } catch(e){}
