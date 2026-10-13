@@ -182,9 +182,9 @@
 
         <div id="avisoAcordo11" class="hint-info" style="display: none; background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%); border-color: #f0abfc; color: #86198f;">
           <span><b>💡 Como funciona o Acordo 1:1?</b><br><br>
-          <b>1. Para GANHAR horas (Trabalhar para compensar depois):</b><br>
-          Se vai fazer horas extra propositadamente para alimentar o seu Banco, selecione o motivo <b>Acordo 1:1</b> e preencha as horas que vai cumprir.<br><br>
-          <b>2. Para GASTAR horas (Tirar folga):</b><br>
+          <b>1. Para GANHAR horas:</b><br>
+          Se vai fazer horas extra propositadamente para alimentar o Banco, selecione <b>Acordo 1:1</b> e preencha as horas que vai cumprir.<br><br>
+          <b>2. Para GASTAR horas:</b><br>
           • <b>Dia Todo:</b> Escolha a data e deixe os horários em branco.<br>
           • <b>Parcial:</b> Preencha o horário que vai trabalhar.</span>
         </div>
@@ -252,8 +252,8 @@
           <button class="btn tile-blue" onclick="abrirSubModulo('pedidos'); carregarPedidosPendentes();"><span>📩</span> Pedidos</button>
           <button class="btn tile-amber" onclick="abrirSubModulo('ausencias')"><span>📅</span> Lançar Faltas</button>
           <button class="btn tile-teal" onclick="abrirSubModulo('troca')"><span>🔄</span> Troca Turno</button>
-          <button class="btn tile-violet" onclick="abrirSubModulo('acordo')"><span>🤝</span> Acordo 1:1</button>
-          <button class="btn tile-purple" onclick="abrirSubModulo('cativas1a1'); carregarCativas1a1();"><span>💰</span> Cativas 1:1</button>
+          <button class="btn tile-violet" onclick="abrirSubModulo('acordo'); carregarSaldosCativas1a1();"><span>💰</span> Usar Cativas</button>
+          <button class="btn tile-purple" onclick="abrirSubModulo('cativas1a1'); carregarCativas1a1();"><span>➕</span> Conceder Cativas</button>
           <button class="btn tile-cyan" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
           <button class="btn tile-rose" onclick="abrirSubModulo('pdf')"><span>📄</span> Exportar PDF</button>
           <button class="btn tile-emerald" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar Colab.</button>
@@ -287,8 +287,8 @@
         </div>
         <div class="hint-info" id="infoFaltaJustificada" style="display:none;">
           <span><b>ℹ️ Como decidir?</b><br>
-          • <b>📄 Falta Justificada (desconta meta)</b> — usa quando a falta deve reduzir a meta semanal do colaborador.<br><br>
-          • <b>📄 Falta Justificada (NÃO desconta meta)</b> — usa quando a falta é legalmente protegida e NÃO deve reduzir a meta semanal (Art.º 255.º CT).</span>
+          • <b>📄 Falta Justificada (desconta meta)</b> — usa quando a falta deve reduzir a meta semanal.<br><br>
+          • <b>📄 Falta Justificada (NÃO desconta meta)</b> — usa quando a falta é legalmente protegida (Art.º 255.º CT).</span>
         </div>
         <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaInicio" class="form-control"></div>
         <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaFim" class="form-control"></div>
@@ -339,32 +339,56 @@
       </div>
     </div>
 
+    <!-- ═══════════════════════════════════════════════════════
+         USAR CATIVAS 1:1 (100% AUTOMÁTICO)
+         ═══════════════════════════════════════════════════════ -->
     <div id="admin-sub-acordo" style="display: none;">
       <div class="admin-card">
-        <h3>🤝 Acordo de Horas (1:1)</h3>
-        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55;">Indique os períodos que o colaborador <b>vai cumprir</b>.</p>
-        <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeAcordo" class="form-control"></select></div>
-        <div class="form-group"><label>Data <span class="campo-obrigatorio">*</span></label><input type="date" id="dataAcordo" class="form-control"></div>
-        <div class="form-group" style="margin-top: 24px;">
-          <label>Horário (Opcional)</label>
-          <div class="periodo-card"><div class="periodo-num">1</div><div class="periodo-inputs"><input type="time" id="acE1" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="acS1" class="form-control periodo-input"></div></div>
-          <div class="periodo-card"><div class="periodo-num">2</div><div class="periodo-inputs"><input type="time" id="acE2" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="acS2" class="form-control periodo-input"></div></div>
-          <button type="button" class="btn-add-periodo" id="btnAddPeriodoAcordo" onclick="togglePeriodosExtraAcordo()">➕ Adicionar 3º / 4º período</button>
-          <div id="periodosExtraAcordo" style="display: none;">
-            <div class="periodo-card"><div class="periodo-num">3</div><div class="periodo-inputs"><input type="time" id="acE3" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="acS3" class="form-control periodo-input"></div></div>
-            <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="acE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="acS4" class="form-control periodo-input"></div></div>
-          </div>
+        <h3>💰 Usar Cativas 1:1</h3>
+        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55;">
+          Marque o dia em que o colaborador vai <b>usar as cativas acumuladas</b>. O sistema trata do resto automaticamente.
+        </p>
+
+        <div class="hint-info" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-color: #c4b5fd; color: #6d28d9;">
+          <span>
+            <b>💡 Como funciona (automático):</b><br><br>
+            <b>1.</b> Marque aqui o dia em que o colaborador quer usar a cativa.<br>
+            <b>2.</b> O(A) colaborador(a) <b>pica normalmente</b> nesse dia.<br>
+            <b>3.</b> O sistema vê quanto trabalhou e <b>desconta automaticamente</b> ao banco de cativas.<br><br>
+            <b>Exemplo:</b> Maria tem 1h cativa. Marca o dia 20/10. Maria pica 5h num turno de 7h → o sistema desconta 1h ao banco dela automaticamente. ✅
+          </span>
         </div>
-        <button class="btn btn-primary" onclick="submeterAcordo()">Aplicar Acordo</button>
+
+        <div class="form-group">
+          <label>Colaborador <span class="campo-obrigatorio">*</span></label>
+          <select id="nomeAcordo" class="form-control"></select>
+        </div>
+
+        <div class="form-group">
+          <label>Data em que vai usar a cativa <span class="campo-obrigatorio">*</span></label>
+          <input type="date" id="dataAcordo" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label>Observação (opcional)</label>
+          <textarea id="obsAcordo" class="form-control" rows="2" placeholder="Ex: Maria vai sair 1h mais cedo"></textarea>
+        </div>
+
+        <button class="btn btn-primary" onclick="submeterAcordo()">💰 Marcar Dia e Ativar Consumo</button>
+
+        <div style="margin-top: 22px; padding-top: 18px; border-top: 1.5px solid var(--border);">
+          <h4 style="font-size: 0.88rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">📊 Cativas em Banco por Colaborador</h4>
+          <div id="listaSaldosCativas1a1"><p style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">A carregar...</p></div>
+        </div>
       </div>
     </div>
 
     <!-- ═══════════════════════════════════════════════════════
-         ★ NOVO v2026.48N — SECÇÃO: CATIVAS 1:1
+         CONCEDER CATIVAS 1:1
          ═══════════════════════════════════════════════════════ -->
     <div id="admin-sub-cativas1a1" style="display: none;">
       <div class="admin-card">
-        <h3>💰 Cativas 1:1 — Conceder</h3>
+        <h3>💰 Conceder Cativas 1:1</h3>
         <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55;">
           Registe as horas que ficam em <b>banco de cativas</b> para serem compensadas em data futura.
           Estas horas <b>NÃO</b> geram bónus extra.
@@ -372,7 +396,7 @@
         <div class="hint-info" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-color: #c4b5fd; color: #6d28d9;">
           <span>
             <b>💡 Como funciona?</b><br>
-            Ex: Maria trabalhou 1h extra acordada com a entidade patronal em 12/10. Essa hora NÃO gera bónus — fica <b>guardada</b> para usar como folga. Quando a Maria usar, o sistema <b>desconta automaticamente</b> do banco de cativas.
+            Ex: Maria trabalhou 1h extra acordada com a entidade patronal em 12/10. Essa hora NÃO gera bónus — fica <b>guardada</b> para usar como folga.
           </span>
         </div>
         <div class="form-group">
@@ -392,7 +416,7 @@
           <label>Motivo (opcional)</label>
           <textarea id="notaCativa" class="form-control" rows="2" placeholder="Ex: 1h acordada com a entidade patronal"></textarea>
         </div>
-        <button class="btn btn-primary" onclick="submeterCativa1a1()">Conceder Cativas</button>
+        <button class="btn btn-primary" onclick="submeterCativa1a1()">💰 Conceder Cativas</button>
 
         <div style="margin-top: 28px; padding-top: 22px; border-top: 1.5px solid var(--border);">
           <h4 style="font-size: 0.92rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px;">📋 Cativas Registadas</h4>
@@ -489,6 +513,8 @@
     if (campoCorrigir) campoCorrigir.value = hojeStr;
     var campoCativa = document.getElementById('dataCativa');
     if (campoCativa) campoCativa.value = hojeStr;
+    var campoAcordo = document.getElementById('dataAcordo');
+    if (campoAcordo) campoAcordo.value = hojeStr;
     var dataInicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
     var dataInicioMesStr = dataInicioMes.toISOString().split('T')[0];
     var campoPdfIni = document.getElementById('dataInicio');
@@ -841,26 +867,89 @@
     var bpa = document.getElementById('btnAddPeriodoAus'); if (bpa) bpa.innerText = '➕ Adicionar 3º / 4º período';
   }
 
+  // ★ v2026.48N — Marcar dia para consumir cativas (100% automático, sem horários)
   function submeterAcordo() {
-    var nome = document.getElementById('nomeAcordo').value; var d = document.getElementById('dataAcordo').value;
-    if (!nome || !d) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o colaborador e a data.", tipo: "erro" }); return; }
-    var horarios = { e1: document.getElementById('acE1').value, s1: document.getElementById('acS1').value, e2: document.getElementById('acE2').value, s2: document.getElementById('acS2').value, e3: document.getElementById('acE3').value, s3: document.getElementById('acS3').value, e4: document.getElementById('acE4').value, s4: document.getElementById('acS4').value };
-    var erro = validarParesHorario(horarios); if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
-    mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A aplicar o acordo de horas...", tipo: "processando" });
-    chamarAPIJsonp({ action: "marcarAcordoJsonp", nome: nome, data: d, horarios: JSON.stringify(horarios), senha: senhaAdminSessao }, function(resp) {
-      mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
-      if (resp.indexOf("Aviso") === -1) limparFormularioAcordo();
+    var nome = document.getElementById('nomeAcordo').value;
+    var d = document.getElementById('dataAcordo').value;
+    var obs = (document.getElementById('obsAcordo') || {}).value || "";
+
+    if (!nome || !d) {
+      mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Selecione o colaborador e a data.", tipo: "erro" });
+      return;
+    }
+
+    var partes = d.split('-');
+    var dataFmt = partes[2] + "/" + partes[1] + "/" + partes[0];
+
+    mostrarPopupPersonalizado({
+      titulo: "Confirmar Marcação",
+      mensagem: "<p style='margin-bottom:12px;'>Vai marcar o dia <b>" + dataFmt + "</b> como <b>Acordo 1:1</b> para <b>" + nome + "</b>.</p>" +
+                "<p style='margin-bottom:12px;color:#6d28d9;font-weight:600;'>💰 O sistema vai descontar automaticamente do banco de cativas ao recalcular.</p>" +
+                "<p style='margin:0;font-size:13px;color:#64748b;'>O(A) colaborador(a) deve picar normalmente nesse dia.</p>",
+      icone: "💰",
+      botoes: [
+        { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
+        { texto: "Confirmar", classe: "toast-btn-primary", acao: function() {
+          mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A marcar o dia e a calcular consumo...", tipo: "processando" });
+          chamarAPIJsonp({
+            action: "marcarDiaCativaAcordoJsonp",
+            nome: nome, data: d, nota: obs, senha: senhaAdminSessao
+          }, function(resp) {
+            if (resp.indexOf("Aviso") !== -1) {
+              mostrarPopupPersonalizado({ titulo: "Erro", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" });
+            } else {
+              mostrarPopupPersonalizado({ titulo: "Marcado", mensagem: resp, tipo: "sucesso" });
+              limparFormularioAcordo();
+              carregarSaldosCativas1a1();
+            }
+          });
+        }}
+      ]
     });
   }
 
   function limparFormularioAcordo() {
-    document.getElementById('nomeAcordo').value = ""; document.getElementById('dataAcordo').value = "";
-    ['acE1','acS1','acE2','acS2','acE3','acS3','acE4','acS4'].forEach(function(id) { document.getElementById(id).value = ""; });
-    document.getElementById('periodosExtraAcordo').style.display = 'none';
-    document.getElementById('btnAddPeriodoAcordo').innerText = '➕ Adicionar 3º / 4º período';
+    var elNome = document.getElementById('nomeAcordo'); if (elNome) elNome.value = "";
+    var elData = document.getElementById('dataAcordo'); if (elData) elData.value = "";
+    var elObs = document.getElementById('obsAcordo'); if (elObs) elObs.value = "";
   }
 
-  // ★ NOVO v2026.48N — Cativas 1:1
+  // ★ Carrega os saldos de cativas 1:1 de cada colaborador
+  function carregarSaldosCativas1a1() {
+    var container = document.getElementById('listaSaldosCativas1a1');
+    if (!container) return;
+    container.innerHTML = "<p style='text-align:center;color:var(--text-muted);font-size:0.85rem;'>A carregar...</p>";
+
+    chamarAPIJsonp({ action: "listarCativas1a1Jsonp", senha: senhaAdminSessao }, function(resp) {
+      if (typeof resp === "string" && resp.indexOf("Aviso") !== -1) {
+        container.innerHTML = "<p style='color:var(--danger);text-align:center;font-size:0.85rem;'>" + resp + "</p>";
+        return;
+      }
+      if (!resp || resp.length === 0) {
+        container.innerHTML = "<p style='text-align:center;color:var(--text-muted);font-size:0.85rem;padding:10px;'>Sem cativas registadas.</p>";
+        return;
+      }
+      var porNome = {};
+      resp.forEach(function(c) {
+        if (!porNome[c.nome]) porNome[c.nome] = { total: 0, itens: [] };
+        porNome[c.nome].total += c.minutos;
+        porNome[c.nome].itens.push(c);
+      });
+      var html = "";
+      Object.keys(porNome).sort().forEach(function(nome) {
+        var info = porNome[nome];
+        var h = Math.floor(info.total / 60), m = info.total % 60;
+        var hStr = (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m;
+        html += '<div class="pedido-item" style="border-left-color:#7e22ce;padding:14px 16px;">';
+        html += '<p style="margin-bottom:8px;"><strong>👤 ' + nome + '</strong></p>';
+        html += '<p style="margin:0;color:#6d28d9;font-weight:800;font-size:1.05rem;">💰 ' + hStr + ' disponíveis</p>';
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    });
+  }
+
+  // ★ v2026.48N — Conceder Cativas 1:1
   function carregarCativas1a1() {
     var container = document.getElementById('listaCativas1a1Container');
     if (container) container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>A carregar...</p>";
