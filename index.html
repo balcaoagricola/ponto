@@ -637,7 +637,7 @@
     document.body.appendChild(script);
   }
 
-  function abrirModalSenhaAdmin() {
+    function abrirModalSenhaAdmin() {
     mostrarPopupPersonalizado({
       titulo: "Autenticação", mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.94rem;">Área reservada à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.35rem; letter-spacing:6px;" placeholder="••••" autofocus><button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️</button></div>', icone: "🔐",
       botoes: [
@@ -645,7 +645,7 @@
         { texto: "Entrar", classe: "toast-btn-primary", acao: function() {
             var s = document.getElementById('inputSenhaPopup').value; if (!s) return;
             mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A verificar credenciais...", tipo: "processando" });
-                        chamarAPIJsonp({ action: "verificarSenhaJsonp", senha: s }, function(resp) {
+            chamarAPIJsonp({ action: "verificarSenhaJsonp", senha: s }, function(resp) {
               if (resp === "OK") {
                 senhaAdminSessao = s; fecharToast();
                 document.getElementById('section-ponto').classList.remove('active');
@@ -657,15 +657,6 @@
               } else {
                 var _msg = resp.replace("Aviso: ", "");
                 mostrarPopupPersonalizado({ titulo: "Acesso Negado", mensagem: _msg, tipo: "erro" });
-              }
-            });
-                senhaAdminSessao = s; fecharToast();
-                document.getElementById('section-ponto').classList.remove('active');
-                document.getElementById('section-falta-func').classList.remove('active');
-                document.getElementById('section-admin').classList.add('active');
-                document.getElementById('headerTitle').style.display = 'none';
-                document.getElementById('headerClockBox').style.display = 'none';
-                voltarAoMenuCentralAdmin();
               }
             });
           }
