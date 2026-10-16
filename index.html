@@ -645,9 +645,20 @@
         { texto: "Entrar", classe: "toast-btn-primary", acao: function() {
             var s = document.getElementById('inputSenhaPopup').value; if (!s) return;
             mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A verificar credenciais...", tipo: "processando" });
-            chamarAPIJsonp({ action: "verificarSenhaJsonp", senha: s }, function(resp) {
-              if (resp.indexOf("incorreta") !== -1 || resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Acesso Negado", mensagem: "A palavra-passe introduzida está incorreta.", tipo: "erro" }); }
-              else {
+                        chamarAPIJsonp({ action: "verificarSenhaJsonp", senha: s }, function(resp) {
+              if (resp === "OK") {
+                senhaAdminSessao = s; fecharToast();
+                document.getElementById('section-ponto').classList.remove('active');
+                document.getElementById('section-falta-func').classList.remove('active');
+                document.getElementById('section-admin').classList.add('active');
+                document.getElementById('headerTitle').style.display = 'none';
+                document.getElementById('headerClockBox').style.display = 'none';
+                voltarAoMenuCentralAdmin();
+              } else {
+                var _msg = resp.replace("Aviso: ", "");
+                mostrarPopupPersonalizado({ titulo: "Acesso Negado", mensagem: _msg, tipo: "erro" });
+              }
+            });
                 senhaAdminSessao = s; fecharToast();
                 document.getElementById('section-ponto').classList.remove('active');
                 document.getElementById('section-falta-func').classList.remove('active');
