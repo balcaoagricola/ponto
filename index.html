@@ -189,6 +189,12 @@
           • <b>Parcial:</b> Preencha o horário que vai trabalhar.</span>
         </div>
 
+        <div class="form-group" id="grupoHorasAcordo" style="display: none;">
+          <label>Quantas horas tem o acordo? <span class="campo-obrigatorio">*</span></label>
+          <input type="number" id="horasAcordoFunc" class="form-control" step="0.5" min="0.5" max="12" placeholder="Ex: 2" inputmode="decimal">
+          <p class="periodo-hint" style="margin-top:8px;">Ex: <b>1</b> = 1h · <b>2</b> = 2h · <b>0.5</b> = 30 min · <b>1.5</b> = 1h30</p>
+        </div>
+
         <div class="form-group" id="grupoColegaTroca" style="display: none;">
           <label>Colega com quem vai trocar <span class="campo-obrigatorio">*</span></label>
           <select id="colegaTrocaFunc" class="form-control"><option value="">Selecione o colega</option></select>
@@ -452,6 +458,11 @@
         <div class="form-group">
           <label>Data <span class="campo-obrigatorio">*</span></label>
           <input type="date" id="dataHorasAcordadas" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Horas do Acordo <span class="campo-obrigatorio">*</span></label>
+          <input type="number" id="horasAcordadasAdmin" class="form-control" step="0.5" min="0.5" max="12" placeholder="Ex: 2" inputmode="decimal">
+          <p class="periodo-hint" style="margin-top:8px;">Ex: <b>1</b> = 1h · <b>2</b> = 2h · <b>0.5</b> = 30 min · <b>1.5</b> = 1h30</p>
         </div>
         <div class="form-group">
           <label>Observação (opcional)</label>
@@ -762,7 +773,11 @@
     var grupoHorario = document.getElementById('grupoHorarioFunc');
     var grupoTrocaHorarios = document.getElementById('grupoTrocaHorarios');
     var avisoAcordo = document.getElementById('avisoAcordo11');
+    var grupoHorasAcordo = document.getElementById('grupoHorasAcordo');
+
     if (avisoAcordo) { avisoAcordo.style.display = (tipo === "🤝 Acordo 1:1") ? "flex" : "none"; }
+    if (grupoHorasAcordo) { grupoHorasAcordo.style.display = (tipo === "🤝 Acordo 1:1") ? "block" : "none"; }
+
     if (tipo === "🔄 Troca com Colega") {
       grupo.style.display = "block"; grupoTrocaHorarios.style.display = "block"; grupoHorario.style.display = "none";
       atualizarFiltroColegasTroca();
@@ -771,6 +786,10 @@
       var s = document.getElementById('colegaTrocaFunc'); if (s) s.value = "";
       if (TIPOS_COM_HORARIO.indexOf(tipo) !== -1) grupoHorario.style.display = "block";
       else { grupoHorario.style.display = "none"; limparHorarioFunc(); }
+    }
+
+    if (tipo !== "🤝 Acordo 1:1") {
+      var elH = document.getElementById('horasAcordoFunc'); if (elH) elH.value = "";
     }
   }
 
@@ -1061,17 +1080,28 @@
   function submeterHorasAcordadas() {
     var nome = document.getElementById('nomeHorasAcordadas').value;
     var data = document.getElementById('dataHorasAcordadas').value;
+    var horasRaw = (document.getElementById('horasAcordadasAdmin').value || "").trim();
     var obs = (document.getElementById('obsHorasAcordadas') || {}).value || "";
+
     if (!nome || !data) {
       mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Selecione o colaborador e a data.", tipo: "erro" });
       return;
     }
+    var horasNum = parseFloat(horasRaw.replace(',', '.'));
+    if (!horasRaw || isNaN(horasNum) || horasNum <= 0) {
+      mostrarPopupPersonalizado({ titulo: "Falta o Nº de Horas", mensagem: "Indique quantas horas tem o acordo (ex: 1, 2, 0.5).", tipo: "erro" });
+      return;
+    }
+
+    var notaFinal = (obs ? obs + " · " : "") + "Horas do acordo: " + horasRaw + "h";
+
     var partes = data.split('-');
     var dataFmt = partes[2] + "/" + partes[1] + "/" + partes[0];
+
     mostrarPopupPersonalizado({
       titulo: "Confirmar Horas Acordadas",
       mensagem: "<p style='margin-bottom:12px;'>Vai marcar o dia <b>" + dataFmt + "</b> como <b>Horas Acordadas</b> para <b>" + nome + "</b>.</p>"
-              + "<p style='margin-bottom:12px;color:#6d28d9;font-weight:600;'>💰 As horas trabalhadas nesse dia vão para cativas 1:1.</p>"
+              + "<p style='margin-bottom:12px;color:#6d28d9;font-weight:600;'>💰 Horas do acordo: <b>" + horasRaw + "h</b></p>"
               + "<p style='margin:0;font-size:13px;color:#64748b;'>O dia NÃO aparecerá no próximo PDF.</p>",
       icone: "🤝",
       botoes: [
@@ -1080,7 +1110,7 @@
           mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A marcar o dia...", tipo: "processando" });
           chamarAPIJsonp({
             action: "marcarHorasAcordadasJsonp",
-            nome: nome, data: data, nota: obs, senha: senhaAdminSessao
+            nome: nome, data: data, nota: notaFinal, senha: senhaAdminSessao
           }, function(resp) {
             if (resp.indexOf("Aviso") !== -1) {
               mostrarPopupPersonalizado({ titulo: "Erro", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" });
@@ -1088,6 +1118,7 @@
               mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: "sucesso" });
               document.getElementById('dataHorasAcordadas').value = "";
               document.getElementById('obsHorasAcordadas').value = "";
+              document.getElementById('horasAcordadasAdmin').value = "";
               carregarHorasAcordadas();
             }
           });
@@ -1173,8 +1204,24 @@
     var dIni = document.getElementById('dataFaltaFuncInicio').value;
     var dFim = document.getElementById('dataFaltaFuncFim').value;
     var obs = document.getElementById('obsFuncFalta').value;
-    if (!nome || !pin || !email || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios antes de submeter.", tipo: "erro" }); return; }
+
+    if (!nome || !pin || !email || !tipo || !dIni || !dFim) {
+      mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios antes de submeter.", tipo: "erro" });
+      return;
+    }
     localStorage.setItem('emailColaboradorBA', email.trim());
+
+    // ── ★ Acordo 1:1 — exigir horas do acordo ──
+    if (tipo === "🤝 Acordo 1:1") {
+      var horasAc = (document.getElementById('horasAcordoFunc').value || "").trim();
+      var horasNum = parseFloat(horasAc.replace(',', '.'));
+      if (!horasAc || isNaN(horasNum) || horasNum <= 0) {
+        mostrarPopupPersonalizado({ titulo: "Falta o Acordo", mensagem: "Indique quantas horas tem o acordo com a entidade patronal (ex: 1, 2, 0.5).", tipo: "erro" });
+        return;
+      }
+      obs = (obs ? obs + " · " : "") + "Horas do acordo: " + horasAc + "h";
+    }
+
     var pacoteExtras = "";
     if (tipo === "🔄 Troca com Colega") {
       var colega = document.getElementById('colegaTrocaFunc').value;
@@ -1189,12 +1236,14 @@
       if (dIni !== dFim) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "A troca com colega só pode ser submetida para um único dia de cada vez.", tipo: "erro" }); return; }
       pacoteExtras = "|TROCA:" + JSON.stringify({ proprio: horProprio, colega: horColega, nomeColega: colega });
     }
+
     var horarios = { e1: "", s1: "", e2: "", s2: "", e3: "", s3: "", e4: "", s4: "" };
     if (TIPOS_COM_HORARIO.indexOf(tipo) !== -1) {
       horarios = { e1: document.getElementById('fuE1').value, s1: document.getElementById('fuS1').value, e2: document.getElementById('fuE2').value, s2: document.getElementById('fuS2').value, e3: document.getElementById('fuE3').value, s3: document.getElementById('fuS3').value, e4: document.getElementById('fuE4').value, s4: document.getElementById('fuS4').value };
       var erro = validarParesHorario(horarios); if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
       if (contarPeriodosAtivos(horarios) > 0 && dIni !== dFim) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O horário só pode ser preenchido para um único dia.", tipo: "erro" }); return; }
     }
+
     mostrarPopupPersonalizado({ titulo: "A Enviar", mensagem: "A submeter o seu pedido à gerência...", tipo: "processando" });
     chamarAPIJsonp({ action: "comunicarAusenciaFuncionarioJsonp", nome: nome, pin: pin, email: email, tipo: tipo, dataInicio: dIni, dataFim: dFim, obs: obs, horarios: JSON.stringify(horarios), extras: pacoteExtras }, function(resp) {
       if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível Submeter", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); }
@@ -1212,6 +1261,8 @@
     var g1 = document.getElementById('grupoColegaTroca'); if (g1) g1.style.display = "none";
     var g2 = document.getElementById('grupoHorarioFunc'); if (g2) g2.style.display = "none";
     var g3 = document.getElementById('grupoTrocaHorarios'); if (g3) g3.style.display = "none";
+    var g4 = document.getElementById('grupoHorasAcordo'); if (g4) g4.style.display = "none";
+    var elH = document.getElementById('horasAcordoFunc'); if (elH) elH.value = "";
     var avisoAcordo = document.getElementById('avisoAcordo11'); if (avisoAcordo) avisoAcordo.style.display = "none";
     limparHorarioFunc();
     limparHorariosTrocaFunc();
