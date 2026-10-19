@@ -1113,47 +1113,57 @@
   }
 
   function carregarPedidosPendentes() {
-    var container = document.getElementById('listaPedidosContainer');
-    container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>A procurar pedidos pendentes...</p>";
-    chamarAPIJsonp({ action: "obterPedidosPendentes", senha: senhaAdminSessao }, function(resp) {
-      if(typeof resp === "string" && resp.indexOf("Aviso") !== -1) { container.innerHTML = "<p style='color:var(--danger); font-weight: 600; text-align: center;'>" + resp + "</p>"; return; }
-      if(!resp || resp.length === 0) { container.innerHTML = "<p style='text-align:center; color:var(--text-muted); padding: 15px; font-weight: 600;'>Não existem pedidos pendentes.</p>"; return; }
-      var html = "";
-      resp.forEach(function(p) {
-        html += '<div class="pedido-item"><p><strong>Colaborador:</strong> ' + p.nome + '</p><p><strong>Pedido:</strong> ' + p.detalhes + '</p>' +
-          (p.obs ? '<p><strong>Detalhes:</strong> <i>' + p.obs + '</i></p>' : '') +
-          '<div style="display:flex; gap:10px; margin-top:16px;">' +
-            '<button class="btn btn-primary" style="padding:13px; margin:0; font-size:0.82rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'aprovar\')">✅ Aprovar</button>' +
-            '<button class="btn btn-danger" style="padding:13px; margin:0; font-size:0.82rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'recusar\')">❌ Recusar</button>' +
-          '</div></div>';
-      });
-      container.innerHTML = html;
-    });
-  }
-
-  function responderPedidoFaltaAdmin(idPedido, decisao) {
-    if (decisao === "recusar") {
-      mostrarPopupPersonalizado({
-        titulo: "Confirmar Recusa",
-        mensagem: "Tem a certeza de que pretende <b>recusar</b> este pedido? O colaborador será notificado por email.",
-        icone: "❌",
-        botoes: [
-          { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
-          { texto: "Confirmar Recusa", classe: "toast-btn-primary", acao: function() { executarRespostaPedido(idPedido, "recusar"); } }
-        ]
-      });
+  var container = document.getElementById('listaPedidosContainer');
+  container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>A procurar pedidos pendentes...</p>";
+  chamarAPIJsonp({ action: "obterPedidosPendentes", senha: senhaAdminSessao }, function(resp) {
+    if (typeof resp === "string" && resp.indexOf("Aviso") !== -1) {
+      container.innerHTML = "<p style='color:var(--danger); font-weight: 600; text-align: center;'>" + resp + "</p>";
       return;
     }
+    if (!resp || resp.length === 0) {
+      container.innerHTML = "<p style='text-align:center; color:var(--text-muted); padding: 15px; font-weight: 600;'>Não existem pedidos pendentes.</p>";
+      return;
+    }
+    var html = "";
+    resp.forEach(function(p) {
+      html += '<div class="pedido-item">'
+           +  '<p><strong>Colaborador:</strong> ' + p.nome + '</p>'
+           +  '<p><strong>Pedido:</strong> ' + p.detalhes + '</p>'
+           +  (p.obs ? '<p><strong>Detalhes:</strong> <i>' + p.obs + '</i></p>' : '')
+           +  '<div style="display:flex; gap:10px; margin-top:16px;">'
+           +    '<button class="btn btn-primary" style="padding:13px; margin:0; font-size:0.82rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'aprovar\')">✅ Aprovar</button>'
+           +    '<button class="btn btn-danger" style="padding:13px; margin:0; font-size:0.82rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'recusar\')">❌ Recusar</button>'
+           +  '</div></div>';
+    });
+    container.innerHTML = html;
+  });
+}
+
+  function responderPedidoFaltaAdmin(idPedido, decisao) {
+  if (decisao === "recusar") {
     mostrarPopupPersonalizado({
-      titulo: "Aprovar Pedido",
-      mensagem: "O horário será <b>automaticamente aplicado ao mapa</b> de ponto do colaborador (e do colega, se aplicável).<br><br>Confirmar aprovação?",
-      icone: "✅",
+      titulo: "Confirmar Recusa",
+      mensagem: "Tem a certeza de que pretende <b>recusar</b> este pedido? O colaborador será notificado por email.",
+      icone: "❌",
       botoes: [
         { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
-        { texto: "Aprovar e Aplicar", classe: "toast-btn-primary", acao: function() { executarRespostaPedido(idPedido, "aprovar"); } }
+        { texto: "Confirmar Recusa", classe: "toast-btn-primary", acao: function() { executarRespostaPedido(idPedido, "recusar"); } }
       ]
     });
+    return;
   }
+  mostrarPopupPersonalizado({
+    titulo: "Aprovar Pedido",
+    mensagem: "<p style='margin-bottom:12px;'>A colaboradora será <b>notificada por email</b> da aprovação.</p>"
+            + "<p style='margin-bottom:12px;'><b>⚠️ Importante:</b> a falta <b>NÃO</b> é lançada automaticamente no mapa.</p>"
+            + "<p style='margin:0;font-size:13px;color:#64748b;'>Depois de aprovar, vá a <b>⚙️ Painel → 📅 Lançar Faltas</b> e coloque a falta manualmente (com ou sem desconto da meta).</p>",
+    icone: "✅",
+    botoes: [
+      { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
+      { texto: "Aprovar", classe: "toast-btn-primary", acao: function() { executarRespostaPedido(idPedido, "aprovar"); } }
+    ]
+  });
+}
 
   function executarRespostaPedido(idPedido, decisao) {
     mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A aplicar horários e a notificar o colaborador...", tipo: "processando" });
