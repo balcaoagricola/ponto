@@ -254,7 +254,7 @@
           <button class="btn tile-teal" onclick="abrirSubModulo('troca')"><span>🔄</span> Troca Turno</button>
           <button class="btn tile-violet" onclick="abrirSubModulo('acordo'); carregarSaldosCativas1a1();"><span>💰</span> Usar Cativas</button>
           <button class="btn tile-purple" onclick="abrirSubModulo('cativas1a1'); carregarCativas1a1();"><span>➕</span> Conceder Cativas</button>
-                    <button class="btn tile-purple" onclick="abrirSubModulo('horasacordadas'); carregarHorasAcordadas();"><span>🤝</span> Horas Acordadas</button>
+          <button class="btn tile-purple" onclick="abrirSubModulo('horasacordadas'); carregarHorasAcordadas();"><span>🤝</span> Horas Acordadas</button>
           <button class="btn tile-cyan" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
           <button class="btn tile-rose" onclick="abrirSubModulo('pdf')"><span>📄</span> Exportar PDF</button>
           <button class="btn tile-emerald" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar Colab.</button>
@@ -425,7 +425,8 @@
         </div>
       </div>
     </div>
-        <!-- ═══════════════════════════════════════════════════════
+
+    <!-- ═══════════════════════════════════════════════════════
          ★ v2026.52 — HORAS ACORDADAS COM ENTIDADE PATRONAL
          ═══════════════════════════════════════════════════════ -->
     <div id="admin-sub-horasacordadas" style="display: none;">
@@ -464,7 +465,6 @@
         </div>
       </div>
     </div>
-
 
     <div id="admin-sub-corrigir" style="display: none;">
       <div class="admin-card">
@@ -530,8 +530,9 @@
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
   var senhaAdminSessao = ""; var emProcessamento = false; var estaOnline = navigator.onLine;
   var listaFuncionariosCache = [];
-      var MODULOS_ADMIN = ['pedidos', 'ausencias', 'troca', 'acordo', 'cativas1a1', 'horasacordadas', 'corrigir', 'pdf', 'funcionario', 'remover'];
-  var TIPOS_COM_HORARIO = ["📄 Falta Justificada", "⚠️ Falta Injustificada", "🤝 Acordo 1:1"];   ← 🆕
+  var MODULOS_ADMIN = ['pedidos', 'ausencias', 'troca', 'acordo', 'cativas1a1', 'horasacordadas', 'corrigir', 'pdf', 'funcionario', 'remover'];
+  var TIPOS_COM_HORARIO = ["📄 Falta Justificada", "⚠️ Falta Injustificada", "🤝 Acordo 1:1"]; // 🆕
+
   function configurarComportamentoDatas() {
     function ligarSincronizacao(idIni, idFim) {
       var elIni = document.getElementById(idIni);
@@ -557,7 +558,6 @@
     if (campoAcordo) campoAcordo.value = hojeStr;
     var campoHorasAcordadas = document.getElementById('dataHorasAcordadas');
     if (campoHorasAcordadas) campoHorasAcordadas.value = hojeStr;
-    if (campoAcordo) campoAcordo.value = hojeStr;
     var dataInicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
     var dataInicioMesStr = dataInicioMes.toISOString().split('T')[0];
     var campoPdfIni = document.getElementById('dataInicio');
@@ -680,7 +680,7 @@
     document.body.appendChild(script);
   }
 
-    function abrirModalSenhaAdmin() {
+  function abrirModalSenhaAdmin() {
     mostrarPopupPersonalizado({
       titulo: "Autenticação", mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.94rem;">Área reservada à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.35rem; letter-spacing:6px;" placeholder="••••" autofocus><button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️</button></div>', icone: "🔐",
       botoes: [
@@ -1054,6 +1054,7 @@
       ]
     });
   }
+
   // ═══════════════════════════════════════════════════════════════════════
   // ★ v2026.52 — Horas Acordadas c/ Entidade Patronal
   // ═══════════════════════════════════════════════════════════════════════
