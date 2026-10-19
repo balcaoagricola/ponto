@@ -346,16 +346,12 @@
       </div>
     </div>
 
-    <!-- ═══════════════════════════════════════════════════════
-         USAR CATIVAS 1:1 (100% AUTOMÁTICO)
-         ═══════════════════════════════════════════════════════ -->
     <div id="admin-sub-acordo" style="display: none;">
       <div class="admin-card">
         <h3>💰 Usar Cativas 1:1</h3>
         <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55;">
           Marque o dia em que o colaborador vai <b>usar as cativas acumuladas</b>. O sistema trata do resto automaticamente.
         </p>
-
         <div class="hint-info" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-color: #c4b5fd; color: #6d28d9;">
           <span>
             <b>💡 Como funciona (automático):</b><br><br>
@@ -365,24 +361,10 @@
             <b>Exemplo:</b> Maria tem 1h cativa. Marca o dia 20/10. Maria pica 5h num turno de 7h → o sistema desconta 1h ao banco dela automaticamente. ✅
           </span>
         </div>
-
-        <div class="form-group">
-          <label>Colaborador <span class="campo-obrigatorio">*</span></label>
-          <select id="nomeAcordo" class="form-control"></select>
-        </div>
-
-        <div class="form-group">
-          <label>Data em que vai usar a cativa <span class="campo-obrigatorio">*</span></label>
-          <input type="date" id="dataAcordo" class="form-control">
-        </div>
-
-        <div class="form-group">
-          <label>Observação (opcional)</label>
-          <textarea id="obsAcordo" class="form-control" rows="2" placeholder="Ex: Maria vai sair 1h mais cedo"></textarea>
-        </div>
-
+        <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeAcordo" class="form-control"></select></div>
+        <div class="form-group"><label>Data em que vai usar a cativa <span class="campo-obrigatorio">*</span></label><input type="date" id="dataAcordo" class="form-control"></div>
+        <div class="form-group"><label>Observação (opcional)</label><textarea id="obsAcordo" class="form-control" rows="2" placeholder="Ex: Maria vai sair 1h mais cedo"></textarea></div>
         <button class="btn btn-primary" onclick="submeterAcordo()">💰 Marcar Dia e Ativar Consumo</button>
-
         <div style="margin-top: 22px; padding-top: 18px; border-top: 1.5px solid var(--border);">
           <h4 style="font-size: 0.88rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">📊 Cativas em Banco por Colaborador</h4>
           <div id="listaSaldosCativas1a1"><p style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">A carregar...</p></div>
@@ -390,15 +372,11 @@
       </div>
     </div>
 
-    <!-- ═══════════════════════════════════════════════════════
-         CONCEDER CATIVAS 1:1
-         ═══════════════════════════════════════════════════════ -->
     <div id="admin-sub-cativas1a1" style="display: none;">
       <div class="admin-card">
         <h3>💰 Conceder Cativas 1:1</h3>
         <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55;">
-          Registe as horas que ficam em <b>banco de cativas</b> para serem compensadas em data futura.
-          Estas horas <b>NÃO</b> geram bónus extra.
+          Registe as horas que ficam em <b>banco de cativas</b> para serem compensadas em data futura. Estas horas <b>NÃO</b> geram bónus extra.
         </p>
         <div class="hint-info" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-color: #c4b5fd; color: #6d28d9;">
           <span>
@@ -406,25 +384,15 @@
             Ex: Maria trabalhou 1h extra acordada com a entidade patronal em 12/10. Essa hora NÃO gera bónus — fica <b>guardada</b> para usar como folga.
           </span>
         </div>
-        <div class="form-group">
-          <label>Colaborador <span class="campo-obrigatorio">*</span></label>
-          <select id="nomeCativa" class="form-control"></select>
-        </div>
-        <div class="form-group">
-          <label>Data de referência <span class="campo-obrigatorio">*</span></label>
-          <input type="date" id="dataCativa" class="form-control">
-        </div>
+        <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeCativa" class="form-control"></select></div>
+        <div class="form-group"><label>Data de referência <span class="campo-obrigatorio">*</span></label><input type="date" id="dataCativa" class="form-control"></div>
         <div class="form-group">
           <label>Horas a conceder <span class="campo-obrigatorio">*</span></label>
           <input type="number" id="horasCativa" class="form-control" step="0.25" min="0.25" placeholder="Ex: 1">
           <p class="periodo-hint" style="margin-top:8px;">Ex: <b>1</b> = 1h · <b>1.5</b> = 1h30 · <b>0.5</b> = 30 min</p>
         </div>
-        <div class="form-group">
-          <label>Motivo (opcional)</label>
-          <textarea id="notaCativa" class="form-control" rows="2" placeholder="Ex: 1h acordada com a entidade patronal"></textarea>
-        </div>
+        <div class="form-group"><label>Motivo (opcional)</label><textarea id="notaCativa" class="form-control" rows="2" placeholder="Ex: 1h acordada com a entidade patronal"></textarea></div>
         <button class="btn btn-primary" onclick="submeterCativa1a1()">💰 Conceder Cativas</button>
-
         <div style="margin-top: 28px; padding-top: 22px; border-top: 1.5px solid var(--border);">
           <h4 style="font-size: 0.92rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px;">📋 Cativas Registadas</h4>
           <div id="listaCativas1a1Container"><p style="text-align: center; color: var(--text-muted);">A carregar...</p></div>
@@ -432,9 +400,6 @@
       </div>
     </div>
 
-    <!-- ═══════════════════════════════════════════════════════
-         ★ v2026.52 — HORAS ACORDADAS COM ENTIDADE PATRONAL
-         ═══════════════════════════════════════════════════════ -->
     <div id="admin-sub-horasacordadas" style="display: none;">
       <div class="admin-card">
         <h3>🤝 Horas Acordadas c/ Entidade Patronal</h3>
@@ -446,30 +411,20 @@
           <span>
             <b>💡 Como funciona?</b><br>
             • As horas trabalhadas nesse dia <b>contam para a meta semanal</b><br>
-            • As horas extra desse dia vão para <b>cativas 1:1</b> em vez de bónus<br>
-            • O dia <b>não aparece no PDF mensal</b><br>
-            • A pessoa usa essas horas como folga quando quiser
+            • As horas do acordo vão para <b>cativas 1:1</b> em vez de bónus<br>
+            • Se trabalhar <b>mais</b> do que o acordo, o excedente conta como extra normal<br>
+            • O dia <b>não aparece no PDF mensal</b>
           </span>
         </div>
-        <div class="form-group">
-          <label>Colaborador <span class="campo-obrigatorio">*</span></label>
-          <select id="nomeHorasAcordadas" class="form-control"></select>
-        </div>
-        <div class="form-group">
-          <label>Data <span class="campo-obrigatorio">*</span></label>
-          <input type="date" id="dataHorasAcordadas" class="form-control">
-        </div>
+        <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeHorasAcordadas" class="form-control"></select></div>
+        <div class="form-group"><label>Data <span class="campo-obrigatorio">*</span></label><input type="date" id="dataHorasAcordadas" class="form-control"></div>
         <div class="form-group">
           <label>Horas do Acordo <span class="campo-obrigatorio">*</span></label>
           <input type="number" id="horasAcordadasAdmin" class="form-control" step="0.5" min="0.5" max="12" placeholder="Ex: 2" inputmode="decimal">
           <p class="periodo-hint" style="margin-top:8px;">Ex: <b>1</b> = 1h · <b>2</b> = 2h · <b>0.5</b> = 30 min · <b>1.5</b> = 1h30</p>
         </div>
-        <div class="form-group">
-          <label>Observação (opcional)</label>
-          <textarea id="obsHorasAcordadas" class="form-control" rows="2" placeholder="Ex: Sábado acordado com gerência"></textarea>
-        </div>
+        <div class="form-group"><label>Observação (opcional)</label><textarea id="obsHorasAcordadas" class="form-control" rows="2" placeholder="Ex: Sábado acordado com gerência"></textarea></div>
         <button class="btn btn-primary" onclick="submeterHorasAcordadas()">🤝 Marcar Dia como Horas Acordadas</button>
-
         <div style="margin-top: 24px; padding-top: 20px; border-top: 1.5px solid var(--border);">
           <h4 style="font-size: 0.92rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px;">📋 Dias Marcados</h4>
           <div id="listaHorasAcordadasContainer"><p style="text-align: center; color: var(--text-muted);">A carregar...</p></div>
@@ -931,20 +886,13 @@
     var bpa = document.getElementById('btnAddPeriodoAus'); if (bpa) bpa.innerText = '➕ Adicionar 3º / 4º período';
   }
 
-  // ★ v2026.48N — Marcar dia para consumir cativas (100% automático, sem horários)
   function submeterAcordo() {
     var nome = document.getElementById('nomeAcordo').value;
     var d = document.getElementById('dataAcordo').value;
     var obs = (document.getElementById('obsAcordo') || {}).value || "";
-
-    if (!nome || !d) {
-      mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Selecione o colaborador e a data.", tipo: "erro" });
-      return;
-    }
-
+    if (!nome || !d) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Selecione o colaborador e a data.", tipo: "erro" }); return; }
     var partes = d.split('-');
     var dataFmt = partes[2] + "/" + partes[1] + "/" + partes[0];
-
     mostrarPopupPersonalizado({
       titulo: "Confirmar Marcação",
       mensagem: "<p style='margin-bottom:12px;'>Vai marcar o dia <b>" + dataFmt + "</b> como <b>Acordo 1:1</b> para <b>" + nome + "</b>.</p>" +
@@ -955,17 +903,9 @@
         { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
         { texto: "Confirmar", classe: "toast-btn-primary", acao: function() {
           mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A marcar o dia e a calcular consumo...", tipo: "processando" });
-          chamarAPIJsonp({
-            action: "marcarDiaCativaAcordoJsonp",
-            nome: nome, data: d, nota: obs, senha: senhaAdminSessao
-          }, function(resp) {
-            if (resp.indexOf("Aviso") !== -1) {
-              mostrarPopupPersonalizado({ titulo: "Erro", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" });
-            } else {
-              mostrarPopupPersonalizado({ titulo: "Marcado", mensagem: resp, tipo: "sucesso" });
-              limparFormularioAcordo();
-              carregarSaldosCativas1a1();
-            }
+          chamarAPIJsonp({ action: "marcarDiaCativaAcordoJsonp", nome: nome, data: d, nota: obs, senha: senhaAdminSessao }, function(resp) {
+            if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Erro", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); }
+            else { mostrarPopupPersonalizado({ titulo: "Marcado", mensagem: resp, tipo: "sucesso" }); limparFormularioAcordo(); carregarSaldosCativas1a1(); }
           });
         }}
       ]
@@ -978,27 +918,15 @@
     var elObs = document.getElementById('obsAcordo'); if (elObs) elObs.value = "";
   }
 
-  // ★ Carrega os saldos de cativas 1:1 de cada colaborador
   function carregarSaldosCativas1a1() {
     var container = document.getElementById('listaSaldosCativas1a1');
     if (!container) return;
     container.innerHTML = "<p style='text-align:center;color:var(--text-muted);font-size:0.85rem;'>A carregar...</p>";
-
     chamarAPIJsonp({ action: "listarCativas1a1Jsonp", senha: senhaAdminSessao }, function(resp) {
-      if (typeof resp === "string" && resp.indexOf("Aviso") !== -1) {
-        container.innerHTML = "<p style='color:var(--danger);text-align:center;font-size:0.85rem;'>" + resp + "</p>";
-        return;
-      }
-      if (!resp || resp.length === 0) {
-        container.innerHTML = "<p style='text-align:center;color:var(--text-muted);font-size:0.85rem;padding:10px;'>Sem cativas registadas.</p>";
-        return;
-      }
+      if (typeof resp === "string" && resp.indexOf("Aviso") !== -1) { container.innerHTML = "<p style='color:var(--danger);text-align:center;font-size:0.85rem;'>" + resp + "</p>"; return; }
+      if (!resp || resp.length === 0) { container.innerHTML = "<p style='text-align:center;color:var(--text-muted);font-size:0.85rem;padding:10px;'>Sem cativas registadas.</p>"; return; }
       var porNome = {};
-      resp.forEach(function(c) {
-        if (!porNome[c.nome]) porNome[c.nome] = { total: 0, itens: [] };
-        porNome[c.nome].total += c.minutos;
-        porNome[c.nome].itens.push(c);
-      });
+      resp.forEach(function(c) { if (!porNome[c.nome]) porNome[c.nome] = { total: 0, itens: [] }; porNome[c.nome].total += c.minutos; porNome[c.nome].itens.push(c); });
       var html = "";
       Object.keys(porNome).sort().forEach(function(nome) {
         var info = porNome[nome];
@@ -1013,7 +941,6 @@
     });
   }
 
-  // ★ v2026.48N — Conceder Cativas 1:1
   function carregarCativas1a1() {
     var container = document.getElementById('listaCativas1a1Container');
     if (container) container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>A carregar...</p>";
@@ -1048,11 +975,7 @@
     mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A conceder cativas...", tipo: "processando" });
     chamarAPIJsonp({ action: "concederCativa1a1Jsonp", nome: nome, data: data, minutos: Math.round(horas * 60), nota: nota, senha: senhaAdminSessao }, function(resp) {
       mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
-      if (resp.indexOf("Aviso") === -1) {
-        document.getElementById('horasCativa').value = "";
-        document.getElementById('notaCativa').value = "";
-        carregarCativas1a1();
-      }
+      if (resp.indexOf("Aviso") === -1) { document.getElementById('horasCativa').value = ""; document.getElementById('notaCativa').value = ""; carregarCativas1a1(); }
     });
   }
 
@@ -1074,9 +997,7 @@
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // ★ v2026.52 — Horas Acordadas c/ Entidade Patronal
-  // ═══════════════════════════════════════════════════════════════════════
+  // ★ v2026.53 — Horas Acordadas c/ Entidade Patronal (envia horas em parâmetro separado)
   function submeterHorasAcordadas() {
     var nome = document.getElementById('nomeHorasAcordadas').value;
     var data = document.getElementById('dataHorasAcordadas').value;
@@ -1093,8 +1014,6 @@
       return;
     }
 
-    var notaFinal = (obs ? obs + " · " : "") + "Horas do acordo: " + horasRaw + "h";
-
     var partes = data.split('-');
     var dataFmt = partes[2] + "/" + partes[1] + "/" + partes[0];
 
@@ -1110,7 +1029,11 @@
           mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A marcar o dia...", tipo: "processando" });
           chamarAPIJsonp({
             action: "marcarHorasAcordadasJsonp",
-            nome: nome, data: data, nota: notaFinal, senha: senhaAdminSessao
+            nome: nome,
+            data: data,
+            horas: horasNum,
+            nota: obs,
+            senha: senhaAdminSessao
           }, function(resp) {
             if (resp.indexOf("Aviso") !== -1) {
               mostrarPopupPersonalizado({ titulo: "Erro", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" });
@@ -1146,6 +1069,10 @@
         html += '<div class="pedido-item" style="border-left-color:#7e22ce;">';
         html += '<p><strong>👤 Colaborador:</strong> ' + c.nome + '</p>';
         html += '<p><strong>📅 Data:</strong> ' + dataFmt + '</p>';
+        if (c.minutos > 0) {
+          var hh = Math.floor(c.minutos / 60), mm = c.minutos % 60;
+          html += '<p><strong>⏱️ Horas do Acordo:</strong> ' + (hh<10?'0':'')+hh + ':' + (mm<10?'0':'')+mm + '</p>';
+        }
         if (c.nota) html += '<p><strong>📝 Motivo:</strong> <i>' + c.nota + '</i></p>';
         html += '<div style="margin-top:12px;"><button class="btn btn-danger" style="padding:11px; margin:0; font-size:0.78rem;" onclick="removerHorasAcordadas(\'' + c.key + '\')">🗑️ Remover</button></div>';
         html += '</div>';
@@ -1211,7 +1138,6 @@
     }
     localStorage.setItem('emailColaboradorBA', email.trim());
 
-    // ── ★ Acordo 1:1 — exigir horas do acordo ──
     if (tipo === "🤝 Acordo 1:1") {
       var horasAc = (document.getElementById('horasAcordoFunc').value || "").trim();
       var horasNum = parseFloat(horasAc.replace(',', '.'));
@@ -1293,57 +1219,51 @@
   }
 
   function carregarPedidosPendentes() {
-  var container = document.getElementById('listaPedidosContainer');
-  container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>A procurar pedidos pendentes...</p>";
-  chamarAPIJsonp({ action: "obterPedidosPendentes", senha: senhaAdminSessao }, function(resp) {
-    if (typeof resp === "string" && resp.indexOf("Aviso") !== -1) {
-      container.innerHTML = "<p style='color:var(--danger); font-weight: 600; text-align: center;'>" + resp + "</p>";
-      return;
-    }
-    if (!resp || resp.length === 0) {
-      container.innerHTML = "<p style='text-align:center; color:var(--text-muted); padding: 15px; font-weight: 600;'>Não existem pedidos pendentes.</p>";
-      return;
-    }
-    var html = "";
-    resp.forEach(function(p) {
-      html += '<div class="pedido-item">'
-           +  '<p><strong>Colaborador:</strong> ' + p.nome + '</p>'
-           +  '<p><strong>Pedido:</strong> ' + p.detalhes + '</p>'
-           +  (p.obs ? '<p><strong>Detalhes:</strong> <i>' + p.obs + '</i></p>' : '')
-           +  '<div style="display:flex; gap:10px; margin-top:16px;">'
-           +    '<button class="btn btn-primary" style="padding:13px; margin:0; font-size:0.82rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'aprovar\')">✅ Aprovar</button>'
-           +    '<button class="btn btn-danger" style="padding:13px; margin:0; font-size:0.82rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'recusar\')">❌ Recusar</button>'
-           +  '</div></div>';
+    var container = document.getElementById('listaPedidosContainer');
+    container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>A procurar pedidos pendentes...</p>";
+    chamarAPIJsonp({ action: "obterPedidosPendentes", senha: senhaAdminSessao }, function(resp) {
+      if (typeof resp === "string" && resp.indexOf("Aviso") !== -1) { container.innerHTML = "<p style='color:var(--danger); font-weight: 600; text-align: center;'>" + resp + "</p>"; return; }
+      if (!resp || resp.length === 0) { container.innerHTML = "<p style='text-align:center; color:var(--text-muted); padding: 15px; font-weight: 600;'>Não existem pedidos pendentes.</p>"; return; }
+      var html = "";
+      resp.forEach(function(p) {
+        html += '<div class="pedido-item">'
+             +  '<p><strong>Colaborador:</strong> ' + p.nome + '</p>'
+             +  '<p><strong>Pedido:</strong> ' + p.detalhes + '</p>'
+             +  (p.obs ? '<p><strong>Detalhes:</strong> <i>' + p.obs + '</i></p>' : '')
+             +  '<div style="display:flex; gap:10px; margin-top:16px;">'
+             +    '<button class="btn btn-primary" style="padding:13px; margin:0; font-size:0.82rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'aprovar\')">✅ Aprovar</button>'
+             +    '<button class="btn btn-danger" style="padding:13px; margin:0; font-size:0.82rem;" onclick="responderPedidoFaltaAdmin(\'' + p.id + '\', \'recusar\')">❌ Recusar</button>'
+             +  '</div></div>';
+      });
+      container.innerHTML = html;
     });
-    container.innerHTML = html;
-  });
-}
+  }
 
   function responderPedidoFaltaAdmin(idPedido, decisao) {
-  if (decisao === "recusar") {
+    if (decisao === "recusar") {
+      mostrarPopupPersonalizado({
+        titulo: "Confirmar Recusa",
+        mensagem: "Tem a certeza de que pretende <b>recusar</b> este pedido? O colaborador será notificado por email.",
+        icone: "❌",
+        botoes: [
+          { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
+          { texto: "Confirmar Recusa", classe: "toast-btn-primary", acao: function() { executarRespostaPedido(idPedido, "recusar"); } }
+        ]
+      });
+      return;
+    }
     mostrarPopupPersonalizado({
-      titulo: "Confirmar Recusa",
-      mensagem: "Tem a certeza de que pretende <b>recusar</b> este pedido? O colaborador será notificado por email.",
-      icone: "❌",
+      titulo: "Aprovar Pedido",
+      mensagem: "<p style='margin-bottom:12px;'>A colaboradora será <b>notificada por email</b> da aprovação.</p>"
+              + "<p style='margin-bottom:12px;'><b>⚠️ Importante:</b> a falta <b>NÃO</b> é lançada automaticamente no mapa.</p>"
+              + "<p style='margin:0;font-size:13px;color:#64748b;'>Depois de aprovar, vá a <b>⚙️ Painel → 📅 Lançar Faltas</b> e coloque a falta manualmente (com ou sem desconto da meta).</p>",
+      icone: "✅",
       botoes: [
         { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
-        { texto: "Confirmar Recusa", classe: "toast-btn-primary", acao: function() { executarRespostaPedido(idPedido, "recusar"); } }
+        { texto: "Aprovar", classe: "toast-btn-primary", acao: function() { executarRespostaPedido(idPedido, "aprovar"); } }
       ]
     });
-    return;
   }
-  mostrarPopupPersonalizado({
-    titulo: "Aprovar Pedido",
-    mensagem: "<p style='margin-bottom:12px;'>A colaboradora será <b>notificada por email</b> da aprovação.</p>"
-            + "<p style='margin-bottom:12px;'><b>⚠️ Importante:</b> a falta <b>NÃO</b> é lançada automaticamente no mapa.</p>"
-            + "<p style='margin:0;font-size:13px;color:#64748b;'>Depois de aprovar, vá a <b>⚙️ Painel → 📅 Lançar Faltas</b> e coloque a falta manualmente (com ou sem desconto da meta).</p>",
-    icone: "✅",
-    botoes: [
-      { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
-      { texto: "Aprovar", classe: "toast-btn-primary", acao: function() { executarRespostaPedido(idPedido, "aprovar"); } }
-    ]
-  });
-}
 
   function executarRespostaPedido(idPedido, decisao) {
     mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A aplicar horários e a notificar o colaborador...", tipo: "processando" });
@@ -1398,6 +1318,7 @@
     var pNovo = document.getElementById('pinNovo'); if(pNovo) pNovo.value = "";
     var nNovo = document.getElementById('nomeNovo'); if(nNovo) nNovo.value = "";
     var hCor = document.getElementById('horaCorrigir'); if(hCor) hCor.value = "";
+    var hAc = document.getElementById('horasAcordadasAdmin'); if(hAc) hAc.value = "";
   }
 
   function limparFeedbackPonto() { gerirErroCampo("erro-nome-ponto", ""); gerirErroCampo("erro-pin-ponto", ""); }
