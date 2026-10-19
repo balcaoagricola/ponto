@@ -254,6 +254,7 @@
           <button class="btn tile-teal" onclick="abrirSubModulo('troca')"><span>🔄</span> Troca Turno</button>
           <button class="btn tile-violet" onclick="abrirSubModulo('acordo'); carregarSaldosCativas1a1();"><span>💰</span> Usar Cativas</button>
           <button class="btn tile-purple" onclick="abrirSubModulo('cativas1a1'); carregarCativas1a1();"><span>➕</span> Conceder Cativas</button>
+                    <button class="btn tile-purple" onclick="abrirSubModulo('horasacordadas'); carregarHorasAcordadas();"><span>🤝</span> Horas Acordadas</button>
           <button class="btn tile-cyan" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
           <button class="btn tile-rose" onclick="abrirSubModulo('pdf')"><span>📄</span> Exportar PDF</button>
           <button class="btn tile-emerald" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar Colab.</button>
@@ -424,6 +425,46 @@
         </div>
       </div>
     </div>
+        <!-- ═══════════════════════════════════════════════════════
+         ★ v2026.52 — HORAS ACORDADAS COM ENTIDADE PATRONAL
+         ═══════════════════════════════════════════════════════ -->
+    <div id="admin-sub-horasacordadas" style="display: none;">
+      <div class="admin-card">
+        <h3>🤝 Horas Acordadas c/ Entidade Patronal</h3>
+        <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55;">
+          Marque dias em que as horas extra foram <b>acordadas com a entidade patronal</b>.
+          Essas horas vão para <b>cativas 1:1</b> (banco de folga) e <b>NÃO aparecem no PDF</b>.
+        </p>
+        <div class="hint-info" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-color: #c4b5fd; color: #6d28d9;">
+          <span>
+            <b>💡 Como funciona?</b><br>
+            • As horas trabalhadas nesse dia <b>contam para a meta semanal</b><br>
+            • As horas extra desse dia vão para <b>cativas 1:1</b> em vez de bónus<br>
+            • O dia <b>não aparece no PDF mensal</b><br>
+            • A pessoa usa essas horas como folga quando quiser
+          </span>
+        </div>
+        <div class="form-group">
+          <label>Colaborador <span class="campo-obrigatorio">*</span></label>
+          <select id="nomeHorasAcordadas" class="form-control"></select>
+        </div>
+        <div class="form-group">
+          <label>Data <span class="campo-obrigatorio">*</span></label>
+          <input type="date" id="dataHorasAcordadas" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Observação (opcional)</label>
+          <textarea id="obsHorasAcordadas" class="form-control" rows="2" placeholder="Ex: Sábado acordado com gerência"></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="submeterHorasAcordadas()">🤝 Marcar Dia como Horas Acordadas</button>
+
+        <div style="margin-top: 24px; padding-top: 20px; border-top: 1.5px solid var(--border);">
+          <h4 style="font-size: 0.92rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px;">📋 Dias Marcados</h4>
+          <div id="listaHorasAcordadasContainer"><p style="text-align: center; color: var(--text-muted);">A carregar...</p></div>
+        </div>
+      </div>
+    </div>
+
 
     <div id="admin-sub-corrigir" style="display: none;">
       <div class="admin-card">
@@ -489,9 +530,8 @@
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
   var senhaAdminSessao = ""; var emProcessamento = false; var estaOnline = navigator.onLine;
   var listaFuncionariosCache = [];
-  var MODULOS_ADMIN = ['pedidos', 'ausencias', 'troca', 'acordo', 'cativas1a1', 'corrigir', 'pdf', 'funcionario', 'remover'];
-  var TIPOS_COM_HORARIO = ["📄 Falta Justificada", "⚠️ Falta Injustificada", "🤝 Acordo 1:1"];
-
+      var MODULOS_ADMIN = ['pedidos', 'ausencias', 'troca', 'acordo', 'cativas1a1', 'horasacordadas', 'corrigir', 'pdf', 'funcionario', 'remover'];
+  var TIPOS_COM_HORARIO = ["📄 Falta Justificada", "⚠️ Falta Injustificada", "🤝 Acordo 1:1"];   ← 🆕
   function configurarComportamentoDatas() {
     function ligarSincronizacao(idIni, idFim) {
       var elIni = document.getElementById(idIni);
@@ -514,6 +554,9 @@
     var campoCativa = document.getElementById('dataCativa');
     if (campoCativa) campoCativa.value = hojeStr;
     var campoAcordo = document.getElementById('dataAcordo');
+    if (campoAcordo) campoAcordo.value = hojeStr;
+    var campoHorasAcordadas = document.getElementById('dataHorasAcordadas');
+    if (campoHorasAcordadas) campoHorasAcordadas.value = hojeStr;
     if (campoAcordo) campoAcordo.value = hojeStr;
     var dataInicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
     var dataInicioMesStr = dataInicioMes.toISOString().split('T')[0];
@@ -698,7 +741,7 @@
   }
 
   function preencherSelectsNomes(lista) {
-    ['nomeFuncionario', 'nomeFuncionarioFolga', 'nomeRemover', 'nomeFuncFalta', 'nomeAcordo', 'nomeCorrigir', 'colegaTrocaFunc', 'nomeTrocaAusente', 'nomeTrocaSubstituto', 'nomeCativa'].forEach(function(id) {
+    ['nomeFuncionario', 'nomeFuncionarioFolga', 'nomeRemover', 'nomeFuncFalta', 'nomeAcordo', 'nomeCorrigir', 'colegaTrocaFunc', 'nomeTrocaAusente', 'nomeTrocaSubstituto', 'nomeCativa', 'nomeHorasAcordadas'].forEach(function(id) {
       var sel = document.getElementById(id);
       if (sel) {
         var valorAtual = sel.value;
@@ -1006,6 +1049,91 @@
             chamarAPIJsonp({ action: "removerCativa1a1Jsonp", chave: chave, senha: senhaAdminSessao }, function(resp) {
               mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
               if (resp.indexOf("Aviso") === -1) carregarCativas1a1();
+            });
+        }}
+      ]
+    });
+  }
+  // ═══════════════════════════════════════════════════════════════════════
+  // ★ v2026.52 — Horas Acordadas c/ Entidade Patronal
+  // ═══════════════════════════════════════════════════════════════════════
+  function submeterHorasAcordadas() {
+    var nome = document.getElementById('nomeHorasAcordadas').value;
+    var data = document.getElementById('dataHorasAcordadas').value;
+    var obs = (document.getElementById('obsHorasAcordadas') || {}).value || "";
+    if (!nome || !data) {
+      mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Selecione o colaborador e a data.", tipo: "erro" });
+      return;
+    }
+    var partes = data.split('-');
+    var dataFmt = partes[2] + "/" + partes[1] + "/" + partes[0];
+    mostrarPopupPersonalizado({
+      titulo: "Confirmar Horas Acordadas",
+      mensagem: "<p style='margin-bottom:12px;'>Vai marcar o dia <b>" + dataFmt + "</b> como <b>Horas Acordadas</b> para <b>" + nome + "</b>.</p>"
+              + "<p style='margin-bottom:12px;color:#6d28d9;font-weight:600;'>💰 As horas trabalhadas nesse dia vão para cativas 1:1.</p>"
+              + "<p style='margin:0;font-size:13px;color:#64748b;'>O dia NÃO aparecerá no próximo PDF.</p>",
+      icone: "🤝",
+      botoes: [
+        { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
+        { texto: "Confirmar", classe: "toast-btn-primary", acao: function() {
+          mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A marcar o dia...", tipo: "processando" });
+          chamarAPIJsonp({
+            action: "marcarHorasAcordadasJsonp",
+            nome: nome, data: data, nota: obs, senha: senhaAdminSessao
+          }, function(resp) {
+            if (resp.indexOf("Aviso") !== -1) {
+              mostrarPopupPersonalizado({ titulo: "Erro", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" });
+            } else {
+              mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: "sucesso" });
+              document.getElementById('dataHorasAcordadas').value = "";
+              document.getElementById('obsHorasAcordadas').value = "";
+              carregarHorasAcordadas();
+            }
+          });
+        }}
+      ]
+    });
+  }
+
+  function carregarHorasAcordadas() {
+    var container = document.getElementById('listaHorasAcordadasContainer');
+    if (!container) return;
+    container.innerHTML = "<p style='text-align:center;color:var(--text-muted);'>A carregar...</p>";
+    chamarAPIJsonp({ action: "listarHorasAcordadasJsonp", senha: senhaAdminSessao }, function(resp) {
+      if (typeof resp === "string" && resp.indexOf("Aviso") !== -1) {
+        container.innerHTML = "<p style='color:var(--danger);text-align:center;'>" + resp + "</p>";
+        return;
+      }
+      if (!resp || resp.length === 0) {
+        container.innerHTML = "<p style='text-align:center;color:var(--text-muted);font-weight:600;padding:15px;'>Sem dias marcados.</p>";
+        return;
+      }
+      var html = "";
+      resp.forEach(function(c) {
+        var dataFmt = c.data.split('-').reverse().join('/');
+        html += '<div class="pedido-item" style="border-left-color:#7e22ce;">';
+        html += '<p><strong>👤 Colaborador:</strong> ' + c.nome + '</p>';
+        html += '<p><strong>📅 Data:</strong> ' + dataFmt + '</p>';
+        if (c.nota) html += '<p><strong>📝 Motivo:</strong> <i>' + c.nota + '</i></p>';
+        html += '<div style="margin-top:12px;"><button class="btn btn-danger" style="padding:11px; margin:0; font-size:0.78rem;" onclick="removerHorasAcordadas(\'' + c.key + '\')">🗑️ Remover</button></div>';
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    });
+  }
+
+  function removerHorasAcordadas(chave) {
+    mostrarPopupPersonalizado({
+      titulo: "Confirmar Remoção",
+      mensagem: "Tem a certeza que quer remover esta marcação?<br><br>O dia voltará a contar como dia normal.",
+      icone: "⚠️",
+      botoes: [
+        { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
+        { texto: "Remover", classe: "toast-btn-primary", acao: function() {
+            mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A remover...", tipo: "processando" });
+            chamarAPIJsonp({ action: "removerHorasAcordadasJsonp", chave: chave, senha: senhaAdminSessao }, function(resp) {
+              mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" });
+              if (resp.indexOf("Aviso") === -1) carregarHorasAcordadas();
             });
         }}
       ]
