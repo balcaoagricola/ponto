@@ -1667,7 +1667,17 @@ body {
     if(elOff) elOff.textContent = fila.length;
     
     var dataEl = document.getElementById('dashboardData');
-    if(dataEl) dataEl.textContent = new Date().toLocaleDateString('pt-PT', {weekday:'long', day:'2-digit', month:'long', year:'numeric'}) + ' · ' + new Date().toLocaleTimeString('pt-PT', {hour:'2-digit', minute:'2-digit'});
+        if(dataEl) {
+      try{
+        var agora = new Date();
+        var diasPT = ["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"];
+        var mesesPT = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+        var txt = diasPT[agora.getDay()] + ", " + ("0"+agora.getDate()).slice(-2) + " de " + mesesPT[agora.getMonth()] + " de " + agora.getFullYear() + " · " + agora.toLocaleTimeString('pt-PT', {hour:'2-digit', minute:'2-digit'});
+        dataEl.textContent = txt;
+      }catch(e){
+        dataEl.textContent = new Date().toLocaleDateString('pt-PT', {weekday:'long', day:'2-digit', month:'long', year:'numeric'}) + ' · ' + new Date().toLocaleTimeString('pt-PT', {hour:'2-digit', minute:'2-digit'});
+      }
+    }
 
     try{
       chamarAPIJsonp({action:"obterResumoIndexJsonp", senha: senhaAdminSessao}, function(resp){
