@@ -5,10 +5,6 @@
   <title>Registo de Ponto · Balcão Agrícola</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#065f46">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiUG9udG8ifQ==">
-  <style>/* Performance: reduce motion for users who prefer */ @media (prefers-reduced-motion: reduce){ *,*::before,*::after{animation:none!important;transition:none!important}}</style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
@@ -412,7 +408,7 @@ body {
       <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
         <h3 style="margin-bottom: 22px; color: var(--primary); text-align: center; justify-content: center; font-size: 1.15rem;">⚙️ Painel de Gestão</h3>
         <div class="menu-admin-grid">
-          <button class="btn tile-emerald" onclick="abrirSubModulo('index'); carregarIndexResumo();" style="grid-column: span 2; background: linear-gradient(135deg,#065f46,#10b981); color:white;"><span>📊</span> INDEX / Dashboard</button>
+          <button class="btn tile-emerald" onclick="abrirSubModulo('dashboard'); carregarDashboard();" style="grid-column: span 2; background: linear-gradient(135deg,#065f46 0%, #10b981 100%); color:white; font-weight:800; letter-spacing:0.02em;"><span>📊</span> DASHBOARD</button>
           <button class="btn tile-blue" onclick="abrirSubModulo('pedidos'); carregarPedidosPendentes();"><span>📩</span> Pedidos</button>
           <button class="btn tile-amber" onclick="abrirSubModulo('ausencias')"><span>📅</span> Lançar Faltas</button>
           <button class="btn tile-teal" onclick="abrirSubModulo('troca')"><span>🔄</span> Troca Turno</button>
@@ -428,17 +424,33 @@ body {
     </div>
 
     
-    <div id="admin-sub-index" style="display: none;">
+    <div id="admin-sub-dashboard" style="display: none;">
       <div class="admin-card">
-        <h3>📊 INDEX - Resumo do Dia</h3>
-        <div id="indexResumoContainer" style="display:grid; gap:12px; grid-template-columns: 1fr 1fr;">
-          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:14px;"><div style="font-size:0.75rem;font-weight:800;color:#065f46;text-transform:uppercase;">Presentes Hoje</div><div id="idxPresentes" style="font-size:1.8rem;font-weight:800;">--</div></div>
-          <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:14px;padding:14px;"><div style="font-size:0.75rem;font-weight:800;color:#92400e;text-transform:uppercase;">Em Atraso</div><div id="idxAtrasos" style="font-size:1.8rem;font-weight:800;">--</div></div>
-          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;padding:14px;"><div style="font-size:0.75rem;font-weight:800;color:#1e40af;text-transform:uppercase;">Turno Aberto</div><div id="idxAbertos" style="font-size:1.8rem;font-weight:800;">--</div></div>
-          <div style="background:#fdf2f8;border:1px solid #fbcfe8;border-radius:14px;padding:14px;"><div style="font-size:0.75rem;font-weight:800;color:#9d174d;text-transform:uppercase;">Fila Offline</div><div id="idxOffline" style="font-size:1.8rem;font-weight:800;">0</div></div>
+        <h3>📊 Dashboard - Hoje</h3>
+        <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:16px;" id="dashboardData">A carregar resumo...</p>
+        <div style="display:grid; gap:12px; grid-template-columns: 1fr 1fr;">
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:14px;text-align:center;">
+            <div style="font-size:0.70rem;font-weight:800;color:#065f46;text-transform:uppercase;letter-spacing:0.05em;">Presentes</div>
+            <div id="dashPresentes" style="font-size:1.9rem;font-weight:800;color:#065f46;margin-top:4px;">--</div>
+          </div>
+          <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:14px;padding:14px;text-align:center;">
+            <div style="font-size:0.70rem;font-weight:800;color:#92400e;text-transform:uppercase;">Atrasos</div>
+            <div id="dashAtrasos" style="font-size:1.9rem;font-weight:800;color:#92400e;margin-top:4px;">--</div>
+          </div>
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;padding:14px;text-align:center;">
+            <div style="font-size:0.70rem;font-weight:800;color:#1e40af;text-transform:uppercase;">Turno Aberto</div>
+            <div id="dashAbertos" style="font-size:1.9rem;font-weight:800;color:#1e40af;margin-top:4px;">--</div>
+          </div>
+          <div style="background:#fdf2f8;border:1px solid #fbcfe8;border-radius:14px;padding:14px;text-align:center;">
+            <div style="font-size:0.70rem;font-weight:800;color:#9d174d;text-transform:uppercase;">Offline</div>
+            <div id="dashOffline" style="font-size:1.9rem;font-weight:800;color:#9d174d;margin-top:4px;">0</div>
+          </div>
         </div>
-        <div id="idxListaHoje" style="margin-top:18px; font-size:0.9rem;"></div>
-        <button class="btn btn-primary" style="margin-top:16px" onclick="carregarIndexResumo()">🔄 Atualizar INDEX</button>
+        <div id="dashLista" style="margin-top:20px; text-align:left;"></div>
+        <div style="display:flex; gap:10px; margin-top:18px;">
+          <button class="btn btn-primary" onclick="carregarDashboard()" style="flex:1">🔄 Atualizar</button>
+          <button class="btn btn-nav" onclick="voltarAoMenuCentralAdmin()" style="flex:1">⬅️ Voltar</button>
+        </div>
       </div>
     </div>
 
@@ -669,7 +681,7 @@ body {
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
   var senhaAdminSessao = ""; var emProcessamento = false; var estaOnline = navigator.onLine;
   var listaFuncionariosCache = [];
-  var MODULOS_ADMIN = ['pedidos', 'ausencias', 'troca', 'acordo', 'cativas1a1', 'horasacordadas', 'corrigir', 'pdf', 'funcionario', 'remover'];
+  var MODULOS_ADMIN = ['dashboard','pedidos', 'ausencias', 'troca', 'acordo', 'cativas1a1', 'horasacordadas', 'corrigir', 'pdf', 'funcionario', 'remover'];
   var TIPOS_COM_HORARIO = ["📄 Falta Justificada", "⚠️ Falta Injustificada", "🤝 Acordo 1:1"]; // 🆕
 
   function configurarComportamentoDatas() {
@@ -1647,46 +1659,51 @@ body {
   function atualizarPinDisplay(){ atualizarDisplayPin(); }
   function registarPontoDiario(){ if(pinAtual && pinAtual.length===4){ resolverERegistarAutomatico(); } else { var e=document.getElementById('erro-pin-ponto'); if(e){ e.innerText='⚠️ Insira 4 dígitos no teclado.'; e.style.display='flex'; } } }
   
-  // ====== ★ INDEX V4 - DASHBOARD RESUMO (SEM PERDER NADA) ======
-  function carregarIndexResumo(){
-    var c = document.getElementById('indexResumoContainer');
-    if(!c) return;
-    document.getElementById('idxOffline').textContent = getFilaOffline().length;
-    // usa cache de funcionarios + chamada leve ao backend
-    chamarAPIJsonp({action:"obterResumoIndexJsonp", senha: senhaAdminSessao}, function(resp){
-      try{
-        if(typeof resp === 'object'){
-          document.getElementById('idxPresentes').textContent = resp.presentes ?? '--';
-          document.getElementById('idxAtrasos').textContent = resp.atrasos ?? '--';
-          document.getElementById('idxAbertos').textContent = resp.abertos ?? '--';
-          var lista = document.getElementById('idxListaHoje');
+  // ====== ★ DASHBOARD - FUNCIONA MESMO SEM GS NOVO ======
+  function carregarDashboard(){
+    var fila = [];
+    try{ fila = getFilaOffline(); }catch(e){ fila=[]; }
+    var elOff = document.getElementById('dashOffline');
+    if(elOff) elOff.textContent = fila.length;
+    
+    var dataEl = document.getElementById('dashboardData');
+    if(dataEl) dataEl.textContent = new Date().toLocaleDateString('pt-PT', {weekday:'long', day:'2-digit', month:'long', year:'numeric'}) + ' · ' + new Date().toLocaleTimeString('pt-PT', {hour:'2-digit', minute:'2-digit'});
+
+    // Tenta ir ao servidor (se já instalaste o GS novo)
+    try{
+      chamarAPIJsonp({action:"obterResumoIndexJsonp", senha: senhaAdminSessao}, function(resp){
+        if(resp && typeof resp === 'object' && !resp.erro){
+          document.getElementById('dashPresentes').textContent = resp.presentes ?? 0;
+          document.getElementById('dashAtrasos').textContent = resp.atrasos ?? 0;
+          document.getElementById('dashAbertos').textContent = resp.abertos ?? 0;
+          var listaDiv = document.getElementById('dashLista');
           if(resp.lista && resp.lista.length){
-            lista.innerHTML = resp.lista.map(function(r){ return '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9"><span>'+r.nome+'</span><span style="font-weight:700">'+r.estado+'</span></div>'; }).join('');
+            var htmlLista = '<div style="font-weight:800;font-size:0.82rem;text-transform:uppercase;color:var(--primary);margin-bottom:10px;">Quem picou hoje</div>';
+            htmlLista += resp.lista.map(function(r){
+              return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#f8fafc;border:1px solid #f1f5f9;border-radius:10px;margin-bottom:8px;"><div><div style="font-weight:700;font-size:0.92rem;">'+r.nome+'</div><div style="font-size:0.75rem;color:var(--text-muted);">'+(r.hora||'')+' → '+(r.ultima||'')+'</div></div><div style="font-size:0.82rem;font-weight:700;">'+r.estado+'</div></div>';
+            }).join('');
+            listaDiv.innerHTML = htmlLista;
           } else {
-            lista.innerHTML = '<p style="color:#64748b">Sem dados ainda. Adiciona a funcao obterResumoIndexJsonp no GS (codigo abaixo).</p>';
+            document.getElementById('dashLista').innerHTML = '<div style="text-align:center;padding:16px;background:#f8fafc;border-radius:12px;color:var(--text-muted);font-size:0.9rem;">Nenhuma picagem hoje ainda.<br><small>Se instalaste o GS novo, os dados aparecem aqui automaticamente.</small></div>';
           }
+        } else {
+          // Fallback offline - mostra o que tem
+          mostrarDashboardOfflineFallback();
         }
-      }catch(e){ console.warn(e); }
-    });
+      });
+    }catch(e){
+      mostrarDashboardOfflineFallback();
+    }
   }
 
-  // Debounce para geolocation (poupa bateria)
-  var _geoWatchId = null;
-  function iniciarWatchOtimizado(){
-    if(!navigator.geolocation) return;
-    if(_geoWatchId) navigator.geolocation.clearWatch(_geoWatchId);
-    _geoWatchId = navigator.geolocation.watchPosition(function(p){
-      try{
-        localStorage.setItem("PONTO_LAST_LAT", p.coords.latitude);
-        localStorage.setItem("PONTO_LAST_LON", p.coords.longitude);
-      }catch(e){}
-    }, null, { enableHighAccuracy: false, maximumAge: 60000, timeout: 15000 });
+  function mostrarDashboardOfflineFallback(){
+    document.getElementById('dashPresentes').textContent = '—';
+    document.getElementById('dashAtrasos').textContent = '—';
+    document.getElementById('dashAbertos').textContent = '—';
+    var listaDiv = document.getElementById('dashLista');
+    listaDiv.innerHTML = '<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:14px;font-size:0.88rem;line-height:1.5;"><b>ℹ️ Ainda não instalaste o GS novo?</b><br>Para ver quem está presente, instala o ficheiro <b>GS_COMPLETO_V4_INDEX.gs</b> que te dei.<br><br>Mesmo sem isso, a picagem e todos os botões continuam iguais.</div>';
   }
 
-  // Otimiza badge para não bloquear UI
-  var _badgeRAF = null;
-  var originalAtualizarBadge = atualizarBadgeFilaOffline;
-  // vamos sobrescrever depois da definicao original - guardamos para V4
 
   // ====== ★ OPÇÃO A - CACHE HASH PINs PARA OFFLINE ======
 
@@ -1804,7 +1821,13 @@ body {
     atualizarBadgeFilaOffline();
   });
   // Guarda ultima posicao sempre
-  try{ iniciarWatchOtimizado(); }catch(e){}
+  try{
+    if(navigator.geolocation){
+      navigator.geolocation.watchPosition(function(p){ 
+        try{ localStorage.setItem(OFFLINE_LAST_LAT, p.coords.latitude); localStorage.setItem(OFFLINE_LAST_LON, p.coords.longitude); }catch(e){}
+      });
+    }
+  }catch(e){}
   // Inicializa badge
   setTimeout(atualizarBadgeFilaOffline, 800);
   // ====== FIM OFFLINE PATCH ======
