@@ -135,13 +135,17 @@
     .erro-campo { justify-content:center; }
 
   
-/* ★ V3 BALANCED - PRINCIPAL SEM SCROLL MAS CONFORTÁVEL, OUTRAS COM SCROLL */
-html { background:#f8fafc; }
+
+/* ★ A+B+C FINAL - LOGO NITIDO + COUNTDOWN + CONTRASTE + QUIOSQUE + ULTIMA PICAGEM + ANTI-BRUTEFORCE */
+html { background:#f8fafc; overflow-x:hidden; }
 body {
   min-height:100dvh;
   padding:10px;
   overflow-y:auto;
   -webkit-overflow-scrolling:touch;
+  overscroll-behavior:none;
+  user-select:none;
+  -webkit-user-select:none;
 }
 .container {
   width:100%;
@@ -150,103 +154,169 @@ body {
   border-radius:28px;
   display:flex;
   flex-direction:column;
-  max-height:none;
+  box-shadow: var(--shadow-xl);
+  border:1px solid rgba(255,255,255,0.9);
+  background:#fff;
 }
-/* Header mais compacto mas logo maior que versão apertada */
-.header { padding:18px 20px 14px; }
-.logo-wrapper { margin-bottom:4px; }
-.logo-empresa { max-height:84px !important; }
-.header h2 { font-size:0.9rem; margin-top:6px; margin-bottom:12px; }
-.live-clock-card { padding:12px 14px; gap:6px; border-radius:18px; }
-.clock-time-row { font-size:2.1rem; gap:10px; }
-.clock-date-row { font-size:0.7rem; }
+/* A) LOGO NITIDO */
+.header { padding:20px 20px 14px; background: linear-gradient(180deg,#ffffff 0%,#f8fafc 100%); border-bottom:1px solid var(--border); text-align:center; }
+.logo-wrapper { display:flex; align-items:center; justify-content:center; margin-bottom:6px; min-height:92px; background:radial-gradient(circle at center, rgba(255,255,255,1) 0%, rgba(248,250,252,0) 70%); }
+.logo-empresa {
+  width:auto;
+  max-width:92%;
+  max-height:92px !important;
+  object-fit:contain;
+  object-position:center;
+  mix-blend-mode:normal;
+  filter: contrast(1.25) saturate(1.25) brightness(1.02) drop-shadow(0 2px 8px rgba(0,0,0,0.06));
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  display:block;
+}
+.header h2 { font-size:0.92rem; font-weight:900; letter-spacing:0.06em; margin:8px 0 12px; color:var(--primary); }
+.live-clock-card { padding:14px 14px; gap:6px; border-radius:18px; background: linear-gradient(135deg,#0f172a 0%,#1e293b 100%); box-shadow:0 8px 24px rgba(15,23,42,0.18), inset 0 1px 0 rgba(255,255,255,0.06); position:relative; overflow:hidden; }
+.clock-time-row { font-size:2.15rem; gap:10px; }
+.clock-date-row { font-size:0.72rem; letter-spacing:0.14em; }
 
-/* PRINCIPAL - SEM SCROLL */
+/* B) ULTIMA PICAGEM */
+.ultima-picagem-box {
+  margin-top:10px;
+  padding:8px 12px;
+  background: linear-gradient(135deg,#f0fdf4 0%,#ecfdf5 100%);
+  border:1.5px solid #a7f3d0;
+  border-radius:12px;
+  font-size:0.78rem;
+  font-weight:700;
+  color:#065f46;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  position:relative;
+  z-index:1;
+}
+
+/* PRINCIPAL SEM SCROLL MAS CONFORTÁVEL */
 #section-ponto.content-section.active {
   display:flex !important;
   flex-direction:column;
-  padding:14px 18px 14px;
+  padding:14px 18px 16px;
   overflow:hidden;
   flex:1;
   min-height:0;
 }
-.ponto-pin-only {
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  min-height:0;
+.ponto-pin-only { flex:1; display:flex; flex-direction:column; justify-content:space-between; min-height:0; }
+.ponto-pin-only > div:first-child { flex-shrink:0; margin-bottom:8px !important; display:flex; justify-content:flex-end; }
+.ponto-pin-only h3 { flex-shrink:0; font-size:1.18rem !important; font-weight:900; margin-bottom:8px !important; text-align:center; color:var(--primary); }
+.pin-display-area { flex-shrink:0; margin:8px 0 12px !important; text-align:center; }
+.pin-dots-big { margin:10px 0 !important; gap:14px; justify-content:center; display:flex; }
+.pin-dots-big .pin-dot { width:20px; height:20px; border-radius:50%; border:2.5px solid var(--border-strong); background:#fff; transition:all 0.18s; box-shadow:inset 0 1px 2px rgba(0,0,0,0.04); }
+.pin-dots-big .pin-dot.filled { background: var(--primary); border-color:var(--primary); box-shadow:0 0 0 4px rgba(15,23,42,0.12), 0 2px 6px rgba(15,23,42,0.15); transform:scale(1.12); }
+
+/* A) BADGE COUNTDOWN VIVO */
+.pin-nome-preview { min-height:42px; margin:8px 0 6px !important; display:flex; justify-content:center; align-items:center; }
+.pin-nome-preview span {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:10px 18px;
+  border-radius:999px;
+  font-weight:800;
+  font-size:0.92rem;
+  background: linear-gradient(135deg,#ecfdf5,#f0fdfa);
+  border:1.5px solid #a7f3d0;
+  color:#065f46;
+  box-shadow:0 2px 10px rgba(16,185,129,0.12);
+  animation: popIn 0.3s cubic-bezier(0.16,1,0.3,1);
 }
-.ponto-pin-only > div:first-child { flex-shrink:0; margin-bottom:8px !important; }
-.ponto-pin-only h3 { flex-shrink:0; font-size:1.15rem !important; margin-bottom:8px !important; }
-.pin-display-area { flex-shrink:0; margin:6px 0 10px !important; }
-.pin-dots-big { margin:8px 0 !important; gap:12px; }
-.pin-dots-big .pin-dot { width:18px; height:18px; }
-.pin-nome-preview { min-height:32px; margin:6px 0 4px !important; }
+.pin-nome-preview.erro span {
+  background: linear-gradient(135deg,#fef2f2,#fff1f2) !important;
+  border-color:#fecaca !important;
+  color:#991b1b !important;
+  box-shadow:0 4px 16px rgba(239,68,68,0.18);
+}
+@keyframes popIn { from { transform:scale(0.85); opacity:0; } to { transform:scale(1); opacity:1; } }
+
+/* A) BOTÕES MAIS VISÍVEIS - CONTRASTE */
+.top-action-btn {
+  width:46px; height:46px; border-radius:14px;
+  border:1.5px solid var(--border);
+  background:#fff;
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:1.25rem; cursor:pointer;
+  box-shadow: 0 2px 8px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
+  transition:all 0.15s;
+}
+.top-action-btn:active { transform:scale(0.92); box-shadow:0 1px 2px rgba(0,0,0,0.1); }
+.top-action-btn.calendar { background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%); border-color:#93c5fd; }
+.top-action-btn.settings { background:linear-gradient(135deg,#faf5ff 0%,#f3e8ff 100%); border-color:#d8b4fe; }
+
 .keypad {
   flex:1;
-  gap:10px;
-  margin:6px 0 0 !important;
-  min-height:260px;
-  max-height:380px;
+  gap:12px;
+  margin:8px 0 0 !important;
+  min-height:300px;
+  max-height:420px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
   align-content:stretch;
 }
-.key { height:auto; min-height:56px; font-size:1.45rem; border-radius:16px; }
-.key.key-action { font-size:0.92rem; }
+.key {
+  height:auto;
+  min-height:58px;
+  font-size:1.5rem;
+  font-weight:800;
+  border-radius:18px;
+  border:2px solid #e2e8f0;
+  background: linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+  color:var(--primary);
+  box-shadow: 0 4px 12px rgba(15,23,42,0.06), 0 1px 3px rgba(15,23,42,0.04), inset 0 1px 0 rgba(255,255,255,0.8);
+  transition: all 0.12s cubic-bezier(0.16,1,0.3,1);
+  display:flex; align-items:center; justify-content:center;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.key:active { transform:scale(0.94); background:#f1f5f9; border-color:#cbd5e1; box-shadow:0 1px 2px rgba(0,0,0,0.08); }
+.key.key-action { background: linear-gradient(180deg,#f8fafc 0%,#f1f5f9 100%); font-size:0.95rem; color:var(--text-muted); border-color:#e2e8f0; }
+.key.key-clear { background: linear-gradient(135deg,#fef2f2 0%,#fee2e2 100%); border-color:#fecaca; color:#dc2626; font-size:0.9rem; font-weight:800; }
+.key:disabled { opacity:0.4; pointer-events:none; filter:grayscale(0.3); }
 
-/* OUTRAS PÁGINAS - COM SCROLL NORMAL */
+/* C) ANTI-BRUTEFORCE BLOQUEIO VISUAL */
+.keypad.bloqueado { opacity:0.35; pointer-events:none; filter:grayscale(0.5); }
+.bloqueio-overlay {
+  position:absolute; inset:0; background:rgba(255,255,255,0.85); backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; color:#991b1b; font-size:1rem; border-radius:18px;
+  z-index:5;
+}
+
+/* REMOVE DUPLICAÇÃO FUNDO */
+#erro-pin-ponto { display:none !important; }
+.pin-status.erro { display:none !important; }
+
+/* OUTRAS PÁGINAS COM SCROLL */
 #section-falta-func.content-section.active,
 #section-admin.content-section.active {
   display:block !important;
   overflow-y:auto;
   -webkit-overflow-scrolling:touch;
-  max-height:none;
-  padding:18px 18px 24px;
+  padding:20px 18px 28px;
 }
-
-/* Footer só aparece nas outras páginas se necessário */
 #section-ponto ~ .app-footer { display:none; }
 
-/* Telas pequenas - ainda confortável */
-@media (max-height:750px){
-  .logo-empresa { max-height:72px !important; }
-  .header { padding:14px 18px 10px; }
-  .clock-time-row { font-size:1.85rem; }
-  .keypad { min-height:230px; gap:8px; }
-  .key { min-height:50px; font-size:1.3rem; }
+/* RESPONSIVO */
+@media (max-height:780px){
+  .logo-empresa { max-height:82px !important; }
+  .header { padding:16px 18px 12px; }
+  .keypad { min-height:270px; }
+  .key { min-height:52px; }
 }
-@media (max-height:650px){
-  .logo-empresa { max-height:62px !important; }
-  .header h2 { font-size:0.8rem; margin-bottom:8px; }
-  .keypad { min-height:200px; }
-  .key { min-height:44px; }
+@media (max-height:680px){
+  .logo-empresa { max-height:68px !important; }
+  .keypad { min-height:230px; gap:10px; }
+  .key { min-height:46px; font-size:1.3rem; }
 }
-@media (min-width:461px){
-  body { padding:14px; }
-  .container { border-radius:28px; margin:8px auto 20px; }
-}
+@media (min-width:461px){ body { padding:14px; } .container { border-radius:28px; } }
 
-  
-/* ★ FIX - REMOVE INFO DUPLICADA DO FUNDO */
-#erro-pin-ponto { display:none !important; visibility:hidden !important; height:0 !important; margin:0 !important; padding:0 !important; }
-.pin-status.erro { display:none !important; } /* esconde status duplicado em baixo se houver */
-/* Mantém só o badge de cima (nomePreview) */
-.pin-nome-preview { min-height:38px; }
-.pin-nome-preview.erro span { 
-  display:inline-flex; 
-  align-items:center; 
-  gap:6px;
-  padding:8px 16px; 
-  font-size:0.92rem; 
-  font-weight:800;
-  background:#fef2f2 !important; 
-  border:1.5px solid #fecaca !important; 
-  color:#991b1b !important;
-  border-radius:999px;
-  box-shadow:0 2px 8px rgba(239,68,68,0.12);
-}
-
-  </style>
+</style>
 </head>
 <body>
 
@@ -1626,6 +1696,142 @@ body {
   function focarPin(){}
   function atualizarPinDisplay(){ atualizarDisplayPin(); }
   function registarPontoDiario(){ if(pinAtual && pinAtual.length===4){ resolverERegistarAutomatico(); } else { var e=document.getElementById('erro-pin-ponto'); if(e){ e.innerText='⚠️ Insira 4 dígitos no teclado.'; e.style.display='flex'; } } }
+  
+// ★ A+B+C - MELHORIAS COMPLETAS
+var tentativasErradas = 0;
+var ultimoErroTimestamp = 0;
+var countdownInterval = null;
+
+function vibrar(tipo){
+  try{
+    if(!navigator.vibrate) return;
+    if(tipo==='sucesso') navigator.vibrate([80,40,80]);
+    else if(tipo==='erro') navigator.vibrate([120,60,120]);
+    else navigator.vibrate(40);
+  }catch(e){}
+}
+function tocarSom(tipo){
+  try{
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    var o = ctx.createOscillator();
+    var g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type='sine';
+    if(tipo==='sucesso'){ o.frequency.value=880; g.gain.value=0.12; o.start(); setTimeout(()=>{o.frequency.value=1320;},120); setTimeout(()=>{o.stop(); ctx.close();},280); }
+    else { o.frequency.value=220; g.gain.value=0.14; o.start(); setTimeout(()=>{o.stop(); ctx.close();},220); }
+  }catch(e){}
+}
+
+function iniciarCountdownBloqueio(segundos){
+  clearInterval(countdownInterval);
+  var nomeEl=document.getElementById('nomePreview');
+  var fim = Date.now() + segundos*1000;
+  countdownInterval = setInterval(function(){
+    var restante = Math.max(0, Math.ceil((fim - Date.now())/1000));
+    var m = Math.floor(restante/60);
+    var s = restante%60;
+    var txt = m>0 ? m+'m '+s+'s' : s+'s';
+    if(nomeEl){
+      nomeEl.innerHTML = "<span>⏳ Aguarde "+txt+" entre picagens</span>";
+      nomeEl.className="pin-nome-preview erro";
+    }
+    if(restante<=0){
+      clearInterval(countdownInterval);
+      if(nomeEl){ nomeEl.innerHTML=""; nomeEl.className="pin-nome-preview"; }
+      desabilitarTeclado(false);
+      var kp=document.getElementById('keypadPonto');
+      if(kp) kp.classList.remove('bloqueado');
+    }
+  }, 250);
+}
+
+function mostrarUltimaPicagem(){
+  try{
+    var boxId = "ultimaPicagemBox";
+    var existente = document.getElementById(boxId);
+    if(existente) existente.remove();
+    var ultima = localStorage.getItem("ULTIMA_PICAGEM_TXT");
+    if(!ultima) return;
+    var headerClock = document.getElementById('headerClockBox');
+    if(!headerClock) return;
+    var div = document.createElement('div');
+    div.id = boxId;
+    div.className = "ultima-picagem-box";
+    div.innerHTML = "🕒 Última: " + ultima;
+    headerClock.parentNode.insertBefore(div, headerClock.nextSibling);
+  }catch(e){}
+}
+function guardarUltimaPicagemTxt(txt){
+  try{ localStorage.setItem("ULTIMA_PICAGEM_TXT", txt); }catch(e){}
+}
+
+// Override finalizarSucesso para incluir ultima picagem + vibracao
+var _finalizarSucessoOriginal = null;
+setTimeout(function(){
+  if(typeof finalizarSucesso === 'function' && !_finalizarSucessoOriginal){
+    _finalizarSucessoOriginal = finalizarSucesso;
+    finalizarSucesso = function(nome,pin){
+      vibrar('sucesso'); tocarSom('sucesso');
+      var agora = new Date();
+      var txt = agora.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'}) + " hoje";
+      guardarUltimaPicagemTxt(txt + " · " + (nome||''));
+      mostrarUltimaPicagem();
+      tentativasErradas = 0;
+      _finalizarSucessoOriginal(nome,pin);
+    };
+  }
+}, 500);
+
+// Quiosque - Wake Lock e fullscreen hint
+try{
+  if('wakeLock' in navigator){
+    var wakeLock = null;
+    var requestWakeLock = async function(){ try{ wakeLock = await navigator.wakeLock.request('screen'); }catch(e){} };
+    document.addEventListener('visibilitychange', function(){ if(wakeLock!==null && document.visibilityState==='visible'){ requestWakeLock(); } });
+    requestWakeLock();
+  }
+}catch(e){}
+
+// Melhorar resolverERegistarAutomatico com confirmacao nome 1s + anti-bruteforce
+var _resolverOriginal = null;
+setTimeout(function(){
+  if(typeof resolverERegistarAutomatico === 'function' && !_resolverOriginal){
+    _resolverOriginal = resolverERegistarAutomatico;
+    resolverERegistarAutomatico = async function(){
+      // Anti-bruteforce
+      if(tentativasErradas >= 5){
+        var tempoBloqueio = 30;
+        var nomeEl=document.getElementById('nomePreview');
+        if(nomeEl){ nomeEl.innerHTML="<span>🚫 Muitas tentativas. Aguarde "+tempoBloqueio+"s</span>"; nomeEl.className="pin-nome-preview erro"; }
+        desabilitarTeclado(true);
+        var kp=document.getElementById('keypadPonto'); if(kp) kp.classList.add('bloqueado');
+        vibrar('erro'); tocarSom('erro');
+        iniciarCountdownBloqueio(tempoBloqueio);
+        setTimeout(function(){ tentativasErradas=0; }, tempoBloqueio*1000);
+        return;
+      }
+      // Chama original mas com intercept de erro para contar tentativas
+      var pinAntes = pinAtual;
+      try{
+        await _resolverOriginal();
+      }catch(e){
+        tentativasErradas++;
+      }
+      // Se depois de 2s ainda tem erro visivel, conta como tentativa errada
+      setTimeout(function(){
+        var nomeEl=document.getElementById('nomePreview');
+        if(nomeEl && nomeEl.className.indexOf('erro')!==-1){
+          tentativasErradas++;
+          vibrar('erro'); tocarSom('erro');
+        }
+      }, 800);
+    };
+  }
+}, 800);
+
+// Mostrar ultima picagem ao carregar
+document.addEventListener('DOMContentLoaded', function(){ setTimeout(mostrarUltimaPicagem, 600); });
+
   // ====== ★ OPÇÃO A - CACHE HASH PINs PARA OFFLINE ======
 
   var PINS_HASH_KEY = "FUNCIONARIOS_PINS_HASH_V1";
