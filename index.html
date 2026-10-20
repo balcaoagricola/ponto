@@ -226,6 +226,26 @@ body {
   .container { border-radius:28px; margin:8px auto 20px; }
 }
 
+  
+/* ★ FIX - REMOVE INFO DUPLICADA DO FUNDO */
+#erro-pin-ponto { display:none !important; visibility:hidden !important; height:0 !important; margin:0 !important; padding:0 !important; }
+.pin-status.erro { display:none !important; } /* esconde status duplicado em baixo se houver */
+/* Mantém só o badge de cima (nomePreview) */
+.pin-nome-preview { min-height:38px; }
+.pin-nome-preview.erro span { 
+  display:inline-flex; 
+  align-items:center; 
+  gap:6px;
+  padding:8px 16px; 
+  font-size:0.92rem; 
+  font-weight:800;
+  background:#fef2f2 !important; 
+  border:1.5px solid #fecaca !important; 
+  color:#991b1b !important;
+  border-radius:999px;
+  box-shadow:0 2px 8px rgba(239,68,68,0.12);
+}
+
   </style>
 </head>
 <body>
@@ -281,7 +301,7 @@ body {
         <button class="key key-action" onclick="tecladoBack()" title="Apagar">⌦</button>
       </div>
       
-      <div id="erro-pin-ponto" class="erro-campo" style="display:none; justify-content:center; margin-top:10px;"></div>
+      <div id="erro-pin-ponto" class="erro-campo" style="display:none !important;"></div>
     </div>
   </div>
 
@@ -1531,7 +1551,7 @@ body {
     var ps=document.getElementById('pinStatus'); if(ps){ ps.innerText=""; ps.className="pin-status"; }
   }
   function tecladoBack(){ if(pinAtual.length>0){ pinAtual = pinAtual.slice(0,-1); atualizarDisplayPin(); limparFeedbackPontoV3(); } }
-  function limparFeedbackPontoV3(){ var e=document.getElementById('erro-pin-ponto'); if(e){ e.style.display='none'; e.innerText=''; } }
+  function limparFeedbackPontoV3(){ /* não usa bottom */ }
   async function resolverERegistarAutomatico(){
     if(emProcessamento) return;
     var pin = pinAtual;
@@ -1593,7 +1613,7 @@ body {
         if(nomeExtra){ try{ await guardarHashPin(nomeExtra,pin); var hh=await hashPin(pin); var rc=getReverseCache(); rc[hh]=nomeExtra; setReverseCache(rc); var np=document.getElementById('nomePreview'); if(np) np.innerHTML="<span>👋 Olá, "+nomeExtra+"</span>"; }catch(e){} }
         mostrarPopupPersonalizado({titulo:"Ponto Registado ✅", mensagem:rStr, tipo:"sucesso"}); finalizarSucesso(nomeExtra||"colaborador",pin);
       } else {
-        var msg=rStr.replace("Aviso: ",""); var errEl=document.getElementById('erro-pin-ponto'); if(errEl){ errEl.innerText="⚠️ "+msg; errEl.style.display='flex'; }
+        var msg=rStr.replace("Aviso: ",""); /* bottom erro removido - só mostra em cima */
         var nm=document.getElementById('nomePreview'); if(nm){ nm.innerHTML="<span style='background:#fef2f2;border-color:#fecaca;color:#991b1b'>❌ "+msg+"</span>"; nm.className="pin-nome-preview erro"; }
         emProcessamento=false; desabilitarTeclado(false); bloqueadoAte=Date.now()+2000;
         setTimeout(function(){ tecladoClear(); var nn=document.getElementById('nomePreview'); if(nn) nn.className="pin-nome-preview"; }, 2500);
