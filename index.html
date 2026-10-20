@@ -107,6 +107,33 @@
     .pedido-item p strong { color: var(--primary); font-weight: 700; }
     .troca-bloco { padding: 14px; background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%); border: 1.5px solid #5eead4; border-radius: var(--radius-sm); margin-bottom: 14px; }
     .troca-bloco h4 { font-size: 0.82rem; font-weight: 800; color: #0f766e; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+  
+    /* ★ V3 FINAL - TECLADO PIN ONLY - COMPLETO */
+    .top-action-btn { width:44px; height:44px; border-radius:13px; border:1.5px solid var(--border); background:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:1.15rem; cursor:pointer; box-shadow:var(--shadow-sm); transition:all 0.18s; }
+    .top-action-btn:active { transform:scale(0.94); }
+    .top-action-btn.calendar { background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%); border-color:#bfdbfe; }
+    .top-action-btn.settings { background:linear-gradient(135deg,#faf5ff 0%,#f3e8ff 100%); border-color:#e9d5ff; }
+    .ponto-pin-only { text-align:center; }
+    .pin-display-area { margin: 10px 0 18px; }
+    .pin-dots-big { display:flex; justify-content:center; gap:14px; margin:12px 0; }
+    .pin-dots-big .pin-dot { width:18px; height:18px; border-radius:50%; border:2px solid var(--border-strong); background:#fff; transition: all 0.18s; }
+    .pin-dots-big .pin-dot.filled { background: var(--primary); border-color: var(--primary); box-shadow: 0 0 0 4px rgba(15,23,42,0.12); transform: scale(1.15); }
+    .pin-dots-big .pin-dot.filled.ok { background: var(--accent); border-color: var(--accent); }
+    .pin-nome-preview { min-height: 42px; margin: 8px 0 4px; font-weight:800; font-size:1.05rem; color: var(--primary); }
+    .pin-nome-preview span { display:inline-block; padding:6px 14px; border-radius:999px; background: linear-gradient(135deg,#ecfdf5,#f0fdfa); border:1.5px solid #a7f3d0; color:#065f46; }
+    .pin-nome-preview.erro span { background:#fef2f2; border-color:#fecaca; color:#991b1b; }
+    .keypad { display:grid; grid-template-columns: repeat(3,1fr); gap:12px; margin:18px 0 10px; }
+    .key { height:64px; border-radius:18px; border:1.5px solid var(--border); background:#fff; font-size:1.6rem; font-weight:800; color:var(--primary); box-shadow: var(--shadow-sm); cursor:pointer; transition: all 0.12s; user-select:none; -webkit-tap-highlight-color:transparent; }
+    .key:active { transform: scale(0.96); background: var(--surface-2); }
+    .key.key-action { background: var(--surface-2); font-size:1.05rem; color: var(--text-muted); }
+    .key.key-clear { background:#fef2f2; border-color:#fecaca; color:#dc2626; font-size:0.95rem; font-weight:800; }
+    .key.key-enter { background: linear-gradient(135deg,#059669,#10b981); color:#fff; border-color:#059669; box-shadow: var(--shadow-accent); }
+    .key:disabled { opacity:0.45; pointer-events:none; }
+    .pin-status { min-height:20px; font-size:0.84rem; font-weight:700; margin-top:10px; }
+    .pin-status.ok { color: var(--accent); }
+    .pin-status.erro { color: var(--danger); }
+    .erro-campo { justify-content:center; }
+
   </style>
 </head>
 <body>
@@ -126,34 +153,48 @@
     </div>
   </div>
 
-  <div id="section-ponto" class="content-section active">
-    <div class="form-group">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <label for="nomeFuncionario" style="margin-bottom: 0;">O seu Nome <span class="campo-obrigatorio">*</span></label>
-        <div style="display: flex; gap: 8px;">
+    <div id="section-ponto" class="content-section active">
+    <div class="ponto-pin-only">
+      <div style="display:flex; justify-content:flex-end; align-items:center; margin-bottom:14px;">
+        
+        <div style="display:flex; gap:8px;">
           <button type="button" class="top-action-btn calendar" onclick="abrirEcraFaltaFuncionario()" title="Comunicar Ausência">📅</button>
           <button type="button" class="top-action-btn settings" onclick="abrirModalSenhaAdmin()" title="Painel de Gestão">⚙️</button>
         </div>
       </div>
-      <select id="nomeFuncionario" class="form-control" onchange="limparFeedbackPonto(); focarPin('pinPonto')">
-        <option value="">Selecione o colaborador</option>
-      </select>
-      <div id="erro-nome-ponto" class="erro-campo" style="display:none;"></div>
-    </div>
-    <div class="form-group" style="margin-bottom: 28px;">
-      <label for="pinPonto" style="margin-bottom: 12px;">PIN de Acesso <span class="campo-obrigatorio">*</span></label>
-      <div class="pin-box-wrapper">
-        <input type="password" id="pinPonto" class="pin-hidden-input" maxlength="4" inputmode="numeric" oninput="atualizarPinDisplay('pinPonto', 'dotsPonto'); limparFeedbackPonto();">
-        <div id="dotsPonto" class="pin-dots-container" onclick="document.getElementById('pinPonto').focus()">
+      
+      <h3 style="font-size:1.35rem; font-weight:900; color:var(--primary); margin-bottom:14px; letter-spacing:-0.02em; text-align:center;">Insira o seu PIN</h3>
+      
+      <div class="pin-display-area">
+        <input type="password" id="pinPonto" class="pin-hidden-input" maxlength="4" inputmode="numeric" style="position:absolute; opacity:0; pointer-events:none;">
+        <div id="dotsPonto" class="pin-dots-big">
           <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
         </div>
+        <div id="nomePreview" class="pin-nome-preview"></div>
+        <div id="pinStatus" class="pin-status"></div>
       </div>
-      <div id="erro-pin-ponto" class="erro-campo" style="display:none;"></div>
+
+      <div class="keypad" id="keypadPonto">
+        <button class="key" onclick="tecladoPress('1')">1</button>
+        <button class="key" onclick="tecladoPress('2')">2</button>
+        <button class="key" onclick="tecladoPress('3')">3</button>
+        <button class="key" onclick="tecladoPress('4')">4</button>
+        <button class="key" onclick="tecladoPress('5')">5</button>
+        <button class="key" onclick="tecladoPress('6')">6</button>
+        <button class="key" onclick="tecladoPress('7')">7</button>
+        <button class="key" onclick="tecladoPress('8')">8</button>
+        <button class="key" onclick="tecladoPress('9')">9</button>
+        <button class="key key-action key-clear" onclick="tecladoClear()" title="Limpar">⌫ Limpar</button>
+        <button class="key" onclick="tecladoPress('0')">0</button>
+        <button class="key key-action" onclick="tecladoBack()" title="Apagar">⌦</button>
+      </div>
+      
+      <div id="erro-pin-ponto" class="erro-campo" style="display:none; justify-content:center; margin-top:10px;"></div>
     </div>
-    <button id="btnPonto" class="btn btn-primary" onclick="registarPontoDiario()">👆 Validar Registo de Ponto</button>
   </div>
 
-  <div id="section-falta-func" class="content-section">
+
+<div id="section-falta-func" class="content-section">
     <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
       <h3 style="margin-bottom: 8px; color: var(--primary); text-align: left; font-size: 1.05rem;">📅 Comunicar Ausência</h3>
       <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 22px; line-height: 1.6; text-align: left;">Submeta os detalhes da sua ausência. O pedido será analisado pela gerência e, ao ser aprovado, o horário é <b>automaticamente aplicado ao mapa de ponto</b>.</p>
@@ -1372,7 +1413,109 @@
   }
 
   
+  // ====== ★ V3 FINAL - PIN ONLY - COMPLETO - NÃO PERDE NADA ======
+  var pinAtual = "";
+  var bloqueadoAte = 0;
+  var PINS_REVERSE_KEY = "FUNCIONARIOS_PINS_REVERSE_V1";
+  function getReverseCache(){ try{ return JSON.parse(localStorage.getItem(PINS_REVERSE_KEY)||"{}"); }catch(e){ return {}; } }
+  function setReverseCache(o){ localStorage.setItem(PINS_REVERSE_KEY, JSON.stringify(o)); }
+  function atualizarDisplayPin(){
+    var dots = document.querySelectorAll('#dotsPonto .pin-dot');
+    for(var i=0;i<4;i++){ if(dots[i]){ if(i < pinAtual.length) dots[i].classList.add('filled'); else dots[i].classList.remove('filled'); } }
+    var inp = document.getElementById('pinPonto'); if(inp) inp.value = pinAtual;
+  }
+  function tecladoPress(d){
+    if(Date.now() < bloqueadoAte) return;
+    if(pinAtual.length >= 4) return;
+    if(emProcessamento) return;
+    pinAtual += d;
+    atualizarDisplayPin();
+    limparFeedbackPontoV3();
+    if(pinAtual.length === 4){ setTimeout(resolverERegistarAutomatico, 250); }
+  }
+  function tecladoClear(){
+    pinAtual = ""; atualizarDisplayPin(); limparFeedbackPontoV3();
+    var np=document.getElementById('nomePreview'); if(np) np.innerHTML="";
+    var ps=document.getElementById('pinStatus'); if(ps){ ps.innerText=""; ps.className="pin-status"; }
+  }
+  function tecladoBack(){ if(pinAtual.length>0){ pinAtual = pinAtual.slice(0,-1); atualizarDisplayPin(); limparFeedbackPontoV3(); } }
+  function limparFeedbackPontoV3(){ var e=document.getElementById('erro-pin-ponto'); if(e){ e.style.display='none'; e.innerText=''; } }
+  async function resolverERegistarAutomatico(){
+    if(emProcessamento) return;
+    var pin = pinAtual;
+    if(!/^\d{4}$/.test(pin)){ tecladoClear(); return; }
+    emProcessamento = true; desabilitarTeclado(true);
+    var statusEl=document.getElementById('pinStatus'); var nomeEl=document.getElementById('nomePreview');
+    if(statusEl){ statusEl.innerText="A identificar..."; statusEl.className="pin-status"; }
+    if(nomeEl) nomeEl.innerHTML="";
+    var nomeResolvido=null;
+    try{ var h=await hashPin(pin); var rev=getReverseCache(); if(rev[h]) nomeResolvido=rev[h]; }catch(e){}
+    if(!nomeResolvido && navigator.onLine){
+      try{
+        var nomePorPin = await new Promise(function(resolve){ chamarAPIJsonp({action:"obterNomePorPinJsonp", pin:pin}, function(resp){ resolve(resp); }); });
+        if(nomePorPin && typeof nomePorPin === 'string' && nomePorPin.indexOf("Aviso")===-1 && nomePorPin.trim().length>2){ nomeResolvido=nomePorPin.trim(); }
+        else if(nomePorPin && typeof nomePorPin === 'object' && nomePorPin.nome){ nomeResolvido=nomePorPin.nome; }
+        else if(typeof nomePorPin === 'string' && nomePorPin.indexOf("Aviso")!==-1){ throw new Error(nomePorPin.replace("Aviso: ","")); }
+      }catch(e){}
+    }
+    if(nomeResolvido){
+      if(nomeEl) nomeEl.innerHTML="<span>👋 Olá, "+nomeResolvido+"</span>";
+      if(statusEl) statusEl.innerText="A registar ponto...";
+      try{ var hh=await hashPin(pin); var rc=getReverseCache(); rc[hh]=nomeResolvido; setReverseCache(rc); await guardarHashPin(nomeResolvido,pin); }catch(e){}
+      await executarRegistoPonto(nomeResolvido,pin);
+    } else {
+      if(nomeEl) nomeEl.innerHTML="<span>🔍 A validar PIN...</span>";
+      await executarRegistoPontoPorPin(pin);
+    }
+  }
+  async function executarRegistoPonto(nome,pin){
+    var detalhesDisp=obterDetalhesDispositivo(); var lat=0, lon=0, isMock=false;
+    try{ var pos=await new Promise(function(res){ if(!navigator.geolocation) return res(null); navigator.geolocation.getCurrentPosition(function(p){ res(p); }, function(){ res(null); }, {enableHighAccuracy:true, timeout:6000, maximumAge:30000}); }); if(pos){ lat=pos.coords.latitude; lon=pos.coords.longitude; } }catch(e){}
+    if(!navigator.onLine){ var item=guardarPicagemOffline(nome,pin,lat||0,lon||0,isMock,detalhesDisp,navigator.userAgent); mostrarPopupPersonalizado({titulo:"Guardado Offline 📦", mensagem:"Olá "+nome+"! Sem rede, a tua picagem ("+item.horaLocalStr+") foi guardada e será enviada automaticamente.", tipo:"sucesso"}); finalizarSucesso(nome,pin); return; }
+    chamarAPIJsonp({action:"salvarPontoJsonp", nome:nome, lat:lat, lon:lon, pin:pin, isMock:isMock?"true":"false", disp:detalhesDisp, ua:navigator.userAgent}, async function(resp){
+      var rStr=String(resp||"");
+      if(rStr.toLowerCase().indexOf("sucesso")!==-1 || rStr.indexOf("✅")!==-1){
+        try{ await guardarHashPin(nome,pin); var hh=await hashPin(pin); var rc=getReverseCache(); rc[hh]=nome; setReverseCache(rc); }catch(e){}
+        mostrarPopupPersonalizado({titulo:"Ponto Registado ✅", mensagem:rStr, tipo:"sucesso"}); finalizarSucesso(nome,pin);
+      } else {
+        var msg=rStr.replace("Aviso: ",""); var errEl=document.getElementById('erro-pin-ponto');
+        if(errEl){ errEl.innerText="⚠️ "+msg; errEl.style.display='flex'; }
+        var st=document.getElementById('pinStatus'); if(st){ st.innerText=""; st.className="pin-status erro"; }
+        var nm=document.getElementById('nomePreview'); if(nm){ nm.innerHTML="<span style='background:#fef2f2;border-color:#fecaca;color:#991b1b'>❌ "+msg+"</span>"; nm.className="pin-nome-preview erro"; }
+        emProcessamento=false; desabilitarTeclado(false); bloqueadoAte=Date.now()+2000;
+        setTimeout(function(){ tecladoClear(); var nn=document.getElementById('nomePreview'); if(nn) nn.className="pin-nome-preview"; }, 2500);
+      }
+    });
+  }
+  async function executarRegistoPontoPorPin(pin){
+    var detalhesDisp=obterDetalhesDispositivo(); var lat=0, lon=0, isMock=false;
+    try{ var pos=await new Promise(function(res){ if(!navigator.geolocation) return res(null); navigator.geolocation.getCurrentPosition(function(p){ res(p); }, function(){ res(null); }, {enableHighAccuracy:true, timeout:6000, maximumAge:30000}); }); if(pos){ lat=pos.coords.latitude; lon=pos.coords.longitude; } }catch(e){}
+    if(!navigator.onLine){
+      try{ var h=await hashPin(pin); var rc=getReverseCache(); if(rc[h]){ await executarRegistoPonto(rc[h],pin); return; } }catch(e){}
+      mostrarPopupPersonalizado({titulo:"Sem rede", mensagem:"Não foi possível identificar o PIN offline porque é a primeira vez neste dispositivo. Liga à internet uma vez para memorizar.", tipo:"erro"}); emProcessamento=false; desabilitarTeclado(false); tecladoClear(); return;
+    }
+    chamarAPIJsonp({action:"salvarPontoPorPinJsonp", pin:pin, lat:lat, lon:lon, isMock:isMock?"true":"false", disp:detalhesDisp, ua:navigator.userAgent}, async function(resp){
+      var rStr=String(resp||"");
+      if(rStr.toLowerCase().indexOf("sucesso")!==-1 || rStr.indexOf("✅")!==-1){
+        var m=rStr.match(/Ol[aá],?\s*([^!\n]+)/i); var nomeExtra=m?m[1].trim().split('!')[0].trim():null;
+        if(nomeExtra){ try{ await guardarHashPin(nomeExtra,pin); var hh=await hashPin(pin); var rc=getReverseCache(); rc[hh]=nomeExtra; setReverseCache(rc); var np=document.getElementById('nomePreview'); if(np) np.innerHTML="<span>👋 Olá, "+nomeExtra+"</span>"; }catch(e){} }
+        mostrarPopupPersonalizado({titulo:"Ponto Registado ✅", mensagem:rStr, tipo:"sucesso"}); finalizarSucesso(nomeExtra||"colaborador",pin);
+      } else {
+        var msg=rStr.replace("Aviso: ",""); var errEl=document.getElementById('erro-pin-ponto'); if(errEl){ errEl.innerText="⚠️ "+msg; errEl.style.display='flex'; }
+        var nm=document.getElementById('nomePreview'); if(nm){ nm.innerHTML="<span style='background:#fef2f2;border-color:#fecaca;color:#991b1b'>❌ "+msg+"</span>"; nm.className="pin-nome-preview erro"; }
+        emProcessamento=false; desabilitarTeclado(false); bloqueadoAte=Date.now()+2000;
+        setTimeout(function(){ tecladoClear(); var nn=document.getElementById('nomePreview'); if(nn) nn.className="pin-nome-preview"; }, 2500);
+      }
+    });
+  }
+  function desabilitarTeclado(b){ var keys=document.querySelectorAll('#keypadPonto .key'); keys.forEach(function(k){ k.disabled=b; }); }
+  function finalizarSucesso(nome,pin){ emProcessamento=false; desabilitarTeclado(false); pinAtual=""; atualizarDisplayPin(); setTimeout(function(){ tecladoClear(); var np=document.getElementById('nomePreview'); if(np){ np.innerHTML=""; np.className="pin-nome-preview"; } var ps=document.getElementById('pinStatus'); if(ps) ps.innerText=""; }, 2500); }
+  function limparFeedbackPonto(){ limparFeedbackPontoV3(); }
+  function focarPin(){}
+  function atualizarPinDisplay(){ atualizarDisplayPin(); }
+  function registarPontoDiario(){ if(pinAtual && pinAtual.length===4){ resolverERegistarAutomatico(); } else { var e=document.getElementById('erro-pin-ponto'); if(e){ e.innerText='⚠️ Insira 4 dígitos no teclado.'; e.style.display='flex'; } } }
   // ====== ★ OPÇÃO A - CACHE HASH PINs PARA OFFLINE ======
+
   var PINS_HASH_KEY = "FUNCIONARIOS_PINS_HASH_V1";
   function getPinsHashCache(){ try{ return JSON.parse(localStorage.getItem(PINS_HASH_KEY)||"{}"); }catch(e){ return {}; } }
   function setPinsHashCache(o){ localStorage.setItem(PINS_HASH_KEY, JSON.stringify(o)); }
