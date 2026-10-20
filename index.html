@@ -1659,7 +1659,7 @@ body {
   function atualizarPinDisplay(){ atualizarDisplayPin(); }
   function registarPontoDiario(){ if(pinAtual && pinAtual.length===4){ resolverERegistarAutomatico(); } else { var e=document.getElementById('erro-pin-ponto'); if(e){ e.innerText='⚠️ Insira 4 dígitos no teclado.'; e.style.display='flex'; } } }
   
-  // ====== ★ DASHBOARD - FUNCIONA MESMO SEM GS NOVO ======
+  // ====== ★ DASHBOARD REAL-TIME V5 - CORRIGIDO ======
   function carregarDashboard(){
     var fila = [];
     try{ fila = getFilaOffline(); }catch(e){ fila=[]; }
@@ -1669,39 +1669,63 @@ body {
     var dataEl = document.getElementById('dashboardData');
     if(dataEl) dataEl.textContent = new Date().toLocaleDateString('pt-PT', {weekday:'long', day:'2-digit', month:'long', year:'numeric'}) + ' · ' + new Date().toLocaleTimeString('pt-PT', {hour:'2-digit', minute:'2-digit'});
 
-    // Tenta ir ao servidor (se já instalaste o GS novo)
     try{
       chamarAPIJsonp({action:"obterResumoIndexJsonp", senha: senhaAdminSessao}, function(resp){
-        if(resp && typeof resp === 'object' && !resp.erro){
-          document.getElementById('dashPresentes').textContent = resp.presentes ?? 0;
-          document.getElementById('dashAtrasos').textContent = resp.atrasos ?? 0;
-          document.getElementById('dashAbertos').textContent = resp.abertos ?? 0;
-          var listaDiv = document.getElementById('dashLista');
-          if(resp.lista && resp.lista.length){
-            var htmlLista = '<div style="font-weight:800;font-size:0.82rem;text-transform:uppercase;color:var(--primary);margin-bottom:10px;">Quem picou hoje</div>';
-            htmlLista += resp.lista.map(function(r){
-              return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#f8fafc;border:1px solid #f1f5f9;border-radius:10px;margin-bottom:8px;"><div><div style="font-weight:700;font-size:0.92rem;">'+r.nome+'</div><div style="font-size:0.75rem;color:var(--text-muted);">'+(r.hora||'')+' → '+(r.ultima||'')+'</div></div><div style="font-size:0.82rem;font-weight:700;">'+r.estado+'</div></div>';
-            }).join('');
-            listaDiv.innerHTML = htmlLista;
-          } else {
-            document.getElementById('dashLista').innerHTML = '<div style="text-align:center;padding:16px;background:#f8fafc;border-radius:12px;color:var(--text-muted);font-size:0.9rem;">Nenhuma picagem hoje ainda.<br><small>Se instalaste o GS novo, os dados aparecem aqui automaticamente.</small></div>';
-          }
-        } else {
-          // Fallback offline - mostra o que tem
-          mostrarDashboardOfflineFallback();
+        if(!resp || resp.erro){
+          mostrarDashboardErro(resp ? resp.erro : 'Sem resposta');
+          return;
         }
+        // Novos campos reais
+        document.getElementById('dashPresentes').textContent = resp.presentes ?? 0;
+        document.getElementById('dashAtrasos').textContent = resp.atrasos ?? 0;
+        document.getElementById('dashAbertos').textContent = resp.trabalhandoAgora ?? resp.abertos ?? 0;
+        
+        var listaDiv = document.getElementById('dashLista');
+        var htmlFinal = '';
+
+        // 1 - A TRABALHAR AGORA (tempo real)
+        if(resp.trabalhandoLista && resp.trabalhandoLista.length){
+          htmlFinal += '<div style="margin-bottom:18px;"><div style="font-weight:800;font-size:0.85rem;text-transform:uppercase;color:#065f46;margin-bottom:10px;display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;background:#10b981;border-radius:50%;display:inline-block;animation:pulseGps 1.5s infinite;"></span> A TRABALHAR AGORA ('+resp.trabalhandoLista.length+')</div>';
+          htmlFinal += resp.trabalhandoLista.map(function(r){
+            return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;margin-bottom:8px;"><div><div style="font-weight:800;font-size:0.94rem;color:#065f46;">'+r.nome+'</div><div style="font-size:0.78rem;color:#065f46;opacity:0.8;">Entrou '+r.primeira+' · '+r.horasHoje+' hoje · '+r.filial+'</div></div><div style="background:#065f46;color:white;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:800;">DENTRO</div></div>';
+          }).join('');
+          htmlFinal += '</div>';
+        } else {
+          htmlFinal += '<div style="margin-bottom:18px;padding:14px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;text-align:center;color:#64748b;font-size:0.88rem;">Ninguém dentro neste momento</div>';
+        }
+
+        // 2 - JA SAIU HOJE
+        if(resp.jaSaiu && resp.jaSaiu.length){
+          htmlFinal += '<div style="margin-bottom:18px;"><div style="font-weight:800;font-size:0.82rem;text-transform:uppercase;color:#475569;margin-bottom:10px;">✔️ JÁ SAIU HOJE ('+resp.jaSaiu.length+')</div>';
+          htmlFinal += resp.jaSaiu.map(function(r){
+            return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#ffffff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:6px;"><div><div style="font-weight:600;font-size:0.88rem;">'+r.nome+'</div><div style="font-size:0.75rem;color:var(--text-muted);">'+r.primeira+' → '+r.ultima+' · '+r.horasHoje+'</div></div><div style="font-size:0.75rem;color:#64748b;">FORA</div></div>';
+          }).join('');
+          htmlFinal += '</div>';
+        }
+
+        // 3 - AUSENTES
+        if(resp.ausentes && resp.ausentes.length){
+          htmlFinal += '<div><div style="font-weight:800;font-size:0.82rem;text-transform:uppercase;color:#dc2626;margin-bottom:10px;">❌ AUSENTES HOJE ('+resp.ausentes.length+'/'+resp.totalAtivos+')</div>';
+          htmlFinal += resp.ausentes.map(function(r){
+            return '<div style="display:flex;justify-content:space-between;padding:8px 14px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;margin-bottom:6px;font-size:0.86rem;"><span>'+r.nome+'</span><span style="color:#94a3b8;font-size:0.75rem;">'+(r.filial||'')+'</span></div>';
+          }).join('');
+          htmlFinal += '</div>';
+        }
+
+        htmlFinal += '<div style="margin-top:16px;padding:10px 12px;background:#f8fafc;border-radius:10px;font-size:0.72rem;color:#94a3b8;text-align:center;">Servidor: '+ (resp.horaServidor||'') +' · Total ativos: '+ (resp.totalAtivos||0) +' · Presentes hoje: '+ (resp.presentes||0) +'</div>';
+
+        listaDiv.innerHTML = htmlFinal;
       });
     }catch(e){
-      mostrarDashboardOfflineFallback();
+      mostrarDashboardErro(e.toString());
     }
   }
 
-  function mostrarDashboardOfflineFallback(){
+  function mostrarDashboardErro(msg){
     document.getElementById('dashPresentes').textContent = '—';
     document.getElementById('dashAtrasos').textContent = '—';
     document.getElementById('dashAbertos').textContent = '—';
-    var listaDiv = document.getElementById('dashLista');
-    listaDiv.innerHTML = '<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:14px;font-size:0.88rem;line-height:1.5;"><b>ℹ️ Ainda não instalaste o GS novo?</b><br>Para ver quem está presente, instala o ficheiro <b>GS_COMPLETO_V4_INDEX.gs</b> que te dei.<br><br>Mesmo sem isso, a picagem e todos os botões continuam iguais.</div>';
+    document.getElementById('dashLista').innerHTML = '<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:14px;font-size:0.88rem;color:#dc2626;"><b>Erro ao ler tempo real:</b><br>'+msg+'<br><br>1. Verifica se colaste o GS_COMPLETO_V5_REALTIME.gs<br>2. Fizeste Implementar > Nova versão?<br>3. A senha de admin está correta?</div>';
   }
 
 
