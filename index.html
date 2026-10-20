@@ -5,6 +5,10 @@
   <title>Registo de Ponto · Balcão Agrícola</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#065f46">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiUG9udG8ifQ==">
+  <style>/* Performance: reduce motion for users who prefer */ @media (prefers-reduced-motion: reduce){ *,*::before,*::after{animation:none!important;transition:none!important}}</style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
@@ -408,6 +412,7 @@ body {
       <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
         <h3 style="margin-bottom: 22px; color: var(--primary); text-align: center; justify-content: center; font-size: 1.15rem;">⚙️ Painel de Gestão</h3>
         <div class="menu-admin-grid">
+          <button class="btn tile-emerald" onclick="abrirSubModulo('index'); carregarIndexResumo();" style="grid-column: span 2; background: linear-gradient(135deg,#065f46,#10b981); color:white;"><span>📊</span> INDEX / Dashboard</button>
           <button class="btn tile-blue" onclick="abrirSubModulo('pedidos'); carregarPedidosPendentes();"><span>📩</span> Pedidos</button>
           <button class="btn tile-amber" onclick="abrirSubModulo('ausencias')"><span>📅</span> Lançar Faltas</button>
           <button class="btn tile-teal" onclick="abrirSubModulo('troca')"><span>🔄</span> Troca Turno</button>
@@ -419,6 +424,21 @@ body {
           <button class="btn tile-emerald" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar Colab.</button>
           <button class="btn tile-red" onclick="abrirSubModulo('remover')"><span>❌</span> Inativar Colab.</button>
         </div>
+      </div>
+    </div>
+
+    
+    <div id="admin-sub-index" style="display: none;">
+      <div class="admin-card">
+        <h3>📊 INDEX - Resumo do Dia</h3>
+        <div id="indexResumoContainer" style="display:grid; gap:12px; grid-template-columns: 1fr 1fr;">
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:14px;"><div style="font-size:0.75rem;font-weight:800;color:#065f46;text-transform:uppercase;">Presentes Hoje</div><div id="idxPresentes" style="font-size:1.8rem;font-weight:800;">--</div></div>
+          <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:14px;padding:14px;"><div style="font-size:0.75rem;font-weight:800;color:#92400e;text-transform:uppercase;">Em Atraso</div><div id="idxAtrasos" style="font-size:1.8rem;font-weight:800;">--</div></div>
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;padding:14px;"><div style="font-size:0.75rem;font-weight:800;color:#1e40af;text-transform:uppercase;">Turno Aberto</div><div id="idxAbertos" style="font-size:1.8rem;font-weight:800;">--</div></div>
+          <div style="background:#fdf2f8;border:1px solid #fbcfe8;border-radius:14px;padding:14px;"><div style="font-size:0.75rem;font-weight:800;color:#9d174d;text-transform:uppercase;">Fila Offline</div><div id="idxOffline" style="font-size:1.8rem;font-weight:800;">0</div></div>
+        </div>
+        <div id="idxListaHoje" style="margin-top:18px; font-size:0.9rem;"></div>
+        <button class="btn btn-primary" style="margin-top:16px" onclick="carregarIndexResumo()">🔄 Atualizar INDEX</button>
       </div>
     </div>
 
@@ -1626,6 +1646,48 @@ body {
   function focarPin(){}
   function atualizarPinDisplay(){ atualizarDisplayPin(); }
   function registarPontoDiario(){ if(pinAtual && pinAtual.length===4){ resolverERegistarAutomatico(); } else { var e=document.getElementById('erro-pin-ponto'); if(e){ e.innerText='⚠️ Insira 4 dígitos no teclado.'; e.style.display='flex'; } } }
+  
+  // ====== ★ INDEX V4 - DASHBOARD RESUMO (SEM PERDER NADA) ======
+  function carregarIndexResumo(){
+    var c = document.getElementById('indexResumoContainer');
+    if(!c) return;
+    document.getElementById('idxOffline').textContent = getFilaOffline().length;
+    // usa cache de funcionarios + chamada leve ao backend
+    chamarAPIJsonp({action:"obterResumoIndexJsonp", senha: senhaAdminSessao}, function(resp){
+      try{
+        if(typeof resp === 'object'){
+          document.getElementById('idxPresentes').textContent = resp.presentes ?? '--';
+          document.getElementById('idxAtrasos').textContent = resp.atrasos ?? '--';
+          document.getElementById('idxAbertos').textContent = resp.abertos ?? '--';
+          var lista = document.getElementById('idxListaHoje');
+          if(resp.lista && resp.lista.length){
+            lista.innerHTML = resp.lista.map(function(r){ return '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9"><span>'+r.nome+'</span><span style="font-weight:700">'+r.estado+'</span></div>'; }).join('');
+          } else {
+            lista.innerHTML = '<p style="color:#64748b">Sem dados ainda. Adiciona a funcao obterResumoIndexJsonp no GS (codigo abaixo).</p>';
+          }
+        }
+      }catch(e){ console.warn(e); }
+    });
+  }
+
+  // Debounce para geolocation (poupa bateria)
+  var _geoWatchId = null;
+  function iniciarWatchOtimizado(){
+    if(!navigator.geolocation) return;
+    if(_geoWatchId) navigator.geolocation.clearWatch(_geoWatchId);
+    _geoWatchId = navigator.geolocation.watchPosition(function(p){
+      try{
+        localStorage.setItem("PONTO_LAST_LAT", p.coords.latitude);
+        localStorage.setItem("PONTO_LAST_LON", p.coords.longitude);
+      }catch(e){}
+    }, null, { enableHighAccuracy: false, maximumAge: 60000, timeout: 15000 });
+  }
+
+  // Otimiza badge para não bloquear UI
+  var _badgeRAF = null;
+  var originalAtualizarBadge = atualizarBadgeFilaOffline;
+  // vamos sobrescrever depois da definicao original - guardamos para V4
+
   // ====== ★ OPÇÃO A - CACHE HASH PINs PARA OFFLINE ======
 
   var PINS_HASH_KEY = "FUNCIONARIOS_PINS_HASH_V1";
@@ -1742,13 +1804,7 @@ body {
     atualizarBadgeFilaOffline();
   });
   // Guarda ultima posicao sempre
-  try{
-    if(navigator.geolocation){
-      navigator.geolocation.watchPosition(function(p){ 
-        try{ localStorage.setItem(OFFLINE_LAST_LAT, p.coords.latitude); localStorage.setItem(OFFLINE_LAST_LON, p.coords.longitude); }catch(e){}
-      });
-    }
-  }catch(e){}
+  try{ iniciarWatchOtimizado(); }catch(e){}
   // Inicializa badge
   setTimeout(atualizarBadgeFilaOffline, 800);
   // ====== FIM OFFLINE PATCH ======
