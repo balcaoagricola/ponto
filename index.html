@@ -605,7 +605,46 @@
   }
 
   function chamarAPIJsonp(params, callbackSucesso) {
-    if (!navigator.onLine) { emProcessamento = false; mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Verifique a sua ligação à internet.", tipo: "erro" }); return; }
+    // ★ OFFLINE PATCH OPÇÃO A: validação por hash quando offline
+    if (!navigator.onLine && params && params.action === "salvarPontoJsonp") {
+      (async function(){
+        var valid = await validarPinOffline(params.nome, params.pin);
+        if(valid.status==="PIN_ERRADO"){
+          emProcessamento = false;
+          var btn=document.getElementById('btnPonto'); if(btn) btn.disabled=false;
+          mostrarPopupPersonalizado({ titulo: "PIN Incorreto", mensagem: "O PIN não corresponde ao guardado neste telemóvel.<br><br>Picagem <b>não foi guardada</b>.", tipo: "erro" });
+          gerirErroCampo("erro-pin-ponto", "PIN incorreto (validado offline).");
+          return;
+        }
+        var item = guardarPicagemOffline(params.nome, params.pin, params.lat, params.lon, params.isMock, params.disp, params.ua);
+        // marca se foi validado ou não
+        try{
+          var f=getFilaOffline(); var last=f[f.length-1]; if(last){ last.validadoOffline = (valid.status==="OK"); last.semCache = (valid.status==="SEM_CACHE"); setFilaOffline(f); }
+        }catch(e){}
+        emProcessamento = false;
+        var btn2 = document.getElementById('btnPonto'); if(btn2) btn2.disabled = false;
+        document.getElementById('pinPonto').value = ""; try{ atualizarPinDisplay('pinPonto', 'dotsPonto'); }catch(e){}
+        if(valid.status==="OK"){
+          mostrarPopupPersonalizado({ titulo: "Guardado OFFLINE ✅", mensagem: "PIN validado offline.<br><br><b>Picagem guardada:</b><br>"+item.horaLocalStr+"<br><br>Será enviada quando tiver rede.", tipo: "sucesso" });
+        } else {
+          mostrarPopupPersonalizado({ titulo: "Guardado OFFLINE ⚠️", mensagem: "Primeira vez deste colaborador neste telemóvel, por isso o PIN não pôde ser validado offline.<br><br><b>Picagem guardada:</b><br>"+item.horaLocalStr+"<br><br>Será validado quando voltar a ter rede.", tipo: "sucesso" });
+        }
+        if(callbackSucesso) callbackSucesso("Sucesso! Picagem guardada offline - "+item.horaLocalStr);
+      })();
+      return;
+    }
+    if (!navigator.onLine && params && params.action !== "obterFuncionarios" && params.action !== "obterTodosFuncionarios") { 
+      // para outras ações que não são picagem, mantém aviso mas não bloqueia picagem
+      if(params.action !== "salvarPontoJsonp"){
+        emProcessamento = false; 
+        // se for lista de funcionarios, tenta usar cache
+        if(params.action === "obterFuncionarios" || params.action === "obterTodosFuncionarios"){
+          try{ var cache = JSON.parse(localStorage.getItem("FUNCIONARIOS_CACHE_V1")||"null"); if(cache && callbackSucesso) { callbackSucesso(cache); return; } }catch(e){}
+        }
+        mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Sem internet. A picagem funciona offline, mas esta função precisa de rede.", tipo: "erro" }); 
+        return; 
+      }
+    }
     var controller = new AbortController(); var timeoutId = setTimeout(function() { controller.abort(); }, 1200);
     fetch('https://api.ipify.org?format=json', { signal: controller.signal })
       .then(function(res) { return res.json(); }).then(function(data) { clearTimeout(timeoutId); params.ip = data.ip || "Não disponível"; enviarPedidoComIp(params, callbackSucesso); })
@@ -706,7 +745,7 @@
     });
   }
 
-  function preencherSelectsNomes(lista) {
+  function preencherSelectsNomes(lista) { try{ localStorage.setItem('FUNCIONARIOS_CACHE_V1', JSON.stringify(lista)); }catch(e){} 
     ['nomeFuncionario', 'nomeFuncionarioFolga', 'nomeRemover', 'nomeFuncFalta', 'nomeAcordo', 'nomeCorrigir', 'colegaTrocaFunc', 'nomeTrocaAusente', 'nomeTrocaSubstituto', 'nomeCativa', 'nomeHorasAcordadas'].forEach(function(id) {
       var sel = document.getElementById(id);
       if (sel) {
@@ -1210,7 +1249,11 @@
           document.getElementById('pinPonto').value = ""; atualizarPinDisplay('pinPonto', 'dotsPonto');
           emProcessamento = false; document.getElementById('btnPonto').disabled = false;
           if (resposta.indexOf("Aviso") !== -1) { gerirErroCampo("erro-pin-ponto", resposta.replace("Aviso: ", "")); fecharToast(); }
-          else { mostrarPopupPersonalizado({ titulo: "Registo Validado", mensagem: resposta, tipo: "sucesso" }); }
+          else { 
+            // ★ OPÇÃO A: guarda hash do PIN para validação offline futura
+            try{ var _nomeOk = document.getElementById('nomeFuncionario').value; var _pinOk = params ? params.pin : ""; if(_nomeOk && _pinOk){ guardarHashPin(_nomeOk, _pinOk); } }catch(e){}
+            mostrarPopupPersonalizado({ titulo: "Registo Validado", mensagem: resposta, tipo: "sucesso" }); 
+          }
         });
       },
       function() { emProcessamento = false; document.getElementById('btnPonto').disabled = false; mostrarPopupPersonalizado({ titulo: "Localização Indisponível", mensagem: "Autorize o acesso à localização nas configurações do dispositivo e tente novamente.", tipo: "erro" }); },
@@ -1327,6 +1370,134 @@
     if (msg) { cp.innerHTML = msg; cp.style.display = "flex"; var f = cp.parentElement.querySelector('.form-control') || cp.parentElement.querySelector('.pin-dots-container'); if(f) { f.style.borderColor = 'var(--danger)'; setTimeout(function(){ f.style.borderColor='var(--border)'; }, 3000); } }
     else { cp.style.display = "none"; }
   }
+
+  
+  // ====== ★ OPÇÃO A - CACHE HASH PINs PARA OFFLINE ======
+  var PINS_HASH_KEY = "FUNCIONARIOS_PINS_HASH_V1";
+  function getPinsHashCache(){ try{ return JSON.parse(localStorage.getItem(PINS_HASH_KEY)||"{}"); }catch(e){ return {}; } }
+  function setPinsHashCache(o){ localStorage.setItem(PINS_HASH_KEY, JSON.stringify(o)); }
+  async function hashPin(pin){
+    try{
+      var enc = new TextEncoder().encode(String(pin).trim());
+      var buf = await crypto.subtle.digest('SHA-256', enc);
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }catch(e){
+      // fallback simples se crypto não disponível
+      var s=String(pin); var h=0; for(var i=0;i<s.length;i++){ h=((h<<5)-h)+s.charCodeAt(i); h|=0; } return String(h);
+    }
+  }
+  async function guardarHashPin(nome, pin){
+    var cache=getPinsHashCache();
+    var h=await hashPin(pin);
+    cache[nome.toUpperCase()]=h;
+    setPinsHashCache(cache);
+  }
+  async function validarPinOffline(nome, pin){
+    var cache=getPinsHashCache();
+    var key=nome.toUpperCase();
+    if(!cache[key]) return { status:"SEM_CACHE" }; // nunca picou online neste telemóvel
+    var h=await hashPin(pin);
+    if(h===cache[key]) return { status:"OK" };
+    return { status:"PIN_ERRADO" };
+  }
+  // Quando pica com sucesso ONLINE, guarda o hash
+  var originalMostrarSucessoParaHash = false;
+  // Vamos interceptar no callback de sucesso da picagem
+
+  // ====== ★ OFFLINE PATCH v2026.51 - NÃO PERDE NADA ======
+  var OFFLINE_QUEUE_KEY = "PONTO_FILA_OFFLINE_V1";
+  var OFFLINE_LAST_LAT = "PONTO_LAST_LAT";
+  var OFFLINE_LAST_LON = "PONTO_LAST_LON";
+  function getFilaOffline(){ try{ return JSON.parse(localStorage.getItem(OFFLINE_QUEUE_KEY)||"[]"); }catch(e){ return []; } }
+  function setFilaOffline(f){ localStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(f)); atualizarBadgeFilaOffline(); }
+  function atualizarBadgeFilaOffline(){
+    var q = getFilaOffline();
+    var el = document.getElementById('offlineQueueBadge');
+    if(!el){ 
+      // cria badge por baixo do relogio se nao existir
+      var clockBox = document.getElementById('headerClockBox');
+      if(clockBox){
+        var div = document.createElement('div');
+        div.id='offlineQueueBadge';
+        div.style.cssText='margin-top:10px;width:100%;display:none;';
+        clockBox.parentNode.insertBefore(div, clockBox.nextSibling);
+        el=div;
+      } else return;
+    }
+    if(q.length>0){
+      el.style.display='block';
+      el.innerHTML = '<div style="background:#fef3c7;border:1px solid #fde68a;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;"><span style="font-size:1.2rem">📦</span><div style="flex:1"><div style="font-weight:800;font-size:0.85rem;color:#92400e">'+q.length+' picagem(ns) guardada(s) offline</div><div style="font-size:0.75rem;color:#b45309">Será enviada automaticamente quando tiver rede</div></div><button onclick="sincronizarFilaOffline()" style="background:#0f172a;color:#fff;border:0;border-radius:10px;padding:8px 12px;font-weight:700;font-size:0.78rem">Sincronizar</button></div>';
+    } else {
+      el.style.display='none';
+    }
+  }
+  function guardarPicagemOffline(nome, pin, lat, lon, isMock, disp, ua){
+    var item = {
+      idUnico: "OFF_"+Date.now()+"_"+Math.random().toString(36).substring(2,6),
+      nome: nome, pin: pin, lat: lat, lon: lon, isMock: isMock, disp: disp, ua: ua,
+      horaLocal: new Date().toISOString(),
+      horaLocalStr: new Date().toLocaleString('pt-PT'),
+      tentativas: 0
+    };
+    var f = getFilaOffline(); f.push(item); setFilaOffline(f);
+    try{ localStorage.setItem(OFFLINE_LAST_LAT, lat); localStorage.setItem(OFFLINE_LAST_LON, lon); }catch(e){}
+    return item;
+  }
+  function sincronizarFilaOffline(){
+    if(!navigator.onLine){ mostrarPopupPersonalizado({titulo:"Sem rede",mensagem:"Ainda sem internet. Tenta mais tarde.",tipo:"erro"}); return; }
+    var fila = getFilaOffline();
+    if(fila.length==0){ mostrarPopupPersonalizado({titulo:"Tudo em dia",mensagem:"Nenhuma picagem offline pendente.",tipo:"sucesso"}); return; }
+    mostrarPopupPersonalizado({titulo:"A sincronizar",mensagem:"A enviar "+fila.length+" picagem(ns) guardada(s)...",tipo:"processando"});
+    var novaFila=[];
+    var i=0;
+    function enviarProximo(){
+      if(i>=fila.length){
+        setFilaOffline(novaFila);
+        if(novaFila.length==0) mostrarPopupPersonalizado({titulo:"Sincronizado ✅",mensagem:"Todas as picagens offline foram enviadas com sucesso.",tipo:"sucesso"});
+        else mostrarPopupPersonalizado({titulo:"Parcial",mensagem:"Ficaram "+novaFila.length+" por enviar. Tentará de novo automaticamente.",tipo:"erro"});
+        return;
+      }
+      var it = fila[i++];
+      it.tentativas++;
+      chamarAPIJsonp({action:"salvarPontoJsonp", nome:it.nome, lat:it.lat, lon:it.lon, pin:it.pin, isMock:it.isMock, disp:it.disp, ua:it.ua, idUnico:it.idUnico, horaOffline:it.horaLocal}, function(resp){
+        var rStr = String(resp||"");
+        if(rStr.toLowerCase().indexOf("sucesso")!==-1){ 
+          // sucesso: guarda hash para futuro offline
+          try{ guardarHashPin(it.nome, it.pin); }catch(e){}
+        } else if(rStr.indexOf("PIN incorreto")!==-1 || rStr.indexOf("Colaborador não encontrado")!==-1 || rStr.indexOf("Inativo")!==-1){
+          // erro definitivo: não tenta de novo, avisa
+          console.warn("Picagem rejeitada definitiva:", it.nome, rStr);
+          // não coloca de volta na fila
+        } else { 
+          if(it.tentativas<10) novaFila.push(it); 
+        }
+        setTimeout(enviarProximo, 1200);
+      });
+    }
+    enviarProximo();
+  }
+  // Auto-sync quando volta online
+  window.addEventListener('online', function(){ 
+    var dot=document.querySelector('.gps-pulse-dot'); if(dot) dot.classList.remove('offline');
+    setTimeout(sincronizarFilaOffline, 1500); 
+    atualizarBadgeFilaOffline();
+  });
+  window.addEventListener('offline', function(){ 
+    var dot=document.querySelector('.gps-pulse-dot'); if(dot) dot.classList.add('offline');
+    atualizarBadgeFilaOffline();
+  });
+  // Guarda ultima posicao sempre
+  try{
+    if(navigator.geolocation){
+      navigator.geolocation.watchPosition(function(p){ 
+        try{ localStorage.setItem(OFFLINE_LAST_LAT, p.coords.latitude); localStorage.setItem(OFFLINE_LAST_LON, p.coords.longitude); }catch(e){}
+      });
+    }
+  }catch(e){}
+  // Inicializa badge
+  setTimeout(atualizarBadgeFilaOffline, 800);
+  // ====== FIM OFFLINE PATCH ======
+
 </script>
 </body>
 </html>
