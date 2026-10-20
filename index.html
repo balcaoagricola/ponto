@@ -108,214 +108,247 @@
     .troca-bloco { padding: 14px; background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%); border: 1.5px solid #5eead4; border-radius: var(--radius-sm); margin-bottom: 14px; }
     .troca-bloco h4 { font-size: 0.82rem; font-weight: 800; color: #0f766e; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
   
-    /* ★ V3 FINAL - TECLADO PIN ONLY - COMPLETO */
-    .top-action-btn { width:44px; height:44px; border-radius:13px; border:1.5px solid var(--border); background:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:1.15rem; cursor:pointer; box-shadow:var(--shadow-sm); transition:all 0.18s; }
-    .top-action-btn:active { transform:scale(0.94); }
-    .top-action-btn.calendar { background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%); border-color:#bfdbfe; }
-    .top-action-btn.settings { background:linear-gradient(135deg,#faf5ff 0%,#f3e8ff 100%); border-color:#e9d5ff; }
-    .ponto-pin-only { text-align:center; }
-    .pin-display-area { margin: 10px 0 18px; }
-    .pin-dots-big { display:flex; justify-content:center; gap:14px; margin:12px 0; }
-    .pin-dots-big .pin-dot { width:18px; height:18px; border-radius:50%; border:2px solid var(--border-strong); background:#fff; transition: all 0.18s; }
-    .pin-dots-big .pin-dot.filled { background: var(--primary); border-color: var(--primary); box-shadow: 0 0 0 4px rgba(15,23,42,0.12); transform: scale(1.15); }
-    .pin-dots-big .pin-dot.filled.ok { background: var(--accent); border-color: var(--accent); }
-    .pin-nome-preview { min-height: 42px; margin: 8px 0 4px; font-weight:800; font-size:1.05rem; color: var(--primary); }
-    .pin-nome-preview span { display:inline-block; padding:6px 14px; border-radius:999px; background: linear-gradient(135deg,#ecfdf5,#f0fdfa); border:1.5px solid #a7f3d0; color:#065f46; }
-    .pin-nome-preview.erro span { background:#fef2f2; border-color:#fecaca; color:#991b1b; }
-    .keypad { display:grid; grid-template-columns: repeat(3,1fr); gap:12px; margin:18px 0 10px; }
-    .key { height:64px; border-radius:18px; border:1.5px solid var(--border); background:#fff; font-size:1.6rem; font-weight:800; color:var(--primary); box-shadow: var(--shadow-sm); cursor:pointer; transition: all 0.12s; user-select:none; -webkit-tap-highlight-color:transparent; }
-    .key:active { transform: scale(0.96); background: var(--surface-2); }
-    .key.key-action { background: var(--surface-2); font-size:1.05rem; color: var(--text-muted); }
-    .key.key-clear { background:#fef2f2; border-color:#fecaca; color:#dc2626; font-size:0.95rem; font-weight:800; }
-    .key.key-enter { background: linear-gradient(135deg,#059669,#10b981); color:#fff; border-color:#059669; box-shadow: var(--shadow-accent); }
-    .key:disabled { opacity:0.45; pointer-events:none; }
-    .pin-status { min-height:20px; font-size:0.84rem; font-weight:700; margin-top:10px; }
-    .pin-status.ok { color: var(--accent); }
-    .pin-status.erro { color: var(--danger); }
-    .erro-campo { justify-content:center; }
 
-  
-
-/* ★ A+B+C FINAL - LOGO NITIDO + COUNTDOWN + CONTRASTE + QUIOSQUE + ULTIMA PICAGEM + ANTI-BRUTEFORCE */
-html { background:#f8fafc; overflow-x:hidden; }
+/* ===== PROFISSIONAL FINAL - SEM CORTES - 100% SMARTPHONE ===== */
+html, body {
+  height:100%;
+  height:100dvh;
+  max-height:100dvh;
+  overflow:hidden;
+  overscroll-behavior:none;
+}
 body {
   min-height:100dvh;
-  padding:10px;
-  overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior:none;
+  max-height:100dvh;
+  padding:0;
+  margin:0;
+  display:flex;
+  align-items:stretch;
+  justify-content:center;
+  background:#eef2f6;
+  -webkit-font-smoothing:antialiased;
   user-select:none;
   -webkit-user-select:none;
 }
 .container {
   width:100%;
   max-width:460px;
-  margin:6px auto 18px;
-  border-radius:28px;
+  height:100dvh;
+  max-height:100dvh;
+  margin:0 auto;
+  border-radius:0;
   display:flex;
   flex-direction:column;
-  box-shadow: var(--shadow-xl);
-  border:1px solid rgba(255,255,255,0.9);
+  overflow:hidden;
   background:#fff;
+  box-shadow:none;
+  border:none;
 }
-/* A) LOGO NITIDO */
-.header { padding:20px 20px 14px; background: linear-gradient(180deg,#ffffff 0%,#f8fafc 100%); border-bottom:1px solid var(--border); text-align:center; }
-.logo-wrapper { display:flex; align-items:center; justify-content:center; margin-bottom:6px; min-height:92px; background:radial-gradient(circle at center, rgba(255,255,255,1) 0%, rgba(248,250,252,0) 70%); }
+@media (min-width:481px){
+  body { padding:12px; background: radial-gradient(circle at 15% 15%, rgba(16,185,129,0.10) 0%, transparent 45%), linear-gradient(135deg,#f8fafc 0%,#eef2f6 50%,#ecfdf5 100%); }
+  .container { border-radius:28px; box-shadow:0 24px 48px rgba(15,23,42,0.12), 0 8px 16px rgba(15,23,42,0.06); border:1px solid rgba(255,255,255,0.9); height:min(880px,100dvh); max-height:min(880px,100dvh); }
+}
+
+/* HEADER PROFISSIONAL - NAO CORTA */
+.header {
+  flex-shrink:0;
+  padding:14px 18px 12px;
+  background: linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+  border-bottom:1px solid #e2e8f0;
+  text-align:center;
+}
+.logo-wrapper {
+  display:flex; align-items:center; justify-content:center;
+  min-height:72px;
+  margin-bottom:4px;
+}
 .logo-empresa {
-  width:auto;
-  max-width:92%;
-  max-height:92px !important;
+  width:auto; max-width:90%; max-height:78px !important;
   object-fit:contain;
-  object-position:center;
-  mix-blend-mode:normal;
-  filter: contrast(1.25) saturate(1.25) brightness(1.02) drop-shadow(0 2px 8px rgba(0,0,0,0.06));
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  filter: contrast(1.2) saturate(1.2) drop-shadow(0 2px 6px rgba(0,0,0,0.05));
   display:block;
 }
-.header h2 { font-size:0.92rem; font-weight:900; letter-spacing:0.06em; margin:8px 0 12px; color:var(--primary); }
-.live-clock-card { padding:14px 14px; gap:6px; border-radius:18px; background: linear-gradient(135deg,#0f172a 0%,#1e293b 100%); box-shadow:0 8px 24px rgba(15,23,42,0.18), inset 0 1px 0 rgba(255,255,255,0.06); position:relative; overflow:hidden; }
-.clock-time-row { font-size:2.15rem; gap:10px; }
-.clock-date-row { font-size:0.72rem; letter-spacing:0.14em; }
+.header h2 { font-size:0.88rem; font-weight:900; letter-spacing:0.05em; margin:6px 0 10px; color:#0f172a; }
+.live-clock-card {
+  padding:12px 12px; gap:5px; border-radius:16px;
+  background: linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
+  box-shadow:0 6px 18px rgba(15,23,42,0.18);
+}
+.clock-time-row { font-size:1.95rem; gap:8px; font-family:'JetBrains Mono',monospace; font-weight:700; color:#fff; }
+.clock-date-row { font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; color:#94a3b8; font-weight:600; }
+.gps-badge { width:18px; height:18px; background:rgba(16,185,129,0.12); border-radius:50%; display:inline-flex; align-items:center; justify-content:center; }
+.gps-pulse-dot { width:8px; height:8px; background:#10b981; border-radius:50%; box-shadow:0 0 10px rgba(16,185,129,0.9); position:relative; }
+.gps-pulse-dot::after { content:''; position:absolute; top:-2px; left:-2px; width:12px; height:12px; border-radius:50%; background:#10b981; opacity:0.5; animation:pulseGps 2s infinite ease-out; }
+@keyframes pulseGps { 0%{transform:scale(0.8); opacity:0.8;} 100%{transform:scale(2.6); opacity:0;} }
 
-/* B) ULTIMA PICAGEM */
+/* ULTIMA PICAGEM */
 .ultima-picagem-box {
-  margin-top:10px;
-  padding:8px 12px;
-  background: linear-gradient(135deg,#f0fdf4 0%,#ecfdf5 100%);
-  border:1.5px solid #a7f3d0;
-  border-radius:12px;
-  font-size:0.78rem;
-  font-weight:700;
-  color:#065f46;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  position:relative;
-  z-index:1;
+  margin-top:8px; padding:7px 10px;
+  background: linear-gradient(135deg,#f0fdf4,#ecfdf5);
+  border:1.2px solid #a7f3d0; border-radius:10px;
+  font-size:0.75rem; font-weight:700; color:#065f46;
+  display:flex; align-items:center; justify-content:center; gap:6px;
 }
 
-/* PRINCIPAL SEM SCROLL MAS CONFORTÁVEL */
+/* PRINCIPAL - 100% SEM CORTES, SEM SCROLL */
 #section-ponto.content-section.active {
+  flex:1;
   display:flex !important;
   flex-direction:column;
-  padding:14px 18px 16px;
+  padding:12px 16px 10px;
   overflow:hidden;
-  flex:1;
   min-height:0;
+  gap:0;
 }
-.ponto-pin-only { flex:1; display:flex; flex-direction:column; justify-content:space-between; min-height:0; }
-.ponto-pin-only > div:first-child { flex-shrink:0; margin-bottom:8px !important; display:flex; justify-content:flex-end; }
-.ponto-pin-only h3 { flex-shrink:0; font-size:1.18rem !important; font-weight:900; margin-bottom:8px !important; text-align:center; color:var(--primary); }
-.pin-display-area { flex-shrink:0; margin:8px 0 12px !important; text-align:center; }
-.pin-dots-big { margin:10px 0 !important; gap:14px; justify-content:center; display:flex; }
-.pin-dots-big .pin-dot { width:20px; height:20px; border-radius:50%; border:2.5px solid var(--border-strong); background:#fff; transition:all 0.18s; box-shadow:inset 0 1px 2px rgba(0,0,0,0.04); }
-.pin-dots-big .pin-dot.filled { background: var(--primary); border-color:var(--primary); box-shadow:0 0 0 4px rgba(15,23,42,0.12), 0 2px 6px rgba(15,23,42,0.15); transform:scale(1.12); }
+.ponto-pin-only {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  justify-content:space-between;
+}
+.ponto-pin-only > div:first-child {
+  flex-shrink:0;
+  display:flex;
+  justify-content:flex-end;
+  margin-bottom:6px !important;
+}
+.top-action-btn {
+  width:42px; height:42px; border-radius:12px;
+  border:1.5px solid #e2e8f0; background:#fff;
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:1.15rem; cursor:pointer;
+  box-shadow:0 2px 6px rgba(15,23,42,0.06);
+  transition:all 0.12s;
+}
+.top-action-btn:active { transform:scale(0.90); }
+.top-action-btn.calendar { background:linear-gradient(135deg,#eff6ff,#dbeafe); border-color:#93c5fd; }
+.top-action-btn.settings { background:linear-gradient(135deg,#faf5ff,#f3e8ff); border-color:#d8b4fe; }
 
-/* A) BADGE COUNTDOWN VIVO */
-.pin-nome-preview { min-height:42px; margin:8px 0 6px !important; display:flex; justify-content:center; align-items:center; }
+.ponto-pin-only h3 {
+  flex-shrink:0;
+  font-size:1.05rem !important;
+  font-weight:900;
+  margin-bottom:6px !important;
+  text-align:center;
+  color:#0f172a;
+}
+.pin-display-area { flex-shrink:0; margin:4px 0 8px !important; text-align:center; }
+.pin-dots-big { display:flex; justify-content:center; gap:12px; margin:6px 0 !important; }
+.pin-dots-big .pin-dot {
+  width:18px; height:18px; border-radius:50%;
+  border:2.2px solid #cbd5e1; background:#fff;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.04);
+  transition:all 0.15s;
+}
+.pin-dots-big .pin-dot.filled { background:#0f172a; border-color:#0f172a; box-shadow:0 0 0 3px rgba(15,23,42,0.12); transform:scale(1.1); }
+.pin-nome-preview { min-height:36px; display:flex; justify-content:center; align-items:center; margin:6px 0 4px !important; }
 .pin-nome-preview span {
-  display:inline-flex; align-items:center; gap:8px;
-  padding:10px 18px;
-  border-radius:999px;
-  font-weight:800;
-  font-size:0.92rem;
+  display:inline-flex; align-items:center; gap:6px;
+  padding:8px 14px; border-radius:999px;
+  font-weight:800; font-size:0.86rem;
   background: linear-gradient(135deg,#ecfdf5,#f0fdfa);
-  border:1.5px solid #a7f3d0;
-  color:#065f46;
-  box-shadow:0 2px 10px rgba(16,185,129,0.12);
-  animation: popIn 0.3s cubic-bezier(0.16,1,0.3,1);
+  border:1.2px solid #a7f3d0; color:#065f46;
+  box-shadow:0 2px 8px rgba(16,185,129,0.12);
+  animation:popIn 0.25s ease;
 }
 .pin-nome-preview.erro span {
   background: linear-gradient(135deg,#fef2f2,#fff1f2) !important;
-  border-color:#fecaca !important;
-  color:#991b1b !important;
-  box-shadow:0 4px 16px rgba(239,68,68,0.18);
+  border-color:#fecaca !important; color:#991b1b !important;
+  box-shadow:0 3px 12px rgba(239,68,68,0.15);
 }
-@keyframes popIn { from { transform:scale(0.85); opacity:0; } to { transform:scale(1); opacity:1; } }
+@keyframes popIn { from{transform:scale(0.85); opacity:0;} to{transform:scale(1); opacity:1;} }
 
-/* A) BOTÕES MAIS VISÍVEIS - CONTRASTE */
-.top-action-btn {
-  width:46px; height:46px; border-radius:14px;
-  border:1.5px solid var(--border);
-  background:#fff;
-  display:inline-flex; align-items:center; justify-content:center;
-  font-size:1.25rem; cursor:pointer;
-  box-shadow: 0 2px 8px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
-  transition:all 0.15s;
-}
-.top-action-btn:active { transform:scale(0.92); box-shadow:0 1px 2px rgba(0,0,0,0.1); }
-.top-action-btn.calendar { background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%); border-color:#93c5fd; }
-.top-action-btn.settings { background:linear-gradient(135deg,#faf5ff 0%,#f3e8ff 100%); border-color:#d8b4fe; }
-
+/* TECLADO - PROFISSIONAL, SEM CORTES */
 .keypad {
   flex:1;
-  gap:12px;
-  margin:8px 0 0 !important;
-  min-height:300px;
-  max-height:420px;
   display:grid;
   grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:4px 0 0 !important;
+  min-height:0;
   align-content:stretch;
 }
 .key {
+  min-height:0;
   height:auto;
-  min-height:58px;
-  font-size:1.5rem;
+  font-size:1.35rem;
   font-weight:800;
-  border-radius:18px;
-  border:2px solid #e2e8f0;
+  border-radius:14px;
+  border:1.8px solid #e2e8f0;
   background: linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
-  color:var(--primary);
-  box-shadow: 0 4px 12px rgba(15,23,42,0.06), 0 1px 3px rgba(15,23,42,0.04), inset 0 1px 0 rgba(255,255,255,0.8);
-  transition: all 0.12s cubic-bezier(0.16,1,0.3,1);
+  color:#0f172a;
+  box-shadow:0 3px 8px rgba(15,23,42,0.05), inset 0 1px 0 rgba(255,255,255,0.9);
   display:flex; align-items:center; justify-content:center;
-  user-select:none;
+  transition:all 0.1s;
   -webkit-tap-highlight-color:transparent;
+  user-select:none;
 }
-.key:active { transform:scale(0.94); background:#f1f5f9; border-color:#cbd5e1; box-shadow:0 1px 2px rgba(0,0,0,0.08); }
-.key.key-action { background: linear-gradient(180deg,#f8fafc 0%,#f1f5f9 100%); font-size:0.95rem; color:var(--text-muted); border-color:#e2e8f0; }
-.key.key-clear { background: linear-gradient(135deg,#fef2f2 0%,#fee2e2 100%); border-color:#fecaca; color:#dc2626; font-size:0.9rem; font-weight:800; }
-.key:disabled { opacity:0.4; pointer-events:none; filter:grayscale(0.3); }
+.key:active { transform:scale(0.92); background:#f1f5f9; border-color:#cbd5e1; box-shadow:0 1px 2px rgba(0,0,0,0.06); }
+.key.key-action { background: linear-gradient(180deg,#f8fafc,#f1f5f9); font-size:0.88rem; color:#64748b; }
+.key.key-clear { background: linear-gradient(135deg,#fef2f2,#fee2e2); border-color:#fecaca; color:#dc2626; font-size:0.85rem; font-weight:800; }
+.key:disabled { opacity:0.35; pointer-events:none; }
 
-/* C) ANTI-BRUTEFORCE BLOQUEIO VISUAL */
-.keypad.bloqueado { opacity:0.35; pointer-events:none; filter:grayscale(0.5); }
-.bloqueio-overlay {
-  position:absolute; inset:0; background:rgba(255,255,255,0.85); backdrop-filter:blur(4px);
-  display:flex; align-items:center; justify-content:center;
-  font-weight:800; color:#991b1b; font-size:1rem; border-radius:18px;
-  z-index:5;
-}
-
-/* REMOVE DUPLICAÇÃO FUNDO */
+/* REMOVE DUPLICAÇÃO */
 #erro-pin-ponto { display:none !important; }
 .pin-status.erro { display:none !important; }
 
-/* OUTRAS PÁGINAS COM SCROLL */
+/* OUTRAS PÁGINAS - TAMBEM SEM CORTES, COM SCROLL INTERNO SUAVE */
 #section-falta-func.content-section.active,
 #section-admin.content-section.active {
-  display:block !important;
+  flex:1;
+  display:flex !important;
+  flex-direction:column;
+  overflow:hidden;
+  min-height:0;
+  padding:0;
+}
+#section-falta-func .admin-card,
+#section-admin .admin-card {
+  flex:1;
   overflow-y:auto;
   -webkit-overflow-scrolling:touch;
-  padding:20px 18px 28px;
+  padding:16px 16px 20px;
 }
-#section-ponto ~ .app-footer { display:none; }
+#section-falta-func > div:first-child,
+#section-admin > div:first-child {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  overflow:hidden;
+}
 
-/* RESPONSIVO */
-@media (max-height:780px){
-  .logo-empresa { max-height:82px !important; }
-  .header { padding:16px 18px 12px; }
-  .keypad { min-height:270px; }
-  .key { min-height:52px; }
-}
-@media (max-height:680px){
+/* AJUSTE PARA IPHONE SE E TELAS PEQUENAS */
+@media (max-height:800px){
   .logo-empresa { max-height:68px !important; }
-  .keypad { min-height:230px; gap:10px; }
-  .key { min-height:46px; font-size:1.3rem; }
+  .logo-wrapper { min-height:62px; }
+  .header { padding:12px 16px 10px; }
+  .header h2 { font-size:0.82rem; margin:4px 0 8px; }
+  .live-clock-card { padding:10px 12px; }
+  .clock-time-row { font-size:1.75rem; }
+  .keypad { gap:7px; }
+  .key { font-size:1.25rem; border-radius:12px; }
 }
-@media (min-width:461px){ body { padding:14px; } .container { border-radius:28px; } }
+@media (max-height:700px){
+  .logo-empresa { max-height:58px !important; }
+  .logo-wrapper { min-height:52px; }
+  .header { padding:10px 14px 8px; }
+  .ponto-pin-only h3 { font-size:0.95rem !important; margin-bottom:4px !important; }
+  .pin-display-area { margin:2px 0 6px !important; }
+  .pin-dots-big { margin:4px 0 !important; gap:10px; }
+  .pin-dots-big .pin-dot { width:16px; height:16px; }
+  .keypad { gap:6px; }
+  .key { font-size:1.15rem; }
+}
+@media (max-height:600px){
+  .logo-empresa { max-height:50px !important; }
+  .keypad { gap:5px; }
+  .key { font-size:1.05rem; border-radius:10px; }
+}
 
+/* BLOQUEIO VISUAL */
+.keypad.bloqueado { opacity:0.3; pointer-events:none; filter:grayscale(0.4); }
 </style>
 </head>
 <body>
@@ -1697,6 +1730,39 @@ body {
   function atualizarPinDisplay(){ atualizarDisplayPin(); }
   function registarPontoDiario(){ if(pinAtual && pinAtual.length===4){ resolverERegistarAutomatico(); } else { var e=document.getElementById('erro-pin-ponto'); if(e){ e.innerText='⚠️ Insira 4 dígitos no teclado.'; e.style.display='flex'; } } }
   
+
+// VIBRAÇÃO EM CADA TECLA - PROFISSIONAL
+function vibrarTecla(){
+  try{ if(navigator.vibrate) navigator.vibrate(20); }catch(e){}
+}
+function vibrarFeedback(tipo){
+  try{
+    if(!navigator.vibrate) return;
+    if(tipo==='sucesso') navigator.vibrate([60,30,60]);
+    else if(tipo==='erro') navigator.vibrate([100,50,100]);
+    else if(tipo==='tecla') navigator.vibrate(18);
+  }catch(e){}
+}
+// Override tecladoPress para vibrar
+var _tecladoPressOriginal = null;
+setTimeout(function(){
+  if(typeof tecladoPress === 'function' && !_tecladoPressOriginal){
+    _tecladoPressOriginal = tecladoPress;
+    tecladoPress = function(d){
+      vibrarTecla();
+      return _tecladoPressOriginal(d);
+    };
+  }
+  if(typeof tecladoClear === 'function'){
+    var _origClear = tecladoClear;
+    tecladoClear = function(){ vibrarTecla(); return _origClear(); };
+  }
+  if(typeof tecladoBack === 'function'){
+    var _origBack = tecladoBack;
+    tecladoBack = function(){ vibrarTecla(); return _origBack(); };
+  }
+}, 200);
+
 // ★ A+B+C - MELHORIAS COMPLETAS
 var tentativasErradas = 0;
 var ultimoErroTimestamp = 0;
