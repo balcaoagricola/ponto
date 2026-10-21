@@ -249,29 +249,265 @@ body {
   
     
     
-/* ★ V13 FIX - BOLAS INTERATIVAS SEM ESTRAGAR VALIDAÇÃO - SÓ CSS */
-.pin-dots-big{ gap:18px !important; }
-.pin-dots-big .pin-dot{
-  width:22px !important; height:22px !important;
-  border-width:2.5px !important;
-  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-}
-.pin-dots-big .pin-dot.filled{
-  transform: scale(1.25) !important;
-  animation: dotPopSafe 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-}
-@keyframes dotPopSafe{
-  0%{transform:scale(0.8)} 50%{transform:scale(1.4)} 100%{transform:scale(1.25)}
-}
-.pin-dots-big .pin-dot.filled.ok{
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-  border-color:#10b981 !important;
-  box-shadow:0 8px 24px rgba(16,185,129,0.35),0 0 0 6px rgba(16,185,129,0.15) !important;
-}
-.key{ transition: transform 0.12s ease !important; }
-.key:active{ transform: scale(0.94) !important; }
+    /* ★ V9 - POP-UP 100% UNIFICADO - MESMO DESIGN PIXEL-PERFECT */
+    .toast-card {
+      background: #ffffff !important;
+      border-radius: 32px !important;
+      padding: 32px 24px 24px !important;
+      max-width: 380px !important;
+      width: calc(100% - 32px) !important;
+      box-shadow: 0 24px 64px rgba(15,23,42,0.22) !important;
+    }
+    .toast-icon {
+      width: 72px !important;
+      height: 72px !important;
+      margin: 0 auto 18px !important;
+      border-radius: 50% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 2.2rem !important;
+    }
+    .toast-icon.sucesso { background: #f0fdf4 !important; }
+    .toast-icon.erro { background: #fef2f2 !important; }
+    .toast-icon.aviso { background: #fffbeb !important; }
+    .toast-icon.processando { background: #f0fdf4 !important; }
+    .toast-title {
+      font-size: 1.05rem !important;
+      font-weight: 900 !important;
+      letter-spacing: 0.02em !important;
+      text-transform: uppercase !important;
+      margin-bottom: 10px !important;
+    }
+    .toast-body {
+      font-size: 0.92rem !important;
+      line-height: 1.5 !important;
+      color: #64748b !important;
+      margin-bottom: 22px !important;
+    }
+    .toast-btn {
+      border-radius: 16px !important;
+      padding: 16px !important;
+      font-size: 0.90rem !important;
+      letter-spacing: 0.06em !important;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid #e2e8f0;
+      border-top-color: #10b981;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
 
-/* ★ V5.4 - TECLAS MAIORES MAS CABEM SEMPRE - SEM CORTES */
+    
+    /* ★ V10 PREMIUM - POP-UPS INTERATIVAS DINÂMICAS COM BOM DESIGN */
+    .toast-overlay { backdrop-filter: blur(16px) saturate(180%) !important; background: rgba(15,23,42,0.60) !important; }
+    .toast-card {
+      background: rgba(255,255,255,0.98) !important;
+      border-radius: 28px !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      max-width: 360px !important;
+      width: calc(100% - 24px) !important;
+      box-shadow: 0 32px 80px -16px rgba(15,23,42,0.4), 0 0 0 1px rgba(255,255,255,0.5) inset !important;
+      animation: popupEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      position: relative;
+    }
+    @keyframes popupEnter {
+      0% { transform: scale(0.92) translateY(16px); opacity: 0; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+    @keyframes popupShake {
+      0%,100%{transform:translateX(0)} 15%,45%,75%{transform:translateX(-6px)} 30%,60%,90%{transform:translateX(6px)}
+    }
+    .toast-progress {
+      height: 4px; width: 100%; background: #f1f5f9; position: relative; overflow: hidden;
+    }
+    .toast-progress-bar {
+      height: 100%; width: 0%; background: linear-gradient(90deg, #10b981, #06b6d4);
+      animation: progressGrow 2.2s ease-out forwards;
+      transition: width 0.4s ease;
+    }
+    @keyframes progressGrow { 0%{width:0%} 100%{width:100%} }
+    .toast-content { padding: 28px 22px 20px; text-align: center; }
+    .toast-icon {
+      width: 80px !important; height: 80px !important;
+      margin: 0 auto 16px !important;
+      border-radius: 50% !important;
+      display: flex !important; align-items: center; justify-content: center;
+      font-size: 2.4rem !important;
+      position: relative;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .toast-icon::before {
+      content: ''; position: absolute; inset: -4px; border-radius: 50%;
+      border: 2px solid currentColor; opacity: 0.15; animation: pulseRing 1.8s infinite;
+    }
+    @keyframes pulseRing { 0%{transform:scale(1); opacity:0.15} 100%{transform:scale(1.25); opacity:0} }
+    .toast-icon.sucesso { background: linear-gradient(135deg, #f0fdf4, #dcfce7) !important; color: #10b981; }
+    .toast-icon.erro { background: linear-gradient(135deg, #fef2f2, #fee2e2) !important; color: #ef4444; animation: popupShake 0.5s ease; }
+    .toast-icon.aviso { background: linear-gradient(135deg, #fffbeb, #fef3c7) !important; color: #f59e0b; }
+    .toast-icon.processando { background: linear-gradient(135deg, #f0fdfa, #ccfbf1) !important; color: #10b981; }
+    .toast-steps {
+      display: flex; justify-content: center; gap: 8px; margin-bottom: 14px;
+    }
+    .toast-step {
+      width: 8px; height: 8px; border-radius: 50%; background: #e2e8f0; transition: all 0.4s;
+    }
+    .toast-step.active { background: #10b981; transform: scale(1.3); box-shadow: 0 0 0 4px rgba(16,185,129,0.15); }
+    .toast-step.done { background: #10b981; }
+    .toast-title {
+      font-size: 1.05rem !important; font-weight: 900 !important;
+      letter-spacing: -0.01em !important; text-transform: none !important;
+      margin-bottom: 8px !important; color: #0f172a !important;
+    }
+    .toast-body {
+      font-size: 0.90rem !important; line-height: 1.5 !important;
+      color: #64748b !important; margin-bottom: 18px !important;
+    }
+    .toast-body b, .toast-body strong { color: #0f172a; font-weight: 700; }
+    .toast-meta {
+      display: flex; justify-content: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap;
+    }
+    .toast-meta-item {
+      background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 12px;
+      padding: 8px 12px; font-size: 0.78rem; color: #475569; display: flex; align-items: center; gap: 6px;
+    }
+    .toast-actions { display: flex; gap: 10px; padding: 0 22px 22px; }
+    .toast-btn {
+      flex: 1; border-radius: 14px !important; padding: 14px !important;
+      font-size: 0.86rem !important; font-weight: 800 !important;
+      letter-spacing: 0.04em !important; text-transform: uppercase !important;
+      transition: all 0.2s; position: relative; overflow: hidden;
+    }
+    .toast-btn-primary {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+      color: white !important; box-shadow: 0 8px 20px -4px rgba(16,185,129,0.4) !important;
+    }
+    .toast-btn-primary:active { transform: scale(0.97); }
+    .toast-btn-secondary {
+      background: #f8fafc !important; color: #475569 !important; border: 1.5px solid #e2e8f0 !important;
+    }
+    .confetti { position: absolute; width: 8px; height: 8px; top: -10px; animation: confettiFall 1.2s ease-out forwards; }
+    @keyframes confettiFall {
+      0%{transform: translateY(-20px) rotate(0deg) scale(1); opacity:1}
+      100%{transform: translateY(300px) rotate(720deg) scale(0); opacity:0}
+    }
+    .spinner {
+      width: 36px; height: 36px; border: 3px solid #e2e8f0; border-top-color: #10b981;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to{transform:rotate(360deg)} }
+    .hourglass { animation: hourglassFlip 1.8s infinite; display:inline-block; }
+    @keyframes hourglassFlip { 0%{transform:rotate(0)} 50%{transform:rotate(180deg)} 100%{transform:rotate(360deg)} }
+
+    
+    /* ★ V11 - BOLAS PIN INTERATIVAS PREMIUM */
+    .pin-dots-big {
+      display: flex !important;
+      justify-content: center !important;
+      gap: 18px !important;
+      margin: 16px 0 12px !important;
+      padding: 12px 0 !important;
+    }
+    .pin-dots-big .pin-dot {
+      width: 22px !important;
+      height: 22px !important;
+      border-radius: 50% !important;
+      border: 2.5px solid #e2e8f0 !important;
+      background: #ffffff !important;
+      position: relative !important;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+      box-shadow: 0 2px 8px rgba(15,23,42,0.06) inset, 0 1px 2px rgba(15,23,42,0.04) !important;
+    }
+    .pin-dots-big .pin-dot::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%);
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.4s ease;
+    }
+    .pin-dots-big .pin-dot.filled {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+      border-color: #0f172a !important;
+      transform: scale(1.25) !important;
+      box-shadow: 0 6px 20px rgba(15,23,42,0.25), 0 0 0 4px rgba(15,23,42,0.08) !important;
+      animation: dotPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .pin-dots-big .pin-dot.filled::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .pin-dots-big .pin-dot.filled.ok {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+      border-color: #10b981 !important;
+      box-shadow: 0 8px 24px rgba(16,185,129,0.35), 0 0 0 6px rgba(16,185,129,0.15) !important;
+      animation: dotSuccess 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .pin-dots-big .pin-dot.removing {
+      animation: dotRemove 0.25s ease forwards;
+    }
+    .pin-dots-big .pin-dot.error {
+      background: #ef4444 !important;
+      border-color: #ef4444 !important;
+      animation: dotShake 0.4s ease;
+      box-shadow: 0 0 0 4px rgba(239,68,68,0.15) !important;
+    }
+    @keyframes dotPop {
+      0% { transform: scale(0.8); }
+      50% { transform: scale(1.4); }
+      100% { transform: scale(1.25); }
+    }
+    @keyframes dotSuccess {
+      0% { transform: scale(1.25); }
+      30% { transform: scale(1.5); }
+      60% { transform: scale(1.15); }
+      100% { transform: scale(1.25); }
+    }
+    @keyframes dotRemove {
+      0% { transform: scale(1.25); opacity: 1; }
+      100% { transform: scale(0.8); opacity: 0.6; }
+    }
+    @keyframes dotShake {
+      0%,100%{transform:translateX(0) scale(1.25)}
+      25%{transform:translateX(-4px) scale(1.25)}
+      75%{transform:translateX(4px) scale(1.25)}
+    }
+    /* Key press ripple */
+    .key {
+      position: relative;
+      overflow: hidden;
+    }
+    .key::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 0; height: 0;
+      border-radius: 50%;
+      background: rgba(16,185,129,0.15);
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s;
+    }
+    .key:active::after {
+      width: 120px; height: 120px;
+    }
+    .key:active {
+      transform: scale(0.94) !important;
+      background: #f0fdf4 !important;
+    }
+    /* PIN display container pulse when typing */
+    .pin-display-area.typing {
+      animation: containerPulse 0.3s ease;
+    }
+    @keyframes containerPulse {
+      0%{transform:scale(1)} 50%{transform:scale(1.02)} 100%{transform:scale(1)}
+    }
+
+    /* ★ V5.4 - TECLAS MAIORES MAS CABEM SEMPRE - SEM CORTES */
     html, body {
       height: 100%;
       min-height: 100dvh;
@@ -1726,7 +1962,75 @@ body {
   var PINS_REVERSE_KEY = "FUNCIONARIOS_PINS_REVERSE_V1";
   function getReverseCache(){ try{ return JSON.parse(localStorage.getItem(PINS_REVERSE_KEY)||"{}"); }catch(e){ return {}; } }
   function setReverseCache(o){ localStorage.setItem(PINS_REVERSE_KEY, JSON.stringify(o)); }
+  
+  // ★ V11 - BOLAS INTERATIVAS
+  function vibrarTecla(){ try{ if(navigator.vibrate) navigator.vibrate(15); }catch(e){} }
+  
   function atualizarDisplayPin(){
+    var dots = document.querySelectorAll('#dotsPonto .pin-dot');
+    var area = document.querySelector('.pin-display-area');
+    if(area){ area.classList.add('typing'); setTimeout(function(){ area.classList.remove('typing'); }, 300); }
+    for(var i=0;i<4;i++){
+      if(dots[i]){
+        if(i < pinAtual.length){
+          if(!dots[i].classList.contains('filled')){
+            dots[i].classList.add('filled');
+            dots[i].style.animation = 'none';
+            dots[i].offsetHeight; // reflow
+            dots[i].style.animation = '';
+            vibrarTecla();
+          }
+        } else {
+          if(dots[i].classList.contains('filled')){
+            dots[i].classList.add('removing');
+            (function(dot){
+              setTimeout(function(){
+                dot.classList.remove('filled','ok','removing');
+              }, 200);
+            })(dots[i]);
+          }
+        }
+      }
+    }
+    // Quando tem 4 dígitos, anima todas para verde
+    if(pinAtual.length===4){
+      setTimeout(function(){
+        var allDots = document.querySelectorAll('#dotsPonto .pin-dot');
+        allDots.forEach(function(d, idx){
+          setTimeout(function(){ d.classList.add('ok'); }, idx*80);
+        });
+      }, 100);
+    }
+  }
+  
+  function animarErroPin(){
+    var dots = document.querySelectorAll('#dotsPonto .pin-dot');
+    dots.forEach(function(d){ 
+      d.classList.add('error');
+      setTimeout(function(){ d.classList.remove('error'); }, 500);
+    });
+    try{ if(navigator.vibrate) navigator.vibrate([50,30,50,30,80]); }catch(e){}
+  }
+  
+  // Override tecladoPress para adicionar interatividade
+  var originalTecladoPress = window.tecladoPress;
+  window.tecladoPress = function(digito){
+    if(digito==='C' || digito==='clear'){
+      // animação de limpar
+      var dots = document.querySelectorAll('#dotsPonto .pin-dot');
+      dots.forEach(function(d, i){
+        setTimeout(function(){
+          d.classList.add('removing');
+          setTimeout(function(){ d.classList.remove('filled','ok','removing'); }, 200);
+        }, i*40);
+      });
+    }
+    // chama original
+    if(originalTecladoPress) return originalTecladoPress(digito);
+  };
+  
+  function atualizarDisplayPin_original(){
+
     var dots = document.querySelectorAll('#dotsPonto .pin-dot');
     for(var i=0;i<4;i++){ if(dots[i]){ if(i < pinAtual.length) dots[i].classList.add('filled'); else dots[i].classList.remove('filled'); } }
     var inp = document.getElementById('pinPonto'); if(inp) inp.value = pinAtual;
