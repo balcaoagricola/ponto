@@ -1800,9 +1800,15 @@ body {
     chamarAPIJsonp({action:"salvarPontoPorPinJsonp", pin:pin, lat:lat, lon:lon, isMock:isMock?"true":"false", disp:detalhesDisp, ua:navigator.userAgent}, async function(resp){
       var rStr=String(resp||"");
       if(rStr.toLowerCase().indexOf("sucesso")!==-1 || rStr.indexOf("✅")!==-1){
-        var m=rStr.match(/Ol[aá],?\s*([^!\n]+)/i); var nomeExtra=m?m[1].trim().split('!')[0].trim():null;
-        if(nomeExtra){ try{ await guardarHashPin(nomeExtra,pin); var hh=await hashPin(pin); var rc=getReverseCache(); rc[hh]=nomeExtra; setReverseCache(rc); /* nome não mostra inline */ }catch(e){} }
-        fecharPopupProcessando(); mostrarPopupPersonalizado({titulo:"Ponto Registado ✅", mensagem:rStr, tipo:"sucesso"}); finalizarSucesso(nomeExtra||"colaborador",pin);
+        var m=rStr.match(/Olá,?\s*([^!\n]+)/i); var nomeExtra=m?m[1].trim().split('!')[0].trim():null;
+        if(nomeExtra){ try{ await guardarHashPin(nomeExtra,pin); var hh=await hashPin(pin); var rc=getReverseCache(); rc[hh]=nomeExtra; setReverseCache(rc); }catch(e){} }
+        var nomeMostrar = nomeExtra || "colaborador";
+        atualizarPopupProcessando("Olá, "+nomeMostrar, "PIN reconhecido!<br>✅ Ponto validado!<br><small style='color:#94a3b8'>A registar...</small>");
+        setTimeout(function(){
+          fecharPopupProcessando(); 
+          mostrarPopupPersonalizado({titulo:"Ponto Registado", mensagem: "Olá, <b>"+nomeMostrar+"</b>!<br><br>"+rStr, tipo:"sucesso"});
+          finalizarSucesso(nomeMostrar,pin);
+        }, 900);
       } else {
         var msg=rStr.replace("Aviso: ","");
         // ★ V5.5 - ERRO EM POP-UP, NÃO NO ECRÃ
