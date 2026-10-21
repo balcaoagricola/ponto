@@ -1780,7 +1780,8 @@ body {
       var rStr=String(resp||"");
       if(rStr.toLowerCase().indexOf("sucesso")!==-1 || rStr.indexOf("✅")!==-1){
         try{ await guardarHashPin(nome,pin); var hh=await hashPin(pin); var rc=getReverseCache(); rc[hh]=nome; setReverseCache(rc); }catch(e){}
-        fecharPopupProcessando(); mostrarPopupPersonalizado({titulo:"Ponto Registado ✅", mensagem:rStr, tipo:"sucesso"}); finalizarSucesso(nome,pin);
+        var rClean2 = rStr.replace(/Olá,?\s*[^!]+!\s*/gi, "").trim();
+        fecharPopupProcessando(); mostrarPopupPersonalizado({titulo:"Ponto Registado", mensagem: "Olá, <b>"+nome+"</b>!<br><br>"+rClean2, tipo:"sucesso"}); finalizarSucesso(nome,pin);
       } else {
         var msg=rStr.replace("Aviso: ","");
         // ★ V5.5 - ERRO EM POP-UP, NÃO NO ECRÃ
@@ -1809,8 +1810,9 @@ body {
         if(!nomeMostrar) nomeMostrar = "colaborador";
         atualizarPopupProcessando("Olá, "+nomeMostrar, "PIN reconhecido!<br>✅ Ponto validado!<br><small style='color:#94a3b8'>A registar...</small>");
         setTimeout(function(){
+          var rClean = rStr.replace(/Olá,?\s*[^!]+!\s*/gi, "").replace(/Sucesso!\s*Sucesso!/gi, "Sucesso!").trim();
           fecharPopupProcessando(); 
-          mostrarPopupPersonalizado({titulo:"Ponto Registado", mensagem: "Olá, <b>"+nomeMostrar+"</b>!<br><br>"+rStr, tipo:"sucesso"});
+          mostrarPopupPersonalizado({titulo:"Ponto Registado", mensagem: "Olá, <b>"+nomeMostrar+"</b>!<br><br>"+rClean, tipo:"sucesso"});
           finalizarSucesso(nomeMostrar,pin);
         }, 900);
       } else {
