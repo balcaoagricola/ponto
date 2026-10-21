@@ -646,6 +646,18 @@ body {
       margin-bottom: 8px !important;
     }
 
+
+/* ★ V12 OPTIMIZADO - LIMPO E RÁPIDO - SEM DUPLICADOS */
+.pin-dots-big{ display:flex !important; justify-content:center !important; gap:18px !important; margin:16px 0 12px !important; padding:12px 0 !important; }
+.pin-dots-big .pin-dot{ width:22px !important; height:22px !important; border-radius:50% !important; border:2.5px solid #e2e8f0 !important; background:#fff !important; position:relative !important; transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1) !important; box-shadow:0 2px 8px rgba(15,23,42,0.06) inset !important; }
+.pin-dots-big .pin-dot.filled{ background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%) !important; border-color:#0f172a !important; transform:scale(1.25) !important; box-shadow:0 6px 20px rgba(15,23,42,0.25),0 0 0 4px rgba(15,23,42,0.08) !important; animation:dotPop 0.4s cubic-bezier(0.34,1.56,0.64,1) !important; }
+.pin-dots-big .pin-dot.filled.ok{ background:linear-gradient(135deg,#10b981 0%,#059669 100%) !important; border-color:#10b981 !important; box-shadow:0 8px 24px rgba(16,185,129,0.35),0 0 0 6px rgba(16,185,129,0.15) !important; }
+@keyframes dotPop{0%{transform:scale(0.8)}50%{transform:scale(1.4)}100%{transform:scale(1.25)}}
+@keyframes dotSuccess{0%{transform:scale(1.25)}30%{transform:scale(1.5)}60%{transform:scale(1.15)}100%{transform:scale(1.25)}}
+@keyframes dotShake{0%,100%{transform:translateX(0) scale(1.25)}25%{transform:translateX(-4px) scale(1.25)}75%{transform:translateX(4px) scale(1.25)}}
+.key{ position:relative; overflow:hidden; transition:all 0.15s ease !important; }
+.key:active{ transform:scale(0.94) !important; background:#f0fdf4 !important; }
+
 </style>
 </head>
 <body>
@@ -2337,10 +2349,10 @@ body {
   
   function mostrarPopupProcessando(titulo, mensagem){
     popupProcessandoAtivo = true;
-    var overlay = document.getElementById('popupProcessandoOverlay');
+    var overlay = document.getElementById('toastOverlay_old_removed');
     if(!overlay){
       overlay = document.createElement('div');
-      overlay.id = 'popupProcessandoOverlay';
+      overlay.id = 'toastOverlay_old_removed';
       overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.65);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;animation:fadeIn 0.2s;';
       overlay.innerHTML = '<div id="popupProcessandoBox" style="background:white;border-radius:28px;padding:28px 22px;width:100%;max-width:380px;text-align:center;box-shadow:0 24px 48px rgba(0,0,0,0.18);"><div id="popupProcessandoIcon" style="width:64px;height:64px;margin:0 auto 16px;border-radius:50%;background:#f0fdf4;display:flex;align-items:center;justify-content:center;"><div style="width:32px;height:32px;border:3px solid #e2e8f0;border-top-color:#10b981;border-radius:50%;animation:spin 0.8s linear infinite;"></div></div><div id="popupProcessandoTitulo" style="font-size:1.15rem;font-weight:900;color:#0f172a;margin-bottom:8px;letter-spacing:-0.01em;"></div><div id="popupProcessandoMsg" style="font-size:0.92rem;color:#64748b;line-height:1.5;"></div></div>';
       document.body.appendChild(overlay);
@@ -2364,7 +2376,7 @@ body {
   
   function fecharPopupProcessando(){
     popupProcessandoAtivo = false;
-    var overlay = document.getElementById('popupProcessandoOverlay');
+    var overlay = document.getElementById('toastOverlay_old_removed');
     if(overlay) overlay.style.display = 'none';
   }
   
