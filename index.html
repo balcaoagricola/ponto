@@ -1802,7 +1802,11 @@ body {
       if(rStr.toLowerCase().indexOf("sucesso")!==-1 || rStr.indexOf("✅")!==-1){
         var m=rStr.match(/Olá,?\s*([^!\n]+)/i); var nomeExtra=m?m[1].trim().split('!')[0].trim():null;
         if(nomeExtra){ try{ await guardarHashPin(nomeExtra,pin); var hh=await hashPin(pin); var rc=getReverseCache(); rc[hh]=nomeExtra; setReverseCache(rc); }catch(e){} }
-        var nomeMostrar = nomeExtra || "colaborador";
+        var nomeMostrar = nomeExtra;
+        if(!nomeMostrar){
+          try{ var h=await hashPin(pin); var rc=getReverseCache(); if(rc[h]) nomeMostrar = rc[h]; }catch(e){}
+        }
+        if(!nomeMostrar) nomeMostrar = "colaborador";
         atualizarPopupProcessando("Olá, "+nomeMostrar, "PIN reconhecido!<br>✅ Ponto validado!<br><small style='color:#94a3b8'>A registar...</small>");
         setTimeout(function(){
           fecharPopupProcessando(); 
