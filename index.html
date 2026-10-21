@@ -402,6 +402,111 @@ body {
     .hourglass { animation: hourglassFlip 1.8s infinite; display:inline-block; }
     @keyframes hourglassFlip { 0%{transform:rotate(0)} 50%{transform:rotate(180deg)} 100%{transform:rotate(360deg)} }
 
+    
+    /* ★ V11 - BOLAS PIN INTERATIVAS PREMIUM */
+    .pin-dots-big {
+      display: flex !important;
+      justify-content: center !important;
+      gap: 18px !important;
+      margin: 16px 0 12px !important;
+      padding: 12px 0 !important;
+    }
+    .pin-dots-big .pin-dot {
+      width: 22px !important;
+      height: 22px !important;
+      border-radius: 50% !important;
+      border: 2.5px solid #e2e8f0 !important;
+      background: #ffffff !important;
+      position: relative !important;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+      box-shadow: 0 2px 8px rgba(15,23,42,0.06) inset, 0 1px 2px rgba(15,23,42,0.04) !important;
+    }
+    .pin-dots-big .pin-dot::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%);
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.4s ease;
+    }
+    .pin-dots-big .pin-dot.filled {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+      border-color: #0f172a !important;
+      transform: scale(1.25) !important;
+      box-shadow: 0 6px 20px rgba(15,23,42,0.25), 0 0 0 4px rgba(15,23,42,0.08) !important;
+      animation: dotPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .pin-dots-big .pin-dot.filled::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .pin-dots-big .pin-dot.filled.ok {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+      border-color: #10b981 !important;
+      box-shadow: 0 8px 24px rgba(16,185,129,0.35), 0 0 0 6px rgba(16,185,129,0.15) !important;
+      animation: dotSuccess 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .pin-dots-big .pin-dot.removing {
+      animation: dotRemove 0.25s ease forwards;
+    }
+    .pin-dots-big .pin-dot.error {
+      background: #ef4444 !important;
+      border-color: #ef4444 !important;
+      animation: dotShake 0.4s ease;
+      box-shadow: 0 0 0 4px rgba(239,68,68,0.15) !important;
+    }
+    @keyframes dotPop {
+      0% { transform: scale(0.8); }
+      50% { transform: scale(1.4); }
+      100% { transform: scale(1.25); }
+    }
+    @keyframes dotSuccess {
+      0% { transform: scale(1.25); }
+      30% { transform: scale(1.5); }
+      60% { transform: scale(1.15); }
+      100% { transform: scale(1.25); }
+    }
+    @keyframes dotRemove {
+      0% { transform: scale(1.25); opacity: 1; }
+      100% { transform: scale(0.8); opacity: 0.6; }
+    }
+    @keyframes dotShake {
+      0%,100%{transform:translateX(0) scale(1.25)}
+      25%{transform:translateX(-4px) scale(1.25)}
+      75%{transform:translateX(4px) scale(1.25)}
+    }
+    /* Key press ripple */
+    .key {
+      position: relative;
+      overflow: hidden;
+    }
+    .key::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 0; height: 0;
+      border-radius: 50%;
+      background: rgba(16,185,129,0.15);
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s;
+    }
+    .key:active::after {
+      width: 120px; height: 120px;
+    }
+    .key:active {
+      transform: scale(0.94) !important;
+      background: #f0fdf4 !important;
+    }
+    /* PIN display container pulse when typing */
+    .pin-display-area.typing {
+      animation: containerPulse 0.3s ease;
+    }
+    @keyframes containerPulse {
+      0%{transform:scale(1)} 50%{transform:scale(1.02)} 100%{transform:scale(1)}
+    }
+
     /* ★ V5.4 - TECLAS MAIORES MAS CABEM SEMPRE - SEM CORTES */
     html, body {
       height: 100%;
@@ -1857,7 +1962,75 @@ body {
   var PINS_REVERSE_KEY = "FUNCIONARIOS_PINS_REVERSE_V1";
   function getReverseCache(){ try{ return JSON.parse(localStorage.getItem(PINS_REVERSE_KEY)||"{}"); }catch(e){ return {}; } }
   function setReverseCache(o){ localStorage.setItem(PINS_REVERSE_KEY, JSON.stringify(o)); }
+  
+  // ★ V11 - BOLAS INTERATIVAS
+  function vibrarTecla(){ try{ if(navigator.vibrate) navigator.vibrate(15); }catch(e){} }
+  
   function atualizarDisplayPin(){
+    var dots = document.querySelectorAll('#dotsPonto .pin-dot');
+    var area = document.querySelector('.pin-display-area');
+    if(area){ area.classList.add('typing'); setTimeout(function(){ area.classList.remove('typing'); }, 300); }
+    for(var i=0;i<4;i++){
+      if(dots[i]){
+        if(i < pinAtual.length){
+          if(!dots[i].classList.contains('filled')){
+            dots[i].classList.add('filled');
+            dots[i].style.animation = 'none';
+            dots[i].offsetHeight; // reflow
+            dots[i].style.animation = '';
+            vibrarTecla();
+          }
+        } else {
+          if(dots[i].classList.contains('filled')){
+            dots[i].classList.add('removing');
+            (function(dot){
+              setTimeout(function(){
+                dot.classList.remove('filled','ok','removing');
+              }, 200);
+            })(dots[i]);
+          }
+        }
+      }
+    }
+    // Quando tem 4 dígitos, anima todas para verde
+    if(pinAtual.length===4){
+      setTimeout(function(){
+        var allDots = document.querySelectorAll('#dotsPonto .pin-dot');
+        allDots.forEach(function(d, idx){
+          setTimeout(function(){ d.classList.add('ok'); }, idx*80);
+        });
+      }, 100);
+    }
+  }
+  
+  function animarErroPin(){
+    var dots = document.querySelectorAll('#dotsPonto .pin-dot');
+    dots.forEach(function(d){ 
+      d.classList.add('error');
+      setTimeout(function(){ d.classList.remove('error'); }, 500);
+    });
+    try{ if(navigator.vibrate) navigator.vibrate([50,30,50,30,80]); }catch(e){}
+  }
+  
+  // Override tecladoPress para adicionar interatividade
+  var originalTecladoPress = window.tecladoPress;
+  window.tecladoPress = function(digito){
+    if(digito==='C' || digito==='clear'){
+      // animação de limpar
+      var dots = document.querySelectorAll('#dotsPonto .pin-dot');
+      dots.forEach(function(d, i){
+        setTimeout(function(){
+          d.classList.add('removing');
+          setTimeout(function(){ d.classList.remove('filled','ok','removing'); }, 200);
+        }, i*40);
+      });
+    }
+    // chama original
+    if(originalTecladoPress) return originalTecladoPress(digito);
+  };
+  
+  function atualizarDisplayPin_original(){
+
     var dots = document.querySelectorAll('#dotsPonto .pin-dot');
     for(var i=0;i<4;i++){ if(dots[i]){ if(i < pinAtual.length) dots[i].classList.add('filled'); else dots[i].classList.remove('filled'); } }
     var inp = document.getElementById('pinPonto'); if(inp) inp.value = pinAtual;
