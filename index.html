@@ -248,6 +248,58 @@ body {
 
   
     
+    
+    /* ★ V9 - POP-UP 100% UNIFICADO - MESMO DESIGN PIXEL-PERFECT */
+    .toast-card {
+      background: #ffffff !important;
+      border-radius: 32px !important;
+      padding: 32px 24px 24px !important;
+      max-width: 380px !important;
+      width: calc(100% - 32px) !important;
+      box-shadow: 0 24px 64px rgba(15,23,42,0.22) !important;
+    }
+    .toast-icon {
+      width: 72px !important;
+      height: 72px !important;
+      margin: 0 auto 18px !important;
+      border-radius: 50% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 2.2rem !important;
+    }
+    .toast-icon.sucesso { background: #f0fdf4 !important; }
+    .toast-icon.erro { background: #fef2f2 !important; }
+    .toast-icon.aviso { background: #fffbeb !important; }
+    .toast-icon.processando { background: #f0fdf4 !important; }
+    .toast-title {
+      font-size: 1.05rem !important;
+      font-weight: 900 !important;
+      letter-spacing: 0.02em !important;
+      text-transform: uppercase !important;
+      margin-bottom: 10px !important;
+    }
+    .toast-body {
+      font-size: 0.92rem !important;
+      line-height: 1.5 !important;
+      color: #64748b !important;
+      margin-bottom: 22px !important;
+    }
+    .toast-btn {
+      border-radius: 16px !important;
+      padding: 16px !important;
+      font-size: 0.90rem !important;
+      letter-spacing: 0.06em !important;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid #e2e8f0;
+      border-top-color: #10b981;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
     /* ★ V5.4 - TECLAS MAIORES MAS CABEM SEMPRE - SEM CORTES */
     html, body {
       height: 100%;
