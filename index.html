@@ -1727,44 +1727,41 @@ body {
   async function resolverERegistarAutomatico(){
     if(emProcessamento) return;
     var pin = pinAtual;
-    if(!/^\d{4}$/.test(pin)){ tecladoClear(); return; }
+    if(!/^[0-9]{4}$/.test(pin)){ tecladoClear(); return; }
     emProcessamento = true; desabilitarTeclado(true);
-    var statusEl=document.getElementById('pinStatus'); var nomeEl=document.getElementById('nomePreview');
-    /* sem mensagem inline */
-    if(nomeEl) nomeEl.innerHTML="";
+    
+    // ★ Mostra pop-up dinâmico logo - sempre visível
+    mostrarPopupProcessando("🔍 A identificar...", "A validar o seu PIN...<br><small style='color:#94a3b8'>Aguarde 1 segundo</small>");
+    
     var nomeResolvido=null;
     try{ var h=await hashPin(pin); var rev=getReverseCache(); if(rev[h]) nomeResolvido=rev[h]; }catch(e){}
-    if(!nomeResolvido && navigator.onLine){
-      try{
-        var nomePorPin = await new Promise(function(resolve){ chamarAPIJsonp({action:"obterNomePorPinJsonp", pin:pin}, function(resp){ resolve(resp); }); });
-        if(nomePorPin && typeof nomePorPin === 'string' && nomePorPin.indexOf("Aviso")===-1 && nomePorPin.trim().length>2){ nomeResolvido=nomePorPin.trim(); }
-        else if(nomePorPin && typeof nomePorPin === 'object' && nomePorPin.nome){ nomeResolvido=nomePorPin.nome; }
-        else if(typeof nomePorPin === 'string' && nomePorPin.indexOf("Aviso")!==-1){ throw new Error(nomePorPin.replace("Aviso: ","")); }
-      }catch(e){}
-    }
+    
     if(nomeResolvido){
-      /* nome não mostra inline, só no pop-up final */
-      /* sem mensagem inline */
+      atualizarPopupProcessando("👋 Olá, "+nomeResolvido, "PIN reconhecido!<br>A registar o ponto...<br><small style='color:#94a3b8'>A obter localização</small>");
       try{ var hh=await hashPin(pin); var rc=getReverseCache(); rc[hh]=nomeResolvido; setReverseCache(rc); await guardarHashPin(nomeResolvido,pin); }catch(e){}
       await executarRegistoPonto(nomeResolvido,pin);
     } else {
-      /* sem mensagem inline */
+      if(!navigator.onLine){
+        atualizarPopupProcessando("📦 Modo Offline", "Sem internet, a verificar PIN guardado...");
+      } else {
+        atualizarPopupProcessando("🔍 A validar PIN...", "A confirmar no servidor...<br><small style='color:#94a3b8'>Primeira vez pode demorar 3s</small>");
+      }
       await executarRegistoPontoPorPin(pin);
     }
   }
   async function executarRegistoPonto(nome,pin){
     var detalhesDisp=obterDetalhesDispositivo(); var lat=0, lon=0, isMock=false;
     try{ var pos=await new Promise(function(res){ if(!navigator.geolocation) return res(null); navigator.geolocation.getCurrentPosition(function(p){ res(p); }, function(){ res(null); }, {enableHighAccuracy:true, timeout:6000, maximumAge:30000}); }); if(pos){ lat=pos.coords.latitude; lon=pos.coords.longitude; } }catch(e){}
-    if(!navigator.onLine){ var item=guardarPicagemOffline(nome,pin,lat||0,lon||0,isMock,detalhesDisp,navigator.userAgent); mostrarPopupPersonalizado({titulo:"Guardado Offline 📦", mensagem:"Olá "+nome+"! Sem rede, a tua picagem ("+item.horaLocalStr+") foi guardada e será enviada automaticamente.", tipo:"sucesso"}); finalizarSucesso(nome,pin); return; }
+    if(!navigator.onLine){ var item=guardarPicagemOffline(nome,pin,lat||0,lon||0,isMock,detalhesDisp,navigator.userAgent); fecharPopupProcessando(); mostrarPopupPersonalizado({titulo:"Guardado Offline 📦", mensagem:"Olá "+nome+"! Sem rede, a tua picagem ("+item.horaLocalStr+") foi guardada e será enviada automaticamente.", tipo:"sucesso"}); finalizarSucesso(nome,pin); return; }
     chamarAPIJsonp({action:"salvarPontoJsonp", nome:nome, lat:lat, lon:lon, pin:pin, isMock:isMock?"true":"false", disp:detalhesDisp, ua:navigator.userAgent}, async function(resp){
       var rStr=String(resp||"");
       if(rStr.toLowerCase().indexOf("sucesso")!==-1 || rStr.indexOf("✅")!==-1){
         try{ await guardarHashPin(nome,pin); var hh=await hashPin(pin); var rc=getReverseCache(); rc[hh]=nome; setReverseCache(rc); }catch(e){}
-        mostrarPopupPersonalizado({titulo:"Ponto Registado ✅", mensagem:rStr, tipo:"sucesso"}); finalizarSucesso(nome,pin);
+        fecharPopupProcessando(); mostrarPopupPersonalizado({titulo:"Ponto Registado ✅", mensagem:rStr, tipo:"sucesso"}); finalizarSucesso(nome,pin);
       } else {
         var msg=rStr.replace("Aviso: ","");
         // ★ V5.5 - ERRO EM POP-UP, NÃO NO ECRÃ
-        mostrarPopupPersonalizado({titulo:"❌ PIN Incorreto", mensagem: msg, tipo:"erro"});
+        fecharPopupProcessando(); var info = obterTituloCorretoPorMensagem(msg); mostrarPopupPersonalizado({titulo: info.titulo, mensagem: info.mensagem || msg, tipo: info.tipo});
         emProcessamento=false; desabilitarTeclado(false); bloqueadoAte=Date.now()+1500;
         setTimeout(function(){ tecladoClear(); }, 1000);
       }
@@ -1775,18 +1772,18 @@ body {
     try{ var pos=await new Promise(function(res){ if(!navigator.geolocation) return res(null); navigator.geolocation.getCurrentPosition(function(p){ res(p); }, function(){ res(null); }, {enableHighAccuracy:true, timeout:6000, maximumAge:30000}); }); if(pos){ lat=pos.coords.latitude; lon=pos.coords.longitude; } }catch(e){}
     if(!navigator.onLine){
       try{ var h=await hashPin(pin); var rc=getReverseCache(); if(rc[h]){ await executarRegistoPonto(rc[h],pin); return; } }catch(e){}
-      mostrarPopupPersonalizado({titulo:"Sem rede", mensagem:"Não foi possível identificar o PIN offline porque é a primeira vez neste dispositivo. Liga à internet uma vez para memorizar.", tipo:"erro"}); emProcessamento=false; desabilitarTeclado(false); tecladoClear(); return;
+      fecharPopupProcessando(); mostrarPopupPersonalizado({titulo:"Sem rede", mensagem:"Não foi possível identificar o PIN offline porque é a primeira vez neste dispositivo. Liga à internet uma vez para memorizar.", tipo:"erro"}); emProcessamento=false; desabilitarTeclado(false); tecladoClear(); return;
     }
     chamarAPIJsonp({action:"salvarPontoPorPinJsonp", pin:pin, lat:lat, lon:lon, isMock:isMock?"true":"false", disp:detalhesDisp, ua:navigator.userAgent}, async function(resp){
       var rStr=String(resp||"");
       if(rStr.toLowerCase().indexOf("sucesso")!==-1 || rStr.indexOf("✅")!==-1){
         var m=rStr.match(/Ol[aá],?\s*([^!\n]+)/i); var nomeExtra=m?m[1].trim().split('!')[0].trim():null;
         if(nomeExtra){ try{ await guardarHashPin(nomeExtra,pin); var hh=await hashPin(pin); var rc=getReverseCache(); rc[hh]=nomeExtra; setReverseCache(rc); /* nome não mostra inline */ }catch(e){} }
-        mostrarPopupPersonalizado({titulo:"Ponto Registado ✅", mensagem:rStr, tipo:"sucesso"}); finalizarSucesso(nomeExtra||"colaborador",pin);
+        fecharPopupProcessando(); mostrarPopupPersonalizado({titulo:"Ponto Registado ✅", mensagem:rStr, tipo:"sucesso"}); finalizarSucesso(nomeExtra||"colaborador",pin);
       } else {
         var msg=rStr.replace("Aviso: ","");
         // ★ V5.5 - ERRO EM POP-UP, NÃO NO ECRÃ
-        mostrarPopupPersonalizado({titulo:"❌ PIN Incorreto", mensagem: msg, tipo:"erro"});
+        fecharPopupProcessando(); var info = obterTituloCorretoPorMensagem(msg); mostrarPopupPersonalizado({titulo: info.titulo, mensagem: info.mensagem || msg, tipo: info.tipo});
         emProcessamento=false; desabilitarTeclado(false); bloqueadoAte=Date.now()+1500;
         setTimeout(function(){ tecladoClear(); }, 1000);
       }
@@ -2006,6 +2003,63 @@ body {
   setTimeout(atualizarBadgeFilaOffline, 800);
   // ====== FIM OFFLINE PATCH ======
 
+
+  
+  // ★ V6 - POP-UP DINÂMICO SEMPRE VISÍVEL + CORREÇÃO MENSAGENS
+  var popupProcessandoAtivo = false;
+  
+  function mostrarPopupProcessando(titulo, mensagem){
+    popupProcessandoAtivo = true;
+    var overlay = document.getElementById('popupProcessandoOverlay');
+    if(!overlay){
+      overlay = document.createElement('div');
+      overlay.id = 'popupProcessandoOverlay';
+      overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.65);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;animation:fadeIn 0.2s;';
+      overlay.innerHTML = '<div id="popupProcessandoBox" style="background:white;border-radius:28px;padding:28px 22px;width:100%;max-width:380px;text-align:center;box-shadow:0 24px 48px rgba(0,0,0,0.18);"><div id="popupProcessandoIcon" style="width:64px;height:64px;margin:0 auto 16px;border-radius:50%;background:#f0fdf4;display:flex;align-items:center;justify-content:center;"><div style="width:32px;height:32px;border:3px solid #e2e8f0;border-top-color:#10b981;border-radius:50%;animation:spin 0.8s linear infinite;"></div></div><div id="popupProcessandoTitulo" style="font-size:1.15rem;font-weight:900;color:#0f172a;margin-bottom:8px;letter-spacing:-0.01em;"></div><div id="popupProcessandoMsg" style="font-size:0.92rem;color:#64748b;line-height:1.5;"></div></div>';
+      document.body.appendChild(overlay);
+      var style = document.createElement('style');
+      style.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
+      document.head.appendChild(style);
+    } else {
+      overlay.style.display = 'flex';
+    }
+    document.getElementById('popupProcessandoTitulo').innerText = titulo;
+    document.getElementById('popupProcessandoMsg').innerHTML = mensagem;
+  }
+  
+  function atualizarPopupProcessando(titulo, mensagem){
+    if(!popupProcessandoAtivo) return;
+    var t = document.getElementById('popupProcessandoTitulo');
+    var m = document.getElementById('popupProcessandoMsg');
+    if(t && titulo) t.innerText = titulo;
+    if(m && mensagem) m.innerHTML = mensagem;
+  }
+  
+  function fecharPopupProcessando(){
+    popupProcessandoAtivo = false;
+    var overlay = document.getElementById('popupProcessandoOverlay');
+    if(overlay) overlay.style.display = 'none';
+  }
+  
+  function obterTituloCorretoPorMensagem(msg){
+    var lower = (msg||'').toLowerCase();
+    if(lower.indexOf('aguarde')!==-1 || lower.indexOf('5 min')!==-1 || lower.indexOf('entre picagens')!==-1){
+      return {titulo: '⏳ Aguarde um momento', mensagem: msg, tipo: 'aviso'};
+    }
+    if(lower.indexOf('não encontrado')!==-1 || lower.indexOf('nao encontrado')!==-1){
+      return {titulo: '❌ PIN não encontrado', mensagem: msg, tipo: 'erro'};
+    }
+    if(lower.indexOf('incorreto')!==-1 || lower.indexOf('invalido')!==-1 || lower.indexOf('inválido')!==-1){
+      return {titulo: '❌ PIN Incorreto', mensagem: msg, tipo: 'erro'};
+    }
+    if(lower.indexOf('ação desconhecida')!==-1 || lower.indexOf('acao desconhecida')!==-1){
+      return {titulo: '❌ PIN Incorreto', mensagem: 'PIN não encontrado. Verifique os 4 dígitos.', tipo: 'erro'};
+    }
+    if(lower.indexOf('bloqueado')!==-1){
+      return {titulo: '🔒 Conta bloqueada', mensagem: msg, tipo: 'erro'};
+    }
+    return {titulo: '❌ Erro', mensagem: msg, tipo: 'erro'};
+  }
 
   // ★ V5.3 - CONVERTE MENSAGENS INLINE EM POP-UP SÓ
   (function(){
