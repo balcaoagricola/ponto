@@ -915,16 +915,19 @@ body {
 
   function mostrarPopupPersonalizado(config) {
     var overlay = document.getElementById('toastOverlay');
-    document.getElementById('toastTitle').innerText = config.titulo || "Aviso";
+    var tituloLimpo = (config.titulo || "Aviso").replace(/✅|❌|⏳|👋|⚠️|📍|📦|💬|🤝|💰|🟢|🔴|🗺️/g, "").trim().replace(/\s{2,}/g, " ").trim();
+    if(!tituloLimpo) tituloLimpo = (config.titulo || "Aviso").replace(/[^\wÀ-ÿ ]/gi, "").trim() || "Aviso";
+    document.getElementById('toastTitle').innerText = tituloLimpo;
     document.getElementById('toastBody').innerHTML = config.mensagem || "";
     var icon = document.getElementById('toastIcon');
     icon.className = "toast-icon";
     var botoesPrimarios = document.querySelectorAll('.content-section.active .btn-primary');
+    var iconeLimpo = (config.icone || "").replace(/✅|❌|⏳|👋/g, "").trim();
     if (config.tipo === "sucesso") icon.innerText = "✅";
     else if (config.tipo === "erro") icon.innerText = "❌";
     else if (config.tipo === "processando") { icon.className = "toast-icon ampulheta-animada"; icon.innerText = "⏳"; botoesPrimarios.forEach(function(b){ b.disabled = true; b.style.opacity = '0.5'; }); }
-    else if (config.tipo === "aviso") icon.innerText = config.icone || "⚠️";
-    else icon.innerText = config.icone || "💬";
+    else if (config.tipo === "aviso") icon.innerText = iconeLimpo || "⚠️";
+    else icon.innerText = iconeLimpo || "💬";
     var acts = document.getElementById('toastActionsContainer'); acts.innerHTML = "";
     if (config.tipo === "processando") acts.style.display = "none";
     else {
@@ -1775,7 +1778,7 @@ body {
   async function executarRegistoPonto(nome,pin){
     var detalhesDisp=obterDetalhesDispositivo(); var lat=0, lon=0, isMock=false;
     try{ var pos=await new Promise(function(res){ if(!navigator.geolocation) return res(null); navigator.geolocation.getCurrentPosition(function(p){ res(p); }, function(){ res(null); }, {enableHighAccuracy:true, timeout:6000, maximumAge:30000}); }); if(pos){ lat=pos.coords.latitude; lon=pos.coords.longitude; } }catch(e){}
-    if(!navigator.onLine){ var item=guardarPicagemOffline(nome,pin,lat||0,lon||0,isMock,detalhesDisp,navigator.userAgent); fecharPopupProcessando(); mostrarPopupPersonalizado({titulo:"Guardado Offline 📦", mensagem:"Olá "+nome+"! Sem rede, a tua picagem ("+item.horaLocalStr+") foi guardada e será enviada automaticamente.", tipo:"sucesso"}); finalizarSucesso(nome,pin); return; }
+    if(!navigator.onLine){ var item=guardarPicagemOffline(nome,pin,lat||0,lon||0,isMock,detalhesDisp,navigator.userAgent); fecharPopupProcessando(); mostrarPopupPersonalizado({titulo:"Guardado Offline", mensagem:"Olá "+nome+"! Sem rede, a tua picagem ("+item.horaLocalStr+") foi guardada e será enviada automaticamente.", tipo:"sucesso"}); finalizarSucesso(nome,pin); return; }
     chamarAPIJsonp({action:"salvarPontoJsonp", nome:nome, lat:lat, lon:lon, pin:pin, isMock:isMock?"true":"false", disp:detalhesDisp, ua:navigator.userAgent}, async function(resp){
       var rStr=String(resp||"");
       if(rStr.toLowerCase().indexOf("sucesso")!==-1 || rStr.indexOf("✅")!==-1){
@@ -1993,7 +1996,7 @@ body {
     function enviarProximo(){
       if(i>=fila.length){
         setFilaOffline(novaFila);
-        if(novaFila.length==0) mostrarPopupPersonalizado({titulo:"Sincronizado ✅",mensagem:"Todas as picagens offline foram enviadas com sucesso.",tipo:"sucesso"});
+        if(novaFila.length==0) mostrarPopupPersonalizado({titulo:"Sincronizado",mensagem:"Todas as picagens offline foram enviadas com sucesso.",tipo:"sucesso"});
         else mostrarPopupPersonalizado({titulo:"Parcial",mensagem:"Ficaram "+novaFila.length+" por enviar. Tentará de novo automaticamente.",tipo:"erro"});
         return;
       }
