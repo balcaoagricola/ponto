@@ -133,6 +133,7 @@
     .pin-status.ok { color: var(--accent); }
     .pin-status.erro { color: var(--danger); }
     .erro-campo { justify-content:center; }
+
   
 /* ★ V3 BALANCED - PRINCIPAL SEM SCROLL MAS CONFORTÁVEL, OUTRAS COM SCROLL */
 html { background:#f8fafc; }
@@ -159,6 +160,7 @@ body {
 .live-clock-card { padding:12px 14px; gap:6px; border-radius:18px; }
 .clock-time-row { font-size:2.1rem; gap:10px; }
 .clock-date-row { font-size:0.7rem; }
+
 /* PRINCIPAL - SEM SCROLL */
 #section-ponto.content-section.active {
   display:flex !important;
@@ -191,6 +193,7 @@ body {
 }
 .key { height:auto; min-height:56px; font-size:1.45rem; border-radius:16px; }
 .key.key-action { font-size:0.92rem; }
+
 /* OUTRAS PÁGINAS - COM SCROLL NORMAL */
 #section-falta-func.content-section.active,
 #section-admin.content-section.active {
@@ -200,8 +203,10 @@ body {
   max-height:none;
   padding:18px 18px 24px;
 }
+
 /* Footer só aparece nas outras páginas se necessário */
 #section-ponto ~ .app-footer { display:none; }
+
 /* Telas pequenas - ainda confortável */
 @media (max-height:750px){
   .logo-empresa { max-height:72px !important; }
@@ -220,6 +225,7 @@ body {
   body { padding:14px; }
   .container { border-radius:28px; margin:8px auto 20px; }
 }
+
   
 /* ★ FIX - REMOVE INFO DUPLICADA DO FUNDO */
 #erro-pin-ponto { display:none !important; visibility:hidden !important; height:0 !important; margin:0 !important; padding:0 !important; }
@@ -239,9 +245,28 @@ body {
   border-radius:999px;
   box-shadow:0 2px 8px rgba(239,68,68,0.12);
 }
-  </style>
+
+  
+    /* ★ V5.3 - TIRAR MENSAGENS INLINE DO PONTO - SÓ POP-UP */
+    #section-ponto .pin-nome-preview,
+    #section-ponto .pin-status,
+    #section-ponto #pinStatus,
+    #section-ponto #nomePreview {
+      display: none !important;
+      height: 0 !important;
+      min-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+    }
+    #section-ponto .pin-display-area {
+      margin-bottom: 8px !important;
+    }
+
+</style>
 </head>
 <body>
+
 <div class="container">
   <div class="header">
     <div class="logo-wrapper">
@@ -256,6 +281,7 @@ body {
       <div class="clock-date-row" id="liveClockDate">A sincronizar data...</div>
     </div>
   </div>
+
     <div id="section-ponto" class="content-section active">
     <div class="ponto-pin-only">
       <div style="display:flex; justify-content:flex-end; align-items:center; margin-bottom:14px;">
@@ -276,6 +302,7 @@ body {
         <div id="nomePreview" class="pin-nome-preview"></div>
         <div id="pinStatus" class="pin-status"></div>
       </div>
+
       <div class="keypad" id="keypadPonto">
         <button class="key" onclick="tecladoPress('1')">1</button>
         <button class="key" onclick="tecladoPress('2')">2</button>
@@ -294,6 +321,8 @@ body {
       <div id="erro-pin-ponto" class="erro-campo" style="display:none !important;"></div>
     </div>
   </div>
+
+
 <div id="section-falta-func" class="content-section">
     <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
       <h3 style="margin-bottom: 8px; color: var(--primary); text-align: left; font-size: 1.05rem;">📅 Comunicar Ausência</h3>
@@ -320,6 +349,7 @@ body {
             <option value="🔄 Troca com Colega">🔄 Troca com Colega</option>
           </select>
         </div>
+
         <div id="avisoAcordo11" class="hint-info" style="display: none; background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%); border-color: #f0abfc; color: #86198f;">
           <span><b>💡 Como funciona o Acordo 1:1?</b><br><br>
           <b>1. Para GANHAR horas:</b><br>
@@ -328,16 +358,19 @@ body {
           • <b>Dia Todo:</b> Escolha a data e deixe os horários em branco.<br>
           • <b>Parcial:</b> Preencha o horário que vai trabalhar.</span>
         </div>
+
         <div class="form-group" id="grupoHorasAcordo" style="display: none;">
           <label>Quantas horas tem o acordo? <span class="campo-obrigatorio">*</span></label>
           <input type="number" id="horasAcordoFunc" class="form-control" step="0.5" min="0.5" max="12" placeholder="Ex: 2" inputmode="decimal">
           <p class="periodo-hint" style="margin-top:8px;">Ex: <b>1</b> = 1h · <b>2</b> = 2h · <b>0.5</b> = 30 min · <b>1.5</b> = 1h30</p>
         </div>
+
         <div class="form-group" id="grupoColegaTroca" style="display: none;">
           <label>Colega com quem vai trocar <span class="campo-obrigatorio">*</span></label>
           <select id="colegaTrocaFunc" class="form-control"><option value="">Selecione o colega</option></select>
           <div class="badge-troca">O nome do colega será comunicado à gerência</div>
         </div>
+
         <div class="form-group" id="grupoHorarioFunc" style="display: none;">
           <label>Horário que vai cumprir neste dia (opcional)</label>
           <p class="periodo-hint">Indique o horário que <b>vai cumprir</b> neste dia. Deixe em branco para assinalar ausência de <b>dia completo</b>.</p>
@@ -349,6 +382,7 @@ body {
             <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="fuE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="fuS4" class="form-control periodo-input"></div></div>
           </div>
         </div>
+
         <div id="grupoTrocaHorarios" style="display: none;">
           <div class="troca-bloco">
             <h4>👤 O SEU Horário Nestes Dias</h4>
@@ -371,6 +405,7 @@ body {
             </div>
           </div>
         </div>
+
         <div class="form-group">
           <label>Observações / Justificação</label>
           <textarea id="obsFuncFalta" class="form-control" rows="4" placeholder="Detalhes adicionais (opcional)..." style="resize: vertical; min-height: 100px;"></textarea>
@@ -384,6 +419,7 @@ body {
       </div>
     </div>
   </div>
+
   <div id="section-admin" class="content-section">
     <div id="admin-sub-menu">
       <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
@@ -403,6 +439,7 @@ body {
         </div>
       </div>
     </div>
+
     
     <div id="admin-sub-dashboard" style="display: none;">
       <div class="admin-card">
@@ -432,6 +469,7 @@ body {
         </div>
       </div>
     </div>
+
     <div id="admin-sub-pedidos" style="display: none;">
       <div class="admin-card">
         <h3>📩 Pedidos Pendentes</h3>
@@ -439,6 +477,7 @@ body {
         <div id="listaPedidosContainer"><p style="text-align: center; color: var(--text-muted);">A carregar...</p></div>
       </div>
     </div>
+
     <div id="admin-sub-ausencias" style="display: none;">
       <div class="admin-card">
         <h3>📅 Lançar Registo Manual</h3>
@@ -475,6 +514,7 @@ body {
         <button class="btn btn-primary" onclick="submeterAusenciaAdministrativa()">Confirmar Lançamento</button>
       </div>
     </div>
+
     <div id="admin-sub-troca" style="display: none;">
       <div class="admin-card">
         <h3>🔄 Registar Troca de Turno</h3>
@@ -506,6 +546,7 @@ body {
         <button class="btn btn-primary" onclick="submeterTrocaTurno()">Confirmar Troca de Turno</button>
       </div>
     </div>
+
     <div id="admin-sub-acordo" style="display: none;">
       <div class="admin-card">
         <h3>💰 Usar Cativas 1:1</h3>
@@ -531,6 +572,7 @@ body {
         </div>
       </div>
     </div>
+
     <div id="admin-sub-cativas1a1" style="display: none;">
       <div class="admin-card">
         <h3>💰 Conceder Cativas 1:1</h3>
@@ -558,6 +600,7 @@ body {
         </div>
       </div>
     </div>
+
     <div id="admin-sub-horasacordadas" style="display: none;">
       <div class="admin-card">
         <h3>🤝 Horas Acordadas c/ Entidade Patronal</h3>
@@ -589,6 +632,7 @@ body {
         </div>
       </div>
     </div>
+
     <div id="admin-sub-corrigir" style="display: none;">
       <div class="admin-card">
         <h3>✏️ Corrigir Picagem</h3>
@@ -598,6 +642,7 @@ body {
         <button class="btn btn-primary" onclick="submeterCorrecao()">Inserir Picagem</button>
       </div>
     </div>
+
     <div id="admin-sub-pdf" style="display: none;">
       <div class="admin-card">
         <h3>📄 Exportar Relatório</h3>
@@ -607,6 +652,7 @@ body {
         <button class="btn btn-primary" onclick="exportarRelatorioPDF()">Gerar PDF</button>
       </div>
     </div>
+
     <div id="admin-sub-funcionario" style="display: none;">
       <div class="admin-card">
         <h3>➕ Adicionar Colaborador</h3>
@@ -616,6 +662,7 @@ body {
         <button class="btn btn-primary" onclick="submeterNovoFuncionario()">Registar Colaborador</button>
       </div>
     </div>
+
     <div id="admin-sub-remover" style="display: none;">
       <div class="admin-card">
         <h3 style="color:var(--danger);">❌ Inativar Colaborador</h3>
@@ -623,6 +670,7 @@ body {
         <button class="btn btn-danger" onclick="submeterRemocaoFuncionario()">Confirmar Inativação</button>
       </div>
     </div>
+
     <div class="nav-navigation-block" id="adminNavigationGroup" style="display: none; margin-bottom: 18px;">
       <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()">⬅️ Voltar ao Menu</button>
     </div>
@@ -630,8 +678,10 @@ body {
       <button class="btn btn-nav-red" onclick="voltarAoEcraPrincipal()">🚪 Sair do Painel Admin</button>
     </div>
   </div>
+
   <div class="app-footer" id="appFooter"><p>© 2026 · Balcão Agrícola</p></div>
 </div>
+
 <div id="toastOverlay" class="toast-overlay" onclick="fecharToastOverlay(event)">
   <div class="toast-card">
     <div id="toastIcon" class="toast-icon">🟢</div>
@@ -642,12 +692,14 @@ body {
     </div>
   </div>
 </div>
+
 <script>
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
   var senhaAdminSessao = ""; var emProcessamento = false; var estaOnline = navigator.onLine;
   var listaFuncionariosCache = [];
   var MODULOS_ADMIN = ['dashboard','pedidos', 'ausencias', 'troca', 'acordo', 'cativas1a1', 'horasacordadas', 'corrigir', 'pdf', 'funcionario', 'remover'];
   var TIPOS_COM_HORARIO = ["📄 Falta Justificada", "⚠️ Falta Injustificada", "🤝 Acordo 1:1"]; // 🆕
+
   function configurarComportamentoDatas() {
     function ligarSincronizacao(idIni, idFim) {
       var elIni = document.getElementById(idIni);
@@ -662,6 +714,7 @@ body {
     ligarSincronizacao('dataFaltaFuncInicio', 'dataFaltaFuncFim');
     ligarSincronizacao('dataFolgaInicio', 'dataFolgaFim');
     ligarSincronizacao('dataTrocaInicio', 'dataTrocaFim');
+
     var hoje = new Date();
     var hojeStr = hoje.toISOString().split('T')[0];
     var campoCorrigir = document.getElementById('dataCorrigir');
@@ -679,6 +732,7 @@ body {
     if (campoPdfIni) campoPdfIni.value = dataInicioMesStr;
     if (campoPdfFim) campoPdfFim.value = hojeStr;
   }
+
   function iniciarRelogio() {
     setInterval(function() {
       var agora = new Date();
@@ -689,6 +743,7 @@ body {
       if (elDate) elDate.innerText = String(agora.getDate()).padStart(2, '0') + ' ' + meses[agora.getMonth()] + ' ' + agora.getFullYear();
     }, 1000);
   }
+
   window.addEventListener('load', function() {
     iniciarRelogio();
     carregarFuncionariosEmTodosOsCampos();
@@ -698,8 +753,10 @@ body {
     if (emailGuardado && campoEmail) { campoEmail.value = emailGuardado; }
     if (!navigator.onLine) { var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); }
   });
+
   window.addEventListener('online', function() { estaOnline = true; var g = document.getElementById('gpsIndicator'); if (g) g.classList.remove('offline'); mostrarPopupPersonalizado({ titulo: "Ligação Restabelecida", mensagem: "O dispositivo voltou a estar online.", tipo: "sucesso" }); });
   window.addEventListener('offline', function() { estaOnline = false; var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Verifique a sua ligação à internet.", tipo: "erro" }); });
+
   function atualizarPinDisplay(inputId, containerId) {
     var input = document.getElementById(inputId); if (!input) return;
     input.value = input.value.replace(/[^0-9]/g, '');
@@ -708,6 +765,7 @@ body {
     for (var i = 0; i < 4; i++) { if (dots[i]) { if (i < input.value.length) dots[i].classList.add('filled'); else dots[i].classList.remove('filled'); } }
   }
   function focarPin(inputId) { var input = document.getElementById(inputId); if (input) input.focus(); }
+
   function mostrarPopupPersonalizado(config) {
     var overlay = document.getElementById('toastOverlay');
     document.getElementById('toastTitle').innerText = config.titulo || "Aviso";
@@ -730,6 +788,7 @@ body {
     }
     overlay.style.display = "flex";
   }
+
   function fecharToast() {
     document.getElementById('toastOverlay').style.display = "none";
     emProcessamento = false;
@@ -740,10 +799,12 @@ body {
   }
   function fecharToastOverlay(e) {}
   function alternarVisibilidadeSenhaInput(inputId, btnEye) { var ip = document.getElementById(inputId); if (!ip) return; if (ip.type === "password") { ip.type = "text"; if (btnEye) btnEye.innerText = "🙈"; } else { ip.type = "password"; if (btnEye) btnEye.innerText = "👁️"; } }
+
   function obterDetalhesDispositivo() {
     try { if (window.AndroidBridge && typeof window.AndroidBridge.getDeviceModel === "function") { var m = window.AndroidBridge.getDeviceModel(); if (m) return m; } } catch(e) {}
     var ua = navigator.userAgent; if (ua.indexOf("iPhone") !== -1) return "Apple iPhone"; if (ua.indexOf("Samsung") !== -1) return "Samsung Galaxy"; return navigator.platform || "Smartphone";
   }
+
   function chamarAPIJsonp(params, callbackSucesso) {
     // ★ OFFLINE PATCH OPÇÃO A: validação por hash quando offline
     if (!navigator.onLine && params && params.action === "salvarPontoJsonp") {
@@ -790,6 +851,7 @@ body {
       .then(function(res) { return res.json(); }).then(function(data) { clearTimeout(timeoutId); params.ip = data.ip || "Não disponível"; enviarPedidoComIp(params, callbackSucesso); })
       .catch(function() { clearTimeout(timeoutId); params.ip = "Não disponível"; enviarPedidoComIp(params, callbackSucesso); });
   }
+
   function enviarPedidoComIp(params, callbackSucesso) {
     var cbName = "jsonp_cb_" + Math.random().toString(36).substring(2, 9);
     var script = document.createElement('script'); script.id = cbName;
@@ -823,6 +885,7 @@ body {
     };
     document.body.appendChild(script);
   }
+
   function abrirModalSenhaAdmin() {
     mostrarPopupPersonalizado({
       titulo: "Autenticação", mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.94rem;">Área reservada à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.35rem; letter-spacing:6px;" placeholder="••••" autofocus><button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️</button></div>', icone: "🔐",
@@ -850,6 +913,7 @@ body {
       ]
     });
   }
+
   function abrirEcraFaltaFuncionario() {
     document.getElementById('section-ponto').classList.remove('active');
     document.getElementById('section-admin').classList.remove('active');
@@ -858,6 +922,7 @@ body {
     document.getElementById('headerClockBox').style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
   function voltarAoEcraPrincipal() {
     senhaAdminSessao = "";
     document.getElementById('section-admin').classList.remove('active');
@@ -869,6 +934,7 @@ body {
     limparFormularioFaltaCompleto();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
   function carregarFuncionariosEmTodosOsCampos() {
     if (!navigator.onLine) return;
     chamarAPIJsonp({ action: "obterFuncionarios" }, function(lista) { if (lista && lista.length > 0) { listaFuncionariosCache = lista; preencherSelectsNomes(lista); } });
@@ -879,6 +945,7 @@ body {
       }
     });
   }
+
   function preencherSelectsNomes(lista) { try{ localStorage.setItem('FUNCIONARIOS_CACHE_V1', JSON.stringify(lista)); }catch(e){} 
     ['nomeFuncionario', 'nomeFuncionarioFolga', 'nomeRemover', 'nomeFuncFalta', 'nomeAcordo', 'nomeCorrigir', 'colegaTrocaFunc', 'nomeTrocaAusente', 'nomeTrocaSubstituto', 'nomeCativa', 'nomeHorasAcordadas'].forEach(function(id) {
       var sel = document.getElementById(id);
@@ -894,6 +961,7 @@ body {
       }
     });
   }
+
   function alternarCampoTrocaColega() {
     var tipo = document.getElementById('tipoFaltaFunc').value;
     var grupo = document.getElementById('grupoColegaTroca');
@@ -901,8 +969,10 @@ body {
     var grupoTrocaHorarios = document.getElementById('grupoTrocaHorarios');
     var avisoAcordo = document.getElementById('avisoAcordo11');
     var grupoHorasAcordo = document.getElementById('grupoHorasAcordo');
+
     if (avisoAcordo) { avisoAcordo.style.display = (tipo === "🤝 Acordo 1:1") ? "flex" : "none"; }
     if (grupoHorasAcordo) { grupoHorasAcordo.style.display = (tipo === "🤝 Acordo 1:1") ? "block" : "none"; }
+
     if (tipo === "🔄 Troca com Colega") {
       grupo.style.display = "block"; grupoTrocaHorarios.style.display = "block"; grupoHorario.style.display = "none";
       atualizarFiltroColegasTroca();
@@ -912,10 +982,12 @@ body {
       if (TIPOS_COM_HORARIO.indexOf(tipo) !== -1) grupoHorario.style.display = "block";
       else { grupoHorario.style.display = "none"; limparHorarioFunc(); }
     }
+
     if (tipo !== "🤝 Acordo 1:1") {
       var elH = document.getElementById('horasAcordoFunc'); if (elH) elH.value = "";
     }
   }
+
   function alternarOpcaoNaoDesconta() {
     var sel = document.getElementById('tipoAusencia');
     var info = document.getElementById('infoFaltaJustificada');
@@ -924,6 +996,7 @@ body {
     if (v.indexOf("Falta Justificada") !== -1) info.style.display = "flex";
     else info.style.display = "none";
   }
+
   function atualizarFiltroColegasTroca() {
     var selectColega = document.getElementById('colegaTrocaFunc');
     var nomeProprio = document.getElementById('nomeFuncFalta').value;
@@ -935,6 +1008,7 @@ body {
       selectColega.appendChild(o);
     });
   }
+
   function atualizarFiltroSubstitutosTroca() {
     var selectSub = document.getElementById('nomeTrocaSubstituto');
     var nomeAusente = document.getElementById('nomeTrocaAusente').value;
@@ -946,6 +1020,7 @@ body {
       selectSub.appendChild(o);
     });
   }
+
   function togglePeriodosExtraFunc() {
     var el = document.getElementById('periodosExtraFunc'); var btn = document.getElementById('btnAddPeriodoFunc');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
@@ -991,6 +1066,7 @@ body {
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
     else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('auE3').value = ""; document.getElementById('auS3').value = ""; document.getElementById('auE4').value = ""; document.getElementById('auS4').value = ""; }
   }
+
   function validarParesHorario(horarios) {
     if (!horarios || typeof horarios !== 'object') return "";
     for (var i = 1; i <= 4; i++) {
@@ -1006,6 +1082,7 @@ body {
     for (var i = 1; i <= 4; i++) { if (horarios['e' + i] && horarios['s' + i]) c++; }
     return c;
   }
+
   function submeterTrocaTurno() {
     var ausente = document.getElementById('nomeTrocaAusente').value;
     var substituto = document.getElementById('nomeTrocaSubstituto').value;
@@ -1029,6 +1106,7 @@ body {
     }
     executarSubmissaoTroca(ausente, substituto, dIni, dFim, horAus, horSub);
   }
+
   function executarSubmissaoTroca(ausente, substituto, dIni, dFim, horAus, horSub) {
     mostrarPopupPersonalizado({ titulo: "A Registar Troca", mensagem: "A lançar horários nos mapas de ambos os colaboradores...", tipo: "processando" });
     chamarAPIJsonp({ action: "registarTrocaTurnoJsonp", nomeAusente: ausente, nomeSubstituto: substituto, dataInicio: dIni, dataFim: dFim, horariosAusente: JSON.stringify(horAus), horariosSubstituto: JSON.stringify(horSub), senha: senhaAdminSessao }, function(resp) {
@@ -1036,6 +1114,7 @@ body {
       else { mostrarPopupPersonalizado({ titulo: "Troca Registada", mensagem: resp, tipo: "sucesso" }); limparFormularioTroca(); }
     });
   }
+
   function limparFormularioTroca() {
     document.getElementById('nomeTrocaAusente').value = ""; document.getElementById('nomeTrocaSubstituto').value = "";
     document.getElementById('dataTrocaInicio').value = ""; document.getElementById('dataTrocaFim').value = "";
@@ -1046,6 +1125,7 @@ body {
     var pea = document.getElementById('periodosExtraAus'); if (pea) pea.style.display = 'none';
     var bpa = document.getElementById('btnAddPeriodoAus'); if (bpa) bpa.innerText = '➕ Adicionar 3º / 4º período';
   }
+
   function submeterAcordo() {
     var nome = document.getElementById('nomeAcordo').value;
     var d = document.getElementById('dataAcordo').value;
@@ -1071,11 +1151,13 @@ body {
       ]
     });
   }
+
   function limparFormularioAcordo() {
     var elNome = document.getElementById('nomeAcordo'); if (elNome) elNome.value = "";
     var elData = document.getElementById('dataAcordo'); if (elData) elData.value = "";
     var elObs = document.getElementById('obsAcordo'); if (elObs) elObs.value = "";
   }
+
   function carregarSaldosCativas1a1() {
     var container = document.getElementById('listaSaldosCativas1a1');
     if (!container) return;
@@ -1098,6 +1180,7 @@ body {
       container.innerHTML = html;
     });
   }
+
   function carregarCativas1a1() {
     var container = document.getElementById('listaCativas1a1Container');
     if (container) container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>A carregar...</p>";
@@ -1120,6 +1203,7 @@ body {
       if (container) container.innerHTML = html;
     });
   }
+
   function submeterCativa1a1() {
     var nome = document.getElementById('nomeCativa').value;
     var data = document.getElementById('dataCativa').value;
@@ -1134,6 +1218,7 @@ body {
       if (resp.indexOf("Aviso") === -1) { document.getElementById('horasCativa').value = ""; document.getElementById('notaCativa').value = ""; carregarCativas1a1(); }
     });
   }
+
   function removerCativa1a1(chave) {
     mostrarPopupPersonalizado({
       titulo: "Confirmar Remoção",
@@ -1151,12 +1236,14 @@ body {
       ]
     });
   }
+
   // ★ v2026.53 — Horas Acordadas c/ Entidade Patronal (envia horas em parâmetro separado)
   function submeterHorasAcordadas() {
     var nome = document.getElementById('nomeHorasAcordadas').value;
     var data = document.getElementById('dataHorasAcordadas').value;
     var horasRaw = (document.getElementById('horasAcordadasAdmin').value || "").trim();
     var obs = (document.getElementById('obsHorasAcordadas') || {}).value || "";
+
     if (!nome || !data) {
       mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Selecione o colaborador e a data.", tipo: "erro" });
       return;
@@ -1166,8 +1253,10 @@ body {
       mostrarPopupPersonalizado({ titulo: "Falta o Nº de Horas", mensagem: "Indique quantas horas tem o acordo (ex: 1, 2, 0.5).", tipo: "erro" });
       return;
     }
+
     var partes = data.split('-');
     var dataFmt = partes[2] + "/" + partes[1] + "/" + partes[0];
+
     mostrarPopupPersonalizado({
       titulo: "Confirmar Horas Acordadas",
       mensagem: "<p style='margin-bottom:12px;'>Vai marcar o dia <b>" + dataFmt + "</b> como <b>Horas Acordadas</b> para <b>" + nome + "</b>.</p>"
@@ -1200,6 +1289,7 @@ body {
       ]
     });
   }
+
   function carregarHorasAcordadas() {
     var container = document.getElementById('listaHorasAcordadasContainer');
     if (!container) return;
@@ -1230,6 +1320,7 @@ body {
       container.innerHTML = html;
     });
   }
+
   function removerHorasAcordadas(chave) {
     mostrarPopupPersonalizado({
       titulo: "Confirmar Remoção",
@@ -1247,6 +1338,7 @@ body {
       ]
     });
   }
+
   function submeterAusenciaAdministrativa() {
     var nome = document.getElementById('nomeFuncionarioFolga').value; var tipo = document.getElementById('tipoAusencia').value;
     var dIni = document.getElementById('dataFolgaInicio').value; var dFim = document.getElementById('dataFolgaFim').value;
@@ -1261,6 +1353,7 @@ body {
       if (resp.indexOf("Aviso") === -1) limparFormularioAusencia();
     });
   }
+
   function limparFormularioAusencia() {
     document.getElementById('nomeFuncionarioFolga').value = ""; document.getElementById('tipoAusencia').value = "";
     document.getElementById('dataFolgaInicio').value = ""; document.getElementById('dataFolgaFim').value = "";
@@ -1269,6 +1362,7 @@ body {
     document.getElementById('btnAddPeriodoAusencia').innerText = '➕ Adicionar 3º / 4º período';
     var info = document.getElementById('infoFaltaJustificada'); if (info) info.style.display = 'none';
   }
+
   function submeterFaltaFuncionario() {
     var nome = document.getElementById('nomeFuncFalta').value;
     var pin = document.getElementById('pinFuncFalta').value;
@@ -1277,11 +1371,13 @@ body {
     var dIni = document.getElementById('dataFaltaFuncInicio').value;
     var dFim = document.getElementById('dataFaltaFuncFim').value;
     var obs = document.getElementById('obsFuncFalta').value;
+
     if (!nome || !pin || !email || !tipo || !dIni || !dFim) {
       mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios antes de submeter.", tipo: "erro" });
       return;
     }
     localStorage.setItem('emailColaboradorBA', email.trim());
+
     if (tipo === "🤝 Acordo 1:1") {
       var horasAc = (document.getElementById('horasAcordoFunc').value || "").trim();
       var horasNum = parseFloat(horasAc.replace(',', '.'));
@@ -1291,6 +1387,7 @@ body {
       }
       obs = (obs ? obs + " · " : "") + "Horas do acordo: " + horasAc + "h";
     }
+
     var pacoteExtras = "";
     if (tipo === "🔄 Troca com Colega") {
       var colega = document.getElementById('colegaTrocaFunc').value;
@@ -1305,18 +1402,21 @@ body {
       if (dIni !== dFim) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "A troca com colega só pode ser submetida para um único dia de cada vez.", tipo: "erro" }); return; }
       pacoteExtras = "|TROCA:" + JSON.stringify({ proprio: horProprio, colega: horColega, nomeColega: colega });
     }
+
     var horarios = { e1: "", s1: "", e2: "", s2: "", e3: "", s3: "", e4: "", s4: "" };
     if (TIPOS_COM_HORARIO.indexOf(tipo) !== -1) {
       horarios = { e1: document.getElementById('fuE1').value, s1: document.getElementById('fuS1').value, e2: document.getElementById('fuE2').value, s2: document.getElementById('fuS2').value, e3: document.getElementById('fuE3').value, s3: document.getElementById('fuS3').value, e4: document.getElementById('fuE4').value, s4: document.getElementById('fuS4').value };
       var erro = validarParesHorario(horarios); if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
       if (contarPeriodosAtivos(horarios) > 0 && dIni !== dFim) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O horário só pode ser preenchido para um único dia.", tipo: "erro" }); return; }
     }
+
     mostrarPopupPersonalizado({ titulo: "A Enviar", mensagem: "A submeter o seu pedido à gerência...", tipo: "processando" });
     chamarAPIJsonp({ action: "comunicarAusenciaFuncionarioJsonp", nome: nome, pin: pin, email: email, tipo: tipo, dataInicio: dIni, dataFim: dFim, obs: obs, horarios: JSON.stringify(horarios), extras: pacoteExtras }, function(resp) {
       if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível Submeter", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); }
       else { mostrarPopupPersonalizado({ titulo: "Pedido Enviado", mensagem: resp, tipo: "sucesso" }); setTimeout(voltarAoEcraPrincipal, 2500); }
     });
   }
+
   function limparFormularioFaltaCompleto() {
     var el1 = document.getElementById('nomeFuncFalta'); if (el1) el1.value = "";
     var el2 = document.getElementById('pinFuncFalta'); if (el2) el2.value = "";
@@ -1333,6 +1433,7 @@ body {
     limparHorarioFunc();
     limparHorariosTrocaFunc();
   }
+
   function registarPontoDiario() {
     if (emProcessamento) return;
     var nome = document.getElementById('nomeFuncionario').value;
@@ -1360,6 +1461,7 @@ body {
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
   }
+
   function carregarPedidosPendentes() {
     var container = document.getElementById('listaPedidosContainer');
     container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>A procurar pedidos pendentes...</p>";
@@ -1380,6 +1482,7 @@ body {
       container.innerHTML = html;
     });
   }
+
   function responderPedidoFaltaAdmin(idPedido, decisao) {
     if (decisao === "recusar") {
       mostrarPopupPersonalizado({
@@ -1405,6 +1508,7 @@ body {
       ]
     });
   }
+
   function executarRespostaPedido(idPedido, decisao) {
     mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A aplicar horários e a notificar o colaborador...", tipo: "processando" });
     chamarAPIJsonp({ action: "responderPedidoFaltaAdmin", idPedido: idPedido, decisao: decisao, senha: senhaAdminSessao }, function(resp) {
@@ -1412,35 +1516,41 @@ body {
       else { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: "sucesso" }); carregarPedidosPendentes(); }
     });
   }
+
   function submeterCorrecao() {
     var nome = document.getElementById('nomeCorrigir').value; var d = document.getElementById('dataCorrigir').value; var h = document.getElementById('horaCorrigir').value;
     if(!nome || !d || !h) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o colaborador, a data e a hora.", tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Corrigir", mensagem: "A inserir a picagem e a reorganizar o turno...", tipo: "processando" });
     chamarAPIJsonp({ action: "corrigirPicagemJsonp", nome: nome, data: d, hora: h, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
+
   function exportarRelatorioPDF() {
     var f = document.getElementById('selecaoFuncionario').value; var di = document.getElementById('dataInicio').value; var df = document.getElementById('dataFim').value;
     if(!f || !di || !df) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos.", tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Exportar", mensagem: "A gerar o relatório em PDF...", tipo: "processando" });
     chamarAPIJsonp({ action: "gerarPdfJsonp", funcionario: f, dataInicio: di, dataFim: df, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
+
   function submeterNovoFuncionario() {
     var n = document.getElementById('nomeNovo').value; var p = document.getElementById('pinNovo').value; var f = document.getElementById('filialNovo').value;
     if(!n || !p) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o nome e o PIN.", tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Guardar", mensagem: "A registar o novo colaborador...", tipo: "processando" });
     chamarAPIJsonp({ action: "adicionarFuncionarioJsonp", nome: n, pin: p, filial: f, senha: senhaAdminSessao }, function(resp) { carregarFuncionariosEmTodosOsCampos(); mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
+
   function submeterRemocaoFuncionario() {
     var n = document.getElementById('nomeRemover').value; if(!n) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Selecione um colaborador.", tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Atualizar", mensagem: "A inativar o colaborador...", tipo: "processando" });
     chamarAPIJsonp({ action: "removerFuncionarioJsonp", nome: n, senha: senhaAdminSessao }, function(resp) { carregarFuncionariosEmTodosOsCampos(); mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
+
   function abrirSubModulo(id) {
     document.getElementById('admin-sub-menu').style.display = 'none';
     MODULOS_ADMIN.forEach(function(m) { var el = document.getElementById('admin-sub-' + m); if (el) el.style.display = (m === id) ? 'block' : 'none'; });
     document.getElementById('adminNavigationGroup').style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
   function voltarAoMenuCentralAdmin() {
     MODULOS_ADMIN.forEach(function(m) { var el = document.getElementById('admin-sub-' + m); if (el) el.style.display = 'none'; });
     document.getElementById('admin-sub-menu').style.display = 'block';
@@ -1454,12 +1564,14 @@ body {
     var hCor = document.getElementById('horaCorrigir'); if(hCor) hCor.value = "";
     var hAc = document.getElementById('horasAcordadasAdmin'); if(hAc) hAc.value = "";
   }
+
   function limparFeedbackPonto() { gerirErroCampo("erro-nome-ponto", ""); gerirErroCampo("erro-pin-ponto", ""); }
   function gerirErroCampo(id, msg) {
     var cp = document.getElementById(id); if (!cp) return;
     if (msg) { cp.innerHTML = msg; cp.style.display = "flex"; var f = cp.parentElement.querySelector('.form-control') || cp.parentElement.querySelector('.pin-dots-container'); if(f) { f.style.borderColor = 'var(--danger)'; setTimeout(function(){ f.style.borderColor='var(--border)'; }, 3000); } }
     else { cp.style.display = "none"; }
   }
+
   
   // ====== ★ V3 FINAL - PIN ONLY - COMPLETO - NÃO PERDE NADA ======
   var pinAtual = "";
@@ -1582,6 +1694,7 @@ body {
         dataEl.textContent = new Date().toLocaleDateString('pt-PT', {weekday:'long', day:'2-digit', month:'long', year:'numeric'}) + ' · ' + new Date().toLocaleTimeString('pt-PT', {hour:'2-digit', minute:'2-digit'});
       }
     }
+
     try{
       chamarAPIJsonp({action:"obterResumoIndexJsonp", senha: senhaAdminSessao}, function(resp){
         if(!resp || resp.erro){
@@ -1595,6 +1708,7 @@ body {
         
         var listaDiv = document.getElementById('dashLista');
         var htmlFinal = '';
+
         // 1 - A TRABALHAR AGORA (tempo real)
         if(resp.trabalhandoLista && resp.trabalhandoLista.length){
           htmlFinal += '<div style="margin-bottom:18px;"><div style="font-weight:800;font-size:0.85rem;text-transform:uppercase;color:#065f46;margin-bottom:10px;display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;background:#10b981;border-radius:50%;display:inline-block;animation:pulseGps 1.5s infinite;"></span> A TRABALHAR AGORA ('+resp.trabalhandoLista.length+')</div>';
@@ -1605,6 +1719,7 @@ body {
         } else {
           htmlFinal += '<div style="margin-bottom:18px;padding:14px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;text-align:center;color:#64748b;font-size:0.88rem;">Ninguém dentro neste momento</div>';
         }
+
         // 2 - JA SAIU HOJE
         if(resp.jaSaiu && resp.jaSaiu.length){
           htmlFinal += '<div style="margin-bottom:18px;"><div style="font-weight:800;font-size:0.82rem;text-transform:uppercase;color:#475569;margin-bottom:10px;">✔️ JÁ SAIU HOJE ('+resp.jaSaiu.length+')</div>';
@@ -1613,6 +1728,7 @@ body {
           }).join('');
           htmlFinal += '</div>';
         }
+
         // 3 - AUSENTES
         if(resp.ausentes && resp.ausentes.length){
           htmlFinal += '<div><div style="font-weight:800;font-size:0.82rem;text-transform:uppercase;color:#dc2626;margin-bottom:10px;">❌ AUSENTES HOJE ('+resp.ausentes.length+'/'+resp.totalAtivos+')</div>';
@@ -1621,20 +1737,26 @@ body {
           }).join('');
           htmlFinal += '</div>';
         }
+
         htmlFinal += '<div style="margin-top:16px;padding:10px 12px;background:#f8fafc;border-radius:10px;font-size:0.72rem;color:#94a3b8;text-align:center;">Servidor: '+ (resp.horaServidor||'') +' · Total ativos: '+ (resp.totalAtivos||0) +' · Presentes hoje: '+ (resp.presentes||0) +'</div>';
+
         listaDiv.innerHTML = htmlFinal;
       });
     }catch(e){
       mostrarDashboardErro(e.toString());
     }
   }
+
   function mostrarDashboardErro(msg){
     document.getElementById('dashPresentes').textContent = '—';
     document.getElementById('dashAtrasos').textContent = '—';
     document.getElementById('dashAbertos').textContent = '—';
     document.getElementById('dashLista').innerHTML = '<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:14px;font-size:0.88rem;color:#dc2626;"><b>Erro ao ler tempo real:</b><br>'+msg+'<br><br>1. Verifica se colaste o GS_COMPLETO_V5_REALTIME.gs<br>2. Fizeste Implementar > Nova versão?<br>3. A senha de admin está correta?</div>';
   }
+
+
   // ====== ★ OPÇÃO A - CACHE HASH PINs PARA OFFLINE ======
+
   var PINS_HASH_KEY = "FUNCIONARIOS_PINS_HASH_V1";
   function getPinsHashCache(){ try{ return JSON.parse(localStorage.getItem(PINS_HASH_KEY)||"{}"); }catch(e){ return {}; } }
   function setPinsHashCache(o){ localStorage.setItem(PINS_HASH_KEY, JSON.stringify(o)); }
@@ -1665,6 +1787,7 @@ body {
   // Quando pica com sucesso ONLINE, guarda o hash
   var originalMostrarSucessoParaHash = false;
   // Vamos interceptar no callback de sucesso da picagem
+
   // ====== ★ OFFLINE PATCH v2026.51 - NÃO PERDE NADA ======
   var OFFLINE_QUEUE_KEY = "PONTO_FILA_OFFLINE_V1";
   var OFFLINE_LAST_LAT = "PONTO_LAST_LAT";
@@ -1758,6 +1881,34 @@ body {
   // Inicializa badge
   setTimeout(atualizarBadgeFilaOffline, 800);
   // ====== FIM OFFLINE PATCH ======
+
+
+  // ★ V5.3 - CONVERTE MENSAGENS INLINE EM POP-UP SÓ
+  (function(){
+    // Guarda funções originais se existirem
+    var originalMostrarErro = window.gerirErroCampo;
+    // Intercepta nomePreview para não mostrar inline
+    function limparInlinePonto(){
+      try{
+        var np = document.getElementById('nomePreview');
+        if(np){ np.innerHTML=""; np.style.display="none"; }
+        var ps = document.getElementById('pinStatus');
+        if(ps){ ps.innerText=""; ps.style.display="none"; }
+      }catch(e){}
+    }
+    // Limpa a cada tecla
+    var origAtualizarDisplay = window.atualizarDisplayPin;
+    window.atualizarDisplayPin = function(){
+      try{ if(origAtualizarDisplay) origAtualizarDisplay(); }catch(e){}
+      limparInlinePonto();
+    };
+    // Quando aparece "Olá", não mostra inline, mas guarda nome para popup já existente
+    // O popup de sucesso já existe, só garantimos que não fica nada no ecrã
+    setInterval(limparInlinePonto, 500);
+    
+    console.log("✓ V5.3 POP-UP ONLY ativo - mensagens inline removidas");
+  })();
+
 </script>
 </body>
 </html>
