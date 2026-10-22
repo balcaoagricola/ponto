@@ -41,7 +41,7 @@
     textarea.form-control { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; line-height: 1.5; }
     .badge-troca { display: inline-flex; align-items: center; gap: 7px; margin-top: 11px; padding: 7px 14px 7px 11px; background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); border: 1px solid #99f6e4; border-radius: 100px; font-size: 0.74rem; font-weight: 600; color: #0f766e; }
     .hint-info { display: flex; align-items: flex-start; gap: 10px; padding: 12px 15px; margin-bottom: 18px; background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); border: 1.5px solid #5eead4; border-radius: var(--radius-sm); font-size: 0.82rem; color: #0f766e; font-weight: 500; line-height: 1.5; }
-    .hint-info::before { content: '💡'; font-size: 1rem; flex-shrink: 0; }
+    .hint-info::before { content: 'ℹ️'; font-size: 1rem; flex-shrink: 0; }
     .periodo-hint { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.45; font-weight: 500; }
     .periodo-card { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; padding: 10px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); }
     .periodo-card:focus-within { border-color: var(--accent); background: #ffffff; box-shadow: 0 0 0 3px var(--accent-glow); }
@@ -438,6 +438,89 @@ body {
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="icon-192.png">
 
+
+<style>
+.info-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 1.5px solid #86efac;
+  color: #065f46;
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: 10px;
+  vertical-align: middle;
+  transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(16,185,129,0.15);
+}
+.info-trigger:hover {
+  transform: scale(1.1);
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  box-shadow: 0 2px 8px rgba(16,185,129,0.25);
+}
+.info-balloon {
+  display: none;
+  position: relative;
+  margin-top: 14px;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 1.5px solid #86efac;
+  border-radius: 14px;
+  padding: 14px 16px;
+  color: #065f46;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  animation: balloonIn 0.25s cubic-bezier(0.16,1,0.3,1);
+  box-shadow: 0 8px 24px rgba(16,185,129,0.15);
+}
+.info-balloon.open {
+  display: block;
+}
+.info-balloon .close-balloon {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: rgba(255,255,255,0.8);
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #065f46;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@keyframes balloonIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.admin-card h3 { display: flex; align-items: center; flex-wrap: wrap; }
+</style>
+<script>
+function toggleInfo(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var isOpen = el.classList.contains('open');
+  // Fecha todos os outros balões do mesmo card pai
+  var parent = el.closest('.admin-card, .content-section, #admin-sub-ausencias');
+  if (parent) {
+    parent.querySelectorAll('.info-balloon.open').forEach(function(b){ if(b!==el) b.classList.remove('open'); });
+  } else {
+    document.querySelectorAll('.info-balloon.open').forEach(function(b){ if(b!==el) b.classList.remove('open'); });
+  }
+  if (isOpen) el.classList.remove('open');
+  else el.classList.add('open');
+}
+function closeInfo(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.remove('open');
+}
+</script>
 </head>
 <body>
 
@@ -515,6 +598,7 @@ body {
           <label>Motivo da Ausência <span class="campo-obrigatorio">*</span></label>
           <select id="tipoFaltaFunc" class="form-control" onchange="alternarCampoTrocaColega()">
             <option value="" disabled selected>Selecione o motivo</option>
+            <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
             <option value="🏖️ Férias">🏖️ Férias</option>
             <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
             <option value="📄 Falta Justificada">📄 Falta Justificada</option>
@@ -525,7 +609,7 @@ body {
         </div>
 
         <div id="avisoAcordo11" class="hint-info" style="display: none; background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%); border-color: #f0abfc; color: #86198f;">
-          <span><b>💡 Como funciona o Acordo 1:1?</b><br><br>
+          <span><b>ℹ️ Como funciona o Acordo 1:1?</b><br><br>
           <b>1. Para GANHAR horas:</b><br>
           Se vai fazer horas extra propositadamente para alimentar o Banco, selecione <b>Acordo 1:1</b> e preencha as horas que vai cumprir.<br><br>
           <b>2. Para GASTAR horas:</b><br>
@@ -652,15 +736,15 @@ body {
 
     <div id="admin-sub-ausencias" style="display: none;">
       
-          <div class="hint-info" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-color: #86efac; color: #065f46; margin-bottom: 16px;">
+<div class="admin-card">
+        <h3>📅 Lançar Registo Manual <button class="info-trigger" onclick="toggleInfo('info-lancar')" title="Ver instruções">ℹ️</button></h3>
+          <div id="info-lancar" class="info-balloon">
+            <button class="close-balloon" onclick="closeInfo('info-lancar')">✕</button>
             <span><b>📋 Como funciona:</b><br>
             • <b>Falta Justificada:</b> Marca o dia como justificado (não desconta como injustificada)<br>
             • <b>Férias:</b> Conta SÓ dias úteis - Não conta feriados nem fins de semana automaticamente<br>
             • <b>Falta Injustificada:</b> Desconta da meta e fica como falta</span>
           </div>
-
-<div class="admin-card">
-        <h3>📅 Lançar Registo Manual</h3>
         <div class="form-group"><label>Colaborador</label><select id="nomeFuncionarioFolga" class="form-control"></select></div>
         <div class="form-group"><label>Motivo</label>
           <select id="tipoAusencia" class="form-control" onchange="alternarOpcaoNaoDesconta()">
@@ -673,7 +757,7 @@ body {
             <option value="⚖️ Compensação de Horas">⚖️ Compensação de Horas</option>
           </select>
         </div>
-        <div class="hint-info" id="infoFaltaJustificada" style="display:none;">
+        <div class="info-balloon" id="infoFaltaJustificada" style="display:none;">
           <span><b>ℹ️ Como decidir?</b><br>
           • <b>📄 Falta Justificada (desconta meta)</b> — usa quando a falta deve reduzir a meta semanal.<br><br>
           • <b>📄 Falta Justificada (NÃO desconta meta)</b> — usa quando a falta é legalmente protegida (Art.º 255.º CT).</span>
@@ -698,7 +782,7 @@ body {
     <div id="admin-sub-troca" style="display: none;">
       <div class="admin-card">
         <h3>🔄 Registar Troca de Turno</h3>
-        <div class="hint-info"><span>Preencha o horário que <b>cada colaborador</b> vai cumprir. Ambos os mapas são atualizados em simultâneo.</span></div>
+        <div class="info-balloon"><span>Preencha o horário que <b>cada colaborador</b> vai cumprir. Ambos os mapas são atualizados em simultâneo.</span></div>
         <div class="form-group"><label>Colaborador que FALTA <span class="campo-obrigatorio">*</span></label><select id="nomeTrocaAusente" class="form-control" onchange="atualizarFiltroSubstitutosTroca()"><option value="" disabled selected>Selecione o colaborador ausente</option></select></div>
         <div class="form-group"><label>Colaborador SUBSTITUTO <span class="campo-obrigatorio">*</span></label><select id="nomeTrocaSubstituto" class="form-control"><option value="" disabled selected>Selecione o colega substituto</option></select></div>
         <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataTrocaInicio" class="form-control"></div>
@@ -733,9 +817,9 @@ body {
         <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55;">
           Marque o dia em que o colaborador vai <b>usar as cativas acumuladas</b>. O sistema trata do resto automaticamente.
         </p>
-        <div class="hint-info" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-color: #c4b5fd; color: #6d28d9;">
+        <div class="info-balloon" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-color: #c4b5fd; color: #6d28d9;">
           <span>
-            <b>💡 Como funciona (automático):</b><br><br>
+            <b>ℹ️ Como funciona (automático):</b><br><br>
             <b>1.</b> Marque aqui o dia em que o colaborador quer usar a cativa.<br>
             <b>2.</b> O(A) colaborador(a) <b>pica normalmente</b> nesse dia.<br>
             <b>3.</b> O sistema vê quanto trabalhou e <b>desconta automaticamente</b> ao banco de cativas.<br><br>
@@ -759,9 +843,9 @@ body {
         <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55;">
           Registe as horas que ficam em <b>banco de cativas</b> para serem compensadas em data futura. Estas horas <b>NÃO</b> geram bónus extra.
         </p>
-        <div class="hint-info" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-color: #c4b5fd; color: #6d28d9;">
+        <div class="info-balloon" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-color: #c4b5fd; color: #6d28d9;">
           <span>
-            <b>💡 Como funciona?</b><br>
+            <b>ℹ️ Como funciona?</b><br>
             Ex: Maria trabalhou 1h extra acordada com a entidade patronal em 12/10. Essa hora NÃO gera bónus — fica <b>guardada</b> para usar como folga.
           </span>
         </div>
@@ -788,9 +872,9 @@ body {
           Marque dias em que as horas extra foram <b>acordadas com a entidade patronal</b>.
           Essas horas vão para <b>cativas 1:1</b> (banco de folga) e <b>NÃO aparecem no PDF</b>.
         </p>
-        <div class="hint-info" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-color: #c4b5fd; color: #6d28d9;">
+        <div class="info-balloon" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-color: #c4b5fd; color: #6d28d9;">
           <span>
-            <b>💡 Como funciona?</b><br>
+            <b>ℹ️ Como funciona?</b><br>
             • As horas trabalhadas nesse dia <b>contam para a meta semanal</b><br>
             • As horas do acordo vão para <b>cativas 1:1</b> em vez de bónus<br>
             • Se trabalhar <b>mais</b> do que o acordo, o excedente conta como extra normal<br>
@@ -2281,5 +2365,51 @@ window.addEventListener('offline', function(){
 });
 </script>
 
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.admin-card').forEach(function(card){
+    var balloons = card.querySelectorAll('.info-balloon');
+    var h3 = card.querySelector('h3');
+    if (!h3 || balloons.length===0) return;
+    // Se já tem trigger, não adiciona
+    if (h3.querySelector('.info-trigger')) return;
+    // Cria trigger para o primeiro balloon, se houver mais, cada um com seu trigger
+    balloons.forEach(function(bal, idx){
+      if (!bal.id) bal.id = 'info-auto-' + Math.random().toString(36).substr(2,9);
+      // Adiciona close se não tem
+      if (!bal.querySelector('.close-balloon')) {
+        var cb = document.createElement('button');
+        cb.className='close-balloon';
+        cb.innerHTML='✕';
+        cb.onclick=function(){ closeInfo(bal.id); };
+        bal.insertBefore(cb, bal.firstChild);
+      }
+      if (idx===0) {
+        var btn = document.createElement('button');
+        btn.className='info-trigger';
+        btn.innerHTML='ℹ️';
+        btn.title='Ver instruções';
+        btn.onclick=function(){ toggleInfo(bal.id); };
+        h3.appendChild(btn);
+      }
+    });
+    // Se tem mais de 1 balloon no mesmo card, adiciona triggers extra no texto
+    if (balloons.length>1) {
+      for(var i=1;i<balloons.length;i++){
+        var bal = balloons[i];
+        var extraBtn = document.createElement('button');
+        extraBtn.className='info-trigger';
+        extraBtn.innerHTML='ℹ️';
+        extraBtn.style.marginLeft='6px';
+        extraBtn.title='Mais info';
+        (function(bid){ extraBtn.onclick=function(){ toggleInfo(bid); }; })(bal.id);
+        // Insere antes do balloon
+        bal.parentNode.insertBefore(extraBtn, bal);
+      }
+    }
+  });
+});
+</script>
 </body>
 </html>
