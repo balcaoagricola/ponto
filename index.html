@@ -849,6 +849,22 @@ body {
 
 <script>
 
+
+// ==== FIX LOOP INFINITO A SINCRONIZAR ====
+var _sincEmCurso = false;
+function limparFilaOfflineForcado(){
+  try{
+    localStorage.removeItem('PONTO_FILA_OFFLINE');
+    localStorage.removeItem('OFFLINE_QUEUE_KEY');
+    localStorage.removeItem('filaOffline');
+    // tenta todos os nomes possiveis
+    localStorage.setItem('PONTO_FILA_OFFLINE', '[]');
+    atualizarBadgeFilaOffline();
+    console.log('Fila offline limpa forçado');
+    return true;
+  }catch(e){ return false; }
+}
+
 // ==== FIX 10 MIN OFFLINE + ANTI-PARCIAL ====
 var MINUTOS_BLOQUEIO_LOCAL = 10;
 function obterUltimaPicagemLocalMs(){
@@ -2026,15 +2042,20 @@ function registrarUltimaPicagemLocal(){
     return item;
   }
   function sincronizarFilaOffline(){
+    if(_sincEmCurso){ console.log("Sinc ja em curso, ignora"); return; }
+    _sincEmCurso = true;
+    var _limparSincFlag = function(){ _sincEmCurso = false; };
+
     if(!navigator.onLine){ mostrarPopupPersonalizado({titulo:"Sem rede",mensagem:"Ainda sem internet. Tenta mais tarde.",tipo:"erro"}); return; }
     var fila = getFilaOffline();
-    if(fila.length==0){ mostrarPopupPersonalizado({titulo:"Tudo em dia",mensagem:"Nenhuma picagem offline pendente.",tipo:"sucesso"}); return; }
+    if(fila.length==0){ _sincEmCurso = false; mostrarPopupPersonalizado({titulo:"Tudo em dia",mensagem:"Nenhuma picagem offline pendente.",tipo:"sucesso"}); return; }
     mostrarPopupPersonalizado({titulo:"A sincronizar",mensagem:"A enviar "+fila.length+" picagem(ns) guardada(s)...",tipo:"processando"});
     var novaFila=[];
     var i=0;
     function enviarProximo(){
       if(i>=fila.length){
-        setFilaOffline(novaFila);
+        setFilaOffline(novaFila); _limparSincFlag();
+        _limparSincFlag();
         if(novaFila.length==0){
             if(fila.length>0) mostrarPopupPersonalizado({titulo:"✅ Sincronizado",mensagem:"Todas as picagens offline foram enviadas com sucesso.",tipo:"sucesso"});
         } else {
@@ -2045,12 +2066,18 @@ function registrarUltimaPicagemLocal(){
       }
       var it = fila[i++];
       it.tentativas++;
+      // Se já tentou 3 vezes e ainda falha por causa dos 10 min, remove para parar loop
+      if(it.tentativas > 3){
+        console.log("Item offline com mais de 3 tentativas, a remover para parar loop:", it.idUnico);
+        proximo();
+        return;
+      }
       chamarAPIJsonp({action:"salvarPontoJsonp", nome:it.nome, lat:it.lat, lon:it.lon, pin:it.pin, isMock:it.isMock, disp:it.disp, ua:it.ua, idUnico:it.idUnico, horaOffline:it.horaLocal}, function(resp){
         var rStr = String(resp||"");
         if(rStr.toLowerCase().indexOf("sucesso")!==-1){ 
           // sucesso: guarda hash para futuro offline
           try{ guardarHashPin(it.nome, it.pin); }catch(e){}
-        } else if(rStr.indexOf("PIN incorreto")!==-1 || rStr.indexOf("Colaborador não encontrado")!==-1 || rStr.indexOf("Inativo")!==-1){
+        } else if(rStr.indexOf("PIN incorreto")!==-1 || rStr.indexOf("Colaborador não encontrado")!==-1 || rStr.indexOf("Inativo")!==-1 || rStr.toLowerCase().indexOf("aguarde")!==-1 || rStr.toLowerCase().indexOf("aviso")!==-1){
           // erro definitivo: não tenta de novo, avisa
           console.warn("Picagem rejeitada definitiva:", it.nome, rStr);
           // não coloca de volta na fila
