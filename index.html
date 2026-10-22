@@ -410,6 +410,26 @@ body {
       margin-bottom: 8px !important;
     }
 
+
+    /* ★ FIX 2026-10-22: Impedir caixas de texto de sair para o lado */
+    textarea.form-control, textarea, input[type="text"].form-control, .form-control {
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      min-width: 0 !important;
+    }
+    textarea.form-control, textarea {
+      resize: vertical !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+      word-wrap: break-word !important;
+      white-space: pre-wrap !important;
+    }
+    .admin-card, .form-group, .content-section {
+      overflow: hidden;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
 </style>
 
   <link rel="manifest" href="manifest.json">
@@ -480,7 +500,7 @@ body {
 <div id="section-falta-func" class="content-section">
     <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
       <h3 style="margin-bottom: 8px; color: var(--primary); text-align: left; font-size: 1.05rem;">📅 Comunicar Ausência</h3>
-      <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 22px; line-height: 1.6; text-align: left;">Submeta os detalhes da sua ausência. O pedido será analisado pela gerência e, ao ser aprovado, o horário é <b>automaticamente aplicado ao mapa de ponto</b>.</p>
+      <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 22px; line-height: 1.6; text-align: left;">Submeta os detalhes da sua ausência. O pedido será analisado pela gerência e, ao ser aprovado, o horário será <b>aplicado pela gerência/administrador ao mapa de ponto</b>.</p>
       <div class="admin-card" style="margin-bottom: 0;">
         <div class="form-group"><label>O seu Nome <span class="campo-obrigatorio">*</span></label><select id="nomeFuncFalta" class="form-control" onchange="atualizarFiltroColegasTroca()"></select></div>
         <div class="form-group">
@@ -581,10 +601,7 @@ body {
         <div class="menu-admin-grid">
           <button class="btn tile-emerald" onclick="abrirSubModulo('dashboard'); carregarDashboard();" style="grid-column: span 2; background: linear-gradient(135deg,#065f46 0%, #10b981 100%); color:white; font-weight:800; letter-spacing:0.02em;"><span>📊</span> DASHBOARD</button>
           <button class="btn tile-blue" onclick="abrirSubModulo('pedidos'); carregarPedidosPendentes();"><span>📩</span> Pedidos</button>
-          <button class="btn tile-amber" onclick="abrirSubModulo('ausencias')"><span>📅</span> Lançar Faltas</button>
           <button class="btn tile-teal" onclick="abrirSubModulo('troca')"><span>🔄</span> Troca Turno</button>
-          <button class="btn tile-violet" onclick="abrirSubModulo('acordo'); carregarSaldosCativas1a1();"><span>💰</span> Usar Cativas</button>
-          <button class="btn tile-purple" onclick="abrirSubModulo('cativas1a1'); carregarCativas1a1();"><span>➕</span> Conceder Cativas</button>
           <button class="btn tile-purple" onclick="abrirSubModulo('horasacordadas'); carregarHorasAcordadas();"><span>🤝</span> Horas Acordadas</button>
           <button class="btn tile-cyan" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
           <button class="btn tile-rose" onclick="abrirSubModulo('pdf')"><span>📄</span> Exportar PDF</button>
