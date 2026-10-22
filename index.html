@@ -1015,7 +1015,16 @@ function registrarUltimaPicagemLocal(){
           return;
         }
         var item = guardarPicagemOffline(params.nome, params.pin, params.lat, params.lon, params.isMock, params.disp, params.ua);
-        if(!item){ emProcessamento = false; var btn2b = document.getElementById('btnPonto'); if(btn2b) btn2b.disabled = false; return; }
+        if(!item){
+          try{
+            emProcessamento = false;
+            var btn2b = document.getElementById('btnPonto'); if(btn2b){ btn2b.disabled = false; btn2b.classList.remove('disabled'); }
+            var pinEl2 = document.getElementById('pinPonto'); if(pinEl2) pinEl2.value="";
+            if(typeof atualizarPinDisplay==="function") atualizarPinDisplay('pinPonto','dotsPonto');
+            document.querySelectorAll('.tecla-num, .key, button[id^="key"]').forEach(function(b){ b.disabled=false; b.style.opacity="1"; });
+          }catch(e){}
+          return;
+        }
         // marca se foi validado ou não
         try{
           var f=getFilaOffline(); var last=f[f.length-1]; if(last){ last.validadoOffline = (valid.status==="OK"); last.semCache = (valid.status==="SEM_CACHE"); setFilaOffline(f); }
@@ -2027,6 +2036,17 @@ function registrarUltimaPicagemLocal(){
   var chk = podePicarOfflineAgora();
   if(!chk.ok){
     mostrarPopupPersonalizado({titulo:"⏳ Aguarde "+chk.restamMin+" min", mensagem:"Já picou há menos de "+MINUTOS_BLOQUEIO_LOCAL+" minutos.<br><br>Esta picagem <b>não foi guardada</b>. Aguarde "+chk.restamMin+" minuto(s) para picar de novo.", tipo:"aviso"});
+    try{
+      // Limpa PIN e reativa teclas para próximo funcionário
+      var pinEl = document.getElementById('pinPonto');
+      if(pinEl) pinEl.value = "";
+      if(typeof atualizarPinDisplay==="function") atualizarPinDisplay('pinPonto','dotsPonto');
+      emProcessamento = false;
+      var btn = document.getElementById('btnPonto');
+      if(btn){ btn.disabled = false; btn.classList.remove('disabled'); }
+      // Reativa todas as teclas do teclado numérico se estiverem desabilitadas
+      document.querySelectorAll('.tecla-num, .key, button[id^="key"]').forEach(function(b){ b.disabled=false; b.style.opacity="1"; });
+    }catch(e){}
     return null;
   }
 
