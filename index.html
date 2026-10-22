@@ -399,7 +399,7 @@ body {
     #section-ponto .pin-status,
     #section-ponto #pinStatus,
     #section-ponto #nomePreview {
-      display: none !important;
+      /* display none removed */
       height: 0 !important;
       min-height: 0 !important;
       margin: 0 !important;
@@ -601,6 +601,7 @@ body {
         <div class="menu-admin-grid">
           <button class="btn tile-emerald" onclick="abrirSubModulo('dashboard'); carregarDashboard();" style="grid-column: span 2; background: linear-gradient(135deg,#065f46 0%, #10b981 100%); color:white; font-weight:800; letter-spacing:0.02em;"><span>📊</span> DASHBOARD</button>
           <button class="btn tile-blue" onclick="abrirSubModulo('pedidos'); carregarPedidosPendentes();"><span>📩</span> Pedidos</button>
+          <button class="btn tile-amber" onclick="abrirSubModulo('ausencias')"><span>📅</span> Faltas e Férias</button>
           <button class="btn tile-teal" onclick="abrirSubModulo('troca')"><span>🔄</span> Troca Turno</button>
           <button class="btn tile-purple" onclick="abrirSubModulo('horasacordadas'); carregarHorasAcordadas();"><span>🤝</span> Horas Acordadas</button>
           <button class="btn tile-cyan" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
@@ -650,7 +651,15 @@ body {
     </div>
 
     <div id="admin-sub-ausencias" style="display: none;">
-      <div class="admin-card">
+      
+          <div class="hint-info" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-color: #86efac; color: #065f46; margin-bottom: 16px;">
+            <span><b>📋 Como funciona:</b><br>
+            • <b>Falta Justificada:</b> Marca o dia como justificado (não desconta como injustificada)<br>
+            • <b>Férias:</b> Conta SÓ dias úteis - Não conta feriados nem fins de semana automaticamente<br>
+            • <b>Falta Injustificada:</b> Desconta da meta e fica como falta</span>
+          </div>
+
+<div class="admin-card">
         <h3>📅 Lançar Registo Manual</h3>
         <div class="form-group"><label>Colaborador</label><select id="nomeFuncionarioFolga" class="form-control"></select></div>
         <div class="form-group"><label>Motivo</label>
