@@ -2255,38 +2255,5 @@ window.addEventListener('offline', function(){
 });
 </script>
 
-
-<script>
-// V30.1 - Compatível com GS V58 - marca OFFLINE/ONLINE e alerta 24h
-(function(){
-  var origSalvar = window.salvarPonto || window.guardarPicagemOffline;
-  // Já tratado no V30 anterior, mas garante envio origem para GS
-  window.__GS_ORIGEM_MARK__ = true;
-  function enviarParaGSComOrigem(payload){
-    try{
-      payload.origem = payload.origem || (payload.horaOffline || payload.hora_offline ? "📱 OFFLINE" : "🌐 ONLINE");
-      if(payload.horaOffline){
-        var diffMs = Date.now() - new Date(payload.horaOffline).getTime();
-        payload.atraso_min = Math.floor(diffMs/60000);
-      }
-    }catch(e){}
-    return payload;
-  }
-  // Wrap fetch para GS se existir
-  var _fetch = window.fetch;
-  window.fetch = function(url, opts){
-    try{
-      if(opts && opts.body && typeof opts.body === 'string' && (url.toString().indexOf('script.google') !== -1 || url.toString().indexOf('googleusercontent') !== -1)){
-        var bodyObj = {};
-        try{ bodyObj = JSON.parse(opts.body); }catch(e){ try{ bodyObj = JSON.parse(decodeURIComponent(opts.body)); }catch(e2){} }
-        bodyObj = enviarParaGSComOrigem(bodyObj);
-        opts.body = JSON.stringify(bodyObj);
-      }
-    }catch(e){}
-    return _fetch.apply(this, arguments);
-  };
-})();
-</script>
-
 </body>
 </html>
