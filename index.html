@@ -849,44 +849,27 @@ body {
 
 <script>
 
-// ==== FIX 10 MIN OFFLINE - NAO ACRESCENTA SE PICOU HA MENOS DE 10 MIN ====
+// ==== FIX 10 MIN OFFLINE + ANTI-PARCIAL ====
 var MINUTOS_BLOQUEIO_LOCAL = 10;
 function obterUltimaPicagemLocalMs(){
   try{
     var v = localStorage.getItem('ultimaPicagemMs');
-    if(!v) return 0;
-    return parseInt(v,10)||0;
+    return v ? (parseInt(v,10)||0) : 0;
   }catch(e){ return 0; }
 }
 function podePicarOfflineAgora(){
   var ultima = obterUltimaPicagemLocalMs();
-  if(!ultima) return {ok:true};
-  var agora = Date.now();
-  var difMs = agora - ultima;
-  var minBloqueioMs = MINUTOS_BLOQUEIO_LOCAL * 60 * 1000;
-  if(difMs < minBloqueioMs){
-    var restamMs = minBloqueioMs - difMs;
-    var restamMin = Math.ceil(restamMs/60000);
-    return {ok:false, restamMin: restamMin, restamSeg: Math.ceil(restamMs/1000)};
+  if(!ultima) return {ok:true, restamMin:0};
+  var difMs = Date.now() - ultima;
+  var minMs = MINUTOS_BLOQUEIO_LOCAL*60*1000;
+  if(difMs < minMs){
+    var restam = minMs - difMs;
+    return {ok:false, restamMin: Math.ceil(restam/60000), restamSec: Math.ceil(restam/1000)};
   }
-  return {ok:true};
+  return {ok:true, restamMin:0};
 }
 function registrarUltimaPicagemLocal(){
   try{ localStorage.setItem('ultimaPicagemMs', Date.now().toString()); }catch(e){}
-}
-// =====================================================================
-
-
-function tentarGuardarOfflineSeguro(novoItem){
-  var verif = podePicarOfflineAgora();
-  if(!verif.ok){
-    mostrarPopupPersonalizado({titulo:"⏳ Aguarde", mensagem:"Já picou há menos de "+MINUTOS_BLOQUEIO_LOCAL+" min. Aguarde "+verif.restamMin+" min para nova picagem.", tipo:"aviso"});
-    return false;
-  }
-  if(!tentarGuardarOfflineSeguro(novoItem))){ return; }
-  // (guardado via safe) /* original push removido */
-  registrarUltimaPicagemLocal();
-  return true;
 }
 
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
@@ -1016,6 +999,7 @@ function tentarGuardarOfflineSeguro(novoItem){
           return;
         }
         var item = guardarPicagemOffline(params.nome, params.pin, params.lat, params.lon, params.isMock, params.disp, params.ua);
+        if(!item){ emProcessamento = false; var btn2b = document.getElementById('btnPonto'); if(btn2b) btn2b.disabled = false; return; }
         // marca se foi validado ou não
         try{
           var f=getFilaOffline(); var last=f[f.length-1]; if(last){ last.validadoOffline = (valid.status==="OK"); last.semCache = (valid.status==="SEM_CACHE"); setFilaOffline(f); }
@@ -1826,7 +1810,7 @@ function tentarGuardarOfflineSeguro(novoItem){
   async function executarRegistoPonto(nome,pin){
     var detalhesDisp=obterDetalhesDispositivo(); var lat=0, lon=0, isMock=false;
     try{ var pos=await new Promise(function(res){ if(!navigator.geolocation) return res(null); navigator.geolocation.getCurrentPosition(function(p){ res(p); }, function(){ res(null); }, {enableHighAccuracy:true, timeout:6000, maximumAge:30000}); }); if(pos){ lat=pos.coords.latitude; lon=pos.coords.longitude; } }catch(e){}
-    if(!navigator.onLine){ var item=guardarPicagemOffline(nome,pin,lat||0,lon||0,isMock,detalhesDisp,navigator.userAgent); fecharPopupProcessando(); mostrarPopupPersonalizado({titulo:"Guardado Offline", mensagem:"Olá "+nome+"! Sem rede, a tua picagem ("+item.horaLocalStr+") foi guardada e será enviada automaticamente.", tipo:"sucesso"}); finalizarSucesso(nome,pin); return; }
+    if(!navigator.onLine){ var item=guardarPicagemOffline(nome,pin,lat||0,lon||0,isMock,detalhesDisp,navigator.userAgent); fecharPopupProcessando(); registrarUltimaPicagemLocal(); mostrarPopupPersonalizado({titulo:"Guardado Offline", mensagem:"Olá "+nome+"! Sem rede, a tua picagem ("+item.horaLocalStr+") foi guardada e será enviada automaticamente.", tipo:"sucesso"}); finalizarSucesso(nome,pin); return; }
     chamarAPIJsonp({action:"salvarPontoJsonp", nome:nome, lat:lat, lon:lon, pin:pin, isMock:isMock?"true":"false", disp:detalhesDisp, ua:navigator.userAgent}, async function(resp){
       var rStr=String(resp||"");
       if(rStr.toLowerCase().indexOf("sucesso")!==-1 || rStr.indexOf("✅")!==-1){
@@ -2023,6 +2007,13 @@ function tentarGuardarOfflineSeguro(novoItem){
     }
   }
   function guardarPicagemOffline(nome, pin, lat, lon, isMock, disp, ua){
+  // ==== BLOQUEIO 10 MIN LOCAL - NAO ACRESCENTA SE PICOU ANTES ====
+  var chk = podePicarOfflineAgora();
+  if(!chk.ok){
+    mostrarPopupPersonalizado({titulo:"⏳ Aguarde "+chk.restamMin+" min", mensagem:"Já picou há menos de "+MINUTOS_BLOQUEIO_LOCAL+" minutos.<br><br>Esta picagem <b>não foi guardada</b>. Aguarde "+chk.restamMin+" minuto(s) para picar de novo.", tipo:"aviso"});
+    return null;
+  }
+
     var item = {
       idUnico: "OFF_"+Date.now()+"_"+Math.random().toString(36).substring(2,6),
       nome: nome, pin: pin, lat: lat, lon: lon, isMock: isMock, disp: disp, ua: ua,
@@ -2030,7 +2021,7 @@ function tentarGuardarOfflineSeguro(novoItem){
       horaLocalStr: new Date().toLocaleString('pt-PT'),
       tentativas: 0
     };
-    var f = getFilaOffline(); f.push(item); setFilaOffline(f);
+    var f = getFilaOffline(); f.push(item); setFilaOffline(f); registrarUltimaPicagemLocal();
     try{ localStorage.setItem(OFFLINE_LAST_LAT, lat); localStorage.setItem(OFFLINE_LAST_LON, lon); }catch(e){}
     return item;
   }
@@ -2045,12 +2036,10 @@ function tentarGuardarOfflineSeguro(novoItem){
       if(i>=fila.length){
         setFilaOffline(novaFila);
         if(novaFila.length==0){
-            // Só mostra Sincronizado se veio de fila offline (não da picagem normal)
             if(fila.length>0) mostrarPopupPersonalizado({titulo:"✅ Sincronizado",mensagem:"Todas as picagens offline foram enviadas com sucesso.",tipo:"sucesso"});
         } else {
-            // FALHA SILENCIOSA - não mostra X vermelho, tenta de novo sozinho em background
-            console.log("Fila offline: ficaram "+novaFila.length+" por enviar, retry automatico em 15s");
-            setTimeout(function(){ if(typeof tentarSincronizarFilaOffline==='function') tentarSincronizarFilaOffline(); }, 15000);
+            console.log("Fila offline: ficaram "+novaFila.length+" por enviar, retry em 15s");
+            setTimeout(function(){ if(typeof tentarSincronizarFilaOffline==="function") tentarSincronizarFilaOffline(); }, 15000);
         }
         return;
       }
