@@ -2255,5 +2255,189 @@ window.addEventListener('offline', function(){
 });
 </script>
 
+
+<script>
+// ===== V30 - FIX TUDO BLOQUEADO + MELHORIAS PROFISSIONAIS SEM PARTIR NADA =====
+(function(){
+  console.log('V30 loading...');
+
+  function safeGet(id){ try{ return document.getElementById(id); }catch(e){ return null; } }
+
+  // 1. LIMPAR TECLADO SEMPRE AO ABRIR - resolve bloqueio
+  function limparTecladoV30(){
+    try{
+      var pinEl = safeGet('pinPonto');
+      if(pinEl) pinEl.value = "";
+      if(window.atualizarPinDisplay) window.atualizarPinDisplay('pinPonto','dotsPonto');
+      else if(window.atualizarDisplayPin) window.atualizarDisplayPin();
+      // Fallback manual dots
+      var dots = document.querySelectorAll('#dotsPonto span, .dots span, .dot');
+      dots.forEach(function(d){ d.classList.remove('filled','active'); d.style.background=''; });
+      window.emProcessamento = false;
+      var btn = safeGet('btnPonto');
+      if(btn){ btn.disabled = false; if(btn.classList) btn.classList.remove('disabled'); }
+      document.querySelectorAll('.tecla-num, .key, button[id^="key"], .numpad button, button.tecla-num').forEach(function(b){
+        b.disabled = false;
+        b.style.opacity = "1";
+        if(b.classList) b.classList.remove('disabled');
+      });
+    }catch(e){ console.log('limparTecladoV30 erro', e); }
+  }
+
+  // Som diferente entrada/saida
+  function tocarSomV30(tipo){
+    try{
+      var AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if(!AudioCtx) return;
+      var ctx = new AudioCtx();
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.connect(gain); gain.connect(ctx.destination);
+      if(tipo === 'entrada'){
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(1318, ctx.currentTime + 0.18);
+      }else{
+        osc.frequency.setValueAtTime(659, ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(440, ctx.currentTime + 0.22);
+      }
+      gain.gain.setValueAtTime(0.28, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+      osc.start(); osc.stop(ctx.currentTime + 0.36);
+      setTimeout(function(){ try{ ctx.close(); }catch(e){} }, 500);
+    }catch(e){ console.log('som erro', e); }
+  }
+
+  function vibrarV30(){
+    try{
+      if('vibrate' in navigator) navigator.vibrate([70,30,90]);
+      if(window.Android && window.Android.vibrate) window.Android.vibrate(150);
+    }catch(e){}
+  }
+
+  function obterNomePorPinV30(pin){
+    try{
+      if(window.FUNCIONARIOS && window.FUNCIONARIOS[pin]) return window.FUNCIONARIOS[pin].nome || window.FUNCIONARIOS[pin];
+      if(window.funcionarios && window.funcionarios[pin]) return window.funcionarios[pin].nome || window.funcionarios[pin];
+      var saved = localStorage.getItem('ultimoNome_'+pin);
+      if(saved) return saved;
+    }catch(e){}
+    return null;
+  }
+
+  // Wrap mostrarPopupPersonalizado para som + vibra + mensagem inteligente
+  var origPopup = window.mostrarPopupPersonalizado;
+  window.mostrarPopupPersonalizado = function(opts){
+    try{
+      // Se for bloqueio 10 min, melhora mensagem
+      if(opts && opts.titulo && opts.titulo.indexOf('Aguarde') !== -1){
+        var pinAtual = (safeGet('pinPonto') && safeGet('pinPonto').value) || localStorage.getItem('ultimoPinTentado') || '';
+        var nome = obterNomePorPinV30(pinAtual);
+        var restam = 10;
+        var m = opts.titulo.match(/(\d+)/);
+        if(m) restam = parseInt(m[1]);
+        var agora = new Date();
+        var podeAs = new Date(agora.getTime() + restam*60000);
+        var horaPode = podeAs.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
+        if(nome){
+          opts.mensagem = nome + ' já picou há instantes.<br>Pode picar de novo às <b>' + horaPode + '</b> (faltam ' + restam + ' min).<br><br>Esta picagem <b>não foi guardada</b>.';
+        }
+        // Após mostrar, limpa teclado para próximo funcionário
+        setTimeout(limparTecladoV30, 400);
+      }
+
+      // Se for sucesso
+      if(opts && opts.titulo && (opts.titulo.toLowerCase().indexOf('sucesso') !== -1 || opts.titulo.indexOf('✅') !== -1 || opts.titulo.toLowerCase().indexOf('entrada') !== -1 || opts.titulo.toLowerCase().indexOf('saída') !== -1)){
+        var tipo = 'entrada';
+        if((opts.titulo + (opts.mensagem||'')).toLowerCase().indexOf('saída') !== -1 || (opts.titulo + (opts.mensagem||'')).toLowerCase().indexOf('saida') !== -1) tipo = 'saida';
+        tocarSomV30(tipo);
+        vibrarV30();
+        try{ localStorage.setItem('ultimaSincronizacaoTimestamp', Date.now().toString()); }catch(e){}
+        setTimeout(limparTecladoV30, 800);
+      }
+    }catch(e){ console.log('wrap popup erro', e); }
+    if(origPopup) return origPopup(opts);
+  };
+
+  // Wrap guardarPicagemOffline para guardar nome e pin e origem
+  var origGuardar = window.guardarPicagemOffline;
+  if(origGuardar){
+    window.guardarPicagemOffline = function(nome, pin, lat, lon, isMock, disp, ua){
+      try{
+        localStorage.setItem('ultimoPinTentado', pin);
+        if(nome) localStorage.setItem('ultimoNome_'+pin, nome);
+      }catch(e){}
+      var res = origGuardar(nome, pin, lat, lon, isMock, disp, ua);
+      // Se retornou item, adiciona marca OFFLINE e atraso 0
+      try{
+        if(res){
+          res.origem = '📱 OFFLINE';
+          res.origem_offline = true;
+        }
+      }catch(e){}
+      return res;
+    };
+  }
+
+  // Garante que relógio volta a funcionar mesmo se houve erro anterior
+  function garantirRelogio(){
+    try{
+      var el = safeGet('liveClockTime');
+      if(el && (!el.innerText || el.innerText.indexOf(':') === -1)){
+        // força atualização
+        var now = new Date();
+        el.innerText = now.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      }
+    }catch(e){}
+  }
+
+  // Inicializa
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      limparTecladoV30();
+      garantirRelogio();
+      console.log('V30 inicializado - teclado limpo, relogio OK');
+    }, 600);
+  });
+
+  // Se ficar bloqueado, tecla Limpar força limpeza
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    if(t && (t.innerText && t.innerText.toLowerCase().indexOf('limpar') !== -1)){
+      setTimeout(limparTecladoV30, 100);
+    }
+  });
+
+  // 24h alerta Telegram + Email
+  function verificarAlerta24h(){
+    try{
+      var ultima = localStorage.getItem('ultimaSincronizacaoTimestamp');
+      if(!ultima){ localStorage.setItem('ultimaSincronizacaoTimestamp', Date.now().toString()); return; }
+      var diffH = (Date.now() - parseInt(ultima))/ (1000*60*60);
+      if(diffH >= 24){
+        var ja = localStorage.getItem('alerta24h_enviado_em');
+        var desde = ja ? (Date.now() - parseInt(ja))/(1000*60*60) : 999;
+        if(desde >= 12){
+          var payload = { acao:'alerta_tablet_offline', horas_sem_sync: Math.floor(diffH), ultima_sync: new Date(parseInt(ultima)).toLocaleString('pt-PT'), timestamp: new Date().toISOString() };
+          var url = window.GOOGLE_SHEETS_URL || window.SCRIPT_URL || localStorage.getItem('gs_url') || '';
+          if(url){
+            try{ fetch(url, {method:'POST', mode:'no-cors', body: JSON.stringify(payload)}); }catch(e){}
+          }
+          localStorage.setItem('alerta24h_enviado_em', Date.now().toString());
+          console.log('Alerta 24h enviado', payload);
+        }
+      }
+    }catch(e){}
+  }
+  setInterval(verificarAlerta24h, 60*60*1000);
+  setTimeout(verificarAlerta24h, 5000);
+
+  window.limparTecladoV30 = limparTecladoV30;
+  window.tocarSomV30 = tocarSomV30;
+  window.vibrarV30 = vibrarV30;
+
+})();
+</script>
+
 </body>
 </html>
