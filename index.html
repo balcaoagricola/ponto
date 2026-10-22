@@ -411,6 +411,13 @@ body {
     }
 
 </style>
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
 </head>
 <body>
 
@@ -606,7 +613,7 @@ body {
             <div id="dashAbertos" style="font-size:1.9rem;font-weight:800;color:#1e40af;margin-top:4px;">--</div>
           </div>
           <div style="background:#fdf2f8;border:1px solid #fbcfe8;border-radius:14px;padding:14px;text-align:center;">
-            <div style="font-size:0.70rem;font-weight:800;color:#9d174d;text-transform:uppercase;">Offline</div>
+            <div style="font-size:0.70rem;font-weight:800;color:#9d174d;text-transform:uppercase;" title="Picagens guardadas sem internet por enviar">Por Sincronizar</div>
             <div id="dashOffline" style="font-size:1.9rem;font-weight:800;color:#9d174d;margin-top:4px;">0</div>
           </div>
         </div>
@@ -841,6 +848,47 @@ body {
 </div>
 
 <script>
+
+// ==== FIX 10 MIN OFFLINE - NAO ACRESCENTA SE PICOU HA MENOS DE 10 MIN ====
+var MINUTOS_BLOQUEIO_LOCAL = 10;
+function obterUltimaPicagemLocalMs(){
+  try{
+    var v = localStorage.getItem('ultimaPicagemMs');
+    if(!v) return 0;
+    return parseInt(v,10)||0;
+  }catch(e){ return 0; }
+}
+function podePicarOfflineAgora(){
+  var ultima = obterUltimaPicagemLocalMs();
+  if(!ultima) return {ok:true};
+  var agora = Date.now();
+  var difMs = agora - ultima;
+  var minBloqueioMs = MINUTOS_BLOQUEIO_LOCAL * 60 * 1000;
+  if(difMs < minBloqueioMs){
+    var restamMs = minBloqueioMs - difMs;
+    var restamMin = Math.ceil(restamMs/60000);
+    return {ok:false, restamMin: restamMin, restamSeg: Math.ceil(restamMs/1000)};
+  }
+  return {ok:true};
+}
+function registrarUltimaPicagemLocal(){
+  try{ localStorage.setItem('ultimaPicagemMs', Date.now().toString()); }catch(e){}
+}
+// =====================================================================
+
+
+function tentarGuardarOfflineSeguro(novoItem){
+  var verif = podePicarOfflineAgora();
+  if(!verif.ok){
+    mostrarPopupPersonalizado({titulo:"⏳ Aguarde", mensagem:"Já picou há menos de "+MINUTOS_BLOQUEIO_LOCAL+" min. Aguarde "+verif.restamMin+" min para nova picagem.", tipo:"aviso"});
+    return false;
+  }
+  if(!tentarGuardarOfflineSeguro(novoItem))){ return; }
+  // (guardado via safe) /* original push removido */
+  registrarUltimaPicagemLocal();
+  return true;
+}
+
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
   var senhaAdminSessao = ""; var emProcessamento = false; var estaOnline = navigator.onLine;
   var listaFuncionariosCache = [];
@@ -1996,8 +2044,14 @@ body {
     function enviarProximo(){
       if(i>=fila.length){
         setFilaOffline(novaFila);
-        if(novaFila.length==0) mostrarPopupPersonalizado({titulo:"Sincronizado",mensagem:"Todas as picagens offline foram enviadas com sucesso.",tipo:"sucesso"});
-        else mostrarPopupPersonalizado({titulo:"Parcial",mensagem:"Ficaram "+novaFila.length+" por enviar. Tentará de novo automaticamente.",tipo:"erro"});
+        if(novaFila.length==0){
+            // Só mostra Sincronizado se veio de fila offline (não da picagem normal)
+            if(fila.length>0) mostrarPopupPersonalizado({titulo:"✅ Sincronizado",mensagem:"Todas as picagens offline foram enviadas com sucesso.",tipo:"sucesso"});
+        } else {
+            // FALHA SILENCIOSA - não mostra X vermelho, tenta de novo sozinho em background
+            console.log("Fila offline: ficaram "+novaFila.length+" por enviar, retry automatico em 15s");
+            setTimeout(function(){ if(typeof tentarSincronizarFilaOffline==='function') tentarSincronizarFilaOffline(); }, 15000);
+        }
         return;
       }
       var it = fila[i++];
@@ -2126,5 +2180,44 @@ body {
   })();
 
 </script>
+
+<script>
+// ★ V20 PWA OFFLINE - Regista Service Worker para funcionar sem internet ao iniciar
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js').then(function(reg){
+      console.log('SW registado:', reg.scope);
+    }).catch(function(err){
+      console.log('SW falhou:', err);
+    });
+  });
+}
+
+// Detecta modo offline ao arrancar
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    if(!navigator.onLine){
+      var el = document.getElementById('pinStatus');
+      if(el){ el.innerHTML = '📴 <b>Modo offline ativo</b><br><small>Vai usar PINs já memorizados neste telemóvel</small>'; el.style.display='block'; el.style.color='#d97706'; }
+      // Tenta mostrar que está em offline mas funcional
+      if(typeof mostrarPopupPersonalizado === 'function'){
+        // Não mostra pop-up automático, só avisa no ecrã
+      }
+    }
+  }, 500);
+});
+
+window.addEventListener('online', function(){ 
+  var el = document.getElementById('pinStatus');
+  if(el){ el.innerHTML = '✅ <b>Internet de volta</b> - A sincronizar...'; el.style.display='block'; el.style.color='#059669'; }
+  if(typeof tentarSincronizarFilaOffline === 'function'){ tentarSincronizarFilaOffline(); }
+  setTimeout(function(){ if(el) el.style.display='none'; }, 3000);
+});
+window.addEventListener('offline', function(){
+  var el = document.getElementById('pinStatus');
+  if(el){ el.innerHTML = '📴 <b>Sem internet</b> - Modo offline ativo'; el.style.display='block'; el.style.color='#d97706'; }
+});
+</script>
+
 </body>
 </html>
