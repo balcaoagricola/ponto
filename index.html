@@ -901,17 +901,37 @@ function closeInfo(id) {
     
     <div id="admin-sub-sabadocontameta" style="display: none;">
       <div class="admin-card">
-        <h3>📅 Sábado Conta Para Meta - Ana Paula</h3>
-        <div class="info-balloon" style="background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%); border-color: #67e8f9; color: #0e7490; padding:14px; border-radius:14px; border:1.5px solid; margin-bottom:16px;">
-            <b>ℹ️ Quando usar?</b><br>
-            Ana faltou 4h manhã (ex: quinta 04:04 + 03:56 cativa = 08:00).<br>
-            Próximo sábado trabalha 4h para compensar.<br>
-            Normal: sábado gera só 💰 Cativa +04:00 e NÃO conta p/ meta 16h.<br>
-            Marcado aqui: sábado CONTA p/ meta 16h e não gera cativa nova.
+        <h3>📅 Sábado Conta Para Meta - Ana Paula Crucho</h3>
+        <div class="info-balloon" style="background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%); border-color: #67e8f9; color: #0e7490; padding:16px; border-radius:14px; border:1.5px solid; margin-bottom:18px; font-size:0.92rem; line-height:1.6;">
+            <b>ℹ️ Quando usar este botão?</b><br><br>
+            <b>Caso real:</b> Quinta 04:04 + 03:56 cativa (Sáb anterior) = 08:00 → atinge meta 16h mas fica a dever 03:56 de cativa.<br><br>
+            <b>Próximo sábado:</b> Trabalha 04:00 para compensar a falta de quinta.<br>
+            • <b>Normal:</b> Sábado gera só <code style="background:#fff;padding:2px 6px;border-radius:6px;">💰 Cativa +04:00 (a usar em folga)</code> e NÃO conta para meta<br>
+            • <b>Marcado aqui:</b> Sábado passa a <code style="background:#fff;padding:2px 6px;border-radius:6px;">✅ Conta para meta | 04:00 (compensa falta)</code> e CONTA para as 16h<br><br>
+            <b>Depois de recalcular, apaga-se sozinho da lista.</b>
         </div>
-        <div class="form-group"><label>Data do Sábado *</label><input type="date" id="dataSabadoContaMeta" class="form-control"></div>
-        <button class="btn btn-primary" onclick="submeterSabadoContaMeta()">📅 Marcar Sábado Conta Para Meta</button>
-        <div style="margin-top: 20px;"><div id="listaSabadoContaMeta"><p style="text-align:center;color:#64748b;">A carregar...</p></div></div>
+        <div class="form-group">
+          <label>Colaboradora</label>
+          <input type="text" class="form-control" value="Ana Paula Crucho" disabled style="background:#f1f5f9;color:#334155;font-weight:700;">
+        </div>
+        <div class="form-group">
+          <label>Data do Sábado * <span class="campo-obrigatorio">*</span></label>
+          <input type="date" id="dataSabadoContaMeta" class="form-control">
+          <p class="periodo-hint" style="margin-top:8px;">Ex: <b>2026-11-01</b> = sábado 01/11/2026</p>
+        </div>
+        <div class="form-group">
+          <label>Horas a contar</label>
+          <input type="text" class="form-control" value="Automático - horas que picar no sábado" disabled style="background:#f8fafc;color:#64748b;">
+          <p class="periodo-hint" style="margin-top:8px;">Se picar 08:00-12:00 = conta 04:00 para meta</p>
+        </div>
+        <button class="btn btn-primary" onclick="submeterSabadoContaMeta()" style="width:100%; padding:16px; font-size:1rem; font-weight:800;">📅 Marcar Sábado Conta Para Meta</button>
+        <div style="margin-top: 24px; padding-top: 20px; border-top: 1.5px solid var(--border);">
+          <h4 style="font-size: 0.92rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px;">📋 Sábados Marcados Para Contar Para Meta</h4>
+          <div id="listaSabadoContaMeta"><p style="text-align:center;color:#64748b;">A carregar...</p></div>
+        </div>
+        <div style="margin-top: 20px; padding: 14px; background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: 12px; font-size: 0.85rem; color: #92400e; line-height: 1.5;">
+          <b>⚠️ Nota:</b> Depois de marcar, vai à folha da Ana Paula e clica <b>🔄 Recalcular Folha Atual</b> para aplicar. O estado muda de <code>💰 Cativa +04:00</code> para <code>✅ Conta para meta</code>.
+        </div>
       </div>
     </div>
 
