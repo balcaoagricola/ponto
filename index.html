@@ -688,7 +688,6 @@ function closeInfo(id) {
           <button class="btn tile-amber" onclick="abrirSubModulo('ausencias')"><span>📅</span> Faltas e Férias</button>
           <button class="btn tile-teal" onclick="abrirSubModulo('troca')"><span>🔄</span> Troca Turno</button>
           <button class="btn tile-purple" onclick="abrirSubModulo('horasacordadas'); carregarHorasAcordadas();"><span>🤝</span> Horas Acordadas</button>
-          <button class="btn tile-cyan" onclick="abrirSubModulo('sabadocontameta');"><span>📅</span> Sábado Conta p/ Meta</button>
           <button class="btn tile-cyan" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
           <button class="btn tile-rose" onclick="abrirSubModulo('pdf')"><span>📄</span> Exportar PDF</button>
           <button class="btn tile-emerald" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar Colab.</button>
@@ -895,23 +894,6 @@ function closeInfo(id) {
           <h4 style="font-size: 0.92rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px;">📋 Dias Marcados</h4>
           <div id="listaHorasAcordadasContainer"><p style="text-align: center; color: var(--text-muted);">A carregar...</p></div>
         </div>
-      </div>
-    </div>
-
-    
-    <div id="admin-sub-sabadocontameta" style="display: none;">
-      <div class="admin-card">
-        <h3>📅 Sábado Conta Para Meta - Ana Paula</h3>
-        <div class="info-balloon" style="background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%); border-color: #67e8f9; color: #0e7490; padding:14px; border-radius:14px; border:1.5px solid; margin-bottom:16px;">
-            <b>ℹ️ Quando usar?</b><br>
-            Ana faltou 4h manhã (ex: quinta 04:04 + 03:56 cativa = 08:00).<br>
-            Próximo sábado trabalha 4h para compensar.<br>
-            Normal: sábado gera só 💰 Cativa +04:00 e NÃO conta p/ meta 16h.<br>
-            Marcado aqui: sábado CONTA p/ meta 16h e não gera cativa nova.
-        </div>
-        <div class="form-group"><label>Data do Sábado *</label><input type="date" id="dataSabadoContaMeta" class="form-control"></div>
-        <button class="btn btn-primary" onclick="submeterSabadoContaMeta()">📅 Marcar Sábado Conta Para Meta</button>
-        <div style="margin-top: 20px;"><div id="listaSabadoContaMeta"><p style="text-align:center;color:#64748b;">A carregar...</p></div></div>
       </div>
     </div>
 
@@ -2429,57 +2411,5 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 });
 </script>
-
-<script>
-// ★ ADD-ON SEGURO: Sábado Conta Para Meta Ana Paula (não sobrescreve funções existentes)
-function submeterSabadoContaMeta() {
-  var dataInput = document.getElementById('dataSabadoContaMeta');
-  var val = dataInput ? dataInput.value : '';
-  if (!val) { alert('Escolhe a data do sábado (ex: 2026-11-01)'); return; }
-  if (typeof mostrarPopupProcessando === 'function') mostrarPopupProcessando('A marcar...', 'Sábado ' + val);
-  google.script.run.withSuccessHandler(function(res){
-    if (typeof fecharPopupProcessando === 'function') fecharPopupProcessando();
-    if (typeof mostrarPopupPersonalizado === 'function') mostrarPopupPersonalizado('✅ Marcado', res, 'sucesso');
-    else alert(res);
-    carregarListaSabadoContaMeta();
-  }).withFailureHandler(function(err){
-    if (typeof fecharPopupProcessando === 'function') fecharPopupProcessando();
-    alert('Erro: ' + (err.message||err));
-  }).marcarSabadoContaMetaAna(val);
-}
-function carregarListaSabadoContaMeta() {
-  var div = document.getElementById('listaSabadoContaMeta');
-  google.script.run.withSuccessHandler(function(lista){
-    if (!div) return;
-    if (!lista || lista.length===0) { div.innerHTML = '<p style="color:#64748b;text-align:center;">Nenhum sábado marcado</p>'; return; }
-    var h='';
-    for (var i=0;i<lista.length;i++) {
-      h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:8px;"><div><strong>'+lista[i].data+'</strong><br><small style="color:#64748b;">Conta para meta 16h</small></div><button class="btn btn-danger" style="padding:8px 12px;font-size:0.75rem;" onclick="removerSabadoContaMeta(\''+lista[i].data+'\')">🗑️ Remover</button></div>';
-    }
-    div.innerHTML=h;
-  }).withFailureHandler(function(){ if(div) div.innerHTML='<p style="color:#ef4444;">Erro ao carregar</p>'; }).listarSabadoContaMetaAna();
-}
-function removerSabadoContaMeta(data) {
-  if (!confirm('Remover sábado ' + data + '?')) return;
-  google.script.run.withSuccessHandler(function(){ carregarListaSabadoContaMeta(); }).desmarcarSabadoContaMetaAna(data);
-}
-// Hook para carregar lista quando abre o módulo, sem quebrar abrirSubModulo original
-(function(){
-  var originalAbrir = window.abrirSubModulo;
-  window.abrirSubModulo = function(id){
-    if (originalAbrir) originalAbrir(id);
-    else {
-      document.querySelectorAll('[id^="admin-sub-"]').forEach(function(el){ el.style.display='none'; });
-      var el = document.getElementById('admin-sub-' + id);
-      if (!el) el = document.getElementById(id);
-      if (el) el.style.display='block';
-    }
-    if (id === 'sabadocontameta' || id === 'admin-sub-sabadocontameta') {
-      setTimeout(carregarListaSabadoContaMeta, 300);
-    }
-  };
-})();
-</script>
-
 </body>
 </html>
