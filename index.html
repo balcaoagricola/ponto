@@ -661,7 +661,7 @@ function closeInfo(id) {
           <button class="btn tile-amber" onclick="abrirSubModulo('ausencias')"><span>📅</span> Faltas e Férias</button>
           <button class="btn tile-teal" onclick="abrirSubModulo('troca')"><span>🔄</span> Troca Turno</button>
           <button class="btn tile-purple" onclick="abrirSubModulo('horasacordadas'); carregarHorasAcordadas();"><span>🤝</span> Horas Acordadas</button>
-          <button class="btn tile-cyan" onclick="abrirSubModulo('sabadocontameta');"><span>📅</span> Sábado Conta p/ Meta</button>
+          <button class="btn tile-cyan" onclick="abrirSubModulo('sabadocontameta'); setTimeout(carregarListaSabadoContaMeta, 200);"><span>📅</span> Sábado Conta p/ Meta</button>
           <button class="btn tile-cyan" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
           <button class="btn tile-rose" onclick="abrirSubModulo('pdf')"><span>📄</span> Exportar PDF</button>
           <button class="btn tile-emerald" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar Colab.</button>
@@ -879,7 +879,7 @@ function closeInfo(id) {
         <button class="btn btn-primary" onclick="submeterSabadoContaMeta()" style="width:100%;padding:16px;font-weight:800;">📅 Marcar Sábado Conta Para Meta</button>
         <div style="margin-top:20px;border-top:1.5px solid #e2e8f0;padding-top:16px;">
           <h4 style="font-size:0.9rem;font-weight:800;text-transform:uppercase;margin-bottom:12px;">📋 Sábados Marcados</h4>
-          <div id="listaSabadoContaMeta"><p style="text-align:center;color:#64748b;">A carregar...</p></div>
+          <div id="listaSabadoContaMeta"><p style="text-align:center;color:#065f46;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:14px;font-weight:700;">✅ Nenhum sábado marcado<br><small style="color:#64748b;font-weight:500;">Escolhe em cima e marca</small></p></div>
         </div>
       </div>
     </div>
