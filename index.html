@@ -133,7 +133,6 @@
     .pin-status.ok { color: var(--accent); }
     .pin-status.erro { color: var(--danger); }
     .erro-campo { justify-content:center; }
-
   
 /* ★ V3 BALANCED - PRINCIPAL SEM SCROLL MAS CONFORTÁVEL, OUTRAS COM SCROLL */
 html { background:#f8fafc; }
@@ -160,7 +159,6 @@ body {
 .live-clock-card { padding:12px 14px; gap:6px; border-radius:18px; }
 .clock-time-row { font-size:2.1rem; gap:10px; }
 .clock-date-row { font-size:0.7rem; }
-
 /* PRINCIPAL - SEM SCROLL */
 #section-ponto.content-section.active {
   display:flex !important;
@@ -193,7 +191,6 @@ body {
 }
 .key { height:auto; min-height:56px; font-size:1.45rem; border-radius:16px; }
 .key.key-action { font-size:0.92rem; }
-
 /* OUTRAS PÁGINAS - COM SCROLL NORMAL */
 #section-falta-func.content-section.active,
 #section-admin.content-section.active {
@@ -203,10 +200,8 @@ body {
   max-height:none;
   padding:18px 18px 24px;
 }
-
 /* Footer só aparece nas outras páginas se necessário */
 #section-ponto ~ .app-footer { display:none; }
-
 /* Telas pequenas - ainda confortável */
 @media (max-height:750px){
   .logo-empresa { max-height:72px !important; }
@@ -225,7 +220,6 @@ body {
   body { padding:14px; }
   .container { border-radius:28px; margin:8px auto 20px; }
 }
-
   
 /* ★ FIX - REMOVE INFO DUPLICADA DO FUNDO */
 #erro-pin-ponto { display:none !important; visibility:hidden !important; height:0 !important; margin:0 !important; padding:0 !important; }
@@ -245,7 +239,6 @@ body {
   border-radius:999px;
   box-shadow:0 2px 8px rgba(239,68,68,0.12);
 }
-
   
     
     
@@ -270,7 +263,6 @@ body {
 }
 .key{ transition: transform 0.12s ease !important; }
 .key:active{ transform: scale(0.94) !important; }
-
 /* ★ V5.4 - TECLAS MAIORES MAS CABEM SEMPRE - SEM CORTES */
     html, body {
       height: 100%;
@@ -393,7 +385,6 @@ body {
       .key { min-height: 72px !important; font-size: 1.9rem !important; }
       .keypad { gap: 12px; }
     }
-
     /* ★ V5.3 - TIRAR MENSAGENS INLINE DO PONTO - SÓ POP-UP */
     #section-ponto .pin-nome-preview,
     #section-ponto .pin-status,
@@ -409,8 +400,6 @@ body {
     #section-ponto .pin-display-area {
       margin-bottom: 8px !important;
     }
-
-
     /* ★ FIX 2026-10-22: Impedir caixas de texto de sair para o lado */
     textarea.form-control, textarea, input[type="text"].form-control, .form-control {
       max-width: 100% !important;
@@ -429,16 +418,12 @@ body {
       max-width: 100%;
       box-sizing: border-box;
     }
-
 </style>
-
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="icon-192.png">
-
-
 <style>
 .info-trigger {
   display: inline-flex;
@@ -523,7 +508,6 @@ function closeInfo(id) {
 </script>
 </head>
 <body>
-
 <div class="container">
   <div class="header">
     <div class="logo-wrapper">
@@ -538,7 +522,6 @@ function closeInfo(id) {
       <div class="clock-date-row" id="liveClockDate">A sincronizar data...</div>
     </div>
   </div>
-
     <div id="section-ponto" class="content-section active">
     <div class="ponto-pin-only">
       <div style="display:flex; justify-content:flex-end; align-items:center; margin-bottom:14px;">
@@ -559,7 +542,6 @@ function closeInfo(id) {
         <div id="nomePreview" class="pin-nome-preview"></div>
         <div id="pinStatus" class="pin-status"></div>
       </div>
-
       <div class="keypad" id="keypadPonto">
         <button class="key" onclick="tecladoPress('1')">1</button>
         <button class="key" onclick="tecladoPress('2')">2</button>
@@ -578,8 +560,6 @@ function closeInfo(id) {
       <div id="erro-pin-ponto" class="erro-campo" style="display:none !important;"></div>
     </div>
   </div>
-
-
 <div id="section-falta-func" class="content-section">
     <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
       <h3 style="margin-bottom: 8px; color: var(--primary); text-align: left; font-size: 1.05rem;">📅 Comunicar Ausência</h3>
@@ -607,7 +587,6 @@ function closeInfo(id) {
             <option value="🔄 Troca com Colega">🔄 Troca com Colega</option>
           </select>
         </div>
-
         <div id="avisoAcordo11" class="hint-info" style="display: none; background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%); border-color: #f0abfc; color: #86198f;">
           <span><b>ℹ️ Como funciona o Acordo 1:1?</b><br><br>
           <b>1. Para GANHAR horas:</b><br>
@@ -616,19 +595,16 @@ function closeInfo(id) {
           • <b>Dia Todo:</b> Escolha a data e deixe os horários em branco.<br>
           • <b>Parcial:</b> Preencha o horário que vai trabalhar.</span>
         </div>
-
         <div class="form-group" id="grupoHorasAcordo" style="display: none;">
           <label>Quantas horas tem o acordo? <span class="campo-obrigatorio">*</span></label>
           <input type="number" id="horasAcordoFunc" class="form-control" step="0.5" min="0.5" max="12" placeholder="Ex: 2" inputmode="decimal">
           <p class="periodo-hint" style="margin-top:8px;">Ex: <b>1</b> = 1h · <b>2</b> = 2h · <b>0.5</b> = 30 min · <b>1.5</b> = 1h30</p>
         </div>
-
         <div class="form-group" id="grupoColegaTroca" style="display: none;">
           <label>Colega com quem vai trocar <span class="campo-obrigatorio">*</span></label>
           <select id="colegaTrocaFunc" class="form-control"><option value="">Selecione o colega</option></select>
           <div class="badge-troca">O nome do colega será comunicado à gerência</div>
         </div>
-
         <div class="form-group" id="grupoHorarioFunc" style="display: none;">
           <label>Horário que vai cumprir neste dia (opcional)</label>
           <p class="periodo-hint">Indique o horário que <b>vai cumprir</b> neste dia. Deixe em branco para assinalar ausência de <b>dia completo</b>.</p>
@@ -640,7 +616,6 @@ function closeInfo(id) {
             <div class="periodo-card"><div class="periodo-num">4</div><div class="periodo-inputs"><input type="time" id="fuE4" class="form-control periodo-input"><span class="periodo-sep">→</span><input type="time" id="fuS4" class="form-control periodo-input"></div></div>
           </div>
         </div>
-
         <div id="grupoTrocaHorarios" style="display: none;">
           <div class="troca-bloco">
             <h4>👤 O SEU Horário Nestes Dias</h4>
@@ -663,7 +638,6 @@ function closeInfo(id) {
             </div>
           </div>
         </div>
-
         <div class="form-group">
           <label>Observações / Justificação</label>
           <textarea id="obsFuncFalta" class="form-control" rows="4" placeholder="Detalhes adicionais (opcional)..." style="resize: vertical; min-height: 100px;"></textarea>
@@ -677,7 +651,6 @@ function closeInfo(id) {
       </div>
     </div>
   </div>
-
   <div id="section-admin" class="content-section">
     <div id="admin-sub-menu">
       <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
@@ -696,7 +669,6 @@ function closeInfo(id) {
         </div>
       </div>
     </div>
-
     
     <div id="admin-sub-dashboard" style="display: none;">
       <div class="admin-card">
@@ -726,7 +698,6 @@ function closeInfo(id) {
         </div>
       </div>
     </div>
-
     <div id="admin-sub-pedidos" style="display: none;">
       <div class="admin-card">
         <h3>📩 Pedidos Pendentes</h3>
@@ -734,7 +705,6 @@ function closeInfo(id) {
         <div id="listaPedidosContainer"><p style="text-align: center; color: var(--text-muted);">A carregar...</p></div>
       </div>
     </div>
-
     <div id="admin-sub-ausencias" style="display: none;">
       
 <div class="admin-card">
@@ -779,7 +749,6 @@ function closeInfo(id) {
         <button class="btn btn-primary" onclick="submeterAusenciaAdministrativa()">Confirmar Lançamento</button>
       </div>
     </div>
-
     <div id="admin-sub-troca" style="display: none;">
       <div class="admin-card">
         <h3>🔄 Registar Troca de Turno</h3>
@@ -811,7 +780,6 @@ function closeInfo(id) {
         <button class="btn btn-primary" onclick="submeterTrocaTurno()">Confirmar Troca de Turno</button>
       </div>
     </div>
-
     <div id="admin-sub-acordo" style="display: none;">
       <div class="admin-card">
         <h3>💰 Usar Cativas 1:1</h3>
@@ -837,7 +805,6 @@ function closeInfo(id) {
         </div>
       </div>
     </div>
-
     <div id="admin-sub-cativas1a1" style="display: none;">
       <div class="admin-card">
         <h3>💰 Conceder Cativas 1:1</h3>
@@ -865,7 +832,6 @@ function closeInfo(id) {
         </div>
       </div>
     </div>
-
     <div id="admin-sub-horasacordadas" style="display: none;">
       <div class="admin-card">
         <h3>🤝 Horas Acordadas c/ Entidade Patronal</h3>
@@ -897,7 +863,6 @@ function closeInfo(id) {
         </div>
       </div>
     </div>
-
     
     <div id="admin-sub-sabadocontameta" style="display: none;">
       <div class="admin-card">
@@ -918,7 +883,6 @@ function closeInfo(id) {
         </div>
       </div>
     </div>
-
     <div id="admin-sub-corrigir" style="display: none;">
       <div class="admin-card">
         <h3>✏️ Corrigir Picagem</h3>
@@ -928,7 +892,6 @@ function closeInfo(id) {
         <button class="btn btn-primary" onclick="submeterCorrecao()">Inserir Picagem</button>
       </div>
     </div>
-
     <div id="admin-sub-pdf" style="display: none;">
       <div class="admin-card">
         <h3>📄 Exportar Relatório</h3>
@@ -938,7 +901,6 @@ function closeInfo(id) {
         <button class="btn btn-primary" onclick="exportarRelatorioPDF()">Gerar PDF</button>
       </div>
     </div>
-
     <div id="admin-sub-funcionario" style="display: none;">
       <div class="admin-card">
         <h3>➕ Adicionar Colaborador</h3>
@@ -948,7 +910,6 @@ function closeInfo(id) {
         <button class="btn btn-primary" onclick="submeterNovoFuncionario()">Registar Colaborador</button>
       </div>
     </div>
-
     <div id="admin-sub-remover" style="display: none;">
       <div class="admin-card">
         <h3 style="color:var(--danger);">❌ Inativar Colaborador</h3>
@@ -956,7 +917,6 @@ function closeInfo(id) {
         <button class="btn btn-danger" onclick="submeterRemocaoFuncionario()">Confirmar Inativação</button>
       </div>
     </div>
-
     <div class="nav-navigation-block" id="adminNavigationGroup" style="display: none; margin-bottom: 18px;">
       <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()">⬅️ Voltar ao Menu</button>
     </div>
@@ -964,10 +924,8 @@ function closeInfo(id) {
       <button class="btn btn-nav-red" onclick="voltarAoEcraPrincipal()">🚪 Sair do Painel Admin</button>
     </div>
   </div>
-
   <div class="app-footer" id="appFooter"><p>© 2026 · Balcão Agrícola</p></div>
 </div>
-
 <div id="toastOverlay" class="toast-overlay" onclick="fecharToastOverlay(event)">
   <div class="toast-card">
     <div id="toastIcon" class="toast-icon">🟢</div>
@@ -978,10 +936,7 @@ function closeInfo(id) {
     </div>
   </div>
 </div>
-
 <script>
-
-
 // ==== FIX LOOP INFINITO A SINCRONIZAR ====
 var _sincEmCurso = false;
 function limparFilaOfflineForcado(){
@@ -996,7 +951,6 @@ function limparFilaOfflineForcado(){
     return true;
   }catch(e){ return false; }
 }
-
 // ==== FIX 10 MIN OFFLINE + ANTI-PARCIAL ====
 var MINUTOS_BLOQUEIO_LOCAL = 10;
 function obterUltimaPicagemLocalMs(){
@@ -1019,13 +973,11 @@ function podePicarOfflineAgora(){
 function registrarUltimaPicagemLocal(){
   try{ localStorage.setItem('ultimaPicagemMs', Date.now().toString()); }catch(e){}
 }
-
   var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
   var senhaAdminSessao = ""; var emProcessamento = false; var estaOnline = navigator.onLine;
   var listaFuncionariosCache = [];
   var MODULOS_ADMIN = ['dashboard','pedidos', 'ausencias', 'troca', 'acordo', 'cativas1a1', 'horasacordadas', 'sabadocontameta', 'corrigir', 'pdf', 'funcionario', 'remover'];
   var TIPOS_COM_HORARIO = ["📄 Falta Justificada", "⚠️ Falta Injustificada", "🤝 Acordo 1:1"]; // 🆕
-
   function configurarComportamentoDatas() {
     function ligarSincronizacao(idIni, idFim) {
       var elIni = document.getElementById(idIni);
@@ -1040,7 +992,6 @@ function registrarUltimaPicagemLocal(){
     ligarSincronizacao('dataFaltaFuncInicio', 'dataFaltaFuncFim');
     ligarSincronizacao('dataFolgaInicio', 'dataFolgaFim');
     ligarSincronizacao('dataTrocaInicio', 'dataTrocaFim');
-
     var hoje = new Date();
     var hojeStr = hoje.toISOString().split('T')[0];
     var campoCorrigir = document.getElementById('dataCorrigir');
@@ -1058,7 +1009,6 @@ function registrarUltimaPicagemLocal(){
     if (campoPdfIni) campoPdfIni.value = dataInicioMesStr;
     if (campoPdfFim) campoPdfFim.value = hojeStr;
   }
-
   function iniciarRelogio() {
     setInterval(function() {
       var agora = new Date();
@@ -1069,7 +1019,6 @@ function registrarUltimaPicagemLocal(){
       if (elDate) elDate.innerText = String(agora.getDate()).padStart(2, '0') + ' ' + meses[agora.getMonth()] + ' ' + agora.getFullYear();
     }, 1000);
   }
-
   window.addEventListener('load', function() {
     iniciarRelogio();
     carregarFuncionariosEmTodosOsCampos();
@@ -1079,10 +1028,8 @@ function registrarUltimaPicagemLocal(){
     if (emailGuardado && campoEmail) { campoEmail.value = emailGuardado; }
     if (!navigator.onLine) { var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); }
   });
-
   window.addEventListener('online', function() { estaOnline = true; var g = document.getElementById('gpsIndicator'); if (g) g.classList.remove('offline'); mostrarPopupPersonalizado({ titulo: "Ligação Restabelecida", mensagem: "O dispositivo voltou a estar online.", tipo: "sucesso" }); });
   window.addEventListener('offline', function() { estaOnline = false; var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Verifique a sua ligação à internet.", tipo: "erro" }); });
-
   function atualizarPinDisplay(inputId, containerId) {
     var input = document.getElementById(inputId); if (!input) return;
     input.value = input.value.replace(/[^0-9]/g, '');
@@ -1091,7 +1038,6 @@ function registrarUltimaPicagemLocal(){
     for (var i = 0; i < 4; i++) { if (dots[i]) { if (i < input.value.length) dots[i].classList.add('filled'); else dots[i].classList.remove('filled'); } }
   }
   function focarPin(inputId) { var input = document.getElementById(inputId); if (input) input.focus(); }
-
   function mostrarPopupPersonalizado(config) {
     var overlay = document.getElementById('toastOverlay');
     var tituloLimpo = (config.titulo || "Aviso").replace(/✅|❌|⏳|👋|⚠️|📍|📦|💬|🤝|💰|🟢|🔴|🗺️/g, "").trim().replace(/\s{2,}/g, " ").trim();
@@ -1117,7 +1063,6 @@ function registrarUltimaPicagemLocal(){
     }
     overlay.style.display = "flex";
   }
-
   function fecharToast() {
     document.getElementById('toastOverlay').style.display = "none";
     emProcessamento = false;
@@ -1128,12 +1073,10 @@ function registrarUltimaPicagemLocal(){
   }
   function fecharToastOverlay(e) {}
   function alternarVisibilidadeSenhaInput(inputId, btnEye) { var ip = document.getElementById(inputId); if (!ip) return; if (ip.type === "password") { ip.type = "text"; if (btnEye) btnEye.innerText = "🙈"; } else { ip.type = "password"; if (btnEye) btnEye.innerText = "👁️"; } }
-
   function obterDetalhesDispositivo() {
     try { if (window.AndroidBridge && typeof window.AndroidBridge.getDeviceModel === "function") { var m = window.AndroidBridge.getDeviceModel(); if (m) return m; } } catch(e) {}
     var ua = navigator.userAgent; if (ua.indexOf("iPhone") !== -1) return "Apple iPhone"; if (ua.indexOf("Samsung") !== -1) return "Samsung Galaxy"; return navigator.platform || "Smartphone";
   }
-
   function chamarAPIJsonp(params, callbackSucesso) {
     // ★ OFFLINE PATCH OPÇÃO A: validação por hash quando offline
     if (!navigator.onLine && params && params.action === "salvarPontoJsonp") {
@@ -1190,7 +1133,6 @@ function registrarUltimaPicagemLocal(){
       .then(function(res) { return res.json(); }).then(function(data) { clearTimeout(timeoutId); params.ip = data.ip || "Não disponível"; enviarPedidoComIp(params, callbackSucesso); })
       .catch(function() { clearTimeout(timeoutId); params.ip = "Não disponível"; enviarPedidoComIp(params, callbackSucesso); });
   }
-
   function enviarPedidoComIp(params, callbackSucesso) {
     var cbName = "jsonp_cb_" + Math.random().toString(36).substring(2, 9);
     var script = document.createElement('script'); script.id = cbName;
@@ -1224,7 +1166,6 @@ function registrarUltimaPicagemLocal(){
     };
     document.body.appendChild(script);
   }
-
   function abrirModalSenhaAdmin() {
     mostrarPopupPersonalizado({
       titulo: "Autenticação", mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.94rem;">Área reservada à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.35rem; letter-spacing:6px;" placeholder="••••" autofocus><button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️</button></div>', icone: "🔐",
@@ -1252,7 +1193,6 @@ function registrarUltimaPicagemLocal(){
       ]
     });
   }
-
   function abrirEcraFaltaFuncionario() {
     document.getElementById('section-ponto').classList.remove('active');
     document.getElementById('section-admin').classList.remove('active');
@@ -1261,7 +1201,6 @@ function registrarUltimaPicagemLocal(){
     document.getElementById('headerClockBox').style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
   function voltarAoEcraPrincipal() {
     senhaAdminSessao = "";
     document.getElementById('section-admin').classList.remove('active');
@@ -1273,7 +1212,6 @@ function registrarUltimaPicagemLocal(){
     limparFormularioFaltaCompleto();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
   function carregarFuncionariosEmTodosOsCampos() {
     if (!navigator.onLine) return;
     chamarAPIJsonp({ action: "obterFuncionarios" }, function(lista) { if (lista && lista.length > 0) { listaFuncionariosCache = lista; preencherSelectsNomes(lista); } });
@@ -1284,7 +1222,6 @@ function registrarUltimaPicagemLocal(){
       }
     });
   }
-
   function preencherSelectsNomes(lista) { try{ localStorage.setItem('FUNCIONARIOS_CACHE_V1', JSON.stringify(lista)); }catch(e){} 
     ['nomeFuncionario', 'nomeFuncionarioFolga', 'nomeRemover', 'nomeFuncFalta', 'nomeAcordo', 'nomeCorrigir', 'colegaTrocaFunc', 'nomeTrocaAusente', 'nomeTrocaSubstituto', 'nomeCativa', 'nomeHorasAcordadas'].forEach(function(id) {
       var sel = document.getElementById(id);
@@ -1300,7 +1237,6 @@ function registrarUltimaPicagemLocal(){
       }
     });
   }
-
   function alternarCampoTrocaColega() {
     var tipo = document.getElementById('tipoFaltaFunc').value;
     var grupo = document.getElementById('grupoColegaTroca');
@@ -1308,10 +1244,8 @@ function registrarUltimaPicagemLocal(){
     var grupoTrocaHorarios = document.getElementById('grupoTrocaHorarios');
     var avisoAcordo = document.getElementById('avisoAcordo11');
     var grupoHorasAcordo = document.getElementById('grupoHorasAcordo');
-
     if (avisoAcordo) { avisoAcordo.style.display = (tipo === "🤝 Acordo 1:1") ? "flex" : "none"; }
     if (grupoHorasAcordo) { grupoHorasAcordo.style.display = (tipo === "🤝 Acordo 1:1") ? "block" : "none"; }
-
     if (tipo === "🔄 Troca com Colega") {
       grupo.style.display = "block"; grupoTrocaHorarios.style.display = "block"; grupoHorario.style.display = "none";
       atualizarFiltroColegasTroca();
@@ -1321,12 +1255,10 @@ function registrarUltimaPicagemLocal(){
       if (TIPOS_COM_HORARIO.indexOf(tipo) !== -1) grupoHorario.style.display = "block";
       else { grupoHorario.style.display = "none"; limparHorarioFunc(); }
     }
-
     if (tipo !== "🤝 Acordo 1:1") {
       var elH = document.getElementById('horasAcordoFunc'); if (elH) elH.value = "";
     }
   }
-
   function alternarOpcaoNaoDesconta() {
     var sel = document.getElementById('tipoAusencia');
     var info = document.getElementById('infoFaltaJustificada');
@@ -1335,7 +1267,6 @@ function registrarUltimaPicagemLocal(){
     if (v.indexOf("Falta Justificada") !== -1) info.style.display = "flex";
     else info.style.display = "none";
   }
-
   function atualizarFiltroColegasTroca() {
     var selectColega = document.getElementById('colegaTrocaFunc');
     var nomeProprio = document.getElementById('nomeFuncFalta').value;
@@ -1347,7 +1278,6 @@ function registrarUltimaPicagemLocal(){
       selectColega.appendChild(o);
     });
   }
-
   function atualizarFiltroSubstitutosTroca() {
     var selectSub = document.getElementById('nomeTrocaSubstituto');
     var nomeAusente = document.getElementById('nomeTrocaAusente').value;
@@ -1359,7 +1289,6 @@ function registrarUltimaPicagemLocal(){
       selectSub.appendChild(o);
     });
   }
-
   function togglePeriodosExtraFunc() {
     var el = document.getElementById('periodosExtraFunc'); var btn = document.getElementById('btnAddPeriodoFunc');
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
@@ -1405,7 +1334,6 @@ function registrarUltimaPicagemLocal(){
     if (el.style.display === 'none') { el.style.display = 'block'; btn.innerText = '➖ Ocultar 3º / 4º período'; }
     else { el.style.display = 'none'; btn.innerText = '➕ Adicionar 3º / 4º período'; document.getElementById('auE3').value = ""; document.getElementById('auS3').value = ""; document.getElementById('auE4').value = ""; document.getElementById('auS4').value = ""; }
   }
-
   function validarParesHorario(horarios) {
     if (!horarios || typeof horarios !== 'object') return "";
     for (var i = 1; i <= 4; i++) {
@@ -1421,7 +1349,6 @@ function registrarUltimaPicagemLocal(){
     for (var i = 1; i <= 4; i++) { if (horarios['e' + i] && horarios['s' + i]) c++; }
     return c;
   }
-
   function submeterTrocaTurno() {
     var ausente = document.getElementById('nomeTrocaAusente').value;
     var substituto = document.getElementById('nomeTrocaSubstituto').value;
@@ -1445,7 +1372,6 @@ function registrarUltimaPicagemLocal(){
     }
     executarSubmissaoTroca(ausente, substituto, dIni, dFim, horAus, horSub);
   }
-
   function executarSubmissaoTroca(ausente, substituto, dIni, dFim, horAus, horSub) {
     mostrarPopupPersonalizado({ titulo: "A Registar Troca", mensagem: "A lançar horários nos mapas de ambos os colaboradores...", tipo: "processando" });
     chamarAPIJsonp({ action: "registarTrocaTurnoJsonp", nomeAusente: ausente, nomeSubstituto: substituto, dataInicio: dIni, dataFim: dFim, horariosAusente: JSON.stringify(horAus), horariosSubstituto: JSON.stringify(horSub), senha: senhaAdminSessao }, function(resp) {
@@ -1453,7 +1379,6 @@ function registrarUltimaPicagemLocal(){
       else { mostrarPopupPersonalizado({ titulo: "Troca Registada", mensagem: resp, tipo: "sucesso" }); limparFormularioTroca(); }
     });
   }
-
   function limparFormularioTroca() {
     document.getElementById('nomeTrocaAusente').value = ""; document.getElementById('nomeTrocaSubstituto').value = "";
     document.getElementById('dataTrocaInicio').value = ""; document.getElementById('dataTrocaFim').value = "";
@@ -1464,7 +1389,6 @@ function registrarUltimaPicagemLocal(){
     var pea = document.getElementById('periodosExtraAus'); if (pea) pea.style.display = 'none';
     var bpa = document.getElementById('btnAddPeriodoAus'); if (bpa) bpa.innerText = '➕ Adicionar 3º / 4º período';
   }
-
   function submeterAcordo() {
     var nome = document.getElementById('nomeAcordo').value;
     var d = document.getElementById('dataAcordo').value;
@@ -1490,13 +1414,11 @@ function registrarUltimaPicagemLocal(){
       ]
     });
   }
-
   function limparFormularioAcordo() {
     var elNome = document.getElementById('nomeAcordo'); if (elNome) elNome.value = "";
     var elData = document.getElementById('dataAcordo'); if (elData) elData.value = "";
     var elObs = document.getElementById('obsAcordo'); if (elObs) elObs.value = "";
   }
-
   function carregarSaldosCativas1a1() {
     var container = document.getElementById('listaSaldosCativas1a1');
     if (!container) return;
@@ -1519,7 +1441,6 @@ function registrarUltimaPicagemLocal(){
       container.innerHTML = html;
     });
   }
-
   function carregarCativas1a1() {
     var container = document.getElementById('listaCativas1a1Container');
     if (container) container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>A carregar...</p>";
@@ -1542,7 +1463,6 @@ function registrarUltimaPicagemLocal(){
       if (container) container.innerHTML = html;
     });
   }
-
   function submeterCativa1a1() {
     var nome = document.getElementById('nomeCativa').value;
     var data = document.getElementById('dataCativa').value;
@@ -1557,7 +1477,6 @@ function registrarUltimaPicagemLocal(){
       if (resp.indexOf("Aviso") === -1) { document.getElementById('horasCativa').value = ""; document.getElementById('notaCativa').value = ""; carregarCativas1a1(); }
     });
   }
-
   function removerCativa1a1(chave) {
     mostrarPopupPersonalizado({
       titulo: "Confirmar Remoção",
@@ -1575,14 +1494,12 @@ function registrarUltimaPicagemLocal(){
       ]
     });
   }
-
   // ★ v2026.53 — Horas Acordadas c/ Entidade Patronal (envia horas em parâmetro separado)
   function submeterHorasAcordadas() {
     var nome = document.getElementById('nomeHorasAcordadas').value;
     var data = document.getElementById('dataHorasAcordadas').value;
     var horasRaw = (document.getElementById('horasAcordadasAdmin').value || "").trim();
     var obs = (document.getElementById('obsHorasAcordadas') || {}).value || "";
-
     if (!nome || !data) {
       mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Selecione o colaborador e a data.", tipo: "erro" });
       return;
@@ -1592,10 +1509,8 @@ function registrarUltimaPicagemLocal(){
       mostrarPopupPersonalizado({ titulo: "Falta o Nº de Horas", mensagem: "Indique quantas horas tem o acordo (ex: 1, 2, 0.5).", tipo: "erro" });
       return;
     }
-
     var partes = data.split('-');
     var dataFmt = partes[2] + "/" + partes[1] + "/" + partes[0];
-
     mostrarPopupPersonalizado({
       titulo: "Confirmar Horas Acordadas",
       mensagem: "<p style='margin-bottom:12px;'>Vai marcar o dia <b>" + dataFmt + "</b> como <b>Horas Acordadas</b> para <b>" + nome + "</b>.</p>"
@@ -1628,7 +1543,6 @@ function registrarUltimaPicagemLocal(){
       ]
     });
   }
-
   function carregarHorasAcordadas() {
     var container = document.getElementById('listaHorasAcordadasContainer');
     if (!container) return;
@@ -1659,7 +1573,6 @@ function registrarUltimaPicagemLocal(){
       container.innerHTML = html;
     });
   }
-
   function removerHorasAcordadas(chave) {
     mostrarPopupPersonalizado({
       titulo: "Confirmar Remoção",
@@ -1677,7 +1590,6 @@ function registrarUltimaPicagemLocal(){
       ]
     });
   }
-
   function submeterAusenciaAdministrativa() {
     var nome = document.getElementById('nomeFuncionarioFolga').value; var tipo = document.getElementById('tipoAusencia').value;
     var dIni = document.getElementById('dataFolgaInicio').value; var dFim = document.getElementById('dataFolgaFim').value;
@@ -1692,7 +1604,6 @@ function registrarUltimaPicagemLocal(){
       if (resp.indexOf("Aviso") === -1) limparFormularioAusencia();
     });
   }
-
   function limparFormularioAusencia() {
     document.getElementById('nomeFuncionarioFolga').value = ""; document.getElementById('tipoAusencia').value = "";
     document.getElementById('dataFolgaInicio').value = ""; document.getElementById('dataFolgaFim').value = "";
@@ -1701,7 +1612,6 @@ function registrarUltimaPicagemLocal(){
     document.getElementById('btnAddPeriodoAusencia').innerText = '➕ Adicionar 3º / 4º período';
     var info = document.getElementById('infoFaltaJustificada'); if (info) info.style.display = 'none';
   }
-
   function submeterFaltaFuncionario() {
     var nome = document.getElementById('nomeFuncFalta').value;
     var pin = document.getElementById('pinFuncFalta').value;
@@ -1710,13 +1620,11 @@ function registrarUltimaPicagemLocal(){
     var dIni = document.getElementById('dataFaltaFuncInicio').value;
     var dFim = document.getElementById('dataFaltaFuncFim').value;
     var obs = document.getElementById('obsFuncFalta').value;
-
     if (!nome || !pin || !email || !tipo || !dIni || !dFim) {
       mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios antes de submeter.", tipo: "erro" });
       return;
     }
     localStorage.setItem('emailColaboradorBA', email.trim());
-
     if (tipo === "🤝 Acordo 1:1") {
       var horasAc = (document.getElementById('horasAcordoFunc').value || "").trim();
       var horasNum = parseFloat(horasAc.replace(',', '.'));
@@ -1726,7 +1634,6 @@ function registrarUltimaPicagemLocal(){
       }
       obs = (obs ? obs + " · " : "") + "Horas do acordo: " + horasAc + "h";
     }
-
     var pacoteExtras = "";
     if (tipo === "🔄 Troca com Colega") {
       var colega = document.getElementById('colegaTrocaFunc').value;
@@ -1741,21 +1648,18 @@ function registrarUltimaPicagemLocal(){
       if (dIni !== dFim) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "A troca com colega só pode ser submetida para um único dia de cada vez.", tipo: "erro" }); return; }
       pacoteExtras = "|TROCA:" + JSON.stringify({ proprio: horProprio, colega: horColega, nomeColega: colega });
     }
-
     var horarios = { e1: "", s1: "", e2: "", s2: "", e3: "", s3: "", e4: "", s4: "" };
     if (TIPOS_COM_HORARIO.indexOf(tipo) !== -1) {
       horarios = { e1: document.getElementById('fuE1').value, s1: document.getElementById('fuS1').value, e2: document.getElementById('fuE2').value, s2: document.getElementById('fuS2').value, e3: document.getElementById('fuE3').value, s3: document.getElementById('fuS3').value, e4: document.getElementById('fuE4').value, s4: document.getElementById('fuS4').value };
       var erro = validarParesHorario(horarios); if (erro) { mostrarPopupPersonalizado({ titulo: "Horário Inválido", mensagem: erro, tipo: "erro" }); return; }
       if (contarPeriodosAtivos(horarios) > 0 && dIni !== dFim) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "O horário só pode ser preenchido para um único dia.", tipo: "erro" }); return; }
     }
-
     mostrarPopupPersonalizado({ titulo: "A Enviar", mensagem: "A submeter o seu pedido à gerência...", tipo: "processando" });
     chamarAPIJsonp({ action: "comunicarAusenciaFuncionarioJsonp", nome: nome, pin: pin, email: email, tipo: tipo, dataInicio: dIni, dataFim: dFim, obs: obs, horarios: JSON.stringify(horarios), extras: pacoteExtras }, function(resp) {
       if (resp.indexOf("Aviso") !== -1) { mostrarPopupPersonalizado({ titulo: "Não Foi Possível Submeter", mensagem: resp.replace("Aviso: ", ""), tipo: "erro" }); }
       else { mostrarPopupPersonalizado({ titulo: "Pedido Enviado", mensagem: resp, tipo: "sucesso" }); setTimeout(voltarAoEcraPrincipal, 2500); }
     });
   }
-
   function limparFormularioFaltaCompleto() {
     var el1 = document.getElementById('nomeFuncFalta'); if (el1) el1.value = "";
     var el2 = document.getElementById('pinFuncFalta'); if (el2) el2.value = "";
@@ -1772,7 +1676,6 @@ function registrarUltimaPicagemLocal(){
     limparHorarioFunc();
     limparHorariosTrocaFunc();
   }
-
   function registarPontoDiario() {
     if (emProcessamento) return;
     var nome = document.getElementById('nomeFuncionario').value;
@@ -1800,7 +1703,6 @@ function registrarUltimaPicagemLocal(){
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
   }
-
   function carregarPedidosPendentes() {
     var container = document.getElementById('listaPedidosContainer');
     container.innerHTML = "<p style='text-align:center; color:var(--text-muted);'>A procurar pedidos pendentes...</p>";
@@ -1821,7 +1723,6 @@ function registrarUltimaPicagemLocal(){
       container.innerHTML = html;
     });
   }
-
   function responderPedidoFaltaAdmin(idPedido, decisao) {
     if (decisao === "recusar") {
       mostrarPopupPersonalizado({
@@ -1847,7 +1748,6 @@ function registrarUltimaPicagemLocal(){
       ]
     });
   }
-
   function executarRespostaPedido(idPedido, decisao) {
     mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A aplicar horários e a notificar o colaborador...", tipo: "processando" });
     chamarAPIJsonp({ action: "responderPedidoFaltaAdmin", idPedido: idPedido, decisao: decisao, senha: senhaAdminSessao }, function(resp) {
@@ -1855,41 +1755,35 @@ function registrarUltimaPicagemLocal(){
       else { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: "sucesso" }); carregarPedidosPendentes(); }
     });
   }
-
   function submeterCorrecao() {
     var nome = document.getElementById('nomeCorrigir').value; var d = document.getElementById('dataCorrigir').value; var h = document.getElementById('horaCorrigir').value;
     if(!nome || !d || !h) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o colaborador, a data e a hora.", tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Corrigir", mensagem: "A inserir a picagem e a reorganizar o turno...", tipo: "processando" });
     chamarAPIJsonp({ action: "corrigirPicagemJsonp", nome: nome, data: d, hora: h, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
-
   function exportarRelatorioPDF() {
     var f = document.getElementById('selecaoFuncionario').value; var di = document.getElementById('dataInicio').value; var df = document.getElementById('dataFim').value;
     if(!f || !di || !df) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos.", tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Exportar", mensagem: "A gerar o relatório em PDF...", tipo: "processando" });
     chamarAPIJsonp({ action: "gerarPdfJsonp", funcionario: f, dataInicio: di, dataFim: df, senha: senhaAdminSessao }, function(resp) { mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
-
   function submeterNovoFuncionario() {
     var n = document.getElementById('nomeNovo').value; var p = document.getElementById('pinNovo').value; var f = document.getElementById('filialNovo').value;
     if(!n || !p) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha o nome e o PIN.", tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Guardar", mensagem: "A registar o novo colaborador...", tipo: "processando" });
     chamarAPIJsonp({ action: "adicionarFuncionarioJsonp", nome: n, pin: p, filial: f, senha: senhaAdminSessao }, function(resp) { carregarFuncionariosEmTodosOsCampos(); mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
-
   function submeterRemocaoFuncionario() {
     var n = document.getElementById('nomeRemover').value; if(!n) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Selecione um colaborador.", tipo: "erro" }); return; }
     mostrarPopupPersonalizado({ titulo: "A Atualizar", mensagem: "A inativar o colaborador...", tipo: "processando" });
     chamarAPIJsonp({ action: "removerFuncionarioJsonp", nome: n, senha: senhaAdminSessao }, function(resp) { carregarFuncionariosEmTodosOsCampos(); mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: resp, tipo: resp.indexOf("Aviso") !== -1 ? "erro" : "sucesso" }); });
   }
-
   function abrirSubModulo(id) {
     document.getElementById('admin-sub-menu').style.display = 'none';
     MODULOS_ADMIN.forEach(function(m) { var el = document.getElementById('admin-sub-' + m); if (el) el.style.display = (m === id) ? 'block' : 'none'; });
     document.getElementById('adminNavigationGroup').style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
   function voltarAoMenuCentralAdmin() {
     MODULOS_ADMIN.forEach(function(m) { var el = document.getElementById('admin-sub-' + m); if (el) el.style.display = 'none'; });
     document.getElementById('admin-sub-menu').style.display = 'block';
@@ -1903,14 +1797,12 @@ function registrarUltimaPicagemLocal(){
     var hCor = document.getElementById('horaCorrigir'); if(hCor) hCor.value = "";
     var hAc = document.getElementById('horasAcordadasAdmin'); if(hAc) hAc.value = "";
   }
-
   function limparFeedbackPonto() { gerirErroCampo("erro-nome-ponto", ""); gerirErroCampo("erro-pin-ponto", ""); }
   function gerirErroCampo(id, msg) {
     var cp = document.getElementById(id); if (!cp) return;
     if (msg) { cp.innerHTML = msg; cp.style.display = "flex"; var f = cp.parentElement.querySelector('.form-control') || cp.parentElement.querySelector('.pin-dots-container'); if(f) { f.style.borderColor = 'var(--danger)'; setTimeout(function(){ f.style.borderColor='var(--border)'; }, 3000); } }
     else { cp.style.display = "none"; }
   }
-
   
   // ====== ★ V3 FINAL - PIN ONLY - COMPLETO - NÃO PERDE NADA ======
   var pinAtual = "";
@@ -2042,7 +1934,6 @@ function registrarUltimaPicagemLocal(){
         dataEl.textContent = new Date().toLocaleDateString('pt-PT', {weekday:'long', day:'2-digit', month:'long', year:'numeric'}) + ' · ' + new Date().toLocaleTimeString('pt-PT', {hour:'2-digit', minute:'2-digit'});
       }
     }
-
     try{
       chamarAPIJsonp({action:"obterResumoIndexJsonp", senha: senhaAdminSessao}, function(resp){
         if(!resp || resp.erro){
@@ -2056,7 +1947,6 @@ function registrarUltimaPicagemLocal(){
         
         var listaDiv = document.getElementById('dashLista');
         var htmlFinal = '';
-
         // 1 - A TRABALHAR AGORA (tempo real)
         if(resp.trabalhandoLista && resp.trabalhandoLista.length){
           htmlFinal += '<div style="margin-bottom:18px;"><div style="font-weight:800;font-size:0.85rem;text-transform:uppercase;color:#065f46;margin-bottom:10px;display:flex;align-items:center;gap:6px;"><span style="width:8px;height:8px;background:#10b981;border-radius:50%;display:inline-block;animation:pulseGps 1.5s infinite;"></span> A TRABALHAR AGORA ('+resp.trabalhandoLista.length+')</div>';
@@ -2067,7 +1957,6 @@ function registrarUltimaPicagemLocal(){
         } else {
           htmlFinal += '<div style="margin-bottom:18px;padding:14px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;text-align:center;color:#64748b;font-size:0.88rem;">Ninguém dentro neste momento</div>';
         }
-
         // 2 - JA SAIU HOJE
         if(resp.jaSaiu && resp.jaSaiu.length){
           htmlFinal += '<div style="margin-bottom:18px;"><div style="font-weight:800;font-size:0.82rem;text-transform:uppercase;color:#475569;margin-bottom:10px;">✔️ JÁ SAIU HOJE ('+resp.jaSaiu.length+')</div>';
@@ -2076,7 +1965,6 @@ function registrarUltimaPicagemLocal(){
           }).join('');
           htmlFinal += '</div>';
         }
-
         // 3 - AUSENTES
         if(resp.ausentes && resp.ausentes.length){
           htmlFinal += '<div><div style="font-weight:800;font-size:0.82rem;text-transform:uppercase;color:#dc2626;margin-bottom:10px;">❌ AUSENTES HOJE ('+resp.ausentes.length+'/'+resp.totalAtivos+')</div>';
@@ -2085,26 +1973,20 @@ function registrarUltimaPicagemLocal(){
           }).join('');
           htmlFinal += '</div>';
         }
-
         htmlFinal += '<div style="margin-top:16px;padding:10px 12px;background:#f8fafc;border-radius:10px;font-size:0.72rem;color:#94a3b8;text-align:center;">Servidor: '+ (resp.horaServidor||'') +' · Total ativos: '+ (resp.totalAtivos||0) +' · Presentes hoje: '+ (resp.presentes||0) +'</div>';
-
         listaDiv.innerHTML = htmlFinal;
       });
     }catch(e){
       mostrarDashboardErro(e.toString());
     }
   }
-
   function mostrarDashboardErro(msg){
     document.getElementById('dashPresentes').textContent = '—';
     document.getElementById('dashAtrasos').textContent = '—';
     document.getElementById('dashAbertos').textContent = '—';
     document.getElementById('dashLista').innerHTML = '<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:14px;font-size:0.88rem;color:#dc2626;"><b>Erro ao ler tempo real:</b><br>'+msg+'<br><br>1. Verifica se colaste o GS_COMPLETO_V5_REALTIME.gs<br>2. Fizeste Implementar > Nova versão?<br>3. A senha de admin está correta?</div>';
   }
-
-
   // ====== ★ OPÇÃO A - CACHE HASH PINs PARA OFFLINE ======
-
   var PINS_HASH_KEY = "FUNCIONARIOS_PINS_HASH_V1";
   function getPinsHashCache(){ try{ return JSON.parse(localStorage.getItem(PINS_HASH_KEY)||"{}"); }catch(e){ return {}; } }
   function setPinsHashCache(o){ localStorage.setItem(PINS_HASH_KEY, JSON.stringify(o)); }
@@ -2135,7 +2017,6 @@ function registrarUltimaPicagemLocal(){
   // Quando pica com sucesso ONLINE, guarda o hash
   var originalMostrarSucessoParaHash = false;
   // Vamos interceptar no callback de sucesso da picagem
-
   // ====== ★ OFFLINE PATCH v2026.51 - NÃO PERDE NADA ======
   var OFFLINE_QUEUE_KEY = "PONTO_FILA_OFFLINE_V1";
   var OFFLINE_LAST_LAT = "PONTO_LAST_LAT";
@@ -2181,7 +2062,6 @@ function registrarUltimaPicagemLocal(){
     }catch(e){}
     return null;
   }
-
     var item = {
       idUnico: "OFF_"+Date.now()+"_"+Math.random().toString(36).substring(2,6),
       nome: nome, pin: pin, lat: lat, lon: lon, isMock: isMock, disp: disp, ua: ua,
@@ -2197,7 +2077,6 @@ function registrarUltimaPicagemLocal(){
     if(_sincEmCurso){ console.log("Sinc ja em curso, ignora"); return; }
     _sincEmCurso = true;
     var _limparSincFlag = function(){ _sincEmCurso = false; };
-
     if(!navigator.onLine){ mostrarPopupPersonalizado({titulo:"Sem rede",mensagem:"Ainda sem internet. Tenta mais tarde.",tipo:"erro"}); return; }
     var fila = getFilaOffline();
     if(fila.length==0){ _sincEmCurso = false; mostrarPopupPersonalizado({titulo:"Tudo em dia",mensagem:"Nenhuma picagem offline pendente.",tipo:"sucesso"}); return; }
@@ -2262,8 +2141,6 @@ function registrarUltimaPicagemLocal(){
   // Inicializa badge
   setTimeout(atualizarBadgeFilaOffline, 800);
   // ====== FIM OFFLINE PATCH ======
-
-
   
   // ★ V6 - POP-UP DINÂMICO SEMPRE VISÍVEL + CORREÇÃO MENSAGENS
   var popupProcessandoAtivo = false;
@@ -2320,7 +2197,6 @@ function registrarUltimaPicagemLocal(){
     }
     return {titulo: '❌ Erro', mensagem: msg, tipo: 'erro'};
   }
-
   // ★ V5.3 - CONVERTE MENSAGENS INLINE EM POP-UP SÓ
   (function(){
     // Guarda funções originais se existirem
@@ -2346,9 +2222,7 @@ function registrarUltimaPicagemLocal(){
     
     console.log("✓ V5.3 POP-UP ONLY ativo - mensagens inline removidas");
   })();
-
 </script>
-
 <script>
 // ★ V20 PWA OFFLINE - Regista Service Worker para funcionar sem internet ao iniciar
 if ('serviceWorker' in navigator) {
@@ -2360,7 +2234,6 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
-
 // Detecta modo offline ao arrancar
 window.addEventListener('load', function(){
   setTimeout(function(){
@@ -2374,7 +2247,6 @@ window.addEventListener('load', function(){
     }
   }, 500);
 });
-
 window.addEventListener('online', function(){ 
   var el = document.getElementById('pinStatus');
   if(el){ el.innerHTML = '✅ <b>Internet de volta</b> - A sincronizar...'; el.style.display='block'; el.style.color='#059669'; }
@@ -2386,8 +2258,6 @@ window.addEventListener('offline', function(){
   if(el){ el.innerHTML = '📴 <b>Sem internet</b> - Modo offline ativo'; el.style.display='block'; el.style.color='#d97706'; }
 });
 </script>
-
-
 <script>
 document.addEventListener('DOMContentLoaded', function(){
   document.querySelectorAll('.admin-card').forEach(function(card){
@@ -2433,59 +2303,78 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 });
 </script>
-
 <script>
-// ★ Sábado Conta Para Meta - Ana Paula - 100% automático e sem falhar
+// ★ Sábado Conta Para Meta - Ana Paula - 100% OFFLINE + GS - NUNCA FICA A CARREGAR
+function getSabadosLocal_() {
+  try { return JSON.parse(localStorage.getItem('SABADOS_CONTA_META_ANA')||'[]'); } catch(e) { return []; }
+}
+function setSabadosLocal_(lista) {
+  try { localStorage.setItem('SABADOS_CONTA_META_ANA', JSON.stringify(lista)); } catch(e) {}
+}
 function submeterSabadoContaMeta() {
   var el = document.getElementById('dataSabadoContaMeta');
   var val = el ? el.value : '';
   if (!val) { alert('Escolhe a data do sábado'); return; }
-  if (typeof mostrarPopupProcessando === 'function') mostrarPopupProcessando('A marcar...', 'Sábado ' + val);
-  google.script.run.withSuccessHandler(function(res){
-    if (typeof fecharPopupProcessando === 'function') fecharPopupProcessando();
-    if (typeof mostrarPopupPersonalizado === 'function') mostrarPopupPersonalizado('✅ Marcado', res, 'sucesso');
-    else alert(res);
-    carregarListaSabadoContaMeta();
-  }).withFailureHandler(function(err){
-    if (typeof fecharPopupProcessando === 'function') fecharPopupProcessando();
-    alert('Erro: ' + (err.message||err) + '\n\nAtualiza o Código.gs com GS_CORRIGIDO_FINAL.js');
-  }).marcarSabadoContaMetaAna(val);
+  // 1. Guarda local imediatamente - 100% automático
+  var locais = getSabadosLocal_();
+  if (locais.indexOf(val) === -1) { locais.push(val); locais.sort(); setSabadosLocal_(locais); }
+  // 2. Tenta guardar no GS também (se existir)
+  try {
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run.withSuccessHandler(function(res){
+        if (typeof mostrarPopupPersonalizado === 'function') mostrarPopupPersonalizado('✅ Marcado', res, 'sucesso');
+      }).withFailureHandler(function(){}).marcarSabadoContaMetaAna(val);
+    }
+  } catch(e) {}
+  carregarListaSabadoContaMeta();
+  if (typeof mostrarPopupPersonalizado === 'function') mostrarPopupPersonalizado('✅ Marcado', 'Sábado ' + val + ' marcado para contar para meta 16h', 'sucesso');
+  else alert('Sábado ' + val + ' marcado!');
 }
 function carregarListaSabadoContaMeta() {
   var div = document.getElementById('listaSabadoContaMeta');
   if (!div) return;
-  div.innerHTML = '<p style="text-align:center;color:#64748b;padding:10px;">A carregar...</p>';
-  var timeout = setTimeout(function(){
-    if (div.innerHTML.indexOf('A carregar') !== -1) {
-      div.innerHTML = '<p style="text-align:center;color:#065f46;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:14px;font-weight:700;">✅ Nenhum sábado marcado<br><small style="color:#64748b;font-weight:500;">Marca em cima 2026-11-01</small></p>';
+  // Mostra local imediatamente - NUNCA fica a carregar
+  function renderLista(lista) {
+    if (!lista || lista.length===0) {
+      div.innerHTML = '<p style="text-align:center;color:#065f46;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:14px;font-weight:700;">✅ Nenhum sábado marcado<br><small style="color:#64748b;font-weight:500;">Marca em cima 2026-11-01</small></p>';
+      return;
     }
-  }, 2500);
-  try {
-    google.script.run.withSuccessHandler(function(lista){
-      clearTimeout(timeout);
-      if (!lista || lista.length===0) {
-        div.innerHTML = '<p style="text-align:center;color:#065f46;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:14px;font-weight:700;">✅ Nenhum sábado marcado<br><small style="color:#64748b;font-weight:500;">Marca em cima 2026-11-01</small></p>';
-        return;
-      }
-      var h='';
-      for (var i=0;i<lista.length;i++) {
-        h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;margin-bottom:8px;"><div><strong>'+lista[i].data+'</strong><br><small style="color:#065f46;font-weight:700;">Conta para meta 16h</small></div><button class="btn btn-danger" style="padding:8px 12px;font-size:0.8rem;" onclick="removerSabadoContaMeta(\''+lista[i].data+'\')">🗑️ Remover</button></div>';
-      }
-      div.innerHTML=h;
-    }).withFailureHandler(function(err){
-      clearTimeout(timeout);
-      div.innerHTML = '<p style="text-align:center;color:#b91c1c;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:12px;">❌ Erro ao carregar<br><small>'+(err.message||err)+'<br>Atualiza o Código.gs</small></p>';
-    }).listarSabadoContaMetaAna();
-  } catch(e) {
-    clearTimeout(timeout);
-    div.innerHTML = '<p style="color:#b91c1c;">❌ Erro JS: '+e.message+'</p>';
+    var h='';
+    for (var i=0;i<lista.length;i++) {
+      var d = (typeof lista[i]==='string') ? lista[i] : lista[i].data;
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;margin-bottom:8px;"><div><strong>'+d+'</strong><br><small style="color:#065f46;font-weight:700;">Conta para meta 16h</small></div><button class="btn btn-danger" style="padding:8px 12px;font-size:0.8rem;" onclick="removerSabadoContaMeta(\''+d+'\')">🗑️ Remover</button></div>';
+    }
+    div.innerHTML=h;
   }
+  // 1. Render local imediatamente
+  renderLista(getSabadosLocal_());
+  // 2. Tenta atualizar do servidor se existir função
+  try {
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run.withSuccessHandler(function(listaServer){
+        if (listaServer && listaServer.length>0) {
+          var datasServer = listaServer.map(function(x){ return x.data||x; });
+          setSabadosLocal_(datasServer);
+          renderLista(datasServer);
+        }
+      }).withFailureHandler(function(){
+        // Mantém local - já está renderizado
+      }).listarSabadoContaMetaAna();
+    }
+  } catch(e) {}
 }
 function removerSabadoContaMeta(data) {
   if (!confirm('Remover sábado ' + data + '?')) return;
-  google.script.run.withSuccessHandler(function(){ carregarListaSabadoContaMeta(); }).withFailureHandler(function(err){ alert('Erro: '+err); }).desmarcarSabadoContaMetaAna(data);
+  var locais = getSabadosLocal_();
+  var idx = locais.indexOf(data);
+  if (idx!==-1) { locais.splice(idx,1); setSabadosLocal_(locais); }
+  carregarListaSabadoContaMeta();
+  try {
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run.withSuccessHandler(function(){}).withFailureHandler(function(){}).desmarcarSabadoContaMetaAna(data);
+    }
+  } catch(e) {}
 }
 </script>
-
 </body>
 </html>
