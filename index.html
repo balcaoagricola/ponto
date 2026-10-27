@@ -506,6 +506,129 @@ function closeInfo(id) {
   if (el) el.classList.remove('open');
 }
 </script>
+<style>
+/* ★★★ TECLADO COLORIDO + VIBRAÇÃO - BY MONTEZ ★★★ */
+.keypad {
+  gap: 10px !important;
+}
+.key {
+  position: relative !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 900 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+  overflow: hidden !important;
+  transition: all 0.15s cubic-bezier(0.34,1.56,0.64,1) !important;
+  box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 8px 16px rgba(0,0,0,0.12) !important;
+}
+.key::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, transparent 55%);
+  pointer-events: none;
+}
+.key:active {
+  transform: translateY(4px) scale(0.96) !important;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1) !important;
+}
+
+/* Cores por tecla - gradientes vivos */
+.keypad .key:nth-child(1) { background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important; box-shadow: 0 6px 0 #075985, 0 8px 16px rgba(14,165,233,0.35) !important; }
+.keypad .key:nth-child(2) { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%) !important; box-shadow: 0 6px 0 #4c1d95, 0 8px 16px rgba(139,92,246,0.35) !important; }
+.keypad .key:nth-child(3) { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%) !important; box-shadow: 0 6px 0 #9d174d, 0 8px 16px rgba(236,72,153,0.35) !important; }
+.keypad .key:nth-child(4) { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; box-shadow: 0 6px 0 #065f46, 0 8px 16px rgba(16,185,129,0.35) !important; }
+.keypad .key:nth-child(5) { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; box-shadow: 0 6px 0 #92400e, 0 8px 16px rgba(245,158,11,0.35) !important; }
+.keypad .key:nth-child(6) { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%) !important; box-shadow: 0 6px 0 #0e7490, 0 8px 16px rgba(6,182,214,0.35) !important; }
+.keypad .key:nth-child(7) { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important; box-shadow: 0 6px 0 #3730a3, 0 8px 16px rgba(99,102,241,0.35) !important; }
+.keypad .key:nth-child(8) { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%) !important; box-shadow: 0 6px 0 #9f1239, 0 8px 16px rgba(244,63,94,0.35) !important; }
+.keypad .key:nth-child(9) { background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%) !important; box-shadow: 0 6px 0 #3f6212, 0 8px 16px rgba(132,204,22,0.35) !important; }
+.keypad .key:nth-child(10) { background: linear-gradient(135deg, #f87171 0%, #ef4444 100%) !important; box-shadow: 0 6px 0 #991b1b, 0 8px 16px rgba(239,68,68,0.3) !important; font-size: 1rem !important; }
+.keypad .key:nth-child(11) { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important; box-shadow: 0 6px 0 #020617, 0 8px 16px rgba(15,23,42,0.35) !important; }
+.keypad .key:nth-child(12) { background: linear-gradient(135deg, #64748b 0%, #475569 100%) !important; box-shadow: 0 6px 0 #1e293b, 0 8px 16px rgba(100,116,139,0.3) !important; }
+
+/* Brilho ao clicar */
+.key.pressed {
+  animation: keyPulse 0.25s ease-out;
+}
+@keyframes keyPulse {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.3); }
+  100% { filter: brightness(1); }
+}
+</style>
+
+<style>
+/* ★★★ TECLADO SOFT ALTA VISIBILIDADE - V3 ★★★ */
+.keypad { gap: 12px !important; padding: 4px !important; }
+.key {
+  height: 68px !important;
+  min-height: 68px !important;
+  border-radius: 20px !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-weight: 900 !important;
+  font-size: 1.85rem !important;
+  letter-spacing: -0.03em !important;
+  color: #0f172a !important;
+  background: #ffffff !important;
+  border: 2px solid #e2e8f0 !important;
+  box-shadow: 0 2px 0 #e2e8f0, 0 6px 16px rgba(15,23,42,0.06) !important;
+  position: relative !important;
+  transition: all 0.14s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.key:active { transform: translateY(2px) scale(0.96) !important; box-shadow: 0 0 0 #e2e8f0, 0 2px 8px rgba(15,23,42,0.06) !important; }
+.key::after { display:none !important; }
+.key::before {
+  content: '';
+  position: absolute;
+  top: 6px; left: 50%; transform: translateX(-50%);
+  width: 32px; height: 4px; border-radius: 99px;
+  background: var(--accent-soft, #cbd5e1);
+  opacity: 0.9;
+}
+/* Cores do traço superior + leve tint de fundo para identificar sem perder contraste */
+.keypad .key:nth-child(1) { --accent-soft: #0ea5e9; background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 70%) !important; border-color: #bae6fd !important; box-shadow: 0 2px 0 #bae6fd, 0 6px 16px rgba(14,165,233,0.12) !important; }
+.keypad .key:nth-child(1)::before { background: #0ea5e9 !important; }
+
+.keypad .key:nth-child(2) { --accent-soft: #8b5cf6; background: linear-gradient(180deg, #f5f3ff 0%, #ffffff 70%) !important; border-color: #ddd6fe !important; box-shadow: 0 2px 0 #ddd6fe, 0 6px 16px rgba(139,92,246,0.12) !important; }
+.keypad .key:nth-child(2)::before { background: #8b5cf6 !important; }
+
+.keypad .key:nth-child(3) { --accent-soft: #ec4899; background: linear-gradient(180deg, #fdf2f8 0%, #ffffff 70%) !important; border-color: #fbcfe8 !important; box-shadow: 0 2px 0 #fbcfe8, 0 6px 16px rgba(236,72,153,0.12) !important; }
+.keypad .key:nth-child(3)::before { background: #ec4899 !important; }
+
+.keypad .key:nth-child(4) { --accent-soft: #10b981; background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 70%) !important; border-color: #a7f3d0 !important; box-shadow: 0 2px 0 #a7f3d0, 0 6px 16px rgba(16,185,129,0.12) !important; }
+.keypad .key:nth-child(4)::before { background: #10b981 !important; }
+
+.keypad .key:nth-child(5) { --accent-soft: #f59e0b; background: linear-gradient(180deg, #fffbeb 0%, #ffffff 70%) !important; border-color: #fde68a !important; box-shadow: 0 2px 0 #fde68a, 0 6px 16px rgba(245,158,11,0.12) !important; }
+.keypad .key:nth-child(5)::before { background: #f59e0b !important; }
+
+.keypad .key:nth-child(6) { --accent-soft: #06b6d4; background: linear-gradient(180deg, #ecfeff 0%, #ffffff 70%) !important; border-color: #a5f3fc !important; box-shadow: 0 2px 0 #a5f3fc, 0 6px 16px rgba(6,182,214,0.12) !important; }
+.keypad .key:nth-child(6)::before { background: #06b6d4 !important; }
+
+.keypad .key:nth-child(7) { --accent-soft: #6366f1; background: linear-gradient(180deg, #eef2ff 0%, #ffffff 70%) !important; border-color: #c7d2fe !important; box-shadow: 0 2px 0 #c7d2fe, 0 6px 16px rgba(99,102,241,0.12) !important; }
+.keypad .key:nth-child(7)::before { background: #6366f1 !important; }
+
+.keypad .key:nth-child(8) { --accent-soft: #f43f5e; background: linear-gradient(180deg, #fff1f2 0%, #ffffff 70%) !important; border-color: #fecdd3 !important; box-shadow: 0 2px 0 #fecdd3, 0 6px 16px rgba(244,63,94,0.12) !important; }
+.keypad .key:nth-child(8)::before { background: #f43f5e !important; }
+
+.keypad .key:nth-child(9) { --accent-soft: #84cc16; background: linear-gradient(180deg, #f7fee7 0%, #ffffff 70%) !important; border-color: #d9f99d !important; box-shadow: 0 2px 0 #d9f99d, 0 6px 16px rgba(132,204,22,0.12) !important; }
+.keypad .key:nth-child(9)::before { background: #84cc16 !important; }
+
+/* 0 - destaque total preto */
+.keypad .key:nth-child(11) { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important; color: #ffffff !important; border-color: #334155 !important; box-shadow: 0 3px 0 #020617, 0 10px 20px rgba(15,23,42,0.22) !important; font-size: 2rem !important; }
+.keypad .key:nth-child(11)::before { background: #10b981 !important; }
+
+/* Ações */
+.keypad .key:nth-child(10) { background: #ffffff !important; color: #991b1b !important; border-color: #fecaca !important; font-size: 0.92rem !important; font-weight: 800 !important; box-shadow: 0 2px 0 #fecaca, 0 6px 16px rgba(239,68,68,0.08) !important; }
+.keypad .key:nth-child(10)::before { background: #ef4444 !important; }
+
+.keypad .key:nth-child(12) { background: #ffffff !important; color: #334155 !important; border-color: #e2e8f0 !important; font-size: 1.4rem !important; box-shadow: 0 2px 0 #e2e8f0, 0 6px 16px rgba(15,23,42,0.06) !important; }
+.keypad .key:nth-child(12)::before { background: #64748b !important; }
+
+.key.pressed { animation: numPop 0.22s ease-out; }
+@keyframes numPop { 0%{transform:scale(1)} 50%{transform:scale(1.08)} 100%{transform:scale(1)} }
+</style>
+
 </head>
 <body>
 <div class="container">
@@ -2376,5 +2499,33 @@ function removerSabadoContaMeta(data) {
   } catch(e) {}
 }
 </script>
+
+
+<script>
+// ★ VIBRAÇÃO + VISIBILIDADE - V3 ★
+function vibrar(tipo){
+  try{
+    if(!('vibrate' in navigator)) return;
+    if(tipo==='numero') navigator.vibrate(30);
+    else if(tipo==='apagar') navigator.vibrate([20,20,30]);
+    else if(tipo==='limpar') navigator.vibrate(50);
+    else if(tipo==='sucesso') navigator.vibrate([30,20,50]);
+    else if(tipo==='erro') navigator.vibrate([60,30,60]);
+  }catch(e){}
+}
+(function(){
+  const op = window.tecladoPress, oc = window.tecladoClear, ob = window.tecladoBack;
+  window.tecladoPress = function(d){
+    vibrar('numero');
+    try{ document.querySelectorAll('#keypadPonto .key').forEach(k=>{ if(k.textContent.trim()===d){ k.classList.add('pressed'); setTimeout(()=>k.classList.remove('pressed'),220);} }); }catch(e){}
+    if(typeof op==='function') return op(d);
+  };
+  window.tecladoClear = function(){ vibrar('limpar'); if(typeof oc==='function') return oc(); };
+  window.tecladoBack = function(){ vibrar('apagar'); if(typeof ob==='function') return ob(); };
+  const om = window.mostrarPopupPersonalizado;
+  window.mostrarPopupPersonalizado = function(c){ try{ if(c&&c.tipo==='sucesso') vibrar('sucesso'); if(c&&c.tipo==='erro') vibrar('erro'); }catch(e){} if(typeof om==='function') return om(c); };
+})();
+</script>
+
 </body>
 </html>
