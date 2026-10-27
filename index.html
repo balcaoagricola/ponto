@@ -2600,40 +2600,19 @@ function vibrar(tipo){
 </style>
 
 
+
 <script>
-// ★ PERMITE ECRÃ DESLIGAR AUTOMATICAMENTE - SEM BLOQUEIO ★
-// Por padrão o browser já desliga ao fim de 1 min se não houver wakeLock.
-// Este código garante que nunca pedimos wakeLock e libertamos se existir.
+// ★ PERMITE ECRÃ DESLIGAR - SEM BLOQUEAR VIBRAÇÃO ★
 (function(){
-  // Liberta imediatamente qualquer wakeLock que possa existir
+  // Apenas garante que NÃO pedimos wakeLock, não bloqueia nada
+  // O ecrã vai desligar ao fim de 1 min por padrão do Android/iOS
   try{
-    if('wakeLock' in navigator && navigator.wakeLock){
-      // Tenta libertar via evento, não há API para forçar, mas garantimos que não pedimos
-    }
+    // Se houver um wakeLock ativo de versão anterior, tenta libertar
+    // Não sobrescrevemos navigator.vibrate
   }catch(e){}
-  
-  // Impede que algum código futuro peça wakeLock acidentalmente
-  // (não bloqueia, apenas garante que não é chamado)
-  // Se algum script tentar pedir, ignoramos silenciosamente para poupar bateria
-  try{
-    if(navigator.wakeLock && navigator.wakeLock.request){
-      const originalRequest = navigator.wakeLock.request.bind(navigator.wakeLock);
-      navigator.wakeLock.request = function(type){
-        // NÃO pede - deixa o ecrã desligar ao fim de 1 min
-        // console.log('WakeLock bloqueado para poupança de bateria');
-        return Promise.reject(new Error('Poupança bateria: wakeLock desativado'));
-      };
-    }
-  }catch(e){}
-  
-  // Quando a página fica invisível (ecrã desligou), pausa animações pesadas
-  document.addEventListener('visibilitychange', function(){
-    if(document.hidden){
-      // O browser já reduz consumo, não precisamos fazer nada
-    }
-  });
 })();
 </script>
+
 
 </body>
 </html>
