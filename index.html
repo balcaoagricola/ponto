@@ -2502,30 +2502,102 @@ function removerSabadoContaMeta(data) {
 
 
 <script>
-// ★ VIBRAÇÃO + VISIBILIDADE - V3 ★
+// ★ VIBRAÇÃO TURBO V5 - ULTRA FORTE ★
 function vibrar(tipo){
   try{
     if(!('vibrate' in navigator)) return;
-    if(tipo==='numero') navigator.vibrate(30);
-    else if(tipo==='apagar') navigator.vibrate([20,20,30]);
-    else if(tipo==='limpar') navigator.vibrate(50);
-    else if(tipo==='sucesso') navigator.vibrate([30,20,50]);
-    else if(tipo==='erro') navigator.vibrate([60,30,60]);
+    // Tenta parar vibração anterior para dar punch
+    navigator.vibrate(0);
+    setTimeout(function(){
+      try{
+        if(tipo==='numero') navigator.vibrate(120); // antes 30 -> agora 120
+        else if(tipo==='apagar') navigator.vibrate([50,30,120]); // duplo clique forte
+        else if(tipo==='limpar') navigator.vibrate([100,40,150]); // antes 50 -> 100+150
+        else if(tipo==='sucesso') navigator.vibrate([80,40,80,40,200]); // padrão sucesso longo
+        else if(tipo==='erro') navigator.vibrate([200,80,200,80,250]); // erro bem marcado
+        else if(tipo==='tecla') navigator.vibrate(100);
+      }catch(e2){}
+    }, 10);
   }catch(e){}
 }
+// Reforço extra: vibra também no touchstart para resposta instantânea
 (function(){
   const op = window.tecladoPress, oc = window.tecladoClear, ob = window.tecladoBack;
   window.tecladoPress = function(d){
     vibrar('numero');
-    try{ document.querySelectorAll('#keypadPonto .key').forEach(k=>{ if(k.textContent.trim()===d){ k.classList.add('pressed'); setTimeout(()=>k.classList.remove('pressed'),220);} }); }catch(e){}
+    // Vibração extra direta (garantia)
+    try{ if('vibrate' in navigator) navigator.vibrate(120); }catch(e){}
+    try{ 
+      document.querySelectorAll('#keypadPonto .key').forEach(k=>{ 
+        if(k.textContent.trim()===d){ 
+          k.classList.add('pressed'); 
+          // Efeito visual mais forte
+          k.style.transform='scale(0.88)';
+          setTimeout(function(){ 
+            k.classList.remove('pressed');
+            k.style.transform='';
+          }, 260);
+        } 
+      }); 
+    }catch(e){}
     if(typeof op==='function') return op(d);
   };
-  window.tecladoClear = function(){ vibrar('limpar'); if(typeof oc==='function') return oc(); };
-  window.tecladoBack = function(){ vibrar('apagar'); if(typeof ob==='function') return ob(); };
+  window.tecladoClear = function(){ 
+    vibrar('limpar'); 
+    try{ if('vibrate' in navigator) navigator.vibrate([100,40,150]); }catch(e){}
+    if(typeof oc==='function') return oc(); 
+  };
+  window.tecladoBack = function(){ 
+    vibrar('apagar'); 
+    try{ if('vibrate' in navigator) navigator.vibrate([50,30,120]); }catch(e){}
+    if(typeof ob==='function') return ob(); 
+  };
   const om = window.mostrarPopupPersonalizado;
-  window.mostrarPopupPersonalizado = function(c){ try{ if(c&&c.tipo==='sucesso') vibrar('sucesso'); if(c&&c.tipo==='erro') vibrar('erro'); }catch(e){} if(typeof om==='function') return om(c); };
+  window.mostrarPopupPersonalizado = function(c){ 
+    try{ 
+      var tipo = (c&&c.tipo) ? c.tipo : (typeof c==='string' ? '' : '');
+      // Detecta por título também
+      var titulo = (c && c.titulo) ? c.titulo.toString().toLowerCase() : '';
+      if(tipo==='sucesso' || titulo.indexOf('sucesso')>-1 || titulo.indexOf('✅')>-1) vibrar('sucesso'); 
+      if(tipo==='erro' || titulo.indexOf('erro')>-1 || titulo.indexOf('❌')>-1) vibrar('erro'); 
+    }catch(e){} 
+    if(typeof om==='function') return om.apply(this, arguments); 
+  };
+
+  // ★ BÓNUS: Adiciona vibração em TODOS os botões .key ao tocar (touchstart)
+  document.addEventListener('DOMContentLoaded', function(){
+    document.addEventListener('touchstart', function(e){
+      var key = e.target.closest('.key');
+      if(key){
+        try{ navigator.vibrate(100); }catch(err){}
+      }
+    }, {passive:true});
+    // Também no click para desktop/teste
+    document.addEventListener('mousedown', function(e){
+      var key = e.target.closest('.key');
+      if(key){
+        try{ navigator.vibrate(90); }catch(err){}
+      }
+    }, {passive:true});
+  });
 })();
 </script>
+<style>
+/* Feedback visual turbo quando vibra */
+#keypadPonto .key.pressed {
+  background: #065f46 !important;
+  color: white !important;
+  transform: scale(0.88) !important;
+  box-shadow: 0 0 0 4px rgba(5,150,105,0.4), inset 0 2px 8px rgba(0,0,0,0.3) !important;
+  transition: all 0.08s ease-out !important;
+}
+#keypadPonto .key {
+  transition: transform 0.1s ease, background 0.15s ease !important;
+}
+#keypadPonto .key:active {
+  transform: scale(0.90) !important;
+}
+</style>
 
 </body>
 </html>
