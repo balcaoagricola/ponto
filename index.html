@@ -2503,36 +2503,34 @@ function removerSabadoContaMeta(data) {
 
 
 <script>
-// ★ SÓ VIBRAÇÃO FORTE 150ms - MANTÉM TUAS CORES BOAS - V8
+// ★ SÓ VIBRAÇÃO FORTE 150ms - MANTÉM CORES - FINAL
 (function(){
   function vibra(t){
     try{
-      if(!('vibrate' in navigator)) return false;
-      if(t==='num') return navigator.vibrate(150); // FORTE
-      if(t==='clr') return navigator.vibrate([100,40,150]);
-      if(t==='del') return navigator.vibrate([80,30,120]);
-      if(t==='ok') return navigator.vibrate([100,30,150,30,200]);
-      return navigator.vibrate(150);
-    }catch(e){return false;}
+      if(!('vibrate' in navigator)) return;
+      if(t==='num') navigator.vibrate(150);
+      else if(t==='clr') navigator.vibrate([100,40,150]);
+      else if(t==='del') navigator.vibrate([80,30,120]);
+      else if(t==='ok') navigator.vibrate([100,30,150,30,200]);
+      else navigator.vibrate(150);
+    }catch(e){}
   }
-  window.vibraForte=vibra;
   function instala(){
     if(typeof window.tecladoPress!=='function'){ setTimeout(instala,80); return; }
-    if(window.tecladoPress._v8) return;
+    if(window.tecladoPress._final) return;
     const op=window.tecladoPress, oc=window.tecladoClear, ob=window.tecladoBack;
     window.tecladoPress=function(d){ vibra('num'); return op(d); };
-    window.tecladoPress._v8=true;
+    window.tecladoPress._final=true;
     window.tecladoClear=function(){ vibra('clr'); return oc(); };
     window.tecladoBack=function(){ vibra('del'); return ob(); };
     const orig=window.mostrarPopupPersonalizado;
-    if(orig && !orig._v8){
+    if(orig && !orig._final){
       window.mostrarPopupPersonalizado=function(c){ try{ if(c&&c.tipo==='sucesso') vibra('ok'); }catch(e){} return orig(c); };
-      window.mostrarPopupPersonalizado._v8=true;
+      window.mostrarPopupPersonalizado._final=true;
     }
   }
   instala();
   window.addEventListener('load', instala);
-  setTimeout(instala, 900);
   document.addEventListener('touchstart', function(e){
     const b=e.target.closest('#keypadPonto .key');
     if(!b) return;
