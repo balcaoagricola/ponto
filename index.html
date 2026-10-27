@@ -2501,44 +2501,29 @@ function removerSabadoContaMeta(data) {
 </script>
 
 
-
 <script>
-// ★ SÓ VIBRAÇÃO FORTE 150ms - MANTÉM CORES - FINAL
+// ★ VIBRAÇÃO + VISIBILIDADE - V3 ★
+function vibrar(tipo){
+  try{
+    if(!('vibrate' in navigator)) return;
+    if(tipo==='numero') navigator.vibrate(30);
+    else if(tipo==='apagar') navigator.vibrate([20,20,30]);
+    else if(tipo==='limpar') navigator.vibrate(50);
+    else if(tipo==='sucesso') navigator.vibrate([30,20,50]);
+    else if(tipo==='erro') navigator.vibrate([60,30,60]);
+  }catch(e){}
+}
 (function(){
-  function vibra(t){
-    try{
-      if(!('vibrate' in navigator)) return;
-      if(t==='num') navigator.vibrate(150);
-      else if(t==='clr') navigator.vibrate([100,40,150]);
-      else if(t==='del') navigator.vibrate([80,30,120]);
-      else if(t==='ok') navigator.vibrate([100,30,150,30,200]);
-      else navigator.vibrate(150);
-    }catch(e){}
-  }
-  function instala(){
-    if(typeof window.tecladoPress!=='function'){ setTimeout(instala,80); return; }
-    if(window.tecladoPress._final) return;
-    const op=window.tecladoPress, oc=window.tecladoClear, ob=window.tecladoBack;
-    window.tecladoPress=function(d){ vibra('num'); return op(d); };
-    window.tecladoPress._final=true;
-    window.tecladoClear=function(){ vibra('clr'); return oc(); };
-    window.tecladoBack=function(){ vibra('del'); return ob(); };
-    const orig=window.mostrarPopupPersonalizado;
-    if(orig && !orig._final){
-      window.mostrarPopupPersonalizado=function(c){ try{ if(c&&c.tipo==='sucesso') vibra('ok'); }catch(e){} return orig(c); };
-      window.mostrarPopupPersonalizado._final=true;
-    }
-  }
-  instala();
-  window.addEventListener('load', instala);
-  document.addEventListener('touchstart', function(e){
-    const b=e.target.closest('#keypadPonto .key');
-    if(!b) return;
-    const t=b.textContent.trim();
-    if(/^[0-9]$/.test(t)) vibra('num');
-    else if(t.includes('Limpar')) vibra('clr');
-    else vibra('del');
-  }, {passive:true, capture:true});
+  const op = window.tecladoPress, oc = window.tecladoClear, ob = window.tecladoBack;
+  window.tecladoPress = function(d){
+    vibrar('numero');
+    try{ document.querySelectorAll('#keypadPonto .key').forEach(k=>{ if(k.textContent.trim()===d){ k.classList.add('pressed'); setTimeout(()=>k.classList.remove('pressed'),220);} }); }catch(e){}
+    if(typeof op==='function') return op(d);
+  };
+  window.tecladoClear = function(){ vibrar('limpar'); if(typeof oc==='function') return oc(); };
+  window.tecladoBack = function(){ vibrar('apagar'); if(typeof ob==='function') return ob(); };
+  const om = window.mostrarPopupPersonalizado;
+  window.mostrarPopupPersonalizado = function(c){ try{ if(c&&c.tipo==='sucesso') vibrar('sucesso'); if(c&&c.tipo==='erro') vibrar('erro'); }catch(e){} if(typeof om==='function') return om(c); };
 })();
 </script>
 
