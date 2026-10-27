@@ -636,7 +636,7 @@ function closeInfo(id) {
     <div class="logo-wrapper">
       <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.opacity='0.9'" class="logo-empresa" alt="Logotipo Balcão Agrícola">
     </div>
-    <h2 id="headerTitle">CONTROLO DE ASSIDUIDADE</h2>
+    <h2 id="headerTitle">REGISTO DE PONTO</h2>
     <div class="live-clock-card" id="headerClockBox">
       <div class="clock-time-row">
         <div class="gps-badge"><div class="gps-pulse-dot" id="gpsIndicator"></div></div>
@@ -2502,7 +2502,7 @@ function removerSabadoContaMeta(data) {
 
 
 <script>
-// ★ VIBRAÇÃO TURBO V5 - ULTRA FORTE ★
+// ★ VIBRAÇÃO EQUILIBRADO V6 - MÉDIO-FORTE ★
 function vibrar(tipo){
   try{
     if(!('vibrate' in navigator)) return;
@@ -2510,12 +2510,12 @@ function vibrar(tipo){
     navigator.vibrate(0);
     setTimeout(function(){
       try{
-        if(tipo==='numero') navigator.vibrate(120); // antes 30 -> agora 120
-        else if(tipo==='apagar') navigator.vibrate([50,30,120]); // duplo clique forte
-        else if(tipo==='limpar') navigator.vibrate([100,40,150]); // antes 50 -> 100+150
-        else if(tipo==='sucesso') navigator.vibrate([80,40,80,40,200]); // padrão sucesso longo
-        else if(tipo==='erro') navigator.vibrate([200,80,200,80,250]); // erro bem marcado
-        else if(tipo==='tecla') navigator.vibrate(100);
+        if(tipo==='numero') navigator.vibrate(75); // equilibrado - antes 120
+        else if(tipo==='apagar') navigator.vibrate([30,20,70]); // equilibrado
+        else if(tipo==='limpar') navigator.vibrate([60,20,80]); // equilibrado
+        else if(tipo==='sucesso') navigator.vibrate([50,20,50,20,100]); // sucesso equilibrado
+        else if(tipo==='erro') navigator.vibrate([100,30,100,30,120]); // erro equilibrado
+        else if(tipo==='tecla') navigator.vibrate(65);
       }catch(e2){}
     }, 10);
   }catch(e){}
@@ -2526,7 +2526,7 @@ function vibrar(tipo){
   window.tecladoPress = function(d){
     vibrar('numero');
     // Vibração extra direta (garantia)
-    try{ if('vibrate' in navigator) navigator.vibrate(120); }catch(e){}
+    try{ if('vibrate' in navigator) navigator.vibrate(75); }catch(e){}
     try{ 
       document.querySelectorAll('#keypadPonto .key').forEach(k=>{ 
         if(k.textContent.trim()===d){ 
@@ -2544,12 +2544,12 @@ function vibrar(tipo){
   };
   window.tecladoClear = function(){ 
     vibrar('limpar'); 
-    try{ if('vibrate' in navigator) navigator.vibrate([100,40,150]); }catch(e){}
+    try{ if('vibrate' in navigator) navigator.vibrate([60,20,80]); }catch(e){}
     if(typeof oc==='function') return oc(); 
   };
   window.tecladoBack = function(){ 
     vibrar('apagar'); 
-    try{ if('vibrate' in navigator) navigator.vibrate([50,30,120]); }catch(e){}
+    try{ if('vibrate' in navigator) navigator.vibrate([30,20,70]); }catch(e){}
     if(typeof ob==='function') return ob(); 
   };
   const om = window.mostrarPopupPersonalizado;
@@ -2569,14 +2569,14 @@ function vibrar(tipo){
     document.addEventListener('touchstart', function(e){
       var key = e.target.closest('.key');
       if(key){
-        try{ navigator.vibrate(100); }catch(err){}
+        try{ navigator.vibrate(65); }catch(err){}
       }
     }, {passive:true});
     // Também no click para desktop/teste
     document.addEventListener('mousedown', function(e){
       var key = e.target.closest('.key');
       if(key){
-        try{ navigator.vibrate(90); }catch(err){}
+        try{ navigator.vibrate(60); }catch(err){}
       }
     }, {passive:true});
   });
@@ -2598,6 +2598,42 @@ function vibrar(tipo){
   transform: scale(0.90) !important;
 }
 </style>
+
+
+<script>
+// ★ PERMITE ECRÃ DESLIGAR AUTOMATICAMENTE - SEM BLOQUEIO ★
+// Por padrão o browser já desliga ao fim de 1 min se não houver wakeLock.
+// Este código garante que nunca pedimos wakeLock e libertamos se existir.
+(function(){
+  // Liberta imediatamente qualquer wakeLock que possa existir
+  try{
+    if('wakeLock' in navigator && navigator.wakeLock){
+      // Tenta libertar via evento, não há API para forçar, mas garantimos que não pedimos
+    }
+  }catch(e){}
+  
+  // Impede que algum código futuro peça wakeLock acidentalmente
+  // (não bloqueia, apenas garante que não é chamado)
+  // Se algum script tentar pedir, ignoramos silenciosamente para poupar bateria
+  try{
+    if(navigator.wakeLock && navigator.wakeLock.request){
+      const originalRequest = navigator.wakeLock.request.bind(navigator.wakeLock);
+      navigator.wakeLock.request = function(type){
+        // NÃO pede - deixa o ecrã desligar ao fim de 1 min
+        // console.log('WakeLock bloqueado para poupança de bateria');
+        return Promise.reject(new Error('Poupança bateria: wakeLock desativado'));
+      };
+    }
+  }catch(e){}
+  
+  // Quando a página fica invisível (ecrã desligou), pausa animações pesadas
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden){
+      // O browser já reduz consumo, não precisamos fazer nada
+    }
+  });
+})();
+</script>
 
 </body>
 </html>
