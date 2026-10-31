@@ -2459,13 +2459,13 @@ function carregarListaSabadoContaMeta() {
   // Mostra local imediatamente - NUNCA fica a carregar
   function renderLista(lista) {
     if (!lista || lista.length===0) {
-      div.innerHTML = '<p style="text-align:center;color:#065f46;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:14px;font-weight:700;">✅ Nenhum sábado marcado<br><small style="color:#64748b;font-weight:500;">Marca em cima 2026-11-01</small></p>';
+      div.innerHTML = '<p style="text-align:center;color:#065f46;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:14px;font-weight:700;">✅ Nenhum sábado marcado<br><small style="color:#64748b;font-weight:500;">Marca um sábado em cima</small></p>';
       return;
     }
     var h='';
     for (var i=0;i<lista.length;i++) {
       var d = (typeof lista[i]==='string') ? lista[i] : lista[i].data;
-      h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;margin-bottom:8px;"><div><strong>'+d+'</strong><br><small style="color:#065f46;font-weight:700;">Conta para meta 16h</small></div><button class="btn btn-danger" style="padding:8px 12px;font-size:0.8rem;" onclick="removerSabadoContaMeta(\''+d+'\')">🗑️ Remover</button></div>';
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;margin-bottom:8px;"><div><strong>'+d+'</strong><br><small style="color:#065f46;font-weight:700;">Conta para meta</small></div><button class="btn btn-danger" style="padding:8px 12px;font-size:0.8rem;" onclick="removerSabadoContaMeta(\''+d+'\')">🗑️ Remover</button></div>';
     }
     div.innerHTML=h;
   }
@@ -2502,101 +2502,43 @@ function removerSabadoContaMeta(data) {
 
 
 <script>
-// ★ VIBRAÇÃO EQUILIBRADO V6 - MÉDIO-FORTE ★
+// ★ VIBRAÇÃO SECA E SUAVE V7 - SÓ NÚMEROS - PEDIDO LUÍS ★
 function vibrar(tipo){
   try{
     if(!('vibrate' in navigator)) return;
-    // Tenta parar vibração anterior para dar punch
-    navigator.vibrate(0);
-    setTimeout(function(){
-      try{
-        if(tipo==='numero') navigator.vibrate(75); // equilibrado - antes 120
-        else if(tipo==='apagar') navigator.vibrate([30,20,70]); // equilibrado
-        else if(tipo==='limpar') navigator.vibrate([60,20,80]); // equilibrado
-        else if(tipo==='sucesso') navigator.vibrate([50,20,50,20,100]); // sucesso equilibrado
-        else if(tipo==='erro') navigator.vibrate([100,30,100,30,120]); // erro equilibrado
-        else if(tipo==='tecla') navigator.vibrate(65);
-      }catch(e2){}
-    }, 10);
+    if(tipo==='numero') navigator.vibrate(18); // seca e curta
+    // apagar e limpar = sem vibração
   }catch(e){}
 }
-// Reforço extra: vibra também no touchstart para resposta instantânea
 (function(){
   const op = window.tecladoPress, oc = window.tecladoClear, ob = window.tecladoBack;
   window.tecladoPress = function(d){
     vibrar('numero');
-    // Vibração extra direta (garantia)
-    try{ if('vibrate' in navigator) navigator.vibrate(75); }catch(e){}
     try{ 
       document.querySelectorAll('#keypadPonto .key').forEach(k=>{ 
         if(k.textContent.trim()===d){ 
           k.classList.add('pressed'); 
-          // Efeito visual mais forte
-          k.style.transform='scale(0.88)';
-          setTimeout(function(){ 
-            k.classList.remove('pressed');
-            k.style.transform='';
-          }, 260);
+          setTimeout(()=>k.classList.remove('pressed'), 120);
         } 
       }); 
     }catch(e){}
     if(typeof op==='function') return op(d);
   };
-  window.tecladoClear = function(){ 
-    vibrar('limpar'); 
-    try{ if('vibrate' in navigator) navigator.vibrate([60,20,80]); }catch(e){}
-    if(typeof oc==='function') return oc(); 
-  };
-  window.tecladoBack = function(){ 
-    vibrar('apagar'); 
-    try{ if('vibrate' in navigator) navigator.vibrate([30,20,70]); }catch(e){}
-    if(typeof ob==='function') return ob(); 
-  };
-  const om = window.mostrarPopupPersonalizado;
-  window.mostrarPopupPersonalizado = function(c){ 
-    try{ 
-      var tipo = (c&&c.tipo) ? c.tipo : (typeof c==='string' ? '' : '');
-      // Detecta por título também
-      var titulo = (c && c.titulo) ? c.titulo.toString().toLowerCase() : '';
-      if(tipo==='sucesso' || titulo.indexOf('sucesso')>-1 || titulo.indexOf('✅')>-1) vibrar('sucesso'); 
-      if(tipo==='erro' || titulo.indexOf('erro')>-1 || titulo.indexOf('❌')>-1) vibrar('erro'); 
-    }catch(e){} 
-    if(typeof om==='function') return om.apply(this, arguments); 
-  };
-
-  // ★ BÓNUS: Adiciona vibração em TODOS os botões .key ao tocar (touchstart)
-  document.addEventListener('DOMContentLoaded', function(){
-    document.addEventListener('touchstart', function(e){
-      var key = e.target.closest('.key');
-      if(key){
-        try{ navigator.vibrate(65); }catch(err){}
-      }
-    }, {passive:true});
-    // Também no click para desktop/teste
-    document.addEventListener('mousedown', function(e){
-      var key = e.target.closest('.key');
-      if(key){
-        try{ navigator.vibrate(60); }catch(err){}
-      }
-    }, {passive:true});
-  });
+  // Apagar e limpar sem vibrar nada
+  window.tecladoClear = function(){ if(typeof oc==='function') return oc(); };
+  window.tecladoBack = function(){ if(typeof ob==='function') return ob(); };
 })();
 </script>
 <style>
-/* Feedback visual turbo quando vibra */
+/* Feedback visual suave */
 #keypadPonto .key.pressed {
   background: #065f46 !important;
   color: white !important;
-  transform: scale(0.88) !important;
-  box-shadow: 0 0 0 4px rgba(5,150,105,0.4), inset 0 2px 8px rgba(0,0,0,0.3) !important;
+  transform: scale(0.96) !important;
   transition: all 0.08s ease-out !important;
 }
-#keypadPonto .key {
-  transition: transform 0.1s ease, background 0.15s ease !important;
-}
-#keypadPonto .key:active {
-  transform: scale(0.90) !important;
-}
+#keypadPonto .key { transition: transform 0.08s ease !important; }
+#keypadPonto .key:active { transform: scale(0.94) !important; }
 </style>
 
 
