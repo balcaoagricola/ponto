@@ -778,20 +778,19 @@ function closeInfo(id) {
     <div id="admin-sub-menu">
       <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
         <h3 style="margin-bottom: 22px; color: var(--primary); text-align: center; justify-content: center; font-size: 1.15rem;">⚙️ Painel de Gestão</h3>
+        
+      <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
+        <h3 style="font-weight:800;margin-bottom:12px">⚙️ Painel Admin - Sistema Limpo v2026.79</h3>
+        <p style="font-size:0.85rem;color:#64748b;font-weight:600;margin-bottom:16px">Só funções necessárias mantidas. Cativas, banco, sábado conta meta e amamentação removidos.</p>
         <div class="menu-admin-grid">
-          <button class="btn tile-emerald" onclick="abrirSubModulo('dashboard'); carregarDashboard();" style="grid-column: span 2; background: linear-gradient(135deg,#065f46 0%, #10b981 100%); color:white; font-weight:800; letter-spacing:0.02em;"><span>📊</span> DASHBOARD</button>
-          <button class="btn tile-blue" onclick="abrirSubModulo('pedidos'); carregarPedidosPendentes();"><span>📩</span> Pedidos</button>
-          <button class="btn tile-amber" onclick="abrirSubModulo('ausencias')"><span>📅</span> Faltas e Férias</button>
-          <button class="btn tile-teal" onclick="abrirSubModulo('troca')"><span>🔄</span> Troca Turno</button>
-          <button class="btn tile-purple" onclick="abrirSubModulo('horasacordadas'); carregarHorasAcordadas();"><span>🤝</span> Horas Acordadas</button>
-          <button class="btn tile-cyan" onclick="abrirSubModulo('sabadocontameta'); setTimeout(carregarListaSabadoContaMeta, 200);"><span>📅</span> Sábado Conta p/ Meta</button>
-          <button class="btn tile-cyan" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
-          <button class="btn tile-rose" onclick="abrirSubModulo('pdf')"><span>📄</span> Exportar PDF</button>
-          <button class="btn tile-emerald" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar Colab.</button>
-          <button class="btn tile-red" onclick="abrirSubModulo('remover')"><span>❌</span> Inativar Colab.</button>
+          <button class="btn tile-cyan" onclick="abrirSubModulo('ausencias')"><span>🌴</span> Lançar Férias / Baixa / Faltas</button>
+          <button class="btn tile-green" onclick="abrirSubModulo('dashboard')"><span>📊</span> Dashboard</button>
+          <button class="btn tile-blue" onclick="abrirSubModulo('pedidos')"><span>📥</span> Pedidos Pendentes</button>
+          <button class="btn tile-gray" onclick="abrirSubModulo('funcionario')"><span>👤</span> Funcionários</button>
         </div>
       </div>
     </div>
+
     
     <div id="admin-sub-dashboard" style="display: none;">
       <div class="admin-card">
