@@ -2465,7 +2465,7 @@ function carregarListaSabadoContaMeta() {
     var h='';
     for (var i=0;i<lista.length;i++) {
       var d = (typeof lista[i]==='string') ? lista[i] : lista[i].data;
-      h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;margin-bottom:8px;"><div><strong>'+d+'</strong><br><small style="color:#065f46;font-weight:700;">Conta para meta</small></div><button class="btn btn-danger" style="padding:8px 12px;font-size:0.8rem;" onclick="removerSabadoContaMeta(\''+d+'\')">🗑️ Remover</button></div>';
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;margin-bottom:8px;"><div><strong>'+d+'</strong><br><small style="color:#065f46;font-weight:700;">Conta para meta 16h</small></div><button class="btn btn-danger" style="padding:8px 12px;font-size:0.8rem;" onclick="removerSabadoContaMeta(\''+d+'\')">🗑️ Remover</button></div>';
     }
     div.innerHTML=h;
   }
@@ -2502,12 +2502,13 @@ function removerSabadoContaMeta(data) {
 
 
 <script>
-// ★ VIBRAÇÃO SECA E SUAVE V7 - SÓ NÚMEROS - PEDIDO LUÍS ★
+// ★ VIBRAÇÃO SECA E SUAVE V7 FINAL - SÓ NÚMEROS - PEDIDO LUÍS MONTEZ
+// - Números: vibração seca 18ms única
+// - Apagar e Limpar: 0ms (nada)
 function vibrar(tipo){
   try{
     if(!('vibrate' in navigator)) return;
-    if(tipo==='numero') navigator.vibrate(18); // seca e curta
-    // apagar e limpar = sem vibração
+    if(tipo==='numero') navigator.vibrate(18);
   }catch(e){}
 }
 (function(){
@@ -2524,13 +2525,11 @@ function vibrar(tipo){
     }catch(e){}
     if(typeof op==='function') return op(d);
   };
-  // Apagar e limpar sem vibrar nada
   window.tecladoClear = function(){ if(typeof oc==='function') return oc(); };
   window.tecladoBack = function(){ if(typeof ob==='function') return ob(); };
 })();
 </script>
 <style>
-/* Feedback visual suave */
 #keypadPonto .key.pressed {
   background: #065f46 !important;
   color: white !important;
