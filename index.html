@@ -449,73 +449,70 @@ function fecharToast() { document.getElementById('toastOverlay').style.display =
 function fecharToastOverlay(e) {}
 function alternarVisibilidadeSenhaInput(id, btn) { var i = document.getElementById(id); if (!i) return; if (i.type === "password") { i.type = "text"; if(btn) btn.innerText = "🙈"; } else { i.type = "password"; if(btn) btn.innerText = "👁️"; } }
 function obterDetalhesDispositivo() {
-  try { if (window.AndroidBridge && typeof window.AndroidBridge.getDeviceModel === "function") { var m = window.AndroidBridge.getDeviceModel(); if (m) return m; } } catch(e) {}
   var ua = navigator.userAgent || '';
 
-  if (/iPhone/i.test(ua)) {
-    var v = ua.match(/OS (\d+[_\d]*)/);
-    return 'Apple iPhone' + (v ? ' (iOS ' + v[1].replace(/_/g,'.') + ')' : '');
-  }
-  if (/iPad/i.test(ua)) {
-    var v2 = ua.match(/OS (\d+[_\d]*)/);
-    return 'Apple iPad' + (v2 ? ' (iOS ' + v2[1].replace(/_/g,'.') + ')' : '');
-  }
+  // Apple
+  if (/iPhone/i.test(ua)) return 'Apple iPhone';
+  if (/iPad/i.test(ua)) return 'Apple iPad';
 
-  if (/Android/i.test(ua)) {
-    var av = ua.match(/Android\s+([\d.]+)/);
-    var avs = av ? av[1] : '';
+  // Samsung
+  var samsung = ua.match(/SM-[A-Z0-9]+/i);
+  if (samsung) return 'Samsung ' + samsung[0].toUpperCase();
 
-    if (/SM-[A-Z0-9]+/i.test(ua)) {
-      return 'Samsung ' + ua.match(/SM-[A-Z0-9]+/i)[0] + (avs ? ' (Android ' + avs + ')' : '');
-    }
-    if (/Pixel\s+\w+/i.test(ua)) {
-      return 'Google ' + ua.match(/Pixel\s+\w+/i)[0] + (avs ? ' (Android ' + avs + ')' : '');
-    }
-    if (/Redmi\s+[\w\s]+/i.test(ua)) {
-      var rd = ua.match(/Redmi\s+[\w\s]+?(?=Build|\s*\))/i);
-      if (rd) return 'Xiaomi ' + rd[0].trim() + (avs ? ' (Android ' + avs + ')' : '');
-    }
-    if (/POCO\s+[\w\s]+/i.test(ua)) {
-      var po = ua.match(/POCO\s+[\w\s]+?(?=Build|\s*\))/i);
-      if (po) return 'Xiaomi ' + po[0].trim() + (avs ? ' (Android ' + avs + ')' : '');
-    }
-    if (/Mi\s+\d+[\w\s]*/i.test(ua)) {
-      var mi = ua.match(/Mi\s+\d+[\w\s]*?(?=Build|\s*\))/i);
-      if (mi) return 'Xiaomi ' + mi[0].trim() + (avs ? ' (Android ' + avs + ')' : '');
-    }
-    if (/RMX\d+/i.test(ua)) {
-      return 'Realme ' + ua.match(/RMX\d+/i)[0] + (avs ? ' (Android ' + avs + ')' : '');
-    }
-    if (/HUAWEI\s+[\w-]+/i.test(ua)) {
-      return ua.match(/HUAWEI\s+[\w-]+/i)[0] + (avs ? ' (Android ' + avs + ')' : '');
-    }
-    if (/(OnePlus|ONEPLUS)\s*[\w\s]*/i.test(ua)) {
-      var op = ua.match(/(OnePlus|ONEPLUS)\s*[\w\s]*?(?=Build|\s*\))/i);
-      if (op) return op[0].trim() + (avs ? ' (Android ' + avs + ')' : '');
-    }
-    if (/moto\s+\w+[\w\s]*/i.test(ua)) {
-      var mo = ua.match(/moto\s+\w+[\w\s]*?(?=Build|\s*\))/i);
-      if (mo) return 'Motorola ' + mo[0].trim() + (avs ? ' (Android ' + avs + ')' : '');
-    }
-    if (/(CPH\d+|V\d{4})/i.test(ua)) {
-      return 'Oppo/Vivo ' + ua.match(/(CPH\d+|V\d{4})/i)[0] + (avs ? ' (Android ' + avs + ')' : '');
-    }
+  // Google Pixel
+  var pixel = ua.match(/Pixel\s+[A-Za-z0-9]+/i);
+  if (pixel) return 'Google ' + pixel[0];
 
-    var gen = ua.match(/Android\s+[\d.]+;\s*(?:[a-z]{2}[-_][a-z]{2};\s*)?([^;)]+)/i);
-    if (gen && gen[1]) {
-      var model = gen[1].replace(/\s*Build\/.*$/i, '').trim();
-      if (model && model.length < 40 && !/^(K|Linux|wv)$/i.test(model)) {
-        return 'Android ' + model + (avs ? ' (' + avs + ')' : '');
-      }
+  // Xiaomi (Redmi / POCO / Mi)
+  var redmi = ua.match(/Redmi\s+[A-Za-z0-9\s]+?(?=Build|\))/i);
+  if (redmi) return 'Xiaomi ' + redmi[0].trim();
+  var poco = ua.match(/POCO\s+[A-Za-z0-9\s]+?(?=Build|\))/i);
+  if (poco) return 'Xiaomi ' + poco[0].trim();
+  var mi = ua.match(/Mi\s+[A-Za-z0-9\s]+?(?=Build|\))/i);
+  if (mi) return 'Xiaomi ' + mi[0].trim();
+
+  // Realme
+  var realme = ua.match(/RMX\d+/i);
+  if (realme) return 'Realme ' + realme[0];
+
+  // Huawei / Honor
+  var hw = ua.match(/(HUAWEI|HONOR)\s+[A-Za-z0-9-]+/i);
+  if (hw) return hw[0];
+
+  // OnePlus
+  var op = ua.match(/(OnePlus|ONEPLUS)\s+[A-Za-z0-9]+/i);
+  if (op) return op[0];
+
+  // Motorola
+  var moto = ua.match(/moto\s+[A-Za-z0-9\s]+?(?=Build|\))/i);
+  if (moto) return 'Motorola ' + moto[0].trim();
+
+  // Oppo
+  var cph = ua.match(/CPH\d+/i);
+  if (cph) return 'Oppo ' + cph[0];
+
+  // Vivo
+  var vivo = ua.match(/\bV\d{4}[A-Z]?\b/);
+  if (vivo) return 'Vivo ' + vivo[0];
+
+  // Android genérico — extrair modelo do UA
+  var android = ua.match(/Android[^;)]*;\s*([^;)]+?)(?:\s+Build|\s*\))/i);
+  if (android && android[1]) {
+    var model = android[1].replace(/^[a-z]{2}[-_][a-z]{2};\s*/i, '').trim();
+    if (model && model.length > 1 && model.length < 40 && !/^(wv|K|Linux|Mobile|Android)$/i.test(model)) {
+      // Códigos Xiaomi (ex: 2506BPN68G, 2310FPCA4G)
+      if (/^2\d{3}[A-Z]{2,4}\d?[A-Z]?$/i.test(model)) return 'Xiaomi ' + model;
+      return model;
     }
-    return 'Android' + (avs ? ' ' + avs : '') + ' (modelo não identificado)';
   }
 
+  // Desktops
   if (/Windows/i.test(ua)) return 'Windows PC';
-  if (/Macintosh/i.test(ua)) return 'Mac (Apple)';
   if (/CrOS/i.test(ua)) return 'Chromebook';
+  if (/Macintosh/i.test(ua)) return 'Mac (Apple)';
   if (/Linux/i.test(ua)) return 'Linux PC';
-  return 'Dispositivo desconhecido';
+
+  return 'Desconhecido';
 }
 
 function abrirModalSenhaAdmin() {
