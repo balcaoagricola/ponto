@@ -872,3 +872,68 @@ function submeterRemocaoFuncionario() {
 </script>
 </body>
 </html>
+// Sem rede? Usar modo offline
+if (!navigator.onLine) {
+  var pin = document.getElementById('pinPonto').value;
+  var h = await hashPinLocal(pin);
+  var rev = getRevCache();
+  var nome = rev[h];
+
+  if (!nome) {
+    // PIN nunca foi usado neste telemóvel
+    var overlay = document.getElementById('toastOverlay');
+    if (overlay) {
+      document.getElementById('toastTitle').innerText = 'Sem rede';
+      document.getElementById('toastBody').innerHTML = 'Primeira vez neste telemóvel.<br><br>Ligue-se à internet <b>pelo menos uma vez</b> para memorizar este PIN.';
+      document.getElementById('toastIcon').innerText = '❌';
+      var acts = document.getElementById('toastActionsContainer');
+      acts.innerHTML = '<button class="toast-btn toast-btn-primary" onclick="fecharToast()">OK</button>';
+      acts.style.display = 'flex';
+      overlay.style.display = 'flex';
+    }
+    return;
+  }
+
+  // Tentar obter GPS (funciona offline)
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      var lat = pos.coords.latitude;
+      var lon = pos.coords.longitude;
+      var disp = obterDetalhesDispositivo ? obterDetalhesDispositivo() : 'Desconhecido';
+      var item = guardarPicagemOffline(nome, pin, lat, lon, disp);
+      if (item) {
+        var overlay = document.getElementById('toastOverlay');
+        if (overlay) {
+          document.getElementById('toastTitle').innerText = 'Guardado Offline';
+          document.getElementById('toastBody').innerHTML = 'Olá <b>' + nome + '</b>!<br><br>Picagem guardada às ' + new Date().toLocaleTimeString('pt-PT') + '.<br><br>Será enviada quando houver rede.';
+          document.getElementById('toastIcon').innerText = '✅';
+          var acts = document.getElementById('toastActionsContainer');
+          acts.innerHTML = '<button class="toast-btn toast-btn-primary" onclick="fecharToast()">OK</button>';
+          acts.style.display = 'flex';
+          overlay.style.display = 'flex';
+        }
+        document.getElementById('pinPonto').value = '';
+      }
+    },
+    function() {
+      // GPS falhou — guarda com lat/lon = 0
+      var disp = obterDetalhesDispositivo ? obterDetalhesDispositivo() : 'Desconhecido';
+      var item = guardarPicagemOffline(nome, pin, 0, 0, disp);
+      if (item) {
+        var overlay = document.getElementById('toastOverlay');
+        if (overlay) {
+          document.getElementById('toastTitle').innerText = 'Guardado Offline';
+          document.getElementById('toastBody').innerHTML = 'Olá <b>' + nome + '</b>!<br><br>Picagem guardada às ' + new Date().toLocaleTimeString('pt-PT') + '.<br><small>GPS indisponível</small>';
+          document.getElementById('toastIcon').innerText = '⚠️';
+          var acts = document.getElementById('toastActionsContainer');
+          acts.innerHTML = '<button class="toast-btn toast-btn-primary" onclick="fecharToast()">OK</button>';
+          acts.style.display = 'flex';
+          overlay.style.display = 'flex';
+        }
+        document.getElementById('pinPonto').value = '';
+      }
+    },
+    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+  );
+  return; // não chamar API
+}
