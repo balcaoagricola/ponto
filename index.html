@@ -1,670 +1,1160 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#1c1917">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Ponto · Balcão Agrícola</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#fdfbf7; --surface:#ffffff; --surface-2:#faf7f2;
-  --text:#1c1917; --muted:#78716c; --light:#a8a29e;
-  --border:#e7e5e4; --border-strong:#d6d3d1;
-  --accent:#d97706; --accent-light:#f59e0b; --accent-dark:#b45309;
-  --success:#16a34a; --danger:#dc2626; --warning:#ca8a04;
-  --r-sm:12px; --r-md:16px; --r-lg:24px; --r-xl:32px;
-}
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;-webkit-tap-highlight-color:transparent;}
-html{background:var(--bg);overflow-x:hidden;}
-body{min-height:100dvh;color:var(--text);background:var(--bg);display:flex;flex-direction:column;overflow:hidden;-webkit-font-smoothing:antialiased;}
-button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+  <meta charset="UTF-8">
+  <title>Registo de Ponto · Balcão Agrícola</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#065f46">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --primary: #0f172a; --primary-soft: #1e293b; --accent: #059669; --accent-light: #10b981; --accent-dark: #047857; --accent-glow: rgba(5, 150, 105, 0.35); --secondary: #0ea5e9; --text: #1e293b; --text-muted: #64748b; --text-light: #94a3b8; --surface: #ffffff; --surface-2: #f8fafc; --border: #e2e8f0; --border-strong: #cbd5e1; --success: #10b981; --danger: #ef4444; --warning: #f59e0b; --radius-xs: 10px; --radius-sm: 14px; --radius-md: 20px; --radius-lg: 28px; --radius-xl: 36px; --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06); --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04); --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.12), 0 8px 16px rgba(15, 23, 42, 0.06); --shadow-accent: 0 10px 28px rgba(5, 150, 105, 0.28), 0 4px 8px rgba(5, 150, 105, 0.15); --shadow-danger: 0 10px 28px rgba(239, 68, 68, 0.25), 0 4px 8px rgba(239, 68, 68, 0.12); }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+    html { min-height: 100%; background: #f8fafc; overflow-x: hidden; }
+    body { min-height: 100vh; background: radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.10) 0%, transparent 45%), radial-gradient(circle at 85% 80%, rgba(14, 165, 233, 0.10) 0%, transparent 45%), linear-gradient(135deg, #f8fafc 0%, #eef2f6 50%, #ecfdf5 100%); color: var(--text); padding: 14px; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; overflow-y: auto; -webkit-overflow-scrolling: touch; -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+    .container { width: 100%; max-width: 460px; background: var(--surface); border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); border: 1px solid rgba(255, 255, 255, 0.9); overflow: hidden; position: relative; margin-top: 8px; margin-bottom: 20px; flex-shrink: 0; }
+    .header { padding: 32px 24px 22px; text-align: center; position: relative; background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); border-bottom: 1px solid var(--border); }
+    .logo-wrapper { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 6px; padding: 0 8px; }
+    .logo-empresa { width: 100%; max-height: 118px; object-fit: contain; mix-blend-mode: multiply; filter: contrast(1.18) saturate(1.1); display: block; user-select: none; -webkit-user-drag: none; }
+    .header h2 { font-size: 1rem; font-weight: 800; margin-top: 6px; margin-bottom: 22px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--primary); white-space: nowrap; }
+    .live-clock-card { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: var(--radius-md); padding: 18px 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18), inset 0 1px 0 rgba(255,255,255,0.06); position: relative; overflow: hidden; }
+    .live-clock-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 60%); animation: rotate 20s linear infinite; pointer-events: none; }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .clock-time-row { display: inline-flex; align-items: center; gap: 14px; font-family: 'JetBrains Mono', monospace; font-size: 2.6rem; font-weight: 700; color: #ffffff; letter-spacing: -0.02em; line-height: 1; position: relative; z-index: 1; }
+    .clock-time-row #liveClockTime { background: linear-gradient(180deg, #ffffff 0%, #94a3b8 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 12px rgba(16, 185, 129, 0.15); }
+    .clock-date-row { font-size: 0.78rem; font-weight: 600; color: #94a3b8; letter-spacing: 0.18em; text-transform: uppercase; position: relative; z-index: 1; }
+    .gps-badge { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: rgba(16, 185, 129, 0.12); border-radius: 50%; }
+    .gps-pulse-dot { width: 10px; height: 10px; background: var(--accent-light); border-radius: 50%; position: relative; box-shadow: 0 0 12px rgba(16, 185, 129, 0.9); }
+    .gps-pulse-dot::after { content: ''; position: absolute; top: -2px; left: -2px; width: 14px; height: 14px; border-radius: 50%; background: var(--accent-light); opacity: 0.5; animation: pulseGps 2s infinite ease-out; }
+    @keyframes pulseGps { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(2.8); opacity: 0; } }
+    .gps-pulse-dot.offline { background: #ef4444; box-shadow: 0 0 12px rgba(239, 68, 68, 0.9); }
+    .gps-pulse-dot.offline::after { animation: none; background: #ef4444; }
+    .content-section { padding: 24px 22px 30px; display: none; animation: fadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
+    .content-section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 9px; font-weight: 700; font-size: 0.82rem; color: var(--primary); letter-spacing: 0.01em; text-transform: uppercase; }
+    .form-control { width: 100%; padding: 15px 18px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 16px; background-color: var(--surface); color: var(--text); font-weight: 600; outline: none; transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: var(--shadow-sm); }
+    .form-control:focus { border-color: var(--accent); background-color: #ffffff; box-shadow: 0 0 0 4px var(--accent-glow), var(--shadow-sm); }
+    select.form-control { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 18px center; padding-right: 45px; cursor: pointer; }
+    textarea.form-control { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; line-height: 1.5; }
+    .badge-troca { display: inline-flex; align-items: center; gap: 7px; margin-top: 11px; padding: 7px 14px 7px 11px; background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); border: 1px solid #99f6e4; border-radius: 100px; font-size: 0.74rem; font-weight: 600; color: #0f766e; }
+    .hint-info { display: flex; align-items: flex-start; gap: 10px; padding: 12px 15px; margin-bottom: 18px; background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); border: 1.5px solid #5eead4; border-radius: var(--radius-sm); font-size: 0.82rem; color: #0f766e; font-weight: 500; line-height: 1.5; }
+    .hint-info::before { content: 'ℹ️'; font-size: 1rem; flex-shrink: 0; }
+    .periodo-hint { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.45; font-weight: 500; }
+    .periodo-card { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; padding: 10px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); }
+    .periodo-card:focus-within { border-color: var(--accent); background: #ffffff; box-shadow: 0 0 0 3px var(--accent-glow); }
+    .periodo-num { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: #ffffff; font-weight: 800; font-size: 0.82rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .periodo-inputs { display: flex; align-items: center; gap: 4px; flex: 1 1 0; min-width: 0; }
+    .periodo-input { flex: 1 1 0 !important; min-width: 0 !important; width: 0 !important; max-width: 100% !important; padding: 10px 2px !important; font-size: 0.85rem !important; text-align: center !important; font-weight: 700 !important; }
+    .periodo-sep { color: var(--text-muted); font-weight: 700; font-size: 0.88rem; flex-shrink: 0; }
+    .btn-add-periodo { width: 100%; padding: 11px; background: transparent; border: 1.5px dashed var(--border-strong); border-radius: var(--radius-sm); color: var(--text-muted); font-weight: 700; font-size: 0.76rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Plus Jakarta Sans', sans-serif; margin-bottom: 8px; }
+    .btn-add-periodo:hover { border-color: var(--accent); color: var(--accent); background: rgba(5, 150, 105, 0.05); }
+    .btn { width: 100%; padding: 17px 20px; border: none; border-radius: var(--radius-sm); font-size: 0.95rem; font-weight: 800; cursor: pointer; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1); margin-bottom: 14px; letter-spacing: 0.06em; text-transform: uppercase; position: relative; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+    .btn-primary { background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 55%, var(--accent-dark) 100%); color: #ffffff; box-shadow: var(--shadow-accent); }
+    .btn-danger { background: linear-gradient(135deg, #f87171 0%, var(--danger) 60%, #dc2626 100%); color: #ffffff; box-shadow: var(--shadow-danger); }
+    .btn-nav-blue { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; border: 1.5px solid #93c5fd; }
+    .btn-nav-slate { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); color: #334155; border: 1.5px solid #cbd5e1; }
+    .btn-nav-red { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); color: #b91c1c; border: 1.5px solid #fca5a5; }
+    .top-action-btn { width: 44px; height: 44px; border-radius: 13px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.15rem; border: 1.5px solid; }
+    .top-action-btn.calendar { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; border-color: #93c5fd; }
+    .top-action-btn.settings { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); color: #7e22ce; border-color: #d8b4fe; }
+    .admin-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 22px; margin-bottom: 18px; box-shadow: var(--shadow-sm); }
+    .admin-card h3 { font-size: 1rem; margin-bottom: 16px; color: var(--primary); font-weight: 800; display: flex; align-items: center; gap: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .menu-admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .menu-admin-grid .btn { padding: 22px 10px 20px; font-size: 0.78rem; font-weight: 800; flex-direction: column; gap: 10px; border-radius: var(--radius-md); border: 1.5px solid; margin-bottom: 0; position: relative; }
+    .menu-admin-grid .btn span { font-size: 1.7rem; display: block; }
+    .tile-blue { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; border-color: #93c5fd; }
+    .tile-amber { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); color: #b45309; border-color: #fcd34d; }
+    .tile-violet { background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); color: #7e22ce; border-color: #d8b4fe; }
+    .tile-cyan { background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%); color: #0e7490; border-color: #67e8f9; }
+    .tile-rose { background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); color: #be123c; border-color: #fda4af; }
+    .tile-emerald { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); color: #047857; border-color: #6ee7b7; }
+    .tile-red { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); color: #b91c1c; border-color: #fca5a5; }
+    .toast-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(10px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; }
+    .toast-card { background: #ffffff; border-radius: var(--radius-xl); padding: 36px 26px 26px; max-width: 380px; width: 100%; text-align: center; box-shadow: 0 32px 64px -12px rgba(15, 23, 42, 0.35); animation: popModal 0.42s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes popModal { from { transform: scale(0.92) translateY(24px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+    .toast-icon { font-size: 3.2rem; margin-bottom: 14px; display: inline-block; }
+    .ampulheta-animada { display: inline-block; animation: rodarAmpulheta 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+    @keyframes rodarAmpulheta { 0% { transform: rotate(0deg); } 50% { transform: rotate(180deg); } 100% { transform: rotate(360deg); } }
+    .toast-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 8px; color: var(--primary); letter-spacing: 0.05em; text-transform: uppercase; }
+    .toast-body { font-size: 0.94rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.55; font-weight: 500; }
+    .toast-actions { display: flex; gap: 10px; }
+    .toast-btn { flex: 1; padding: 15px 16px; border: none; border-radius: var(--radius-sm); font-weight: 800; font-size: 0.88rem; cursor: pointer; letter-spacing: 0.06em; text-transform: uppercase; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .toast-btn-primary { background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent-dark) 100%); color: #ffffff; }
+    .toast-btn-secondary { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); color: #334155; border: 1.5px solid #cbd5e1; }
+    .app-footer { text-align: center; font-size: 0.8rem; font-weight: 600; color: var(--text-light); padding: 18px; border-top: 1px solid var(--border); background: var(--surface-2); }
+    .campo-obrigatorio { color: var(--danger); font-weight: 800; margin-left: 3px; }
+    .erro-campo { color: var(--danger); font-size: 0.84rem; font-weight: 600; margin-top: 8px; display: none; align-items: center; gap: 6px; }
+    .erro-campo::before { content: '⚠'; font-size: 0.95rem; }
+    .password-eye-wrapper { position: relative; width: 100%; }
+    .password-eye-wrapper .form-control { padding-right: 55px; }
+    .eye-toggle-btn { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: rgba(16, 185, 129, 0.10); border: 1.5px solid rgba(16, 185, 129, 0.25); cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; z-index: 10; color: var(--accent); padding: 6px 8px; border-radius: 10px; }
+    .pedido-item { background: var(--surface); border: 1.5px solid var(--border); padding: 18px 20px; border-radius: var(--radius-md); margin-bottom: 14px; text-align: left; box-shadow: var(--shadow-sm); border-left: 4px solid var(--accent); }
+    .pedido-item p { margin-bottom: 6px; font-size: 0.92rem; color: var(--text-muted); font-weight: 500; line-height: 1.5; }
+    .pedido-item p strong { color: var(--primary); font-weight: 700; }
+    .troca-bloco { padding: 14px; background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%); border: 1.5px solid #5eead4; border-radius: var(--radius-sm); margin-bottom: 14px; }
+    .troca-bloco h4 { font-size: 0.82rem; font-weight: 800; color: #0f766e; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+    .ponto-pin-only { text-align:center; }
+    .pin-display-area { margin: 10px 0 18px; }
+    .pin-dots-big { display:flex; justify-content:center; gap:18px; margin:12px 0; }
+    .pin-dots-big .pin-dot { width:22px; height:22px; border-radius:50%; border:2.5px solid var(--border-strong); background:#fff; transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .pin-dots-big .pin-dot.filled { background: var(--primary); border-color: var(--primary); box-shadow: 0 0 0 4px rgba(15,23,42,0.12); transform: scale(1.25); }
+    .pin-dots-big .pin-dot.filled.ok { background: var(--accent); border-color: var(--accent); }
+    .pin-nome-preview { min-height: 42px; margin: 8px 0 4px; font-weight:800; font-size:1.05rem; color: var(--primary); }
+    .pin-nome-preview span { display:inline-block; padding:6px 14px; border-radius:999px; background: linear-gradient(135deg,#ecfdf5,#f0fdfa); border:1.5px solid #a7f3d0; color:#065f46; }
+    .pin-nome-preview.erro span { background:#fef2f2; border-color:#fecaca; color:#991b1b; }
+    .keypad { display:grid; grid-template-columns: repeat(3,1fr); gap:12px; margin:18px 0 10px; padding: 4px; }
+    .key { height:68px; min-height:68px; border-radius:20px; border:2px solid #e2e8f0; background:#ffffff; font-size:1.85rem; font-weight:900; color:var(--primary); box-shadow: 0 2px 0 #e2e8f0, 0 6px 16px rgba(15,23,42,0.06); cursor:pointer; transition: all 0.14s cubic-bezier(0.34,1.56,0.64,1); user-select:none; -webkit-tap-highlight-color:transparent; position: relative; font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.03em; }
+    .key:active { transform: translateY(2px) scale(0.96); box-shadow: 0 0 0 #e2e8f0, 0 2px 8px rgba(15,23,42,0.06); }
+    .key.key-action { background: var(--surface-2); font-size:1.05rem; color: var(--text-muted); }
+    .key.key-clear { background:#fef2f2; border-color:#fecaca; color:#dc2626; font-size:0.95rem; font-weight:800; }
+    .key:nth-child(1) { background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 70%); border-color: #bae6fd; }
+    .key:nth-child(2) { background: linear-gradient(180deg, #f5f3ff 0%, #ffffff 70%); border-color: #ddd6fe; }
+    .key:nth-child(3) { background: linear-gradient(180deg, #fdf2f8 0%, #ffffff 70%); border-color: #fbcfe8; }
+    .key:nth-child(4) { background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 70%); border-color: #a7f3d0; }
+    .key:nth-child(5) { background: linear-gradient(180deg, #fffbeb 0%, #ffffff 70%); border-color: #fde68a; }
+    .key:nth-child(6) { background: linear-gradient(180deg, #ecfeff 0%, #ffffff 70%); border-color: #a5f3fc; }
+    .key:nth-child(7) { background: linear-gradient(180deg, #eef2ff 0%, #ffffff 70%); border-color: #c7d2fe; }
+    .key:nth-child(8) { background: linear-gradient(180deg, #fff1f2 0%, #ffffff 70%); border-color: #fecdd3; }
+    .key:nth-child(9) { background: linear-gradient(180deg, #f7fee7 0%, #ffffff 70%); border-color: #d9f99d; }
+    .key:nth-child(10) { background: #ffffff !important; color: #991b1b !important; border-color: #fecaca !important; font-size: 0.92rem !important; font-weight: 800 !important; }
+    .key:nth-child(11) { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important; color: #ffffff !important; border-color: #334155 !important; font-size: 2rem !important; }
+    .key:nth-child(12) { background: #ffffff !important; color: #334155 !important; border-color: #e2e8f0 !important; font-size: 1.4rem !important; }
+    .pin-status { min-height:20px; font-size:0.84rem; font-weight:700; margin-top:10px; }
+    .pin-status.ok { color: var(--accent); }
+    .pin-status.erro { color: var(--danger); }
+    html, body { height: 100%; min-height: 100dvh; overflow: hidden; }
+    body { padding: 8px; display: flex; align-items: center; justify-content: center; }
+    .container { width: 100%; max-width: 460px; height: calc(100dvh - 16px); max-height: 900px; display: flex; flex-direction: column; overflow: hidden; margin: 0; }
+    .header { flex-shrink: 0; padding: 18px 20px 14px; }
+    .logo-empresa { max-height: 82px; }
+    .header h2 { margin-bottom: 12px; font-size: 0.92rem; }
+    .live-clock-card { padding: 12px 14px; }
+    .clock-time-row { font-size: 2.1rem; }
+    .content-section { flex: 1; display: none; flex-direction: column; overflow-y: auto; overflow-x: hidden; padding: 14px 18px 12px; }
+    .content-section.active { display: flex; }
+    #section-ponto { padding-top: 10px; padding-bottom: 10px; }
+    .ponto-pin-only { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+    .pin-display-area { flex-shrink: 0; margin-bottom: 6px !important; }
+    .pin-dots-big { gap: 14px; margin: 8px 0; }
+    .pin-dot { width: 18px; height: 18px; }
+    .keypad { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 1.8vh, 14px); margin: 10px 0 0 !important; min-height: 0; align-content: stretch; align-items: stretch; }
+    .key { height: auto !important; min-height: clamp(54px, 8.5vh, 78px) !important; font-size: clamp(1.45rem, 3.2vh, 1.85rem) !important; border-radius: 18px !important; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+    .key.key-clear { font-size: clamp(0.85rem, 2.2vh, 1.05rem) !important; }
+    @media (max-height: 700px) { .header { padding: 12px 16px 10px; } .logo-empresa { max-height: 62px; } .header h2 { margin-bottom: 8px; font-size: 0.82rem; } .live-clock-card { padding: 10px 12px; } .clock-time-row { font-size: 1.8rem; } .clock-date-row { font-size: 0.70rem; } .content-section { padding: 10px 16px 8px; } .key { min-height: clamp(48px, 7.5vh, 64px) !important; } }
+    textarea.form-control, textarea, input[type="text"].form-control, .form-control { max-width: 100% !important; box-sizing: border-box !important; min-width: 0 !important; }
+    textarea.form-control, textarea { resize: vertical !important; overflow-x: hidden !important; overflow-y: auto !important; word-wrap: break-word !important; white-space: pre-wrap !important; }
+    .admin-card, .form-group, .content-section { overflow: hidden; max-width: 100%; box-sizing: border-box; }
+    #keypadPonto .key.pressed { background: #065f46 !important; color: white !important; transform: scale(0.96) !important; transition: all 0.08s ease-out !important; }
+    #keypadPonto .key { transition: transform 0.08s ease !important; }
+    #keypadPonto .key:active { transform: scale(0.94) !important; }
+  </style>
 
-/* ===================== MAIN SCREEN ===================== */
-#screenMain{display:flex;flex-direction:column;min-height:100dvh;}
-.head{padding:28px 24px 16px;text-align:center;}
-.brand{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:14px;}
-.clock{font-size:3.4rem;font-weight:300;letter-spacing:-.03em;line-height:1;color:var(--text);font-variant-numeric:tabular-nums;}
-.clock-sub{margin-top:10px;font-size:.82rem;color:var(--muted);font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;}
-.dot-live{width:7px;height:7px;border-radius:50%;background:var(--success);animation:pulse 2s infinite;}
-.dot-live.off{background:var(--danger);animation:none;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  <!-- ═══ CSS NOVO — PÁGINA DE PEDIDOS RENOVADA ═══ -->
+  <style>
+    .pedidos-hero { background: linear-gradient(135deg, #1c1917 0%, #44403c 100%); border-radius: var(--radius-lg); padding: 22px 20px; color: #fff; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .pedidos-hero::before { content: ''; position: absolute; top: -40%; right: -20%; width: 180px; height: 180px; background: radial-gradient(circle, rgba(217,119,6,.35) 0%, transparent 70%); pointer-events: none; }
+    .pedidos-hero h2 { font-size: 1.25rem; font-weight: 800; letter-spacing: -.01em; margin-bottom: 4px; position: relative; z-index: 1; color: #fff; }
+    .pedidos-hero p { font-size: .82rem; color: rgba(255,255,255,.65); font-weight: 500; position: relative; z-index: 1; }
+    .pedidos-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; position: relative; z-index: 1; }
+    .pedidos-stat { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); border-radius: 12px; padding: 10px 8px; text-align: center; }
+    .pedidos-stat .num { font-size: 1.4rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+    .pedidos-stat .lbl { font-size: .6rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.55); margin-top: 4px; }
+    .pedidos-stat.pendente .num { color: #fbbf24; }
+    .pedidos-stat.aprovado .num { color: #4ade80; }
+    .pedidos-stat.recusado .num { color: #f87171; }
+    .pedidos-filtros { display: flex; gap: 6px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 2px; -webkit-overflow-scrolling: touch; }
+    .pedidos-filtros::-webkit-scrollbar { display: none; }
+    .pf-chip { padding: 8px 14px; border-radius: 999px; background: var(--surface-2); border: 1.5px solid var(--border); font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; transition: all .15s; font-family: inherit; cursor: pointer; }
+    .pf-chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .pf-chip .cnt { display: inline-block; margin-left: 5px; padding: 1px 6px; border-radius: 999px; background: rgba(217,119,6,.2); color: #b45309; font-size: .68rem; font-weight: 800; }
+    .pf-chip.active .cnt { background: rgba(255,255,255,.2); color: #fff; }
+    .pedido-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 18px 18px 16px; margin-bottom: 12px; position: relative; overflow: hidden; transition: all .2s; }
+    .pedido-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--warning); }
+    .pedido-card.aprovado::before { background: var(--success); }
+    .pedido-card.recusado::before { background: var(--danger); }
+    .pedido-card:active { transform: scale(.995); }
+    .pedido-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+    .pedido-avatar { width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, var(--accent-light), var(--accent-dark)); color: #fff; font-weight: 800; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pedido-card.aprovado .pedido-avatar { background: linear-gradient(135deg, #22c55e, #16a34a); }
+    .pedido-card.recusado .pedido-avatar { background: linear-gradient(135deg, #f87171, #dc2626); }
+    .pedido-info { flex: 1; min-width: 0; }
+    .pedido-nome { font-size: .98rem; font-weight: 800; color: var(--text); margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pedido-tipo { font-size: .74rem; font-weight: 700; color: var(--text-muted); letter-spacing: .04em; text-transform: uppercase; }
+    .pedido-badge { font-size: .6rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; flex-shrink: 0; }
+    .pedido-card:not(.aprovado):not(.recusado) .pedido-badge { background: #fef3c7; color: #92400e; }
+    .pedido-card.aprovado .pedido-badge { background: #dcfce7; color: #166534; }
+    .pedido-card.recusado .pedido-badge { background: #fee2e2; color: #991b1b; }
+    .pedido-datas { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+    .pedido-datas .dt { font-size: .58rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
+    .pedido-datas .dv { font-size: .9rem; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+    .pedido-obs { font-size: .85rem; color: var(--text-muted); line-height: 1.5; font-style: italic; margin-bottom: 14px; padding: 10px 12px; background: var(--surface-2); border-radius: 10px; border-left: 3px solid var(--border-strong); }
+    .pedido-actions { display: flex; gap: 8px; }
+    .pedido-actions button { flex: 1; padding: 11px; border-radius: 10px; font-size: .74rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; transition: all .15s; font-family: inherit; cursor: pointer; border: none; }
+    .pedido-actions button:active { transform: scale(.97); }
+    .btn-aprovar { background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; box-shadow: 0 4px 12px rgba(22,163,74,.25); }
+    .btn-recusar { background: linear-gradient(135deg, #f87171, #dc2626); color: #fff; box-shadow: 0 4px 12px rgba(220,38,38,.25); }
+    .pedidos-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+    .pedidos-empty .ico { font-size: 2.6rem; margin-bottom: 12px; opacity: .5; }
+    .pedidos-empty h4 { font-size: .95rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .pedidos-empty p { font-size: .82rem; }
+    .pedido-resposta { text-align: center; padding: 14px; margin-top: 6px; font-size: .8rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; border-radius: 10px; }
+    .pedido-card.aprovado .pedido-resposta { background: #dcfce7; color: #166534; }
+    .pedido-card.recusado .pedido-resposta { background: #fee2e2; color: #991b1b; }
+    .tile-amber .badge-pendentes { position: absolute; top: 8px; right: 8px; min-width: 20px; height: 20px; border-radius: 10px; background: #dc2626; color: #fff; font-size: .65rem; font-weight: 800; display: flex; align-items: center; justify-content: center; padding: 0 6px; box-shadow: 0 2px 6px rgba(220,38,38,.4); }
+  </style>
 
-.main{flex:1;padding:16px 24px;display:flex;flex-direction:column;min-height:0;}
-.prompt{text-align:center;font-size:.85rem;color:var(--muted);font-weight:600;margin-bottom:14px;letter-spacing:.01em;}
-.pin-dots{display:flex;justify-content:center;gap:18px;margin-bottom:22px;}
-.pin-dot{width:14px;height:14px;border-radius:50%;background:transparent;border:2px solid var(--border-strong);transition:all .25s cubic-bezier(.34,1.56,.64,1);}
-.pin-dot.on{background:var(--text);border-color:var(--text);transform:scale(1.2);}
-
-.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;flex:1;max-width:380px;width:100%;margin:0 auto;min-height:0;align-content:stretch;}
-.key{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-md);font-size:1.7rem;font-weight:600;color:var(--text);display:flex;align-items:center;justify-content:center;transition:all .12s ease;box-shadow:0 1px 0 var(--border);min-height:58px;font-variant-numeric:tabular-nums;}
-.key:active{transform:translateY(2px) scale(.97);box-shadow:none;background:var(--surface-2);}
-.key.zero{background:var(--text);color:#fff;border-color:var(--text);}
-.key.zero:active{background:#000;}
-.key.action{font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
-.key.clear{color:var(--danger);}
-
-.foot{padding:16px 24px calc(16px + env(safe-area-inset-bottom));display:flex;justify-content:center;}
-.admin-link{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--light);background:transparent;border:1.5px solid var(--border);border-radius:999px;padding:8px 18px;transition:all .2s;}
-.admin-link:hover{color:var(--muted);border-color:var(--border-strong);}
-
-/* ===================== OVERLAY ===================== */
-.overlay{position:fixed;inset:0;background:rgba(28,25,23,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:100;display:none;align-items:center;justify-content:center;padding:24px;animation:fadeIn .2s;}
-.overlay.show{display:flex;}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal{background:var(--surface);border-radius:var(--r-xl);padding:36px 28px 26px;max-width:400px;width:100%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.35);animation:pop .35s cubic-bezier(.34,1.56,.64,1);}
-@keyframes pop{from{opacity:0;transform:scale(.92) translateY(24px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.modal-icon{width:72px;height:72px;border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--accent-light),var(--accent-dark));box-shadow:0 12px 24px rgba(217,119,6,.35);}
-.modal-icon.success{background:linear-gradient(135deg,#22c55e,#16a34a);box-shadow:0 12px 24px rgba(22,163,74,.35);}
-.modal-icon.error{background:linear-gradient(135deg,#f87171,#dc2626);box-shadow:0 12px 24px rgba(220,38,38,.35);}
-.modal-icon.loading{background:linear-gradient(135deg,var(--muted),var(--text));}
-.modal-icon.loading::after{content:'';width:26px;height:26px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
-.modal-name{font-size:1.35rem;font-weight:700;margin-bottom:4px;}
-.modal-type{font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
-.modal-type.entrada{color:var(--success);}
-.modal-type.saida{color:var(--danger);}
-.modal-time{font-size:3.2rem;font-weight:200;letter-spacing:-.03em;line-height:1;margin-bottom:20px;font-variant-numeric:tabular-nums;}
-.modal-totals{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:16px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:22px;}
-.t-label{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:4px;}
-.t-value{font-size:1rem;font-weight:700;font-variant-numeric:tabular-nums;}
-.modal-btn{width:100%;background:var(--text);color:#fff;padding:16px;border-radius:14px;font-size:.88rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:all .15s;}
-.modal-btn:active{transform:scale(.97);}
-.modal-btn.secondary{background:transparent;color:var(--muted);border:1.5px solid var(--border);margin-top:8px;}
-.modal-body{font-size:.92rem;color:var(--muted);line-height:1.55;margin-bottom:20px;}
-
-/* ===================== ADMIN ===================== */
-#screenAdmin{display:none;flex-direction:column;min-height:100dvh;background:var(--bg);}
-.admin-head{padding:20px 20px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--surface);}
-.admin-title{font-size:1.05rem;font-weight:800;letter-spacing:-.01em;}
-.back-btn{padding:8px 14px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:999px;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
-.admin-body{flex:1;overflow-y:auto;padding:20px;max-width:600px;width:100%;margin:0 auto;}
-.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:22px;margin-bottom:16px;}
-.card h3{font-size:.78rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
-.field{margin-bottom:14px;}
-.field label{display:block;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
-.field input,.field select{width:100%;padding:13px 15px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:16px;font-weight:600;color:var(--text);background:var(--surface-2);outline:none;transition:all .18s;font-family:inherit;}
-.field input:focus,.field select:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 4px rgba(217,119,6,.12);}
-.btn-primary{width:100%;padding:15px;background:var(--text);color:#fff;border-radius:var(--r-sm);font-size:.85rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:all .15s;}
-.btn-primary:active{transform:scale(.98);}
-.btn-primary:disabled{opacity:.5;cursor:not-allowed;}
-.btn-secondary{width:100%;padding:14px;background:var(--surface-2);color:var(--text);border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:.82rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:10px;}
-.punch-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--surface-2);border-radius:var(--r-sm);margin-bottom:8px;font-size:.9rem;}
-.punch-row strong{font-weight:700;}
-.punch-row .badge{font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px;}
-.badge.in{background:#dcfce7;color:#166534;}
-.badge.out{background:#fee2e2;color:#991b1b;}
-.empty{text-align:center;color:var(--muted);font-size:.85rem;padding:20px;}
-.tab-bar{display:flex;gap:6px;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch;}
-.tab-btn{padding:9px 16px;border-radius:999px;background:transparent;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap;border:1.5px solid transparent;}
-.tab-btn.active{background:var(--text);color:#fff;}
-.tab-panel{display:none;}
-.tab-panel.active{display:block;}
-.punch-list{max-height:340px;overflow-y:auto;padding-right:4px;}
-</style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icon-192.png">
 </head>
 <body>
+<div class="container">
+  <div class="header">
+    <div class="logo-wrapper">
+      <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.opacity='0.9'" class="logo-empresa" alt="Logotipo Balcão Agrícola">
+    </div>
+    <h2 id="headerTitle">REGISTO DE PONTO</h2>
+    <div class="live-clock-card" id="headerClockBox">
+      <div class="clock-time-row">
+        <div class="gps-badge"><div class="gps-pulse-dot" id="gpsIndicator"></div></div>
+        <span id="liveClockTime">00:00:00</span>
+      </div>
+      <div class="clock-date-row" id="liveClockDate">A sincronizar data...</div>
+    </div>
+  </div>
 
-<!-- MAIN -->
-<div id="screenMain">
-  <div class="head">
-    <div class="brand">Balcão Agrícola · Registo de Ponto</div>
-    <div class="clock" id="clock">--:--:--</div>
-    <div class="clock-sub"><span class="dot-live" id="liveDot"></span><span id="clockSub">A sincronizar…</span></div>
-  </div>
-  <div class="main">
-    <div class="prompt" id="promptText">Introduza o seu PIN</div>
-    <div class="pin-dots" id="pinDots">
-      <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+  <div id="section-ponto" class="content-section active">
+    <div class="ponto-pin-only">
+      <div style="display:flex; justify-content:flex-end; align-items:center; margin-bottom:14px;">
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="top-action-btn calendar" onclick="abrirEcraFaltaFuncionario()" title="Comunicar Ausência">📅</button>
+          <button type="button" class="top-action-btn settings" onclick="abrirModalSenhaAdmin()" title="Painel de Gestão">⚙️</button>
+        </div>
+      </div>
+      <h3 style="font-size:1.35rem; font-weight:900; color:var(--primary); margin-bottom:14px; letter-spacing:-0.02em; text-align:center;">Insira o seu PIN</h3>
+      <div class="pin-display-area">
+        <input type="password" id="pinPonto" class="pin-hidden-input" maxlength="4" inputmode="numeric" style="position:absolute; opacity:0; pointer-events:none;">
+        <div id="dotsPonto" class="pin-dots-big">
+          <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+        </div>
+        <div id="nomePreview" class="pin-nome-preview"></div>
+        <div id="pinStatus" class="pin-status"></div>
+      </div>
+      <div class="keypad" id="keypadPonto">
+        <button class="key" onclick="tecladoPress('1')">1</button>
+        <button class="key" onclick="tecladoPress('2')">2</button>
+        <button class="key" onclick="tecladoPress('3')">3</button>
+        <button class="key" onclick="tecladoPress('4')">4</button>
+        <button class="key" onclick="tecladoPress('5')">5</button>
+        <button class="key" onclick="tecladoPress('6')">6</button>
+        <button class="key" onclick="tecladoPress('7')">7</button>
+        <button class="key" onclick="tecladoPress('8')">8</button>
+        <button class="key" onclick="tecladoPress('9')">9</button>
+        <button class="key key-action key-clear" onclick="tecladoClear()" title="Limpar">⌫ Limpar</button>
+        <button class="key" onclick="tecladoPress('0')">0</button>
+        <button class="key key-action" onclick="tecladoBack()" title="Apagar">⌦</button>
+      </div>
+      <div id="erro-pin-ponto" class="erro-campo" style="display:none !important;"></div>
     </div>
-    <div class="numpad" id="numpad">
-      <button class="key" data-key="1">1</button>
-      <button class="key" data-key="2">2</button>
-      <button class="key" data-key="3">3</button>
-      <button class="key" data-key="4">4</button>
-      <button class="key" data-key="5">5</button>
-      <button class="key" data-key="6">6</button>
-      <button class="key" data-key="7">7</button>
-      <button class="key" data-key="8">8</button>
-      <button class="key" data-key="9">9</button>
-      <button class="key action clear" data-key="C">Limpar</button>
-      <button class="key zero" data-key="0">0</button>
-      <button class="key action" data-key="B">⌫</button>
+  </div>
+
+  <div id="section-falta-func" class="content-section">
+    <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
+      <h3 style="margin-bottom: 8px; color: var(--primary); text-align: left; font-size: 1.05rem;">📅 Comunicar Ausência</h3>
+      <p style="font-size: 0.94rem; color: var(--text-muted); margin-bottom: 22px; line-height: 1.6; text-align: left;">Submeta os detalhes da sua ausência. A gerência será notificada e responderá por email.</p>
+      <div class="admin-card" style="margin-bottom: 0;">
+        <div class="form-group"><label>O seu Nome <span class="campo-obrigatorio">*</span></label><select id="nomeFuncFalta" class="form-control"></select></div>
+        <div class="form-group">
+          <label>PIN de Acesso (4 dígitos) <span class="campo-obrigatorio">*</span></label>
+          <div class="password-eye-wrapper">
+            <input type="password" id="pinFuncFalta" class="form-control" maxlength="4" inputmode="numeric" placeholder="••••" style="letter-spacing: 8px; text-align: center; font-size: 1.25rem;">
+            <button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput('pinFuncFalta', this)">👁️</button>
+          </div>
+        </div>
+        <div class="form-group"><label>O seu E-mail <span class="campo-obrigatorio">*</span></label><input type="email" id="emailFuncFalta" class="form-control" placeholder="ex: email@email.com"></div>
+        <div class="form-group">
+          <label>Motivo da Ausência <span class="campo-obrigatorio">*</span></label>
+          <select id="tipoFaltaFunc" class="form-control">
+            <option value="" disabled selected>Selecione o motivo</option>
+            <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
+            <option value="🏖️ Férias">🏖️ Férias</option>
+            <option value="📄 Falta Justificada">📄 Falta Justificada</option>
+            <option value="⚠️ Falta Injustificada">⚠️ Falta Injustificada</option>
+            <option value="🤝 Acordo 1:1">🤝 Acordo 1:1</option>
+            <option value="🔄 Troca com Colega">🔄 Troca com Colega</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Observações / Justificação</label>
+          <textarea id="obsFuncFalta" class="form-control" rows="4" placeholder="Detalhes adicionais (opcional)..." style="resize: vertical; min-height: 100px;"></textarea>
+        </div>
+        <div class="form-group"><label>Data de Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncInicio" class="form-control"></div>
+        <div class="form-group"><label>Data de Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncFim" class="form-control"></div>
+        <button class="btn btn-primary" onclick="submeterFaltaFuncionario()">Enviar Pedido à Gerência</button>
+      </div>
+      <div style="margin-top: 18px; padding-top: 20px;">
+        <button class="btn btn-nav-blue" onclick="voltarAoEcraPrincipal()">⬅️ Voltar ao Início</button>
+      </div>
     </div>
   </div>
-  <div class="foot">
-    <button class="admin-link" onclick="openAdminGate()">⚙ Admin</button>
+
+  <div id="section-admin" class="content-section">
+    <div id="admin-sub-menu">
+      <div class="admin-card" style="border: none; background: transparent; box-shadow: none; padding: 0;">
+        <h3 style="margin-bottom: 22px; color: var(--primary); text-align: center; justify-content: center; font-size: 1.15rem;">⚙️ Painel de Gestão</h3>
+        <div class="menu-admin-grid">
+          <button class="btn tile-emerald" onclick="abrirSubModulo('dashboard'); carregarDashboard();" style="grid-column: span 2; background: linear-gradient(135deg,#065f46 0%, #10b981 100%); color:white; font-weight:800; letter-spacing:0.02em;"><span>📊</span> DASHBOARD</button>
+          <button class="btn tile-amber" onclick="abrirSubModulo('pedidos'); carregarPedidosPendentes();"><span>📩</span> Pedidos</button>
+          <button class="btn tile-blue" onclick="abrirSubModulo('ausencias')"><span>📅</span> Faltas e Férias</button>
+          <button class="btn tile-cyan" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
+          <button class="btn tile-rose" onclick="abrirSubModulo('pdf')"><span>📄</span> Exportar PDF</button>
+          <button class="btn tile-emerald" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar Colab.</button>
+          <button class="btn tile-red" onclick="abrirSubModulo('remover')"><span>❌</span> Inativar Colab.</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="admin-sub-dashboard" style="display: none;">
+      <div class="admin-card">
+        <h3>📊 Dashboard - Hoje</h3>
+        <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:16px;" id="dashboardData">A carregar resumo...</p>
+        <div style="display:grid; gap:12px; grid-template-columns: 1fr 1fr;">
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:14px;text-align:center;">
+            <div style="font-size:0.70rem;font-weight:800;color:#065f46;text-transform:uppercase;letter-spacing:0.05em;">Presentes</div>
+            <div id="dashPresentes" style="font-size:1.9rem;font-weight:800;color:#065f46;margin-top:4px;">--</div>
+          </div>
+          <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:14px;padding:14px;text-align:center;">
+            <div style="font-size:0.70rem;font-weight:800;color:#92400e;text-transform:uppercase;">Atrasos</div>
+            <div id="dashAtrasos" style="font-size:1.9rem;font-weight:800;color:#92400e;margin-top:4px;">--</div>
+          </div>
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;padding:14px;text-align:center;">
+            <div style="font-size:0.70rem;font-weight:800;color:#1e40af;text-transform:uppercase;">Turno Aberto</div>
+            <div id="dashAbertos" style="font-size:1.9rem;font-weight:800;color:#1e40af;margin-top:4px;">--</div>
+          </div>
+          <div style="background:#fdf2f8;border:1px solid #fbcfe8;border-radius:14px;padding:14px;text-align:center;">
+            <div style="font-size:0.70rem;font-weight:800;color:#9d174d;text-transform:uppercase;" title="Picagens guardadas sem internet por enviar">Por Sincronizar</div>
+            <div id="dashOffline" style="font-size:1.9rem;font-weight:800;color:#9d174d;margin-top:4px;">0</div>
+          </div>
+        </div>
+        <div id="dashLista" style="margin-top:20px; text-align:left;"></div>
+        <div style="margin-top:18px;">
+          <button class="btn btn-primary" onclick="carregarDashboard()" style="width:100%; padding:16px; font-size:1rem; font-weight:800; letter-spacing:0.02em;">🔄 ATUALIZAR</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PAINEL DE PEDIDOS — NOVO DESIGN ═══ -->
+    <div id="admin-sub-pedidos" style="display: none;">
+      <div class="pedidos-hero">
+        <h2>📩 Pedidos de Ausência</h2>
+        <p>Gestão em tempo real das solicitações da equipa</p>
+        <div class="pedidos-stats">
+          <div class="pedidos-stat pendente">
+            <div class="num" id="statPendentes">0</div>
+            <div class="lbl">Pendentes</div>
+          </div>
+          <div class="pedidos-stat aprovado">
+            <div class="num" id="statAprovados">0</div>
+            <div class="lbl">Aprovados</div>
+          </div>
+          <div class="pedidos-stat recusado">
+            <div class="num" id="statRecusados">0</div>
+            <div class="lbl">Recusados</div>
+          </div>
+        </div>
+      </div>
+      <div class="pedidos-filtros">
+        <button class="pf-chip active" data-filter="pendente">
+          Pendentes <span class="cnt" id="chipPendentes">0</span>
+        </button>
+        <button class="pf-chip" data-filter="aprovado">Aprovados</button>
+        <button class="pf-chip" data-filter="recusado">Recusados</button>
+        <button class="pf-chip" data-filter="todos">Todos</button>
+      </div>
+      <div id="pedidosList"></div>
+    </div>
+
+    <div id="admin-sub-ausencias" style="display: none;">
+      <div class="admin-card">
+        <h3>📅 Lançar Registo Manual</h3>
+        <div class="form-group"><label>Colaborador</label><select id="nomeFuncionarioFolga" class="form-control"></select></div>
+        <div class="form-group"><label>Motivo</label>
+          <select id="tipoAusencia" class="form-control">
+            <option value="" disabled selected>Selecione o motivo</option>
+            <option value="🏖️️ Férias">🏖️ Férias</option>
+            <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
+            <option value="📄 Falta Justificada">📄 Falta Justificada</option>
+            <option value="⚠️ Falta Injustificada">⚠️ Falta Injustificada</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaInicio" class="form-control"></div>
+        <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFolgaFim" class="form-control"></div>
+        <button class="btn btn-primary" onclick="submeterAusenciaAdministrativa()">Confirmar Lançamento</button>
+      </div>
+    </div>
+
+    <div id="admin-sub-corrigir" style="display: none;">
+      <div class="admin-card">
+        <h3>✏️ Corrigir Picagem</h3>
+        <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeCorrigir" class="form-control"></select></div>
+        <div class="form-group"><label>Data <span class="campo-obrigatorio">*</span></label><input type="date" id="dataCorrigir" class="form-control"></div>
+        <div class="form-group"><label>Hora <span class="campo-obrigatorio">*</span></label><input type="time" id="horaCorrigir" class="form-control"></div>
+        <button class="btn btn-primary" onclick="submeterCorrecao()">Inserir Picagem</button>
+      </div>
+    </div>
+
+    <div id="admin-sub-pdf" style="display: none;">
+      <div class="admin-card">
+        <h3>📄 Exportar Relatório</h3>
+        <div class="form-group"><label>Colaborador</label><select id="selecaoFuncionario" class="form-control"></select></div>
+        <div class="form-group"><label>De:</label><input type="date" id="dataInicio" class="form-control"></div>
+        <div class="form-group"><label>Até:</label><input type="date" id="dataFim" class="form-control"></div>
+        <button class="btn btn-primary" onclick="exportarRelatorioPDF()">Gerar PDF</button>
+      </div>
+    </div>
+
+    <div id="admin-sub-funcionario" style="display: none;">
+      <div class="admin-card">
+        <h3>➕ Adicionar Colaborador</h3>
+        <div class="form-group"><label>Nome <span class="campo-obrigatorio">*</span></label><input type="text" id="nomeNovo" class="form-control" placeholder="Ex: Ana Silva"></div>
+        <div class="form-group"><label>PIN (4 dígitos)</label><input type="text" id="pinNovo" class="form-control" maxlength="4" placeholder="0000" inputmode="numeric"></div>
+        <div class="form-group"><label>Filial</label><select id="filialNovo" class="form-control"><option value="Pataias">Pataias</option><option value="Garcia">Garcia</option></select></div>
+        <button class="btn btn-primary" onclick="submeterNovoFuncionario()">Registar Colaborador</button>
+      </div>
+    </div>
+
+    <div id="admin-sub-remover" style="display: none;">
+      <div class="admin-card">
+        <h3 style="color:var(--danger);">❌ Inativar Colaborador</h3>
+        <div class="form-group"><label>Colaborador <span class="campo-obrigatorio">*</span></label><select id="nomeRemover" class="form-control"></select></div>
+        <button class="btn btn-danger" onclick="submeterRemocaoFuncionario()">Confirmar Inativação</button>
+      </div>
+    </div>
+
+    <div class="nav-navigation-block" id="adminNavigationGroup" style="display: none; margin-bottom: 18px;">
+      <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()">⬅️ Voltar ao Menu</button>
+    </div>
+    <div style="margin-top: 18px; padding-top: 20px; border-top: 1px solid var(--border);">
+      <button class="btn btn-nav-red" onclick="voltarAoEcraPrincipal()">🚪 Sair do Painel Admin</button>
+    </div>
   </div>
+
+  <div class="app-footer" id="appFooter"><p>© 2026 · Balcão Agrícola</p></div>
 </div>
 
-<!-- ADMIN -->
-<div id="screenAdmin">
-  <div class="admin-head">
-    <div class="admin-title">Painel de Gestão</div>
-    <button class="back-btn" onclick="closeAdmin()">Sair</button>
-  </div>
-  <div class="tab-bar">
-    <button class="tab-btn active" data-tab="hoje">Hoje</button>
-    <button class="tab-btn" data-tab="corrigir">Corrigir</button>
-    <button class="tab-btn" data-tab="pdf">PDF</button>
-    <button class="tab-btn" data-tab="colabs">Colaboradores</button>
-  </div>
-  <div class="admin-body">
-    <!-- HOJE -->
-    <div class="tab-panel active" id="panelHoje">
-      <div class="card">
-        <h3>🕒 Picagens de hoje</h3>
-        <div id="todayList" class="punch-list"><div class="empty">A carregar…</div></div>
-        <button class="btn-secondary" onclick="loadToday()">🔄 Atualizar</button>
-      </div>
-    </div>
-
-    <!-- CORRIGIR -->
-    <div class="tab-panel" id="panelCorrigir">
-      <div class="card">
-        <h3>✏️ Adicionar picagem</h3>
-        <div class="field"><label>Colaborador</label><select id="corrNome"></select></div>
-        <div class="field"><label>Data</label><input type="date" id="corrData"></div>
-        <div class="field"><label>Hora</label><input type="time" id="corrHora"></div>
-        <button class="btn-primary" onclick="submitCorrecao()">Adicionar Picagem</button>
-      </div>
-      <div class="card">
-        <h3>🗑️ Remover picagem</h3>
-        <div class="field"><label>Colaborador</label><select id="remNome"></select></div>
-        <div class="field"><label>Data</label><input type="date" id="remData"></div>
-        <button class="btn-secondary" style="background:#fee2e2;color:#991b1b;border-color:#fecaca;" onclick="loadPicagensDia()">Ver picagens desse dia</button>
-        <div id="remList" class="punch-list" style="margin-top:14px;"></div>
-      </div>
-    </div>
-
-    <!-- PDF -->
-    <div class="tab-panel" id="panelPdf">
-      <div class="card">
-        <h3>📄 Exportar PDF</h3>
-        <div class="field"><label>Colaborador</label><select id="pdfNome"><option value="TODOS">TODOS</option></select></div>
-        <div class="field"><label>Data início</label><input type="date" id="pdfIni"></div>
-        <div class="field"><label>Data fim</label><input type="date" id="pdfFim"></div>
-        <button class="btn-primary" onclick="submitPdf()">Gerar e Enviar PDF</button>
-      </div>
-    </div>
-
-    <!-- COLABORADORES -->
-    <div class="tab-panel" id="panelColabs">
-      <div class="card">
-        <h3>➕ Adicionar colaborador</h3>
-        <div class="field"><label>Nome</label><input type="text" id="newNome" placeholder="Nome completo"></div>
-        <div class="field"><label>PIN (4 dígitos)</label><input type="text" id="newPin" maxlength="4" inputmode="numeric" placeholder="0000"></div>
-        <div class="field"><label>Filial</label><select id="newFilial"><option value="Pataias">Pataias</option><option value="Garcia">Garcia</option></select></div>
-        <button class="btn-primary" onclick="submitNovoFuncionario()">Registar</button>
-      </div>
-      <div class="card">
-        <h3>❌ Inativar colaborador</h3>
-        <div class="field"><label>Colaborador</label><select id="inativarNome"></select></div>
-        <button class="btn-secondary" style="background:#fee2e2;color:#991b1b;border-color:#fecaca;" onclick="submitInativar()">Inativar</button>
-      </div>
+<div id="toastOverlay" class="toast-overlay" onclick="fecharToastOverlay(event)">
+  <div class="toast-card">
+    <div id="toastIcon" class="toast-icon">🟢</div>
+    <div id="toastTitle" class="toast-title">CONCLUÍDO</div>
+    <div id="toastBody" class="toast-body">Operação processada.</div>
+    <div id="toastActionsContainer" class="toast-actions">
+      <button id="toastBtn" class="toast-btn toast-btn-primary" onclick="fecharToast()">Concluir</button>
     </div>
   </div>
-</div>
-
-<!-- OVERLAY -->
-<div class="overlay" id="overlay">
-  <div class="modal" id="modal"></div>
 </div>
 
 <script>
-/* ============ CONFIG ============ */
-const APP_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec"; // ex: https://script.google.com/macros/s/AKfy.../exec
-const MIN_WAIT_LOCAL = 30; // segundos entre picagens (feedback imediato)
-const LS_PIN_HASH = "PONTO_PIN_HASH_V1";
-const LS_QUEUE = "PONTO_QUEUE_V1";
-const LS_LAST = "PONTO_LAST_PUNCH_MS";
+  var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
+  var senhaAdminSessao = "";
+  var emProcessamento = false;
+  var estaOnline = navigator.onLine;
+  var listaFuncionariosCache = [];
+  var MODULOS_ADMIN = ['dashboard','pedidos','ausencias','corrigir','pdf','funcionario','remover'];
 
-/* ============ STATE ============ */
-let pinBuffer = "";
-let adminSenha = "";
-let processing = false;
-let funcionariosCache = [];
-
-/* ============ CLOCK ============ */
-function tickClock() {
-  const now = new Date();
-  const hh = String(now.getHours()).padStart(2,'0');
-  const mm = String(now.getMinutes()).padStart(2,'0');
-  const ss = String(now.getSeconds()).padStart(2,'0');
-  document.getElementById('clock').textContent = `${hh}:${mm}:${ss}`;
-  const dias = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
-  const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-  document.getElementById('clockSub').textContent = `${dias[now.getDay()]}, ${now.getDate()} ${meses[now.getMonth()]} ${now.getFullYear()}`;
-}
-setInterval(tickClock, 1000); tickClock();
-
-/* ============ ONLINE STATE ============ */
-function updateOnlineState() {
-  const dot = document.getElementById('liveDot');
-  const label = document.getElementById('clockSub');
-  if (!navigator.onLine) {
-    dot.classList.add('off');
-    label.textContent += ' · offline';
-  } else {
-    dot.classList.remove('off');
-  }
-}
-window.addEventListener('online', () => { updateOnlineState(); syncQueue(); });
-window.addEventListener('offline', updateOnlineState);
-updateOnlineState();
-
-/* ============ NUMPAD ============ */
-function updateDots() {
-  const dots = document.querySelectorAll('#pinDots .pin-dot');
-  dots.forEach((d, i) => d.classList.toggle('on', i < pinBuffer.length));
-}
-function vibrate() {
-  if ('vibrate' in navigator) navigator.vibrate(15);
-}
-function handleKey(k) {
-  if (processing) return;
-  if (k >= '0' && k <= '9') {
-    if (pinBuffer.length >= 4) return;
-    pinBuffer += k;
-    vibrate();
-    updateDots();
-    if (pinBuffer.length === 4) setTimeout(submitPin, 200);
-  } else if (k === 'B') {
-    pinBuffer = pinBuffer.slice(0, -1);
-    updateDots();
-  } else if (k === 'C') {
-    pinBuffer = '';
-    updateDots();
-  }
-}
-document.getElementById('numpad').addEventListener('click', (e) => {
-  const btn = e.target.closest('.key');
-  if (!btn) return;
-  handleKey(btn.dataset.key);
-});
-
-/* ============ OVERLAY ============ */
-function showModal(html) {
-  document.getElementById('modal').innerHTML = html;
-  document.getElementById('overlay').classList.add('show');
-}
-function hideModal() {
-  document.getElementById('overlay').classList.remove('show');
-}
-function showLoading(title, sub) {
-  showModal(`
-    <div class="modal-icon loading"></div>
-    <div class="modal-name">${title}</div>
-    <div class="modal-body">${sub || 'Aguarde…'}</div>
-  `);
-}
-function showError(title, msg) {
-  showModal(`
-    <div class="modal-icon error">!</div>
-    <div class="modal-name">${title}</div>
-    <div class="modal-body">${msg}</div>
-    <button class="modal-btn" onclick="hideModal()">Fechar</button>
-  `);
-}
-function showSuccess(r) {
-  const tipoCls = r.tipo === 'Entrada' ? 'entrada' : 'saida';
-  showModal(`
-    <div class="modal-icon success">✓</div>
-    <div class="modal-name">${r.nome}</div>
-    <div class="modal-type ${tipoCls}">${r.tipo}</div>
-    <div class="modal-time">${r.hora}</div>
-    <div class="modal-totals">
-      <div><div class="t-label">Hoje</div><div class="t-value">${r.horasHoje}</div></div>
-      <div><div class="t-label">Semana</div><div class="t-value">${r.horasSemana}</div></div>
-      <div><div class="t-label">Mês</div><div class="t-value">${r.horasMes}</div></div>
-    </div>
-    <button class="modal-btn" onclick="hideModal()">Fechar</button>
-  `);
-}
-
-/* ============ PIN HASH (offline) ============ */
-async function hashPin(pin) {
-  const buf = new TextEncoder().encode(String(pin).trim());
-  const hash = await crypto.subtle.digest('SHA-256', buf);
-  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
-}
-function getHashes() {
-  try { return JSON.parse(localStorage.getItem(LS_PIN_HASH) || '{}'); } catch(e) { return {}; }
-}
-function setHashes(obj) { localStorage.setItem(LS_PIN_HASH, JSON.stringify(obj)); }
-
-/* ============ QUEUE OFFLINE ============ */
-function getQueue() {
-  try { return JSON.parse(localStorage.getItem(LS_QUEUE) || '[]'); } catch(e) { return []; }
-}
-function setQueue(q) { localStorage.setItem(LS_QUEUE, JSON.stringify(q)); }
-
-async function submitPin() {
-  if (processing) return;
-  processing = true;
-
-  const pin = pinBuffer;
-  pinBuffer = '';
-  updateDots();
-
-  // Prefer: try to identify via cached hash first (fast + offline)
-  const hashes = getHashes();
-  const h = await hashPin(pin);
-  const nomeFromCache = hashes[h];
-
-  if (!navigator.onLine) {
-    // OFFLINE PATH
-    if (!nomeFromCache) {
-      showError('Sem rede', 'Primeira vez neste telemóvel. Ligue-se à internet pelo menos uma vez para memorizar este PIN.');
-      processing = false;
-      return;
+  function configurarComportamentoDatas() {
+    function ligarSincronizacao(idIni, idFim) {
+      var elIni = document.getElementById(idIni);
+      var elFim = document.getElementById(idFim);
+      if (elIni && elFim) {
+        elIni.addEventListener('change', function() {
+          elFim.min = this.value;
+          if (!elFim.value || elFim.value < this.value) elFim.value = this.value;
+        });
+      }
     }
-    const item = {
-      idUnico: 'OFF_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
-      nome: nomeFromCache,
-      pin: pin,
-      lat: 0, lon: 0,
-      isMock: false,
-      disp: navigator.userAgent,
-      horaLocal: new Date().toISOString()
-    };
-    const q = getQueue(); q.push(item); setQueue(q);
-    showModal(`
-      <div class="modal-icon success">✓</div>
-      <div class="modal-name">${nomeFromCache}</div>
-      <div class="modal-type">Guardado offline</div>
-      <div class="modal-body">Picagem guardada às ${new Date().toLocaleTimeString('pt-PT')}. Será enviada quando houver rede.</div>
-      <button class="modal-btn" onclick="hideModal()">Fechar</button>
-    `);
-    processing = false;
-    return;
+    ligarSincronizacao('dataFaltaFuncInicio', 'dataFaltaFuncFim');
+    ligarSincronizacao('dataFolgaInicio', 'dataFolgaFim');
+    var hoje = new Date();
+    var hojeStr = hoje.toISOString().split('T')[0];
+    var campoCorrigir = document.getElementById('dataCorrigir');
+    if (campoCorrigir) campoCorrigir.value = hojeStr;
+    var dataInicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    var dataInicioMesStr = dataInicioMes.toISOString().split('T')[0];
+    var campoPdfIni = document.getElementById('dataInicio');
+    var campoPdfFim = document.getElementById('dataFim');
+    if (campoPdfIni) campoPdfIni.value = dataInicioMesStr;
+    if (campoPdfFim) campoPdfFim.value = hojeStr;
   }
 
-  // ONLINE PATH
-  showLoading('A registar', 'A validar o PIN no servidor…');
+  function iniciarRelogio() {
+    setInterval(function() {
+      var agora = new Date();
+      var horaStr = String(agora.getHours()).padStart(2, '0') + ':' + String(agora.getMinutes()).padStart(2, '0') + ':' + String(agora.getSeconds()).padStart(2, '0');
+      var meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+      var elTime = document.getElementById('liveClockTime');
+      var elDate = document.getElementById('liveClockDate');
+      if (elTime) elTime.innerText = horaStr;
+      if (elDate) elDate.innerText = String(agora.getDate()).padStart(2, '0') + ' ' + meses[agora.getMonth()] + ' ' + agora.getFullYear();
+    }, 1000);
+  }
 
-  jsonp({
-    action: 'salvarPontoPorPin',
-    pin: pin,
-    lat: 0, lon: 0,
-    isMock: 'false',
-    disp: navigator.userAgent
-  }, async (resp) => {
-    if (!resp || !resp.ok) {
-      const msg = (resp && resp.erro) || 'Erro desconhecido';
-      showError('Não registado', msg);
-      processing = false;
-      return;
-    }
-    // Cache hash for future offline
-    hashes[h] = resp.nome;
-    setHashes(hashes);
-    showSuccess(resp);
-    processing = false;
+  window.addEventListener('load', function() {
+    iniciarRelogio();
+    carregarFuncionariosEmTodosOsCampos();
+    configurarComportamentoDatas();
+    var emailGuardado = localStorage.getItem('emailColaboradorBA');
+    var campoEmail = document.getElementById('emailFuncFalta');
+    if (emailGuardado && campoEmail) campoEmail.value = emailGuardado;
+    if (!navigator.onLine) { var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); }
   });
-}
 
-/* ============ JSONP HELPER ============ */
-function jsonp(params, cb) {
-  const cbName = 'jsonp_' + Math.random().toString(36).slice(2,10);
-  const script = document.createElement('script');
-  let url = APP_URL + '?';
-  for (const k in params) url += encodeURIComponent(k) + '=' + encodeURIComponent(params[k]) + '&';
-  url += 'callback=' + cbName;
+  window.addEventListener('online', function() {
+    estaOnline = true;
+    var g = document.getElementById('gpsIndicator'); if (g) g.classList.remove('offline');
+    mostrarPopupPersonalizado({ titulo: "Ligação Restabelecida", mensagem: "O dispositivo voltou a estar online.", tipo: "sucesso" });
+  });
+  window.addEventListener('offline', function() {
+    estaOnline = false;
+    var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline');
+  });
 
-  const timeout = setTimeout(() => {
-    delete window[cbName];
-    if (script.parentNode) script.remove();
-    cb({ ok:false, erro:'Timeout na comunicação com o servidor' });
-  }, 30000);
+  function atualizarPinDisplay(inputId, containerId) {
+    var input = document.getElementById(inputId); if (!input) return;
+    input.value = input.value.replace(/[^0-9]/g, '');
+    var container = document.getElementById(containerId); if (!container) return;
+    var dots = container.children;
+    for (var i = 0; i < 4; i++) {
+      if (dots[i]) {
+        if (i < input.value.length) dots[i].classList.add('filled');
+        else dots[i].classList.remove('filled');
+      }
+    }
+  }
 
-  window[cbName] = (data) => {
-    clearTimeout(timeout);
-    delete window[cbName];
-    if (script.parentNode) script.remove();
-    cb(data);
-  };
-  script.onerror = () => {
-    clearTimeout(timeout);
-    delete window[cbName];
-    if (script.parentNode) script.remove();
-    cb({ ok:false, erro:'Erro de rede' });
-  };
-  script.src = url;
-  document.body.appendChild(script);
-}
+  function mostrarPopupPersonalizado(config) {
+    var overlay = document.getElementById('toastOverlay');
+    var tituloLimpo = (config.titulo || "Aviso").replace(/✅|❌|⏳|👋|⚠️|📍|📦|💬|🤝|💰|🟢|🔴|🗺️/g, "").trim().replace(/\s{2,}/g, " ").trim();
+    if (!tituloLimpo) tituloLimpo = "Aviso";
+    document.getElementById('toastTitle').innerText = tituloLimpo;
+    document.getElementById('toastBody').innerHTML = config.mensagem || "";
+    var icon = document.getElementById('toastIcon');
+    icon.className = "toast-icon";
+    var botoesPrimarios = document.querySelectorAll('.content-section.active .btn-primary');
+    if (config.tipo === "sucesso") icon.innerText = "✅";
+    else if (config.tipo === "erro") icon.innerText = "❌";
+    else if (config.tipo === "processando") { icon.className = "toast-icon ampulheta-animada"; icon.innerText = "⏳"; botoesPrimarios.forEach(function(b){ b.disabled = true; b.style.opacity = '0.5'; }); }
+    else if (config.tipo === "aviso") icon.innerText = "⚠️";
+    else icon.innerText = "💬";
+    var acts = document.getElementById('toastActionsContainer');
+    acts.innerHTML = "";
+    if (config.tipo === "processando") acts.style.display = "none";
+    else {
+      acts.style.display = "flex";
+      botoesPrimarios.forEach(function(b){ b.disabled = false; b.style.opacity = '1'; });
+      if (config.botoes) config.botoes.forEach(function(b) { var btn = document.createElement('button'); btn.className = "toast-btn " + (b.classe || "toast-btn-primary"); btn.innerText = b.texto; btn.onclick = b.acao; acts.appendChild(btn); });
+      else { var btn = document.createElement('button'); btn.className = "toast-btn toast-btn-primary"; btn.innerText = "Concluir"; btn.onclick = fecharToast; acts.appendChild(btn); }
+    }
+    overlay.style.display = "flex";
+  }
 
-/* ============ SYNC QUEUE ============ */
-async function syncQueue() {
-  const q = getQueue();
-  if (q.length === 0) return;
-  const hashes = getHashes();
-  const remaining = [];
+  function fecharToast() {
+    document.getElementById('toastOverlay').style.display = "none";
+    emProcessamento = false;
+    var botoesPrimarios = document.querySelectorAll('.btn-primary');
+    botoesPrimarios.forEach(function(b){ b.disabled = false; b.style.opacity = '1'; });
+  }
+  function fecharToastOverlay(e) {}
+  function alternarVisibilidadeSenhaInput(inputId, btnEye) {
+    var ip = document.getElementById(inputId);
+    if (!ip) return;
+    if (ip.type === "password") { ip.type = "text"; if (btnEye) btnEye.innerText = "🙈"; }
+    else { ip.type = "password"; if (btnEye) btnEye.innerText = "👁️"; }
+  }
+  function obterDetalhesDispositivo() {
+    try { if (window.AndroidBridge && typeof window.AndroidBridge.getDeviceModel === "function") { var m = window.AndroidBridge.getDeviceModel(); if (m) return m; } } catch(e) {}
+    var ua = navigator.userAgent;
+    if (ua.indexOf("iPhone") !== -1) return "Apple iPhone";
+    if (ua.indexOf("Samsung") !== -1) return "Samsung Galaxy";
+    return navigator.platform || "Smartphone";
+  }
 
-  for (const item of q) {
-    await new Promise((resolve) => {
-      jsonp({
-        action: 'salvarPonto',
-        nome: item.nome,
-        pin: item.pin,
-        lat: item.lat || 0,
-        lon: item.lon || 0,
-        isMock: 'false',
-        disp: item.disp || '',
-        idUnico: item.idUnico,
-        horaOffline: item.horaLocal
-      }, (resp) => {
-        if (!resp || !resp.ok) {
-          // Permanent failure? drop if server says "PIN incorreto" or "não encontrado"
-          const err = (resp && resp.erro) || '';
-          if (/incorreto|não encontrado|inativo/i.test(err)) {
-            // Drop
-          } else {
-            remaining.push(item);
+  function chamarAPIJsonp(params, callbackSucesso) {
+    if (!navigator.onLine && params && params.action !== "obterFuncionarios" && params.action !== "obterTodosFuncionarios" && params.action !== "salvarPontoJsonp") {
+      emProcessamento = false;
+      mostrarPopupPersonalizado({ titulo: "Sem Ligação", mensagem: "Sem internet. A picagem funciona offline, mas esta função precisa de rede.", tipo: "erro" });
+      return;
+    }
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, 2000);
+    fetch('https://api.ipify.org?format=json', { signal: controller.signal })
+      .then(function(res) { return res.json(); })
+      .then(function(data) { clearTimeout(timeoutId); params.ip = data.ip || "Não disponível"; enviarPedidoComIp(params, callbackSucesso); })
+      .catch(function() { clearTimeout(timeoutId); params.ip = "Não disponível"; enviarPedidoComIp(params, callbackSucesso); });
+  }
+
+  function enviarPedidoComIp(params, callbackSucesso) {
+    var cbName = "jsonp_cb_" + Math.random().toString(36).substring(2, 9);
+    var script = document.createElement('script'); script.id = cbName;
+    var timeoutReq = setTimeout(function() {
+      if (window[cbName]) {
+        delete window[cbName];
+        if (script && script.parentNode) script.remove();
+        emProcessamento = false;
+        mostrarPopupPersonalizado({ titulo: "Tempo Esgotado", mensagem: "A operação demorou demasiado tempo.", tipo: "erro" });
+      }
+    }, 35000);
+    window[cbName] = function(dados) {
+      clearTimeout(timeoutReq);
+      delete window[cbName];
+      if (script && script.parentNode) script.remove();
+      if (callbackSucesso) callbackSucesso(dados);
+    };
+    var url = APP_SCRIPT_URL + "?";
+    for (var key in params) { if (params.hasOwnProperty(key)) url += encodeURIComponent(key) + "=" + encodeURIComponent(params[key]) + "&"; }
+    url += "callback=" + cbName;
+    script.src = url;
+    script.onerror = function() {
+      clearTimeout(timeoutReq);
+      delete window[cbName];
+      if (script && script.parentNode) script.remove();
+      emProcessamento = false;
+      mostrarPopupPersonalizado({ titulo: "Erro de Comunicação", mensagem: "Não foi possível contactar o servidor.", tipo: "erro" });
+    };
+    document.body.appendChild(script);
+  }
+
+  function abrirModalSenhaAdmin() {
+    mostrarPopupPersonalizado({
+      titulo: "Autenticação",
+      mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.94rem;">Área reservada à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.35rem; letter-spacing:6px;" placeholder="••••" autofocus><button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️</button></div>',
+      icone: "🔐",
+      botoes: [
+        { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
+        { texto: "Entrar", classe: "toast-btn-primary", acao: function() {
+            var s = document.getElementById('inputSenhaPopup').value;
+            if (!s) return;
+            mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A verificar credenciais...", tipo: "processando" });
+            chamarAPIJsonp({ action: "verificarSenha", senha: s }, function(resp) {
+              if (resp && resp.ok) {
+                senhaAdminSessao = s;
+                fecharToast();
+                document.getElementById('section-ponto').classList.remove('active');
+                document.getElementById('section-falta-func').classList.remove('active');
+                document.getElementById('section-admin').classList.add('active');
+                document.getElementById('headerTitle').style.display = 'none';
+                document.getElementById('headerClockBox').style.display = 'none';
+                voltarAoMenuCentralAdmin();
+              } else {
+                mostrarPopupPersonalizado({ titulo: "Acesso Negado", mensagem: "Palavra-passe incorreta.", tipo: "erro" });
+              }
+            });
           }
         }
-        resolve();
-      });
+      ]
     });
   }
-  setQueue(remaining);
-}
 
-/* ============ ADMIN ============ */
-function openAdminGate() {
-  showModal(`
-    <div class="modal-name" style="margin-bottom:14px;">Área Reservada</div>
-    <div class="modal-body">Introduza a palavra-passe de administração.</div>
-    <div class="field" style="margin-bottom:16px;">
-      <input type="password" id="adminPin" placeholder="••••" style="text-align:center;font-size:1.4rem;letter-spacing:6px;">
-    </div>
-    <button class="modal-btn" onclick="submitAdminGate()">Entrar</button>
-    <button class="modal-btn secondary" onclick="hideModal()">Cancelar</button>
-  `);
-  setTimeout(() => document.getElementById('adminPin').focus(), 100);
-}
+  function abrirEcraFaltaFuncionario() {
+    document.getElementById('section-ponto').classList.remove('active');
+    document.getElementById('section-admin').classList.remove('active');
+    document.getElementById('section-falta-func').classList.add('active');
+    document.getElementById('headerTitle').style.display = 'none';
+    document.getElementById('headerClockBox').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-function submitAdminGate() {
-  const pin = document.getElementById('adminPin').value;
-  if (!pin) return;
-  showLoading('A validar', '');
-  jsonp({ action: 'verificarSenha', senha: pin }, (resp) => {
-    if (resp && resp.ok) {
-      adminSenha = pin;
-      hideModal();
-      document.getElementById('screenMain').style.display = 'none';
-      document.getElementById('screenAdmin').style.display = 'flex';
-      loadColabsAdmin();
-      loadToday();
-      setDefaultDates();
-    } else {
-      showError('Acesso negado', 'Palavra-passe incorreta');
-    }
-  });
-}
+  function voltarAoEcraPrincipal() {
+    senhaAdminSessao = "";
+    document.getElementById('section-admin').classList.remove('active');
+    document.getElementById('section-falta-func').classList.remove('active');
+    document.getElementById('section-ponto').classList.add('active');
+    document.getElementById('headerTitle').style.display = 'block';
+    document.getElementById('headerClockBox').style.display = 'inline-flex';
+    voltarAoMenuCentralAdmin();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-function closeAdmin() {
-  adminSenha = '';
-  document.getElementById('screenAdmin').style.display = 'none';
-  document.getElementById('screenMain').style.display = 'flex';
-}
-
-/* TABS */
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('panel' + btn.dataset.tab.charAt(0).toUpperCase() + btn.dataset.tab.slice(1)).classList.add('active');
-    if (btn.dataset.tab === 'hoje') loadToday();
-    if (btn.dataset.tab === 'pdf') loadColabsAdmin();
-    if (btn.dataset.tab === 'corrigir') loadColabsAdmin();
-    if (btn.dataset.tab === 'colabs') loadColabsAdmin();
-  });
-});
-
-function setDefaultDates() {
-  const now = new Date();
-  const ymd = now.toISOString().slice(0,10);
-  const ymd1st = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0,10);
-  ['corrData','remData'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ymd; });
-  const pi = document.getElementById('pdfIni'); if (pi) pi.value = ymd1st;
-  const pf = document.getElementById('pdfFim'); if (pf) pf.value = ymd;
-}
-
-function loadColabsAdmin() {
-  jsonp({ action: 'obterFuncionarios' }, (resp) => {
-    if (!resp || !resp.ok) return;
-    const list = resp.funcionarios || [];
-    funcionariosCache = list;
-    ['corrNome','remNome','pdfNome'].forEach(id => {
-      const sel = document.getElementById(id);
-      if (!sel) return;
-      const isPdf = id === 'pdfNome';
-      sel.innerHTML = isPdf ? '<option value="TODOS">TODOS</option>' : '<option value="">Selecione…</option>';
-      list.forEach(n => {
-        const o = document.createElement('option'); o.value = n; o.text = n;
-        sel.appendChild(o);
-      });
+  function carregarFuncionariosEmTodosOsCampos() {
+    if (!navigator.onLine) return;
+    chamarAPIJsonp({ action: "obterFuncionarios" }, function(resp) {
+      if (resp && resp.ok && resp.funcionarios) {
+        listaFuncionariosCache = resp.funcionarios;
+        preencherSelectsNomes(resp.funcionarios);
+      }
     });
-    const selInat = document.getElementById('inativarNome');
-    if (selInat) {
-      selInat.innerHTML = '<option value="">Selecione…</option>';
-      list.forEach(n => { const o = document.createElement('option'); o.value = n; o.text = n; selInat.appendChild(o); });
+  }
+
+  function preencherSelectsNomes(lista) {
+    try { localStorage.setItem('FUNCIONARIOS_CACHE_V1', JSON.stringify(lista)); } catch(e) {}
+    ['nomeFuncionario','nomeFuncionarioFolga','nomeRemover','nomeFuncFalta','nomeCorrigir'].forEach(function(id) {
+      var sel = document.getElementById(id);
+      if (sel) {
+        sel.innerHTML = '<option value="" disabled selected>Selecione o colaborador</option>';
+        lista.forEach(function(n) { var o = document.createElement('option'); o.value = n; o.text = n; sel.appendChild(o); });
+      }
+    });
+    var sAdmin = document.getElementById('selecaoFuncionario');
+    if (sAdmin) {
+      sAdmin.innerHTML = '<option value="" disabled selected>Selecione</option><option value="TODOS">Exportar Todos</option>';
+      lista.forEach(function(n) { var o = document.createElement('option'); o.value = n; o.text = n; sAdmin.appendChild(o); });
     }
-  });
-}
+  }
 
-function loadToday() {
-  const box = document.getElementById('todayList');
-  box.innerHTML = '<div class="empty">A carregar…</div>';
-  jsonp({ action: 'obterResumoHoje', senha: adminSenha }, (resp) => {
-    if (!resp || !resp.ok) { box.innerHTML = `<div class="empty">${(resp && resp.erro) || 'Erro'}</div>`; return; }
-    const emp = resp.employees || [];
-    if (emp.length === 0) { box.innerHTML = '<div class="empty">Sem picagens hoje.</div>'; return; }
-    box.innerHTML = emp.map(e => `
-      <div class="punch-row">
-        <div>
-          <strong>${e.nome}</strong><br>
-          <span style="color:var(--muted);font-size:.8rem;">${e.picagens}</span>
-        </div>
-        <span class="badge ${e.aberto ? 'in' : 'out'}">${e.aberto ? 'Dentro' : 'Fora'}</span>
-      </div>
-    `).join('');
-  });
-}
-
-function submitCorrecao() {
-  const nome = document.getElementById('corrNome').value;
-  const data = document.getElementById('corrData').value;
-  const hora = document.getElementById('corrHora').value;
-  if (!nome || !data || !hora) { showError('Campos em falta','Preencha tudo.'); return; }
-  showLoading('A guardar','');
-  jsonp({ action:'corrigirPicagem', nome, data, hora, senha: adminSenha }, (resp) => {
-    if (resp && resp.ok) { showSuccess({ nome, tipo:'Adicionada', hora, horasHoje:resp.horasHoje||'—', horasSemana:resp.horasSemana||'—', horasMes:resp.horasMes||'—' }); }
-    else showError('Erro', (resp && resp.erro) || 'Erro');
-  });
-}
-
-function loadPicagensDia() {
-  const nome = document.getElementById('remNome').value;
-  const data = document.getElementById('remData').value;
-  if (!nome || !data) { showError('Campos em falta','Escolha colaborador e data.'); return; }
-  const box = document.getElementById('remList');
-  box.innerHTML = '<div class="empty">A carregar…</div>';
-  jsonp({ action:'listarPicagens', nome, data, senha: adminSenha }, (resp) => {
-    if (!resp || !resp.ok) { box.innerHTML = `<div class="empty">${(resp && resp.erro) || 'Erro'}</div>`; return; }
-    const ps = resp.picagens || [];
-    if (ps.length === 0) { box.innerHTML = '<div class="empty">Sem picagens neste dia.</div>'; return; }
-    box.innerHTML = ps.map((p, idx) => `
-      <div class="punch-row">
-        <strong>${p.hora}</strong>
-        <span style="color:var(--muted);font-size:.8rem;flex:1;margin-left:10px;">${p.tipo}</span>
-        <button class="back-btn" style="background:#fee2e2;color:#991b1b;border-color:#fecaca;" onclick="removerPicagem(${idx})">🗑️</button>
-      </div>
-    `).join('');
-  });
-}
-
-function removerPicagem(idx) {
-  const nome = document.getElementById('remNome').value;
-  const data = document.getElementById('remData').value;
-  jsonp({ action:'corrigirPicagem', nome, data, index: idx, modo:'remover', senha: adminSenha }, (resp) => {
-    if (resp && resp.ok) { loadPicagensDia(); loadToday(); }
-    else showError('Erro', (resp && resp.erro) || 'Erro');
-  });
-}
-
-function submitPdf() {
-  const nome = document.getElementById('pdfNome').value;
-  const ini = document.getElementById('pdfIni').value;
-  const fim = document.getElementById('pdfFim').value;
-  if (!nome || !ini || !fim) { showError('Campos em falta','Preencha tudo.'); return; }
-  showLoading('A gerar PDF','Vai receber por email em alguns segundos…');
-  jsonp({ action:'gerarPdf', nome, ini, fim, senha: adminSenha }, (resp) => {
-    if (resp && resp.ok) {
-      showModal(`
-        <div class="modal-icon success">✓</div>
-        <div class="modal-name">PDF pedido</div>
-        <div class="modal-body">Vai receber o PDF no email configurado em alguns segundos.</div>
-        <button class="modal-btn" onclick="hideModal()">Fechar</button>
-      `);
-    } else {
-      showError('Erro', (resp && resp.erro) || 'Erro');
+  function submeterFaltaFuncionario() {
+    var nome = document.getElementById('nomeFuncFalta').value;
+    var pin = document.getElementById('pinFuncFalta').value;
+    var email = document.getElementById('emailFuncFalta').value;
+    var tipo = document.getElementById('tipoFaltaFunc').value;
+    var dIni = document.getElementById('dataFaltaFuncInicio').value;
+    var dFim = document.getElementById('dataFaltaFuncFim').value;
+    var obs = document.getElementById('obsFuncFalta').value;
+    if (!nome || !pin || !email || !tipo || !dIni || !dFim) {
+      mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos obrigatórios antes de submeter.", tipo: "erro" });
+      return;
     }
-  });
-}
+    localStorage.setItem('emailColaboradorBA', email.trim());
+    mostrarPopupPersonalizado({ titulo: "A Enviar", mensagem: "A submeter o seu pedido à gerência...", tipo: "processando" });
+    chamarAPIJsonp({
+      action: "comunicarAusenciaFuncionarioJsonp",
+      nome: nome, pin: pin, email: email, tipo: tipo,
+      dataInicio: dIni, dataFim: dFim, obs: obs
+    }, function(resp) {
+      if (resp && resp.ok) {
+        mostrarPopupPersonalizado({ titulo: "Pedido Enviado", mensagem: "A gerência foi notificada. Será contactado por email.", tipo: "sucesso" });
+        setTimeout(voltarAoEcraPrincipal, 2500);
+      } else {
+        mostrarPopupPersonalizado({ titulo: "Erro", mensagem: (resp && resp.erro) || "Falha ao submeter", tipo: "erro" });
+      }
+    });
+  }
 
-function submitNovoFuncionario() {
-  const nome = document.getElementById('newNome').value.trim();
-  const pin = document.getElementById('newPin').value.trim();
-  const filial = document.getElementById('newFilial').value;
-  if (!nome || !pin || pin.length !== 4) { showError('Dados inválidos','Nome e PIN de 4 dígitos são obrigatórios.'); return; }
-  jsonp({ action:'adicionarFuncionario', nome, pin, filial, senha: adminSenha }, (resp) => {
-    if (resp && resp.ok) { showSuccess({nome, tipo:'Adicionado', hora:'—', horasHoje:'—', horasSemana:'—', horasMes:'—'}); loadColabsAdmin(); document.getElementById('newNome').value=''; document.getElementById('newPin').value=''; }
-    else showError('Erro', (resp && resp.erro) || 'Erro');
-  });
-}
+  function abrirSubModulo(id) {
+    document.getElementById('admin-sub-menu').style.display = 'none';
+    MODULOS_ADMIN.forEach(function(m) {
+      var el = document.getElementById('admin-sub-' + m);
+      if (el) el.style.display = (m === id) ? 'block' : 'none';
+    });
+    document.getElementById('adminNavigationGroup').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-function submitInativar() {
-  const nome = document.getElementById('inativarNome').value;
-  if (!nome) return;
-  if (!confirm(`Inativar ${nome}?`)) return;
-  jsonp({ action:'removerFuncionario', nome, senha: adminSenha }, (resp) => {
-    if (resp && resp.ok) { showSuccess({nome, tipo:'Inativado', hora:'—', horasHoje:'—', horasSemana:'—', horasMes:'—'}); loadColabsAdmin(); }
-    else showError('Erro', (resp && resp.erro) || 'Erro');
-  });
-}
+  function voltarAoMenuCentralAdmin() {
+    MODULOS_ADMIN.forEach(function(m) {
+      var el = document.getElementById('admin-sub-' + m);
+      if (el) el.style.display = 'none';
+    });
+    document.getElementById('admin-sub-menu').style.display = 'block';
+    document.getElementById('adminNavigationGroup').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    var pNovo = document.getElementById('pinNovo'); if (pNovo) pNovo.value = "";
+    var nNovo = document.getElementById('nomeNovo'); if (nNovo) nNovo.value = "";
+    var hCor = document.getElementById('horaCorrigir'); if (hCor) hCor.value = "";
+  }
 
-/* ============ INIT ============ */
-document.addEventListener('DOMContentLoaded', () => {
-  setDefaultDates();
-  if (navigator.onLine) setTimeout(syncQueue, 2000);
-});
+  function gerirErroCampo(id, msg) {
+    var cp = document.getElementById(id); if (!cp) return;
+    if (msg) { cp.innerHTML = msg; cp.style.display = "flex"; }
+    else { cp.style.display = "none"; }
+  }
+
+  /* ═════════════════════════════════════════
+   * TECLADO PIN
+   * ═════════════════════════════════════════ */
+  var pinAtual = "";
+  var bloqueadoAte = 0;
+  var PINS_HASH_KEY = "PONTO_PIN_HASH_V1";
+  var PINS_REVERSE_KEY = "PONTO_PIN_REVERSE_V1";
+
+  function getHashes() { try { return JSON.parse(localStorage.getItem(PINS_HASH_KEY) || "{}"); } catch(e) { return {}; } }
+  function setHashes(o) { localStorage.setItem(PINS_HASH_KEY, JSON.stringify(o)); }
+  function getReverse() { try { return JSON.parse(localStorage.getItem(PINS_REVERSE_KEY) || "{}"); } catch(e) { return {}; } }
+  function setReverse(o) { localStorage.setItem(PINS_REVERSE_KEY, JSON.stringify(o)); }
+
+  async function hashPin(pin) {
+    try {
+      var enc = new TextEncoder().encode(String(pin).trim());
+      var buf = await crypto.subtle.digest('SHA-256', enc);
+      return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+    } catch(e) {
+      var s = String(pin), h = 0;
+      for (var i = 0; i < s.length; i++) { h = ((h << 5) - h) + s.charCodeAt(i); h |= 0; }
+      return String(h);
+    }
+  }
+
+  function atualizarDisplayPin() {
+    var dots = document.querySelectorAll('#dotsPonto .pin-dot');
+    for (var i = 0; i < 4; i++) {
+      if (dots[i]) {
+        if (i < pinAtual.length) dots[i].classList.add('filled');
+        else dots[i].classList.remove('filled');
+      }
+    }
+    var inp = document.getElementById('pinPonto');
+    if (inp) inp.value = pinAtual;
+  }
+
+  function vibrar() { try { if ('vibrate' in navigator) navigator.vibrate(18); } catch(e) {} }
+
+  function tecladoPress(d) {
+    if (Date.now() < bloqueadoAte) return;
+    if (pinAtual.length >= 4) return;
+    if (emProcessamento) return;
+    vibrar();
+    pinAtual += d;
+    atualizarDisplayPin();
+    if (pinAtual.length === 4) setTimeout(resolverERegistarAutomatico, 250);
+  }
+  function tecladoClear() { pinAtual = ""; atualizarDisplayPin(); }
+  function tecladoBack() { if (pinAtual.length > 0) { pinAtual = pinAtual.slice(0, -1); atualizarDisplayPin(); } }
+
+  async function resolverERegistarAutomatico() {
+    if (emProcessamento) return;
+    var pin = pinAtual;
+    if (!/^[0-9]{4}$/.test(pin)) { tecladoClear(); return; }
+    emProcessamento = true;
+
+    var h = await hashPin(pin);
+    var reverse = getReverse();
+    var nomeResolvido = reverse[h] || null;
+
+    if (!navigator.onLine) {
+      if (!nomeResolvido) {
+        mostrarPopupPersonalizado({ titulo: "Sem rede", mensagem: "Primeira vez neste telemóvel. Ligue-se à internet uma vez para memorizar este PIN.", tipo: "erro" });
+        emProcessamento = false;
+        tecladoClear();
+        return;
+      }
+      var item = {
+        idUnico: 'OFF_' + Date.now() + '_' + Math.random().toString(36).substring(2,6),
+        nome: nomeResolvido, pin: pin, lat: 0, lon: 0, isMock: false,
+        disp: obterDetalhesDispositivo(), horaLocal: new Date().toISOString()
+      };
+      var fila = [];
+      try { fila = JSON.parse(localStorage.getItem('PONTO_FILA_OFFLINE_V1') || '[]'); } catch(e) {}
+      fila.push(item);
+      localStorage.setItem('PONTO_FILA_OFFLINE_V1', JSON.stringify(fila));
+      mostrarPopupPersonalizado({ titulo: "Guardado Offline", mensagem: "Olá " + nomeResolvido + "! Picagem guardada às " + new Date().toLocaleTimeString('pt-PT') + ". Será enviada quando houver rede.", tipo: "sucesso" });
+      emProcessamento = false;
+      tecladoClear();
+      return;
+    }
+
+    mostrarPopupPersonalizado({ titulo: "A registar", mensagem: "A validar o PIN no servidor...", tipo: "processando" });
+    var lat = 0, lon = 0;
+    try {
+      var pos = await new Promise(function(res) {
+        if (!navigator.geolocation) return res(null);
+        navigator.geolocation.getCurrentPosition(function(p){ res(p); }, function(){ res(null); }, { enableHighAccuracy: true, timeout: 6000, maximumAge: 30000 });
+      });
+      if (pos) { lat = pos.coords.latitude; lon = pos.coords.longitude; }
+    } catch(e) {}
+
+    chamarAPIJsonp({
+      action: "salvarPontoPorPin",
+      pin: pin, lat: lat, lon: lon,
+      isMock: 'false', disp: obterDetalhesDispositivo()
+    }, async function(resp) {
+      if (resp && resp.ok) {
+        try {
+          var hashes = getHashes();
+          hashes[resp.nome] = h;
+          setHashes(hashes);
+          var rev = getReverse();
+          rev[h] = resp.nome;
+          setReverse(rev);
+        } catch(e) {}
+        mostrarPopupPersonalizado({
+          titulo: "Ponto Registado",
+          mensagem: "Olá, <b>" + resp.nome + "</b>!<br><br>" +
+                    resp.tipo + " às " + resp.hora + "<br>" +
+                    "📍 " + (resp.local || "") + "<br><br>" +
+                    "<b>Hoje:</b> " + resp.horasHoje + " · <b>Semana:</b> " + resp.horasSemana + " · <b>Mês:</b> " + resp.horasMes,
+          tipo: "sucesso"
+        });
+      } else {
+        var msg = (resp && resp.erro) || "Erro desconhecido";
+        mostrarPopupPersonalizado({ titulo: "Não registado", mensagem: msg, tipo: "erro" });
+        bloqueadoAte = Date.now() + 1500;
+      }
+      emProcessamento = false;
+      tecladoClear();
+    });
+  }
+
+  /* ═════════════════════════════════════════
+   * DASHBOARD
+   * ═════════════════════════════════════════ */
+  function carregarDashboard() {
+    var dataEl = document.getElementById('dashboardData');
+    if (dataEl) {
+      var agora = new Date();
+      var diasPT = ["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"];
+      var mesesPT = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+      dataEl.textContent = diasPT[agora.getDay()] + ", " + ("0"+agora.getDate()).slice(-2) + " de " + mesesPT[agora.getMonth()] + " de " + agora.getFullYear() + " · " + agora.toLocaleTimeString('pt-PT', {hour:'2-digit', minute:'2-digit'});
+    }
+    var fila = [];
+    try { fila = JSON.parse(localStorage.getItem('PONTO_FILA_OFFLINE_V1') || '[]'); } catch(e) {}
+    var elOff = document.getElementById('dashOffline');
+    if (elOff) elOff.textContent = fila.length;
+
+    chamarAPIJsonp({ action: "obterResumoHoje", senha: senhaAdminSessao }, function(resp) {
+      if (!resp || !resp.ok) {
+        document.getElementById('dashPresentes').textContent = '—';
+        document.getElementById('dashAtrasos').textContent = '—';
+        document.getElementById('dashAbertos').textContent = '—';
+        document.getElementById('dashLista').innerHTML = '<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:14px;font-size:0.88rem;color:#dc2626;">Erro: ' + ((resp && resp.erro) || 'Sem resposta') + '</div>';
+        return;
+      }
+      var emps = resp.employees || [];
+      var presentes = emps.filter(function(e){ return e.picagens !== '—'; }).length;
+      var abertos = emps.filter(function(e){ return e.aberto; }).length;
+      document.getElementById('dashPresentes').textContent = presentes;
+      document.getElementById('dashAtrasos').textContent = '0';
+      document.getElementById('dashAbertos').textContent = abertos;
+
+      var html = '';
+      emps.forEach(function(e) {
+        var cor = e.aberto ? '#f0fdf4' : (e.picagens === '—' ? '#fef2f2' : '#f8fafc');
+        var badge = e.aberto ? 'DENTRO' : (e.picagens === '—' ? 'AUSENTE' : 'FORA');
+        var badgeCor = e.aberto ? '#065f46' : (e.picagens === '—' ? '#991b1b' : '#64748b');
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:' + cor + ';border-radius:12px;margin-bottom:8px;"><div><div style="font-weight:800;font-size:0.94rem;">' + e.nome + '</div><div style="font-size:0.78rem;color:#64748b;">' + e.picagens + '</div></div><div style="background:' + badgeCor + ';color:white;padding:4px 10px;border-radius:20px;font-size:0.7rem;font-weight:800;">' + badge + '</div></div>';
+      });
+      document.getElementById('dashLista').innerHTML = html || '<div style="text-align:center;color:#64748b;padding:20px;">Sem colaboradores.</div>';
+    });
+  }
+
+  /* ═════════════════════════════════════════
+   * PÁGINA DE PEDIDOS — RENOVADA
+   * ═════════════════════════════════════════ */
+  var _pedidosCache = [];
+  var _pedidosFiltro = 'pendente';
+
+  function carregarPedidosPendentes() {
+    var box = document.getElementById('pedidosList');
+    if (!box) return;
+    box.innerHTML = '<div class="pedidos-empty"><div class="ico">⏳</div><h4>A carregar…</h4></div>';
+    chamarAPIJsonp({ action: 'obterPedidos', senha: senhaAdminSessao }, function(resp) {
+      if (!resp || !resp.ok) {
+        box.innerHTML = '<div class="pedidos-empty"><div class="ico">⚠️</div><h4>Erro</h4><p>' + ((resp && resp.erro) || 'Falha ao carregar') + '</p></div>';
+        return;
+      }
+      _pedidosCache = resp.pedidos || [];
+      atualizarStatsPedidos();
+      renderPedidos();
+    });
+  }
+
+  function atualizarStatsPedidos() {
+    var pend = 0, aprov = 0, recus = 0;
+    _pedidosCache.forEach(function(p) {
+      if (p.estado && p.estado.indexOf('Aguardar') !== -1) pend++;
+      else if (p.estado && p.estado.indexOf('Aprovado') !== -1) aprov++;
+      else if (p.estado && p.estado.indexOf('Recusado') !== -1) recus++;
+    });
+    var sp = document.getElementById('statPendentes'); if (sp) sp.textContent = pend;
+    var sa = document.getElementById('statAprovados'); if (sa) sa.textContent = aprov;
+    var sr = document.getElementById('statRecusados'); if (sr) sr.textContent = recus;
+    var cp = document.getElementById('chipPendentes'); if (cp) cp.textContent = pend;
+    var menuBtn = document.querySelector('.menu-admin-grid .tile-amber');
+    if (menuBtn) {
+      var badge = menuBtn.querySelector('.badge-pendentes');
+      if (pend > 0) {
+        if (!badge) {
+          badge = document.createElement('span');
+          badge.className = 'badge-pendentes';
+          menuBtn.appendChild(badge);
+        }
+        badge.textContent = pend;
+      } else if (badge) {
+        badge.remove();
+      }
+    }
+  }
+
+  function renderPedidos() {
+    var box = document.getElementById('pedidosList');
+    if (!box) return;
+    var lista = _pedidosCache.filter(function(p) {
+      if (_pedidosFiltro === 'todos') return true;
+      if (_pedidosFiltro === 'pendente') return p.estado && p.estado.indexOf('Aguardar') !== -1;
+      if (_pedidosFiltro === 'aprovado') return p.estado && p.estado.indexOf('Aprovado') !== -1;
+      if (_pedidosFiltro === 'recusado') return p.estado && p.estado.indexOf('Recusado') !== -1;
+      return true;
+    });
+    if (lista.length === 0) {
+      var msgs = {
+        pendente: ['🎉', 'Sem pedidos pendentes', 'Está tudo em dia!'],
+        aprovado: ['📋', 'Sem pedidos aprovados', 'Nenhum pedido aprovado ainda.'],
+        recusado: ['📋', 'Sem pedidos recusados', 'Nenhum pedido recusado ainda.'],
+        todos: ['📭', 'Sem pedidos', 'Ainda não há pedidos submetidos.']
+      };
+      var m = msgs[_pedidosFiltro] || msgs.todos;
+      box.innerHTML = '<div class="pedidos-empty"><div class="ico">' + m[0] + '</div><h4>' + m[1] + '</h4><p>' + m[2] + '</p></div>';
+      return;
+    }
+    box.innerHTML = lista.map(function(p) {
+      var classe = '';
+      if (p.estado && p.estado.indexOf('Aprovado') !== -1) classe = 'aprovado';
+      else if (p.estado && p.estado.indexOf('Recusado') !== -1) classe = 'recusado';
+      var badgeTxt = 'Aguarda';
+      if (classe === 'aprovado') badgeTxt = '✓ Aprovado';
+      else if (classe === 'recusado') badgeTxt = '✕ Recusado';
+      var inicial = (p.nome || '?').trim().charAt(0).toUpperCase();
+      var tipoEmoji = p.tipo || '📋';
+      if (tipoEmoji.indexOf('Férias') !== -1) tipoEmoji = '🏖️ Férias';
+      else if (tipoEmoji.indexOf('Baixa') !== -1) tipoEmoji = '🩺 Baixa';
+      else if (tipoEmoji.indexOf('Injustificada') !== -1) tipoEmoji = '⚠️ Injustificada';
+      else if (tipoEmoji.indexOf('Justificada') !== -1) tipoEmoji = '📄 Justificada';
+      else if (tipoEmoji.indexOf('Acordo') !== -1) tipoEmoji = '🤝 Acordo';
+      else if (tipoEmoji.indexOf('Troca') !== -1) tipoEmoji = '🔄 Troca';
+      var actionsHtml = '';
+      if (classe === '') {
+        actionsHtml = '<div class="pedido-actions">' +
+          '<button class="btn-aprovar" onclick="responderPedido(\'' + p.id + '\',\'aprovar\')">✓ Aprovar</button>' +
+          '<button class="btn-recusar" onclick="responderPedido(\'' + p.id + '\',\'recusar\')">✕ Recusar</button>' +
+        '</div>';
+      } else {
+        actionsHtml = '<div class="pedido-resposta">' + (classe === 'aprovado' ? '✓ Pedido aprovado' : '✕ Pedido recusado') + '</div>';
+      }
+      return '<div class="pedido-card ' + classe + '">' +
+        '<div class="pedido-head">' +
+          '<div class="pedido-avatar">' + inicial + '</div>' +
+          '<div class="pedido-info">' +
+            '<div class="pedido-nome">' + (p.nome || '—') + '</div>' +
+            '<div class="pedido-tipo">' + tipoEmoji + '</div>' +
+          '</div>' +
+          '<div class="pedido-badge">' + badgeTxt + '</div>' +
+        '</div>' +
+        '<div class="pedido-datas">' +
+          '<div><div class="dt">De</div><div class="dv">' + (p.dataIni || '—') + '</div></div>' +
+          '<div><div class="dt">Até</div><div class="dv">' + (p.dataFim || '—') + '</div></div>' +
+        '</div>' +
+        (p.obs && p.obs !== '—' ? '<div class="pedido-obs">"' + p.obs + '"</div>' : '') +
+        actionsHtml +
+      '</div>';
+    }).join('');
+  }
+
+  function responderPedido(id, decisao) {
+    var txt = decisao === 'aprovar' ? 'aprovar' : 'recusar';
+    mostrarPopupPersonalizado({
+      titulo: decisao === 'aprovar' ? '✅ Aprovar pedido' : '❌ Recusar pedido',
+      mensagem: 'Tem a certeza que quer ' + txt + ' este pedido?<br><br>O colaborador será notificado por email.',
+      icone: decisao === 'aprovar' ? '✅' : '❌',
+      botoes: [
+        { texto: 'Cancelar', classe: 'toast-btn-secondary', acao: fecharToast },
+        { texto: decisao === 'aprovar' ? 'Aprovar' : 'Recusar', classe: 'toast-btn-primary', acao: function() {
+            mostrarPopupPersonalizado({ titulo: 'A processar…', mensagem: 'A atualizar o pedido…', tipo: 'processando' });
+            chamarAPIJsonp({ action: 'responderPedido', id: id, decisao: decisao, senha: senhaAdminSessao }, function(resp) {
+              if (resp && resp.ok) {
+                mostrarPopupPersonalizado({ titulo: decisao === 'aprovar' ? '✅ Aprovado' : '❌ Recusado', mensagem: 'O colaborador foi notificado por email.', tipo: 'sucesso' });
+                carregarPedidosPendentes();
+              } else {
+                mostrarPopupPersonalizado({ titulo: 'Erro', mensagem: (resp && resp.erro) || 'Não foi possível', tipo: 'erro' });
+              }
+            });
+          }
+        }
+      ]
+    });
+  }
+
+  document.addEventListener('click', function(e) {
+    var chip = e.target.closest('.pf-chip');
+    if (!chip) return;
+    document.querySelectorAll('.pf-chip').forEach(function(c) { c.classList.remove('active'); });
+    chip.classList.add('active');
+    _pedidosFiltro = chip.dataset.filter;
+    renderPedidos();
+  });
+
+  /* ═════════════════════════════════════════
+   * OUTRAS AÇÕES ADMIN
+   * ═════════════════════════════════════════ */
+  function submeterAusenciaAdministrativa() {
+    var nome = document.getElementById('nomeFuncionarioFolga').value;
+    var tipo = document.getElementById('tipoAusencia').value;
+    var dIni = document.getElementById('dataFolgaInicio').value;
+    var dFim = document.getElementById('dataFolgaFim').value;
+    if (!nome || !tipo || !dIni || !dFim) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Processar", mensagem: "A lançar no mapa...", tipo: "processando" });
+    chamarAPIJsonp({ action: "lancarAusenciaAdminJsonp", nome: nome, tipo: tipo, dataInicio: dIni, dataFim: dFim, senha: senhaAdminSessao }, function(resp) {
+      if (resp && resp.ok) {
+        mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: "Registo lançado.", tipo: "sucesso" });
+      } else {
+        mostrarPopupPersonalizado({ titulo: "Erro", mensagem: (resp && resp.erro) || "Erro", tipo: "erro" });
+      }
+    });
+  }
+
+  function submeterCorrecao() {
+    var nome = document.getElementById('nomeCorrigir').value;
+    var d = document.getElementById('dataCorrigir').value;
+    var h = document.getElementById('horaCorrigir').value;
+    if (!nome || !d || !h) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha tudo.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Corrigir", mensagem: "A inserir a picagem...", tipo: "processando" });
+    chamarAPIJsonp({ action: "corrigirPicagem", nome: nome, data: d, hora: h, senha: senhaAdminSessao }, function(resp) {
+      if (resp && resp.ok) {
+        mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: "Picagem inserida.<br>Hoje: " + resp.horasHoje + " · Semana: " + resp.horasSemana + " · Mês: " + resp.horasMes, tipo: "sucesso" });
+      } else {
+        mostrarPopupPersonalizado({ titulo: "Erro", mensagem: (resp && resp.erro) || "Erro", tipo: "erro" });
+      }
+    });
+  }
+
+  function exportarRelatorioPDF() {
+    var f = document.getElementById('selecaoFuncionario').value;
+    var di = document.getElementById('dataInicio').value;
+    var df = document.getElementById('dataFim').value;
+    if (!f || !di || !df) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha todos os campos.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Exportar", mensagem: "A gerar o relatório PDF...", tipo: "processando" });
+    chamarAPIJsonp({ action: "gerarPdf", nome: f, ini: di, fim: df, senha: senhaAdminSessao }, function(resp) {
+      if (resp && resp.ok) {
+        mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: "PDF enviado por email (" + resp.quantidade + " ficheiro(s)).", tipo: "sucesso" });
+      } else {
+        mostrarPopupPersonalizado({ titulo: "Erro", mensagem: (resp && resp.erro) || "Erro", tipo: "erro" });
+      }
+    });
+  }
+
+  function submeterNovoFuncionario() {
+    var n = document.getElementById('nomeNovo').value;
+    var p = document.getElementById('pinNovo').value;
+    var f = document.getElementById('filialNovo').value;
+    if (!n || !p) { mostrarPopupPersonalizado({ titulo: "Campos Obrigatórios", mensagem: "Preencha nome e PIN.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Guardar", mensagem: "A registar o colaborador...", tipo: "processando" });
+    chamarAPIJsonp({ action: "adicionarFuncionario", nome: n, pin: p, filial: f, senha: senhaAdminSessao }, function(resp) {
+      if (resp && resp.ok) {
+        carregarFuncionariosEmTodosOsCampos();
+        mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: "Colaborador adicionado.", tipo: "sucesso" });
+      } else {
+        mostrarPopupPersonalizado({ titulo: "Erro", mensagem: (resp && resp.erro) || "Erro", tipo: "erro" });
+      }
+    });
+  }
+
+  function submeterRemocaoFuncionario() {
+    var n = document.getElementById('nomeRemover').value;
+    if (!n) { mostrarPopupPersonalizado({ titulo: "Validação", mensagem: "Selecione um colaborador.", tipo: "erro" }); return; }
+    mostrarPopupPersonalizado({ titulo: "A Atualizar", mensagem: "A inativar o colaborador...", tipo: "processando" });
+    chamarAPIJsonp({ action: "removerFuncionario", nome: n, senha: senhaAdminSessao }, function(resp) {
+      if (resp && resp.ok) {
+        carregarFuncionariosEmTodosOsCampos();
+        mostrarPopupPersonalizado({ titulo: "Concluído", mensagem: "Colaborador inativado.", tipo: "sucesso" });
+      } else {
+        mostrarPopupPersonalizado({ titulo: "Erro", mensagem: (resp && resp.erro) || "Erro", tipo: "erro" });
+      }
+    });
+  }
 </script>
+
 </body>
 </html>
