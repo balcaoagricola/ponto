@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
   <style>
-    :root { --bg: #f5f3ef; --surface: #ffffff; --surface-2: #faf9f7; --text: #18181b; --text-muted: #71717a; --text-light: #a1a1aa; --border: #e7e5e4; --border-strong: #d6d3d1; --accent: #b45309; --accent-light: #d97706; --accent-dark: #92400e; --success: #15803d; --danger: #b91c1c; --warning: #a16207; --r-sm: 12px; --r-md: 18px; --r-lg: 24px; --r-xl: 28px; --shadow-sm: 0 1px 2px rgba(24,24,27,.04); --shadow-md: 0 4px 16px rgba(24,24,27,.06), 0 1px 3px rgba(24,24,27,.04); --shadow-lg: 0 24px 48px -12px rgba(24,24,27,.16); }
+    :root { --bg: #f5f3ef; --surface: #ffffff; --surface-2: #faf9f7; --text: #18181b; --text-muted: #71717a; --text-light: #a1a1aa; --border: #e7e5e4; --border-strong: #d6d3d1; --accent: #b45309; --accent-light: #d97706; --accent-dark: #92400e; --success: #15803d; --danger: #b91c1c; --warning: #a16207; --r-sm: 12px; --r-md: 18px; --r-lg: 24px; --r-xl: 28px; --shadow-lg: 0 24px 48px -12px rgba(24,24,27,.16); }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
     html { min-height: 100%; background: var(--bg); }
     body { min-height: 100dvh; background: var(--bg); color: var(--text); display: flex; align-items: center; justify-content: center; padding: 12px; overflow: hidden; -webkit-font-smoothing: antialiased; letter-spacing: -0.011em; }
@@ -49,6 +49,7 @@
     select.form-control { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2318181b' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 42px; cursor: pointer; }
     textarea.form-control { resize: vertical; min-height: 100px; line-height: 1.5; }
     .campo-obrigatorio { color: var(--danger); font-weight: 800; margin-left: 3px; }
+    input[type=file].form-control { padding: 10px 12px; font-size: 0.85rem; cursor: pointer; }
 
     .btn { width: 100%; padding: 16px 20px; border: none; border-radius: var(--r-sm); font-size: 0.85rem; font-weight: 700; cursor: pointer; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all .15s; margin-bottom: 12px; letter-spacing: 0.06em; text-transform: uppercase; font-family: inherit; }
     .btn:active { transform: scale(0.98); }
@@ -103,8 +104,6 @@
     .password-eye-wrapper .form-control { padding-right: 52px; }
     .eye-toggle-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: var(--surface-2); border: 1.5px solid var(--border); cursor: pointer; font-size: 1rem; padding: 6px 8px; border-radius: 8px; }
 
-    .hint-info { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; margin-bottom: 16px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--r-sm); font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
-
     .app-footer { text-align: center; font-size: 0.72rem; font-weight: 600; color: var(--text-light); padding: 14px; border-top: 1px solid var(--border); background: var(--surface); }
 
     .pedidos-hero { background: var(--text); border-radius: var(--r-lg); padding: 22px 20px; color: #fff; margin-bottom: 16px; position: relative; overflow: hidden; }
@@ -141,7 +140,7 @@
     .pedido-datas { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 10px; }
     .pedido-datas .dt { font-size: 0.56rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px; }
     .pedido-datas .dv { font-size: 0.85rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-    .pedido-obs { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; font-style: italic; margin-bottom: 12px; padding: 8px 12px; background: var(--surface-2); border-radius: 8px; border-left: 3px solid var(--border-strong); }
+    .pedido-obs { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; font-style: italic; margin-bottom: 12px; padding: 8px 12px; background: var(--surface-2); border-radius: 8px; border-left: 3px solid var(--border-strong); white-space: pre-line; }
     .pedido-actions { display: flex; gap: 8px; }
     .pedido-actions button { flex: 1; padding: 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; font-family: inherit; cursor: pointer; border: none; }
     .btn-aprovar { background: var(--success); color: #fff; }
@@ -210,7 +209,7 @@
 
   <div id="section-falta-func" class="content-section">
     <div style="margin-bottom:20px;">
-      <h3 style="font-size:1rem; font-weight:800; margin-bottom:6px;">Comunicar Ausência</h3>
+      <h3 style="font-size:1rem; font-weight:800; margin-bottom:6px;">Comunicar à Gerência</h3>
       <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">Submeta os detalhes. A gerência será notificada e responderá por email.</p>
     </div>
     <div class="admin-card">
@@ -225,15 +224,25 @@
       <div class="form-group"><label>O seu E-mail <span class="campo-obrigatorio">*</span></label><input type="email" id="emailFuncFalta" class="form-control" placeholder="email@exemplo.pt"></div>
       <div class="form-group">
         <label>Motivo <span class="campo-obrigatorio">*</span></label>
-        <select id="tipoFaltaFunc" class="form-control">
+        <select id="tipoFaltaFunc" class="form-control" onchange="aoMudarMotivo()">
           <option value="" disabled selected>Selecione</option>
           <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
           <option value="🏖️ Férias">🏖️ Férias</option>
           <option value="📄 Falta Justificada">📄 Falta Justificada</option>
           <option value="⚠️ Falta Injustificada">⚠️ Falta Injustificada</option>
+          <option value="📝 Outro Assunto">📝 Outro Assunto</option>
         </select>
       </div>
-      <div class="form-group"><label>Observações</label><textarea id="obsFuncFalta" class="form-control" rows="3" placeholder="Detalhes (opcional)..."></textarea></div>
+      <div class="form-group">
+        <label>Observações <span class="campo-obrigatorio" id="obsObrigatorio" style="display:none;">*</span></label>
+        <textarea id="obsFuncFalta" class="form-control" rows="3" placeholder="Detalhes (opcional)..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Anexar documento (opcional · máx. 5MB)</label>
+        <input type="file" id="fileInputFalta" class="form-control" onchange="handleFileSelect(event)">
+        <div id="fileNameDisplay" style="font-size:0.82rem; margin-top:8px; color:var(--text-muted);"></div>
+        <div id="fileUploadStatus" style="font-size:0.82rem; margin-top:4px; font-weight:700;"></div>
+      </div>
       <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncInicio" class="form-control"></div>
       <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncFim" class="form-control"></div>
       <button class="btn btn-primary" onclick="submeterFaltaFuncionario()">Enviar Pedido</button>
@@ -280,7 +289,7 @@
 
     <div id="admin-sub-pedidos" style="display:none;">
       <div class="pedidos-hero">
-        <h2>📩 Pedidos de Ausência</h2>
+        <h2>📩 Pedidos</h2>
         <p>Gestão em tempo real</p>
         <div class="pedidos-stats">
           <div class="pedidos-stat pendente"><div class="num" id="statPendentes">0</div><div class="lbl">Pendentes</div></div>
@@ -343,7 +352,7 @@
     <div id="admin-sub-funcionario" style="display:none;">
       <div class="admin-card">
         <h3>Adicionar Colaborador</h3>
-        <div class="form-group"><label>Nome</label><input type="text" id="nomeNovo" class="form-control" placeholder="Nome completo"></div>
+        <div class="form-group"><label>Nome</label><input type="text" id="nomeNovo" class="form-control" placeholder="Nome e apelido"></div>
         <div class="form-group"><label>PIN (4 dígitos)</label><input type="text" id="pinNovo" class="form-control" maxlength="4" inputmode="numeric" placeholder="0000"></div>
         <div class="form-group"><label>Filial</label><select id="filialNovo" class="form-control"><option value="Pataias">Pataias</option><option value="Garcia">Garcia</option></select></div>
         <button class="btn btn-primary" onclick="submeterNovoFuncionario()">Registar</button>
@@ -381,8 +390,8 @@ var tokenAdminSessao = "";
 var emProcessamento = false;
 var listaFuncionariosCache = [];
 var MODULOS_ADMIN = ['dashboard','pedidos','ausencias','corrigir','pdf','funcionario','remover'];
+var MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 
-/* Helper para injectar credenciais de admin nas chamadas (token preferido, senha fallback) */
 function adminParams(base) {
   var p = base || {};
   if (tokenAdminSessao) p.token = tokenAdminSessao;
@@ -397,19 +406,10 @@ var LS_ULTIMA_OFF = "PONTO_ULTIMA_PICAGEM_V2";
 var PIN_REV = "PONTO_PIN_REV_V1";
 var _sincronizando = false;
 
-function getFilaOffline() {
-  try { return JSON.parse(localStorage.getItem(LS_FILA_OFF) || '[]'); } catch(e) { return []; }
-}
-function setFilaOffline(f) {
-  localStorage.setItem(LS_FILA_OFF, JSON.stringify(f));
-  atualizarBadgeOffline();
-}
-function getUltimaOfflineMs() {
-  return parseInt(localStorage.getItem(LS_ULTIMA_OFF) || '0', 10) || 0;
-}
-function setUltimaOfflineMs() {
-  localStorage.setItem(LS_ULTIMA_OFF, String(Date.now()));
-}
+function getFilaOffline() { try { return JSON.parse(localStorage.getItem(LS_FILA_OFF) || '[]'); } catch(e) { return []; } }
+function setFilaOffline(f) { localStorage.setItem(LS_FILA_OFF, JSON.stringify(f)); atualizarBadgeOffline(); }
+function getUltimaOfflineMs() { return parseInt(localStorage.getItem(LS_ULTIMA_OFF) || '0', 10) || 0; }
+function setUltimaOfflineMs() { localStorage.setItem(LS_ULTIMA_OFF, String(Date.now())); }
 function podePicarOfflineAgora() {
   var ultima = getUltimaOfflineMs();
   if (!ultima) return { ok: true };
@@ -424,16 +424,11 @@ function podePicarOfflineAgora() {
   }
   return { ok: true };
 }
-
 function atualizarBadgeOffline() {
   var el = document.getElementById('offlineBadge');
   if (!el) return;
   var fila = getFilaOffline();
-  if (fila.length === 0) {
-    el.style.display = 'none';
-    el.innerHTML = '';
-    return;
-  }
+  if (fila.length === 0) { el.style.display = 'none'; el.innerHTML = ''; return; }
   el.style.display = 'block';
   el.innerHTML =
     '<div class="badge-off-box">' +
@@ -451,48 +446,31 @@ async function sincronizarFilaOffline() {
   var fila = getFilaOffline();
   if (fila.length === 0) return;
   _sincronizando = true;
-
   var restantes = [];
   for (var i = 0; i < fila.length; i++) {
     var item = fila[i];
     item.tentativas = (item.tentativas || 0) + 1;
-
     var resp = await new Promise(function(resolve) {
       try {
         chamarAPIJsonp({
-          action: 'salvarPonto',
-          nome: item.nome,
-          pin: item.pin,
-          lat: item.lat,
-          lon: item.lon,
-          isMock: 'false',
-          disp: item.disp,
-          idUnico: item.idUnico,
-          horaOffline: item.horaLocal
+          action: 'salvarPonto', nome: item.nome, pin: item.pin,
+          lat: item.lat, lon: item.lon, isMock: 'false', disp: item.disp,
+          idUnico: item.idUnico, horaOffline: item.horaLocal
         }, resolve);
       } catch(e) { resolve({ ok: false, erro: 'Erro de rede' }); }
     });
-
     var ok = resp && (resp.ok === true || String(resp).toLowerCase().indexOf('sucesso') !== -1);
-    if (ok) {
-      // Sincronizado — não volta à fila
-    } else {
+    if (!ok) {
       var erro = (resp && resp.erro) ? String(resp.erro) : String(resp || '');
       var definitivo = /incorreto|não encontrado|inativo|fora do perímetro|sem sinal gps|falsificado/i.test(erro);
-      if (!definitivo && item.tentativas < 10) {
-        restantes.push(item);
-      }
+      if (!definitivo && item.tentativas < 10) restantes.push(item);
     }
   }
-
   setFilaOffline(restantes);
   _sincronizando = false;
-
   if (restantes.length === 0 && fila.length > 0) {
     mostrarPopup({ titulo: 'Sincronizado', mensagem: 'Todas as picagens offline foram enviadas.', tipo: 'sucesso' });
-  } else if (restantes.length > 0) {
-    setTimeout(sincronizarFilaOffline, 15000);
-  }
+  } else if (restantes.length > 0) setTimeout(sincronizarFilaOffline, 15000);
 }
 
 function guardarPicagemOffline(nome, pin, lat, lon, disp) {
@@ -500,24 +478,19 @@ function guardarPicagemOffline(nome, pin, lat, lon, disp) {
   if (!chk.ok) {
     mostrarPopup({
       titulo: 'Aguarde um momento',
-      mensagem: 'Esta picagem <b>não foi guardada</b>.<br><br>Já picou há menos de ' + MINUTOS_BLOQUEIO_LOCAL + ' minutos. Aguarde <b>' + chk.mensagem + '</b> para picar de novo.',
+      mensagem: 'Esta picagem <b>não foi guardada</b>.<br><br>Já picou há menos de ' + MINUTOS_BLOQUEIO_LOCAL + ' minutos. Aguarde <b>' + chk.mensagem + '</b>.',
       tipo: 'erro'
     });
     return null;
   }
-
   var item = {
     idUnico: 'OFF_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
-    nome: nome,
-    pin: pin,
-    lat: lat || 0,
-    lon: lon || 0,
+    nome: nome, pin: pin,
+    lat: lat || 0, lon: lon || 0,
     disp: disp || 'Desconhecido',
     horaLocal: new Date().toISOString(),
-    horaLocalStr: new Date().toLocaleString('pt-PT'),
     tentativas: 0
   };
-
   var fila = getFilaOffline();
   fila.push(item);
   setFilaOffline(fila);
@@ -551,7 +524,6 @@ window.addEventListener('load', function() {
   atualizarBadgeOffline();
   if (navigator.onLine) setTimeout(sincronizarFilaOffline, 2000);
 });
-
 window.addEventListener('online', function(){
   var g = document.getElementById('gpsIndicator'); if (g) g.classList.remove('offline');
   setTimeout(sincronizarFilaOffline, 1500);
@@ -586,8 +558,7 @@ function enviar(params, cb) {
   url += "callback=" + nome;
   s.src = url;
   s.onerror = function(){
-    clearTimeout(to);
-    delete window[nome];
+    clearTimeout(to); delete window[nome];
     if(s.parentNode) s.remove();
     emProcessamento = false;
     pinAtual = ""; atualizarDots();
@@ -599,7 +570,7 @@ function enviar(params, cb) {
 /* ════════════════ POPUP ════════════════ */
 function mostrarPopup(cfg) {
   var ov = document.getElementById('toastOverlay');
-  document.getElementById('toastTitle').innerText = (cfg.titulo || "Aviso").replace(/[✅❌⏳⚠️📩📅✏️📄➕❌📊🤝🔄]/g, '').trim() || "Aviso";
+  document.getElementById('toastTitle').innerText = (cfg.titulo || "Aviso").replace(/[✅❌⏳⚠️📩📅✏️📄➕📊🤝🔄]/g, '').trim() || "Aviso";
   document.getElementById('toastBody').innerHTML = cfg.mensagem || "";
   var ic = document.getElementById('toastIcon');
   ic.className = "toast-icon";
@@ -613,7 +584,6 @@ function mostrarPopup(cfg) {
   acts.style.display = "flex";
 
   if (cfg.tipo === "processando") {
-    // Botão para cancelar o processamento (evita ficar 30 s bloqueado)
     var btnCancel = document.createElement('button');
     btnCancel.className = "toast-btn toast-btn-secondary";
     btnCancel.innerText = "Cancelar";
@@ -675,38 +645,54 @@ function obterDetalhesDispositivo() {
   return 'Desconhecido';
 }
 
-/* ════════════════ ADMIN LOGIN ════════════════ */
+/* ════════════════ ADMIN LOGIN (com Enter) ════════════════ */
 function abrirModalSenhaAdmin() {
   mostrarPopup({
     titulo: "Autenticação",
-    mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.9rem;">Área reservada à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.2rem; letter-spacing:6px;" placeholder="••••"><button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️</button></div>',
+    mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.9rem;">Área reservada à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.2rem; letter-spacing:6px;" placeholder="••••"><button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️</button></div><p style="margin-top:10px; font-size:0.72rem; color:var(--text-light);">Pressione <b>Enter</b> para entrar</p>',
     botoes: [
       { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
-      { texto: "Entrar", classe: "toast-btn-primary", acao: function() {
-          var s = document.getElementById('inputSenhaPopup').value;
-          if (!s) return;
-          mostrarPopup({ titulo: "A Processar", mensagem: "A verificar...", tipo: "processando" });
-          chamarAPIJsonp({ action: "verificarSenha", senha: s }, function(r) {
-            if (r && r.ok) {
-              senhaAdminSessao = s;
-              tokenAdminSessao = r.token || "";
-              fecharToast();
-              document.getElementById('section-ponto').classList.remove('active');
-              document.getElementById('section-falta-func').classList.remove('active');
-              document.getElementById('section-admin').classList.add('active');
-              document.getElementById('headerTitle').style.display = 'none';
-              document.getElementById('headerClockBox').style.display = 'none';
-              document.getElementById('offlineBadge').style.display = 'none';
-              voltarAoMenuCentralAdmin();
-            } else {
-              mostrarPopup({ titulo: "Acesso Negado", mensagem: "Palavra-passe incorreta.", tipo: "erro" });
-            }
-          });
-        }
-      }
+      { texto: "Entrar", classe: "toast-btn-primary", acao: tentarEntrarAdmin }
     ]
   });
-  setTimeout(function(){ var i = document.getElementById('inputSenhaPopup'); if(i) i.focus(); }, 100);
+  setTimeout(function(){
+    var i = document.getElementById('inputSenhaPopup');
+    if (!i) return;
+    i.focus();
+    if (!i._enterBound) {
+      i._enterBound = true;
+      i.addEventListener('keydown', function(ev) {
+        if (ev.key === 'Enter' || ev.keyCode === 13) {
+          ev.preventDefault();
+          tentarEntrarAdmin();
+        }
+      });
+    }
+  }, 120);
+}
+
+function tentarEntrarAdmin() {
+  var el = document.getElementById('inputSenhaPopup');
+  if (!el) return;
+  var s = el.value;
+  if (!s) return;
+  mostrarPopup({ titulo: "A Processar", mensagem: "A verificar...", tipo: "processando" });
+  chamarAPIJsonp({ action: "verificarSenha", senha: s }, function(r) {
+    if (r && r.ok) {
+      senhaAdminSessao = s;
+      tokenAdminSessao = r.token || "";
+      fecharToast();
+      document.getElementById('section-ponto').classList.remove('active');
+      document.getElementById('section-falta-func').classList.remove('active');
+      document.getElementById('section-admin').classList.add('active');
+      document.getElementById('headerTitle').style.display = 'none';
+      document.getElementById('headerClockBox').style.display = 'none';
+      document.getElementById('offlineBadge').style.display = 'none';
+      voltarAoMenuCentralAdmin();
+    } else {
+      mostrarPopup({ titulo: "Acesso Negado", mensagem: "Palavra-passe incorreta.", tipo: "erro" });
+    }
+  });
 }
 
 function abrirEcraFaltaFuncionario() {
@@ -720,6 +706,11 @@ function abrirEcraFaltaFuncionario() {
 function voltarAoEcraPrincipal() {
   senhaAdminSessao = "";
   tokenAdminSessao = "";
+  _uploadedFile = null;
+  _uploadState = 'idle';
+  var fileInput = document.getElementById('fileInputFalta'); if (fileInput) fileInput.value = '';
+  var fname = document.getElementById('fileNameDisplay'); if (fname) fname.innerText = '';
+  var fstat = document.getElementById('fileUploadStatus'); if (fstat) fstat.innerText = '';
   document.getElementById('section-admin').classList.remove('active');
   document.getElementById('section-falta-func').classList.remove('active');
   document.getElementById('section-ponto').classList.add('active');
@@ -757,7 +748,6 @@ function preencherSelectsNomes(lista) {
 
 /* ════════════════ PIN ════════════════ */
 var pinAtual = "";
-
 function atualizarDots() {
   var ds = document.querySelectorAll('#dotsPonto .pin-dot');
   for (var i = 0; i < 4; i++) {
@@ -789,20 +779,18 @@ async function hashPin(p) {
   }
 }
 
-/* ════════════════ REGISTAR PONTO (com offline) ════════════════ */
+/* ════════════════ REGISTAR PONTO ════════════════ */
 async function registarPonto() {
   if (emProcessamento) return;
   var pin = pinAtual;
   if (!/^[0-9]{4}$/.test(pin)) { tecladoClear(); return; }
   emProcessamento = true;
 
-  /* ─── MODO OFFLINE ─── */
   if (!navigator.onLine) {
     var h = await hashPin(pin);
     var rev = {};
     try { rev = JSON.parse(localStorage.getItem(PIN_REV) || "{}"); } catch(e){}
     var nome = rev[h];
-
     if (!nome) {
       emProcessamento = false;
       pinAtual = ""; atualizarDots();
@@ -813,40 +801,24 @@ async function registarPonto() {
       });
       return;
     }
-
     navigator.geolocation.getCurrentPosition(
       function(pos) {
-        var lat = pos.coords.latitude;
-        var lon = pos.coords.longitude;
-        var item = guardarPicagemOffline(nome, pin, lat, lon, obterDetalhesDispositivo());
+        var item = guardarPicagemOffline(nome, pin, pos.coords.latitude, pos.coords.longitude, obterDetalhesDispositivo());
         emProcessamento = false;
         pinAtual = ""; atualizarDots();
-        if (item) {
-          mostrarPopup({
-            titulo: "Guardado Offline",
-            mensagem: "Olá <b>" + nome + "</b>!<br><br>Picagem guardada às " + new Date().toLocaleTimeString('pt-PT') + ".<br><br>Será enviada quando houver rede.",
-            tipo: "sucesso"
-          });
-        }
+        if (item) mostrarPopup({ titulo: "Guardado Offline", mensagem: "Olá <b>" + nome + "</b>!<br><br>Picagem guardada às " + new Date().toLocaleTimeString('pt-PT') + ".<br><br>Será enviada quando houver rede.", tipo: "sucesso" });
       },
       function() {
         var item = guardarPicagemOffline(nome, pin, 0, 0, obterDetalhesDispositivo());
         emProcessamento = false;
         pinAtual = ""; atualizarDots();
-        if (item) {
-          mostrarPopup({
-            titulo: "Guardado Offline",
-            mensagem: "Olá <b>" + nome + "</b>!<br><br>Picagem guardada às " + new Date().toLocaleTimeString('pt-PT') + ".<br><br>Sem GPS — será validada ao sincronizar.",
-            tipo: "aviso"
-          });
-        }
+        if (item) mostrarPopup({ titulo: "Guardado Offline", mensagem: "Olá <b>" + nome + "</b>!<br><br>Picagem guardada às " + new Date().toLocaleTimeString('pt-PT') + ".<br><br>Sem GPS — será validada ao sincronizar.", tipo: "aviso" });
       },
       { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
     );
     return;
   }
 
-  /* ─── MODO ONLINE ─── */
   var lat = 0, lon = 0;
   try {
     var pos = await new Promise(function(res){ if (!navigator.geolocation) return res(null); navigator.geolocation.getCurrentPosition(function(p){ res(p); }, function(){ res(null); }, { enableHighAccuracy:true, timeout:5000, maximumAge:20000 }); });
@@ -858,7 +830,6 @@ async function registarPonto() {
     emProcessamento = false;
     pinAtual = ""; atualizarDots();
     if (r && r.ok) {
-      // Marcar timer local também em picagem online (evita que o utilizador pique offline logo a seguir)
       setUltimaOfflineMs();
       try {
         var h2 = await hashPin(pin);
@@ -884,7 +855,109 @@ async function registarPonto() {
   });
 }
 
-/* ════════════════ PEDIDOS DE FALTA ════════════════ */
+/* ════════════════ COMUNICAR — UPLOAD ════════════════ */
+var _uploadedFile = null;
+var _uploadState = 'idle';
+
+function aoMudarMotivo() {
+  var tipo = document.getElementById('tipoFaltaFunc').value;
+  var marker = document.getElementById('obsObrigatorio');
+  var obsField = document.getElementById('obsFuncFalta');
+  if (!marker || !obsField) return;
+  if (tipo && tipo.indexOf('Outro Assunto') !== -1) {
+    marker.style.display = 'inline';
+    obsField.placeholder = 'Descreva o assunto (obrigatório)...';
+  } else {
+    marker.style.display = 'none';
+    obsField.placeholder = 'Detalhes (opcional)...';
+  }
+}
+
+function handleFileSelect(ev) {
+  var file = ev.target.files[0];
+  var nomeEl = document.getElementById('fileNameDisplay');
+  var statusEl = document.getElementById('fileUploadStatus');
+  _uploadedFile = null;
+
+  if (!file) {
+    _uploadState = 'idle';
+    if (nomeEl) nomeEl.innerText = '';
+    if (statusEl) statusEl.innerText = '';
+    return;
+  }
+  if (file.size > MAX_UPLOAD_BYTES) {
+    mostrarPopup({ titulo:'Ficheiro muito grande', mensagem:'Tamanho máximo: 5MB.', tipo:'erro' });
+    ev.target.value = '';
+    _uploadState = 'idle';
+    return;
+  }
+
+  if (nomeEl) nomeEl.innerText = '📎 ' + file.name + ' (' + formatBytes(file.size) + ')';
+  if (statusEl) { statusEl.innerText = '⏳ A processar...'; statusEl.style.color = 'var(--text-muted)'; }
+  _uploadState = 'uploading';
+
+  uploadFile(file).then(function(result) {
+    _uploadedFile = result;
+    _uploadState = 'done';
+    if (statusEl) { statusEl.innerText = '✅ Anexado'; statusEl.style.color = 'var(--success)'; }
+  }).catch(function(err) {
+    _uploadedFile = null;
+    _uploadState = 'error';
+    if (statusEl) { statusEl.innerText = '❌ ' + (err.message || 'Falha no upload'); statusEl.style.color = 'var(--danger)'; }
+    ev.target.value = '';
+  });
+}
+
+async function uploadFile(file) {
+  var base64 = await fileToBase64(file);
+  var sessionId = 'UP_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+  try {
+    await fetch(APP_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'uploadFile',
+        sessionId: sessionId,
+        fileName: file.name,
+        mimeType: file.type || 'application/octet-stream',
+        base64: base64
+      })
+    });
+  } catch(e) { /* no-cors: resposta opaca, ignorar */ }
+
+  for (var i = 0; i < 30; i++) {
+    await new Promise(function(r){ setTimeout(r, 1000); });
+    var result = await new Promise(function(resolve) {
+      chamarAPIJsonp({ action: 'obterUploadFile', sessionId: sessionId }, resolve);
+    });
+    if (result && result.ok && result.fileId) return result;
+    if (result && result.erro && result.erro !== 'Ainda a processar') {
+      throw new Error(result.erro);
+    }
+  }
+  throw new Error('Timeout ao processar o ficheiro. Tente de novo.');
+}
+
+function fileToBase64(file) {
+  return new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    reader.onload = function() {
+      var dataUrl = reader.result;
+      var base64 = dataUrl.split(',')[1];
+      resolve(base64);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+function formatBytes(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+  return (b / (1024 * 1024)).toFixed(2) + ' MB';
+}
+
+/* ════════════════ SUBMETER FALTA ════════════════ */
 function submeterFaltaFuncionario() {
   var nome = document.getElementById('nomeFuncFalta').value;
   var pin = document.getElementById('pinFuncFalta').value;
@@ -893,12 +966,33 @@ function submeterFaltaFuncionario() {
   var dIni = document.getElementById('dataFaltaFuncInicio').value;
   var dFim = document.getElementById('dataFaltaFuncFim').value;
   var obs = document.getElementById('obsFuncFalta').value;
-  if (!nome || !pin || !email || !tipo || !dIni || !dFim) { mostrarPopup({ titulo:"Campos em Falta", mensagem:"Preencha todos os campos.", tipo:"erro" }); return; }
+
+  if (!nome || !pin || !email || !tipo || !dIni || !dFim) {
+    mostrarPopup({ titulo:"Campos em Falta", mensagem:"Preencha todos os campos.", tipo:"erro" });
+    return;
+  }
+  if (tipo.indexOf('Outro Assunto') !== -1 && !obs.trim()) {
+    mostrarPopup({ titulo:"Observações obrigatórias", mensagem:"Para <b>Outro Assunto</b>, descreva o assunto nas observações.", tipo:"erro" });
+    return;
+  }
+  if (_uploadState === 'uploading') {
+    mostrarPopup({ titulo:"Aguarde", mensagem:"O ficheiro ainda está a ser processado.", tipo:"aviso" });
+    return;
+  }
+
   localStorage.setItem('emailColaboradorBA', email.trim());
   mostrarPopup({ titulo:"A Enviar", mensagem:"A submeter o pedido...", tipo:"processando" });
-  chamarAPIJsonp({ action:"comunicarAusencia", nome: nome, pin: pin, email: email, tipo: tipo, dataIni: dIni, dataFim: dFim, obs: obs }, function(r) {
+
+  var fileId = _uploadedFile ? _uploadedFile.fileId : '';
+  chamarAPIJsonp({
+    action:"comunicarAusencia",
+    nome: nome, pin: pin, email: email, tipo: tipo,
+    dataIni: dIni, dataFim: dFim, obs: obs, fileId: fileId
+  }, function(r) {
     if (r && r.ok) {
       mostrarPopup({ titulo:"Pedido Enviado", mensagem:"A gerência foi notificada. Será contactado por email.", tipo:"sucesso" });
+      _uploadedFile = null;
+      _uploadState = 'idle';
       setTimeout(voltarAoEcraPrincipal, 2500);
     } else {
       mostrarPopup({ titulo:"Erro", mensagem:(r && r.erro) || "Erro", tipo:"erro" });
@@ -906,7 +1000,7 @@ function submeterFaltaFuncionario() {
   });
 }
 
-/* ════════════════ ADMIN — NAVEGAÇÃO ════════════════ */
+/* ════════════════ ADMIN — NAV ════════════════ */
 function abrirSubModulo(id) {
   document.getElementById('admin-sub-menu').style.display = 'none';
   MODULOS_ADMIN.forEach(function(m){ var el = document.getElementById('admin-sub-' + m); if (el) el.style.display = (m === id) ? 'block' : 'none'; });
@@ -918,7 +1012,7 @@ function voltarAoMenuCentralAdmin() {
   document.getElementById('section-admin').scrollTop = 0;
 }
 
-/* ════════════════ DASHBOARD ════════════════ */
+/* ════════════════ DASHBOARD (com ordenação) ════════════════ */
 function carregarDashboard() {
   var el = document.getElementById('dashboardData');
   if (el) {
@@ -933,7 +1027,20 @@ function carregarDashboard() {
       document.getElementById('dashLista').innerHTML = '<div style="color:var(--danger); font-size:0.85rem; padding:14px; text-align:center;">Erro: ' + ((r && r.erro) || 'Sem resposta') + '</div>';
       return;
     }
-    var emps = r.employees || [];
+    var emps = (r.employees || []).slice();
+
+    // ORDENAÇÃO: DENTRO primeiro, depois FORA, depois AUSENTE (ordem alfabética dentro de cada grupo)
+    emps.sort(function(a, b) {
+      function rank(e) {
+        if (e.aberto) return 0;                       // Dentro
+        if (e.picagens === '—') return 2;             // Ausente
+        return 1;                                     // Fora
+      }
+      var ra = rank(a), rb = rank(b);
+      if (ra !== rb) return ra - rb;
+      return String(a.nome).localeCompare(String(b.nome));
+    });
+
     document.getElementById('dashPresentes').textContent = emps.filter(function(e){ return e.picagens !== '—'; }).length;
     document.getElementById('dashAbertos').textContent = emps.filter(function(e){ return e.aberto; }).length;
     var html = '';
@@ -950,7 +1057,6 @@ function carregarDashboard() {
 /* ════════════════ PEDIDOS ════════════════ */
 var _pedidosCache = [];
 var _pedidosFiltro = 'pendente';
-
 function carregarPedidosPendentes() {
   var box = document.getElementById('pedidosList');
   if (!box) return;
@@ -1003,7 +1109,8 @@ function renderPedidos() {
     var ini = (x.nome || '?').trim().charAt(0).toUpperCase();
     var tp = x.tipo || '📋';
     var acts = cl === '' ? '<div class="pedido-actions"><button class="btn-aprovar" onclick="responderPedido(\'' + x.id + '\',\'aprovar\')">✓ Aprovar</button><button class="btn-recusar" onclick="responderPedido(\'' + x.id + '\',\'recusar\')">✕ Recusar</button></div>' : '<div class="pedido-resposta">' + (cl === 'aprovado' ? '✓ Aprovado' : '✕ Recusado') + '</div>';
-    return '<div class="pedido-card ' + cl + '"><div class="pedido-head"><div class="pedido-avatar">' + ini + '</div><div class="pedido-info"><div class="pedido-nome">' + (x.nome || '—') + '</div><div class="pedido-tipo">' + tp + '</div></div><div class="pedido-badge">' + bd + '</div></div><div class="pedido-datas"><div><div class="dt">De</div><div class="dv">' + (x.dataIni || '—') + '</div></div><div><div class="dt">Até</div><div class="dv">' + (x.dataFim || '—') + '</div></div></div>' + (x.obs && x.obs !== '—' ? '<div class="pedido-obs">"' + x.obs + '"</div>' : '') + acts + '</div>';
+    var obsSafe = (x.obs || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return '<div class="pedido-card ' + cl + '"><div class="pedido-head"><div class="pedido-avatar">' + ini + '</div><div class="pedido-info"><div class="pedido-nome">' + (x.nome || '—') + '</div><div class="pedido-tipo">' + tp + '</div></div><div class="pedido-badge">' + bd + '</div></div><div class="pedido-datas"><div><div class="dt">De</div><div class="dv">' + (x.dataIni || '—') + '</div></div><div><div class="dt">Até</div><div class="dv">' + (x.dataFim || '—') + '</div></div></div>' + (x.obs && x.obs !== '—' ? '<div class="pedido-obs">"' + obsSafe + '"</div>' : '') + acts + '</div>';
   }).join('');
 }
 function responderPedido(id, decisao) {
