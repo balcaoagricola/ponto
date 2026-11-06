@@ -377,9 +377,18 @@
 /* ════════════════ CONFIG ════════════════ */
 var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
 var senhaAdminSessao = "";
+var tokenAdminSessao = "";
 var emProcessamento = false;
 var listaFuncionariosCache = [];
 var MODULOS_ADMIN = ['dashboard','pedidos','ausencias','corrigir','pdf','funcionario','remover'];
+
+/* Helper para injectar credenciais de admin nas chamadas (token preferido, senha fallback) */
+function adminParams(base) {
+  var p = base || {};
+  if (tokenAdminSessao) p.token = tokenAdminSessao;
+  else if (senhaAdminSessao) p.senha = senhaAdminSessao;
+  return p;
+}
 
 /* ════════════════ MÓDULO OFFLINE ════════════════ */
 var MINUTOS_BLOQUEIO_LOCAL = 10;
@@ -469,7 +478,6 @@ async function sincronizarFilaOffline() {
       // Sincronizado — não volta à fila
     } else {
       var erro = (resp && resp.erro) ? String(resp.erro) : String(resp || '');
-      // Erros definitivos: não volta à fila
       var definitivo = /incorreto|não encontrado|inativo|fora do perímetro|sem sinal gps|falsificado/i.test(erro);
       if (!definitivo && item.tentativas < 10) {
         restantes.push(item);
@@ -565,13 +573,26 @@ function chamarAPIJsonp(params, cb) {
 function enviar(params, cb) {
   var nome = "cb_" + Math.random().toString(36).substring(2,9);
   var s = document.createElement('script');
-  var to = setTimeout(function(){ delete window[nome]; if(s.parentNode) s.remove(); emProcessamento=false; if (cb) cb({ ok: false, erro: 'O servidor não respondeu.' }); }, 30000);
+  var to = setTimeout(function(){
+    delete window[nome];
+    if(s.parentNode) s.remove();
+    emProcessamento = false;
+    pinAtual = ""; atualizarDots();
+    if (cb) cb({ ok: false, erro: 'O servidor não respondeu.' });
+  }, 30000);
   window[nome] = function(d){ clearTimeout(to); delete window[nome]; if(s.parentNode) s.remove(); if(cb) cb(d); };
   var url = APP_SCRIPT_URL + "?";
   for (var k in params) if (params.hasOwnProperty(k)) url += encodeURIComponent(k) + "=" + encodeURIComponent(params[k]) + "&";
   url += "callback=" + nome;
   s.src = url;
-  s.onerror = function(){ clearTimeout(to); delete window[nome]; if(s.parentNode) s.remove(); emProcessamento=false; if (cb) cb({ ok: false, erro: 'Não foi possível contactar o servidor.' }); };
+  s.onerror = function(){
+    clearTimeout(to);
+    delete window[nome];
+    if(s.parentNode) s.remove();
+    emProcessamento = false;
+    pinAtual = ""; atualizarDots();
+    if (cb) cb({ ok: false, erro: 'Não foi possível contactar o servidor.' });
+  };
   document.body.appendChild(s);
 }
 
@@ -589,11 +610,33 @@ function mostrarPopup(cfg) {
   else ic.innerText = "💬";
   var acts = document.getElementById('toastActionsContainer');
   acts.innerHTML = "";
-  if (cfg.tipo === "processando") acts.style.display = "none";
-  else {
-    acts.style.display = "flex";
-    if (cfg.botoes) cfg.botoes.forEach(function(b){ var btn = document.createElement('button'); btn.className = "toast-btn " + (b.classe || "toast-btn-primary"); btn.innerText = b.texto; btn.onclick = b.acao; acts.appendChild(btn); });
-    else { var btn = document.createElement('button'); btn.className = "toast-btn toast-btn-primary"; btn.innerText = "Concluir"; btn.onclick = fecharToast; acts.appendChild(btn); }
+  acts.style.display = "flex";
+
+  if (cfg.tipo === "processando") {
+    // Botão para cancelar o processamento (evita ficar 30 s bloqueado)
+    var btnCancel = document.createElement('button');
+    btnCancel.className = "toast-btn toast-btn-secondary";
+    btnCancel.innerText = "Cancelar";
+    btnCancel.onclick = function() {
+      emProcessamento = false;
+      pinAtual = ""; atualizarDots();
+      fecharToast();
+    };
+    acts.appendChild(btnCancel);
+  } else if (cfg.botoes) {
+    cfg.botoes.forEach(function(b){
+      var btn = document.createElement('button');
+      btn.className = "toast-btn " + (b.classe || "toast-btn-primary");
+      btn.innerText = b.texto;
+      btn.onclick = b.acao;
+      acts.appendChild(btn);
+    });
+  } else {
+    var btn = document.createElement('button');
+    btn.className = "toast-btn toast-btn-primary";
+    btn.innerText = "Concluir";
+    btn.onclick = fecharToast;
+    acts.appendChild(btn);
   }
   ov.style.display = "flex";
 }
@@ -645,7 +688,9 @@ function abrirModalSenhaAdmin() {
           mostrarPopup({ titulo: "A Processar", mensagem: "A verificar...", tipo: "processando" });
           chamarAPIJsonp({ action: "verificarSenha", senha: s }, function(r) {
             if (r && r.ok) {
-              senhaAdminSessao = s; fecharToast();
+              senhaAdminSessao = s;
+              tokenAdminSessao = r.token || "";
+              fecharToast();
               document.getElementById('section-ponto').classList.remove('active');
               document.getElementById('section-falta-func').classList.remove('active');
               document.getElementById('section-admin').classList.add('active');
@@ -674,6 +719,7 @@ function abrirEcraFaltaFuncionario() {
 }
 function voltarAoEcraPrincipal() {
   senhaAdminSessao = "";
+  tokenAdminSessao = "";
   document.getElementById('section-admin').classList.remove('active');
   document.getElementById('section-falta-func').classList.remove('active');
   document.getElementById('section-ponto').classList.add('active');
@@ -812,6 +858,8 @@ async function registarPonto() {
     emProcessamento = false;
     pinAtual = ""; atualizarDots();
     if (r && r.ok) {
+      // Marcar timer local também em picagem online (evita que o utilizador pique offline logo a seguir)
+      setUltimaOfflineMs();
       try {
         var h2 = await hashPin(pin);
         var rev2 = JSON.parse(localStorage.getItem(PIN_REV) || "{}");
@@ -878,7 +926,7 @@ function carregarDashboard() {
     var d = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"][a.getDay()];
     el.textContent = d + ", " + String(a.getDate()).padStart(2,'0') + "/" + String(a.getMonth()+1).padStart(2,'0') + "/" + a.getFullYear();
   }
-  chamarAPIJsonp({ action:"obterResumoHoje", senha: senhaAdminSessao }, function(r) {
+  chamarAPIJsonp(adminParams({ action:"obterResumoHoje" }), function(r) {
     if (!r || !r.ok) {
       document.getElementById('dashPresentes').textContent = '—';
       document.getElementById('dashAbertos').textContent = '—';
@@ -907,7 +955,7 @@ function carregarPedidosPendentes() {
   var box = document.getElementById('pedidosList');
   if (!box) return;
   box.innerHTML = '<div class="pedidos-empty"><div class="ico">⏳</div><h4>A carregar…</h4></div>';
-  chamarAPIJsonp({ action:'obterPedidos', senha: senhaAdminSessao }, function(r) {
+  chamarAPIJsonp(adminParams({ action:'obterPedidos' }), function(r) {
     if (!r || !r.ok) { box.innerHTML = '<div class="pedidos-empty"><div class="ico">⚠️</div><h4>Erro</h4><p>' + ((r && r.erro) || '') + '</p></div>'; return; }
     _pedidosCache = r.pedidos || [];
     atualizarStats();
@@ -966,7 +1014,7 @@ function responderPedido(id, decisao) {
       { texto: 'Cancelar', classe: 'toast-btn-secondary', acao: fecharToast },
       { texto: decisao === 'aprovar' ? 'Aprovar' : 'Recusar', classe: 'toast-btn-primary', acao: function() {
           mostrarPopup({ titulo:'A Processar', mensagem:'A atualizar…', tipo:'processando' });
-          chamarAPIJsonp({ action:'responderPedido', id: id, decisao: decisao, senha: senhaAdminSessao }, function(r) {
+          chamarAPIJsonp(adminParams({ action:'responderPedido', id: id, decisao: decisao }), function(r) {
             if (r && r.ok) {
               mostrarPopup({ titulo: decisao === 'aprovar' ? 'Aprovado' : 'Recusado', mensagem: 'Notificação enviada.', tipo: 'sucesso' });
               carregarPedidosPendentes();
@@ -996,7 +1044,7 @@ function submeterAusenciaAdministrativa() {
   var d2 = document.getElementById('dataFolgaFim').value;
   if (!n || !t || !d1 || !d2) { mostrarPopup({ titulo:'Campos em Falta', mensagem:'Preencha tudo.', tipo:'erro' }); return; }
   mostrarPopup({ titulo:'A Processar', mensagem:'A lançar...', tipo:'processando' });
-  chamarAPIJsonp({ action:'lancarAusenciaAdmin', nome:n, tipo:t, dataInicio:d1, dataFim:d2, senha: senhaAdminSessao }, function(r) {
+  chamarAPIJsonp(adminParams({ action:'lancarAusenciaAdmin', nome:n, tipo:t, dataInicio:d1, dataFim:d2 }), function(r) {
     if (r && r.ok) mostrarPopup({ titulo:'Concluído', mensagem:'Registo lançado (' + r.count + ' dia(s)).', tipo:'sucesso' });
     else mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
   });
@@ -1007,7 +1055,7 @@ function submeterCorrecao() {
   var h = document.getElementById('horaCorrigir').value;
   if (!n || !d || !h) { mostrarPopup({ titulo:'Campos em Falta', mensagem:'Preencha tudo.', tipo:'erro' }); return; }
   mostrarPopup({ titulo:'A Corrigir', mensagem:'A inserir picagem...', tipo:'processando' });
-  chamarAPIJsonp({ action:'corrigirPicagem', nome:n, data:d, hora:h, senha: senhaAdminSessao }, function(r) {
+  chamarAPIJsonp(adminParams({ action:'corrigirPicagem', nome:n, data:d, hora:h }), function(r) {
     if (r && r.ok) mostrarPopup({ titulo:'Concluído', mensagem:'Picagem inserida.<br><br>Hoje: ' + r.horasHoje + ' · Semana: ' + r.horasSemana + ' · Mês: ' + r.horasMes, tipo:'sucesso' });
     else mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
   });
@@ -1018,7 +1066,7 @@ function exportarRelatorioPDF() {
   var d2 = document.getElementById('dataFim').value;
   if (!n || !d1 || !d2) { mostrarPopup({ titulo:'Campos em Falta', mensagem:'Preencha tudo.', tipo:'erro' }); return; }
   mostrarPopup({ titulo:'A Exportar', mensagem:'A gerar PDF...', tipo:'processando' });
-  chamarAPIJsonp({ action:'gerarPdf', nome:n, ini:d1, fim:d2, senha: senhaAdminSessao }, function(r) {
+  chamarAPIJsonp(adminParams({ action:'gerarPdf', nome:n, ini:d1, fim:d2 }), function(r) {
     if (r && r.ok) mostrarPopup({ titulo:'Concluído', mensagem:'PDF enviado por email (' + r.quantidade + ').', tipo:'sucesso' });
     else mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
   });
@@ -1029,7 +1077,7 @@ function submeterNovoFuncionario() {
   var f = document.getElementById('filialNovo').value;
   if (!n || !p) { mostrarPopup({ titulo:'Campos em Falta', mensagem:'Preencha nome e PIN.', tipo:'erro' }); return; }
   mostrarPopup({ titulo:'A Guardar', mensagem:'A registar...', tipo:'processando' });
-  chamarAPIJsonp({ action:'adicionarFuncionario', nome:n, pin:p, filial:f, senha: senhaAdminSessao }, function(r) {
+  chamarAPIJsonp(adminParams({ action:'adicionarFuncionario', nome:n, pin:p, filial:f }), function(r) {
     if (r && r.ok) { carregarFuncionarios(); mostrarPopup({ titulo:'Concluído', mensagem:'Colaborador adicionado.', tipo:'sucesso' }); }
     else mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
   });
@@ -1038,7 +1086,7 @@ function submeterRemocaoFuncionario() {
   var n = document.getElementById('nomeRemover').value;
   if (!n) { mostrarPopup({ titulo:'Selecione', mensagem:'Escolha um colaborador.', tipo:'erro' }); return; }
   mostrarPopup({ titulo:'A Atualizar', mensagem:'A inativar...', tipo:'processando' });
-  chamarAPIJsonp({ action:'removerFuncionario', nome:n, senha: senhaAdminSessao }, function(r) {
+  chamarAPIJsonp(adminParams({ action:'removerFuncionario', nome:n }), function(r) {
     if (r && r.ok) { carregarFuncionarios(); mostrarPopup({ titulo:'Concluído', mensagem:'Colaborador inativado.', tipo:'sucesso' }); }
     else mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
   });
