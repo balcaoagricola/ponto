@@ -1199,30 +1199,52 @@ function renderPedidos() {
   }).join('');
 }
 function responderPedido(id, decisao) {
-  mostrarPopup({
-    titulo: decisao === 'aprovar' ? 'Aprovar Pedido' : 'Recusar Pedido',
-    mensagem: 'Confirma? O colaborador será notificado por email e Telegram.',
-    botoes: [
-      { texto: 'Cancelar', classe: 'toast-btn-secondary', acao: fecharToast },
-      { texto: decisao === 'aprovar' ? 'Aprovar' : 'Recusar', classe: 'toast-btn-primary', acao: function() {
-          mostrarPopup({ titulo:'A Processar', mensagem:'A atualizar…', tipo:'processando' });
-          chamarAPIJsonp(adminParams({ action:'responderPedido', id: id, decisao: decisao }), function(r) {
-            if (r && r.ok) { mostrarPopup({ titulo: decisao === 'aprovar' ? 'Aprovado' : 'Recusado', mensagem: 'Notificação enviada.', tipo: 'sucesso' }); carregarPedidosPendentes(); }
-            else { mostrarPopup({ titulo: 'Erro', mensagem: (r && r.erro) || 'Erro', tipo: 'erro' }); }
-          });
-        }
+  var titulo = decisao === 'aprovar' ? 'Aprovar Pedido' : 'Recusar Pedido';
+  var ov = document.getElementById('toastOverlay');
+
+  document.getElementById('toastTitle').innerText = titulo;
+  document.getElementById('toastBody').innerHTML =
+    '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.9rem;">Confirma? O colaborador será notificado.</p>' +
+    '<div style="text-align:left;">' +
+      '<label style="display:block; margin-bottom:6px; font-weight:700; font-size:0.72rem; color:var(--text-muted); letter-spacing:0.08em; text-transform:uppercase;">Comentário (opcional)</label>' +
+      '<textarea id="inputComentarioPopup" class="form-control" rows="3" placeholder="Escreva um comentário para o colaborador…"></textarea>' +
+    '</div>';
+
+  var acts = document.getElementById('toastActionsContainer');
+  acts.innerHTML = '';
+  acts.style.display = 'flex';
+
+  var btnCancelar = document.createElement('button');
+  btnCancelar.className = 'toast-btn toast-btn-secondary';
+  btnCancelar.innerText = 'Cancelar';
+  btnCancelar.onclick = fecharToast;
+  acts.appendChild(btnCancelar);
+
+  var btnConfirmar = document.createElement('button');
+  btnConfirmar.className = 'toast-btn toast-btn-primary';
+  btnConfirmar.innerText = decisao === 'aprovar' ? 'Aprovar' : 'Recusar';
+  btnConfirmar.onclick = function() {
+    var comentario = document.getElementById('inputComentarioPopup') ? document.getElementById('inputComentarioPopup').value : '';
+    mostrarPopup({ titulo:'A Processar', mensagem:'A atualizar…', tipo:'processando' });
+    chamarAPIJsonp(adminParams({
+      action:'responderPedido',
+      id: id,
+      decisao: decisao,
+      comentario: comentario
+    }), function(r) {
+      if (r && r.ok) {
+        mostrarPopup({ titulo: decisao === 'aprovar' ? 'Aprovado' : 'Recusado', mensagem: 'Notificação enviada.', tipo: 'sucesso' });
+        carregarPedidosPendentes();
+      } else {
+        mostrarPopup({ titulo: 'Erro', mensagem: (r && r.erro) || 'Erro', tipo: 'erro' });
       }
-    ]
-  });
+    });
+  };
+  acts.appendChild(btnConfirmar);
+
+  ov.style.display = 'flex';
+  setTimeout(function(){ var el = document.getElementById('inputComentarioPopup'); if (el) el.focus(); }, 150);
 }
-document.addEventListener('click', function(e) {
-  var chip = e.target.closest('.pf-chip');
-  if (!chip) return;
-  document.querySelectorAll('.pf-chip').forEach(function(c){ c.classList.remove('active'); });
-  chip.classList.add('active');
-  _pedidosFiltro = chip.dataset.filter;
-  renderPedidos();
-});
 
 /* ════════════════ OUTRAS AÇÕES ADMIN ════════════════ */
 function submeterAusenciaAdministrativa() {
