@@ -156,6 +156,95 @@
     .menu-admin-grid .btn { position: relative; }
 
     textarea, input, .form-control { max-width: 100%; }
+/* ── Upload elegante ── */
+.file-dropzone {
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--r-md);
+  padding: 20px 16px;
+  text-align: center;
+  background: var(--surface-2);
+  margin-bottom: 10px;
+  transition: all .2s;
+}
+.file-dropzone-icon { font-size: 2rem; margin-bottom: 6px; }
+.file-dropzone-text { font-weight: 700; font-size: 0.86rem; margin-bottom: 2px; }
+.file-dropzone-sub { font-size: 0.72rem; color: var(--text-muted); }
+.file-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.file-btn {
+  padding: 14px 10px;
+  border-radius: var(--r-sm);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all .15s;
+  font-family: inherit;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.file-btn:hover { background: var(--surface-2); }
+.file-btn:active { transform: scale(0.97); }
+.file-btn-camera { background: var(--text); color: #fff; border-color: var(--text); }
+.file-btn-camera:hover { background: #000; }
+.file-preview {
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--surface-2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: popIn .25s ease;
+}
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.file-preview-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: var(--border);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.file-preview-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.file-preview-info { flex: 1; min-width: 0; }
+.file-preview-name {
+  font-weight: 700;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.file-preview-status { font-size: 0.72rem; margin-top: 2px; color: var(--text-muted); font-weight: 700; }
+.file-preview-remove {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--danger);
+  font-weight: 800;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-family: inherit;
+  transition: all .15s;
+}
+.file-preview-remove:hover { background: #fef2f2; border-color: #fecaca; }    
   </style>
 </head>
 <body>
@@ -238,11 +327,35 @@
         <textarea id="obsFuncFalta" class="form-control" rows="3" placeholder="Detalhes (opcional)..."></textarea>
       </div>
       <div class="form-group">
-        <label>Anexar documento (opcional · máx. 5MB)</label>
-        <input type="file" id="fileInputFalta" class="form-control" onchange="handleFileSelect(event)">
-        <div id="fileNameDisplay" style="font-size:0.82rem; margin-top:8px; color:var(--text-muted);"></div>
-        <div id="fileUploadStatus" style="font-size:0.82rem; margin-top:4px; font-weight:700;"></div>
-      </div>
+  <label>Anexar comprovativo (opcional)</label>
+
+  <div class="file-dropzone" id="fileDropzone">
+    <div class="file-dropzone-icon">📎</div>
+    <div class="file-dropzone-text">Escolha como quer anexar</div>
+    <div class="file-dropzone-sub">Documento ou fotografia · máx. 5MB</div>
+  </div>
+
+  <div class="file-buttons">
+    <button type="button" class="file-btn" onclick="document.getElementById('fileInputFalta').click()">
+      <span>📁</span><span>Ficheiro</span>
+    </button>
+    <button type="button" class="file-btn file-btn-camera" onclick="document.getElementById('cameraInputFalta').click()">
+      <span>📷</span><span>Câmara</span>
+    </button>
+  </div>
+
+  <input type="file" id="fileInputFalta" style="display:none;" onchange="handleFileSelect(event)" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt,.xlsx,.xls">
+  <input type="file" id="cameraInputFalta" style="display:none;" onchange="handleFileSelect(event)" accept="image/*" capture="environment">
+
+  <div id="filePreview" class="file-preview" style="display:none;">
+    <div class="file-preview-thumb" id="fileThumb"></div>
+    <div class="file-preview-info">
+      <div class="file-preview-name" id="fileNameDisplay"></div>
+      <div class="file-preview-status" id="fileUploadStatus"></div>
+    </div>
+    <button type="button" class="file-preview-remove" onclick="removerFicheiro()" title="Remover">✕</button>
+  </div>
+</div>
       <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncInicio" class="form-control"></div>
       <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncFim" class="form-control"></div>
       <button class="btn btn-primary" onclick="submeterFaltaFuncionario()">Enviar Pedido</button>
@@ -512,12 +625,10 @@ function iniciarRelogio() {
 window.addEventListener('load', function() {
   iniciarRelogio();
   carregarFuncionarios();
-  var hoje = new Date();
-  var hojeStr = hoje.toISOString().split('T')[0];
-  var d1 = new Date(hoje.getFullYear(), hoje.getMonth(), 1).toISOString().split('T')[0];
-  ['dataCorrigir','dataInicio','dataFaltaFuncInicio'].forEach(function(id){ var e = document.getElementById(id); if (e) e.value = id === 'dataInicio' ? d1 : hojeStr; });
-  var c1 = document.getElementById('dataFim'); if (c1) c1.value = hojeStr;
-  var c2 = document.getElementById('dataFaltaFuncFim'); if (c2) c2.value = hojeStr;
+
+  // ⛔ Datas deixam de ser pré-preenchidas — utilizador escolhe
+  // (bloco de datas removido intencionalmente)
+
   var email = localStorage.getItem('emailColaboradorBA');
   if (email) { var ef = document.getElementById('emailFuncFalta'); if (ef) ef.value = email; }
   var g = document.getElementById('gpsIndicator'); if (g && !navigator.onLine) g.classList.add('offline');
@@ -706,11 +817,7 @@ function abrirEcraFaltaFuncionario() {
 function voltarAoEcraPrincipal() {
   senhaAdminSessao = "";
   tokenAdminSessao = "";
-  _uploadedFile = null;
-  _uploadState = 'idle';
-  var fileInput = document.getElementById('fileInputFalta'); if (fileInput) fileInput.value = '';
-  var fname = document.getElementById('fileNameDisplay'); if (fname) fname.innerText = '';
-  var fstat = document.getElementById('fileUploadStatus'); if (fstat) fstat.innerText = '';
+  removerFicheiro();
   document.getElementById('section-admin').classList.remove('active');
   document.getElementById('section-falta-func').classList.remove('active');
   document.getElementById('section-ponto').classList.add('active');
@@ -875,37 +982,64 @@ function aoMudarMotivo() {
 
 function handleFileSelect(ev) {
   var file = ev.target.files[0];
-  var nomeEl = document.getElementById('fileNameDisplay');
+  if (!file) return;
+
+  var nomeEl   = document.getElementById('fileNameDisplay');
   var statusEl = document.getElementById('fileUploadStatus');
+  var previewEl= document.getElementById('filePreview');
+  var thumbEl  = document.getElementById('fileThumb');
   _uploadedFile = null;
 
-  if (!file) {
-    _uploadState = 'idle';
-    if (nomeEl) nomeEl.innerText = '';
-    if (statusEl) statusEl.innerText = '';
-    return;
+  // Limpar o outro input para evitar duplicação
+  if (ev.target.id === 'fileInputFalta') {
+    var c = document.getElementById('cameraInputFalta'); if (c) c.value = '';
+  } else {
+    var f = document.getElementById('fileInputFalta'); if (f) f.value = '';
   }
+
   if (file.size > MAX_UPLOAD_BYTES) {
     mostrarPopup({ titulo:'Ficheiro muito grande', mensagem:'Tamanho máximo: 5MB.', tipo:'erro' });
     ev.target.value = '';
-    _uploadState = 'idle';
     return;
   }
 
-  if (nomeEl) nomeEl.innerText = '📎 ' + file.name + ' (' + formatBytes(file.size) + ')';
+  var isImage = file.type.indexOf('image/') === 0;
+
+  if (previewEl) previewEl.style.display = 'flex';
+  if (thumbEl) {
+    if (isImage) {
+      var reader = new FileReader();
+      reader.onload = function(e) { thumbEl.innerHTML = '<img src="' + e.target.result + '" alt="">'; };
+      reader.readAsDataURL(file);
+    } else {
+      thumbEl.innerHTML = '📄';
+    }
+  }
+  if (nomeEl)   nomeEl.innerText = file.name + ' (' + formatBytes(file.size) + ')';
   if (statusEl) { statusEl.innerText = '⏳ A processar...'; statusEl.style.color = 'var(--text-muted)'; }
   _uploadState = 'uploading';
 
   uploadFile(file).then(function(result) {
     _uploadedFile = result;
     _uploadState = 'done';
-    if (statusEl) { statusEl.innerText = '✅ Anexado'; statusEl.style.color = 'var(--success)'; }
+    if (statusEl) { statusEl.innerText = '✅ Anexado com sucesso'; statusEl.style.color = 'var(--success)'; }
   }).catch(function(err) {
     _uploadedFile = null;
     _uploadState = 'error';
     if (statusEl) { statusEl.innerText = '❌ ' + (err.message || 'Falha no upload'); statusEl.style.color = 'var(--danger)'; }
     ev.target.value = '';
   });
+}
+
+function removerFicheiro() {
+  _uploadedFile = null;
+  _uploadState = 'idle';
+  var previewEl = document.getElementById('filePreview'); if (previewEl) previewEl.style.display = 'none';
+  var thumbEl = document.getElementById('fileThumb'); if (thumbEl) thumbEl.innerHTML = '';
+  var fi = document.getElementById('fileInputFalta'); if (fi) fi.value = '';
+  var ci = document.getElementById('cameraInputFalta'); if (ci) ci.value = '';
+  var statusEl = document.getElementById('fileUploadStatus'); if (statusEl) statusEl.innerText = '';
+  var nomeEl = document.getElementById('fileNameDisplay'); if (nomeEl) nomeEl.innerText = '';
 }
 
 async function uploadFile(file) {
