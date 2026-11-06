@@ -195,6 +195,52 @@
     .camera-btn-secondary { background: rgba(255,255,255,0.15); color: #fff; }
 
     textarea, input, .form-control { max-width: 100%; }
+/* ── Meta do pedido (dispositivo/IP/local) ── */
+.pedido-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+.pedido-meta-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  line-height: 1.4;
+}
+.pedido-meta-row .meta-ico {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+}
+.pedido-meta-row .meta-txt {
+  flex: 1;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+.pedido-anexo-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1.5px solid #bfdbfe;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: all .15s;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.pedido-anexo-btn:hover { background: #dbeafe; }    
   </style>
 </head>
 <body>
@@ -1001,7 +1047,7 @@ function formatBytes(b) {
 }
 
 /* ════════════════ SUBMETER FALTA ════════════════ */
-function submeterFaltaFuncionario() {
+async function submeterFaltaFuncionario() {
   var nome = document.getElementById('nomeFuncFalta').value;
   var pin = document.getElementById('pinFuncFalta').value;
   var email = document.getElementById('emailFuncFalta').value;
@@ -1010,18 +1056,51 @@ function submeterFaltaFuncionario() {
   var dFim = document.getElementById('dataFaltaFuncFim').value;
   var obs = document.getElementById('obsFuncFalta').value;
 
-  if (!nome || !pin || !email || !tipo || !dIni || !dFim) { mostrarPopup({ titulo:"Campos em Falta", mensagem:"Preencha todos os campos.", tipo:"erro" }); return; }
-  if (tipo.indexOf('Outro Assunto') !== -1 && !obs.trim()) { mostrarPopup({ titulo:"Observações obrigatórias", mensagem:"Para <b>Outro Assunto</b>, descreva o assunto.", tipo:"erro" }); return; }
-  if (_uploadState === 'uploading') { mostrarPopup({ titulo:"Aguarde", mensagem:"O ficheiro ainda está a ser processado.", tipo:"aviso" }); return; }
+  if (!nome || !pin || !email || !tipo || !dIni || !dFim) {
+    mostrarPopup({ titulo:"Campos em Falta", mensagem:"Preencha todos os campos.", tipo:"erro" });
+    return;
+  }
+  if (tipo.indexOf('Outro Assunto') !== -1 && !obs.trim()) {
+    mostrarPopup({ titulo:"Observações obrigatórias", mensagem:"Para <b>Outro Assunto</b>, descreva o assunto nas observações.", tipo:"erro" });
+    return;
+  }
+  if (_uploadState === 'uploading') {
+    mostrarPopup({ titulo:"Aguarde", mensagem:"O ficheiro ainda está a ser processado.", tipo:"aviso" });
+    return;
+  }
 
   localStorage.setItem('emailColaboradorBA', email.trim());
+  mostrarPopup({ titulo:"A Enviar", mensagem:"A obter localização...", tipo:"processando" });
+
+  // GPS (opcional — se falhar, envia 0,0)
+  var lat = 0, lon = 0;
+  try {
+    var pos = await new Promise(function(resolve) {
+      if (!navigator.geolocation) return resolve(null);
+      navigator.geolocation.getCurrentPosition(
+        function(p){ resolve(p); },
+        function(){ resolve(null); },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 300000 }
+      );
+    });
+    if (pos) { lat = pos.coords.latitude; lon = pos.coords.longitude; }
+  } catch(e) {}
+
+  var disp = obterDetalhesDispositivo();
+  var fileId = _uploadedFile ? _uploadedFile.fileId : '';
+
   mostrarPopup({ titulo:"A Enviar", mensagem:"A submeter o pedido...", tipo:"processando" });
 
-  var fileId = _uploadedFile ? _uploadedFile.fileId : '';
-  chamarAPIJsonp({ action:"comunicarAusencia", nome: nome, pin: pin, email: email, tipo: tipo, dataIni: dIni, dataFim: dFim, obs: obs, fileId: fileId }, function(r) {
+  chamarAPIJsonp({
+    action:"comunicarAusencia",
+    nome: nome, pin: pin, email: email, tipo: tipo,
+    dataIni: dIni, dataFim: dFim, obs: obs, fileId: fileId,
+    lat: lat, lon: lon, disp: disp
+  }, function(r) {
     if (r && r.ok) {
       mostrarPopup({ titulo:"Pedido Enviado", mensagem:"A gerência foi notificada (email + Telegram). Será contactado com a resposta.", tipo:"sucesso" });
-      _uploadedFile = null; _uploadState = 'idle';
+      _uploadedFile = null;
+      _uploadState = 'idle';
       setTimeout(voltarAoEcraPrincipal, 2500);
     } else {
       mostrarPopup({ titulo:"Erro", mensagem:(r && r.erro) || "Erro", tipo:"erro" });
@@ -1109,6 +1188,10 @@ function atualizarStats() {
     else if (b) b.remove();
   }
 }
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 function renderPedidos() {
   var box = document.getElementById('pedidosList');
   var lista = _pedidosCache.filter(function(x) {
@@ -1131,23 +1214,37 @@ function renderPedidos() {
     var bd = cl === 'aprovado' ? '✓ Aprovado' : cl === 'recusado' ? '✕ Recusado' : 'Aguarda';
     var ini = (x.nome || '?').trim().charAt(0).toUpperCase();
     var tp = x.tipo || '📋';
-    var acts = cl === '' ? '<div class="pedido-actions"><button class="btn-aprovar" onclick="responderPedido(\'' + x.id + '\',\'aprovar\')">✓ Aprovar</button><button class="btn-recusar" onclick="responderPedido(\'' + x.id + '\',\'recusar\')">✕ Recusar</button></div>' : '<div class="pedido-resposta">' + (cl === 'aprovado' ? '✓ Aprovado' : '✕ Recusado') + '</div>';
+    var acts = cl === ''
+      ? '<div class="pedido-actions"><button class="btn-aprovar" onclick="responderPedido(\'' + x.id + '\',\'aprovar\')">✓ Aprovar</button><button class="btn-recusar" onclick="responderPedido(\'' + x.id + '\',\'recusar\')">✕ Recusar</button></div>'
+      : '<div class="pedido-resposta">' + (cl === 'aprovado' ? '✓ Aprovado' : '✕ Recusado') + '</div>';
 
-    // Anexo com word-break (nunca corta)
+    // Meta (dispositivo/IP + coordenadas)
+    var metaRows = '';
+    if (x.dispIP && x.dispIP !== '—' && x.dispIP !== '') {
+      metaRows += '<div class="pedido-meta-row"><span class="meta-ico">📱</span><span class="meta-txt">' + esc(x.dispIP) + '</span></div>';
+    }
+    if (x.coords && x.coords !== '—' && x.coords !== '') {
+      metaRows += '<div class="pedido-meta-row"><span class="meta-ico">📍</span><span class="meta-txt">' + esc(x.coords) + '</span></div>';
+    }
+    var metaHtml = metaRows ? '<div class="pedido-meta">' + metaRows + '</div>' : '';
+
+    // Anexo
     var anexoHtml = '';
     if (x.anexoUrl) {
-      var nomeSafe = (x.anexoNome || 'Anexo').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      anexoHtml = '<a href="' + x.anexoUrl + '" target="_blank" rel="noopener" class="pedido-anexo-btn">📎 ' + nomeSafe + '</a>';
+      var anexoLabel = x.anexoNome ? esc(x.anexoNome) : 'Ver anexo';
+      anexoHtml = '<a href="' + esc(x.anexoUrl) + '" target="_blank" rel="noopener" class="pedido-anexo-btn"><span>📎</span><span>' + anexoLabel + '</span></a>';
     }
 
-    var obsSafe = (x.obs || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    var obsHtml = (x.obs && x.obs !== '—') ? '<div class="pedido-obs">"' + obsSafe + '"</div>' : '';
+    // Obs
+    var obsHtml = (x.obs && x.obs !== '—') ? '<div class="pedido-obs">"' + esc(x.obs) + '"</div>' : '';
 
     return '<div class="pedido-card ' + cl + '">' +
-      '<div class="pedido-head"><div class="pedido-avatar">' + ini + '</div><div class="pedido-info"><div class="pedido-nome">' + (x.nome || '—') + '</div><div class="pedido-tipo">' + tp + '</div></div><div class="pedido-badge">' + bd + '</div></div>' +
+      '<div class="pedido-head"><div class="pedido-avatar">' + ini + '</div><div class="pedido-info"><div class="pedido-nome">' + esc(x.nome || '—') + '</div><div class="pedido-tipo">' + tp + '</div></div><div class="pedido-badge">' + bd + '</div></div>' +
       '<div class="pedido-datas"><div><div class="dt">De</div><div class="dv">' + (x.dataIni || '—') + '</div></div><div><div class="dt">Até</div><div class="dv">' + (x.dataFim || '—') + '</div></div></div>' +
-      obsHtml + anexoHtml + acts + '</div>';
+      metaHtml + obsHtml + anexoHtml + acts +
+    '</div>';
   }).join('');
+}
 }
 function responderPedido(id, decisao) {
   mostrarPopup({
