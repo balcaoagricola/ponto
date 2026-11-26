@@ -939,6 +939,16 @@
         <button class="pf-chip" data-filter="recusado">Recusados</button>
         <button class="pf-chip" data-filter="todos">Todos</button>
       </div>
+      <div id="pedidosGestaoLimpeza" style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; margin-bottom:12px; background:var(--surface-2); border:1.5px solid var(--border); border-radius:12px;">
+        <label style="display:inline-flex; align-items:center; gap:7px; font-size:0.74rem; font-weight:800; color:var(--text); cursor:pointer; user-select:none;">
+          <input type="checkbox" id="chkSelecionarTodosPedidos" onchange="alternarSelecionarTodosPedidos(this.checked)" style="width:16px; height:16px; accent-color:var(--accent); cursor:pointer;">
+          <span>Selecionar todos</span>
+        </label>
+        <div style="display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <button type="button" id="btnApagarSelecionadosPedidos" onclick="apagarPedidosSelecionados()" style="padding:7px 11px; border-radius:9px; border:1.5px solid var(--border-strong); background:#ffffff; color:var(--text); font-size:0.66rem; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; cursor:pointer; font-family:inherit;">🗑️ Apagar marcados</button>
+          <button type="button" id="btnApagarTodosPedidos" onclick="apagarTodosPedidosLista()" style="padding:7px 11px; border-radius:9px; border:none; background:#dc2626; color:#ffffff; font-size:0.66rem; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; cursor:pointer; font-family:inherit;">🗑️ Apagar todos</button>
+        </div>
+      </div>
       <div id="pedidosList"></div>
       <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()" style="margin-top:16px;">← Menu</button>
     </div>
@@ -2510,7 +2520,17 @@ function renderPedidos() {
     var card = document.createElement('div');
     card.className = 'pedido-card ' + cl;
     card.innerHTML =
-      '<div class="pedido-head"><div class="pedido-avatar">' + ini + '</div><div class="pedido-info"><div class="pedido-nome">' + esc(x.nome || '—') + '</div><div class="pedido-tipo">' + esc(tp) + '</div></div><div class="pedido-badge">' + bd + '</div></div>' +
+      '<div class="pedido-head" style="align-items:center;">' +
+        '<label style="display:inline-flex; align-items:center; justify-content:center; margin-right:2px; cursor:pointer;" title="Selecionar pedido">' +
+          '<input type="checkbox" class="chk-pedido-item" data-pedido-chk="' + esc(x.id) + '" onchange="sincronizarEstadoCheckboxTodos()" style="width:17px; height:17px; accent-color:var(--accent); cursor:pointer;">' +
+        '</label>' +
+        '<div class="pedido-avatar">' + ini + '</div>' +
+        '<div class="pedido-info"><div class="pedido-nome">' + esc(x.nome || '—') + '</div><div class="pedido-tipo">' + esc(tp) + '</div></div>' +
+        '<div style="display:inline-flex; align-items:center; gap:6px; flex-shrink:0;">' +
+          '<div class="pedido-badge">' + bd + '</div>' +
+          '<button type="button" onclick="apagarPedidoUnico('' + esc(x.id) + '')" title="Apagar este pedido da vista (mantém no Sheets)" style="width:28px; height:28px; border-radius:8px; border:1px solid #fecaca; background:#fef2f2; color:#dc2626; font-size:0.78rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">🗑️</button>' +
+        '</div>' +
+      '</div>' +
       '<div class="pedido-datas"><div><div class="dt">De</div><div class="dv">' + esc(x.dataIni || '—') + '</div></div><div><div class="dt">Até</div><div class="dv">' + esc(x.dataFim || '—') + '</div></div></div>' +
       metaHtml + obsHtml + anexoHtml;
 
@@ -2542,6 +2562,71 @@ function renderPedidos() {
 
     box.appendChild(card);
   });
+  var chkAll = document.getElementById('chkSelecionarTodosPedidos');
+  if (chkAll) chkAll.checked = false;
+}
+
+function alternarSelecionarTodosPedidos(marcado) {
+  var caixas = document.querySelectorAll('#pedidosList .chk-pedido-item');
+  caixas.forEach(function(cb) { cb.checked = !!marcado; });
+}
+
+function sincronizarEstadoCheckboxTodos() {
+  var caixas = Array.prototype.slice.call(document.querySelectorAll('#pedidosList .chk-pedido-item'));
+  var chkAll = document.getElementById('chkSelecionarTodosPedidos');
+  if (!chkAll) return;
+  if (caixas.length === 0) { chkAll.checked = false; return; }
+  chkAll.checked = caixas.every(function(cb) { return cb.checked; });
+}
+
+function _obterIdsPedidosVisiveis_() {
+  return _pedidosCache.filter(function(x) {
+    if (_pedidosFiltro === 'todos') return true;
+    if (_pedidosFiltro === 'pendente') return x.estado && x.estado.indexOf('Aguardar') !== -1;
+    if (_pedidosFiltro === 'aprovado') return x.estado && x.estado.indexOf('Aprovado') !== -1;
+    if (_pedidosFiltro === 'recusado') return x.estado && x.estado.indexOf('Recusado') !== -1;
+    return true;
+  }).map(function(x) { return x.id; }).filter(function(id) { return !!id; });
+}
+
+function _executarLimpezaPedidosVista_(ids) {
+  if (!ids || ids.length === 0) {
+    mostrarPopup({ titulo: 'Sem seleção', mensagem: 'Selecione pelo menos um pedido para apagar da vista.', tipo: 'aviso' });
+    return;
+  }
+  mostrarPopup({ titulo: 'A Limpar', mensagem: 'A remover da vista da app e do PC (o registo mantém-se no Sheets)...', tipo: 'processando' });
+  chamarAPIJsonp(adminParams({ action: 'ocultarPedidos', ids: ids.join(',') }), function(r) {
+    if (r && r.ok) {
+      var setRemovidos = {};
+      ids.forEach(function(id) { setRemovidos[id] = true; });
+      _pedidosCache = _pedidosCache.filter(function(item) { return !setRemovidos[item.id]; });
+      atualizarStats();
+      renderPedidos();
+      mostrarPopup({
+        titulo: 'Limpo da Vista',
+        mensagem: ids.length + ' pedido(s) removido(s) da app e do PC. A informação continua guardada no Google Sheets.',
+        tipo: 'sucesso'
+      });
+    } else {
+      mostrarPopup({ titulo: 'Erro', mensagem: (r && r.erro) || 'Não foi possível limpar os pedidos.', tipo: 'erro' });
+    }
+  });
+}
+
+function apagarPedidoUnico(id) {
+  if (!id) return;
+  _executarLimpezaPedidosVista_([id]);
+}
+
+function apagarPedidosSelecionados() {
+  var marcados = Array.prototype.slice.call(document.querySelectorAll('#pedidosList .chk-pedido-item:checked'));
+  var ids = marcados.map(function(cb) { return cb.getAttribute('data-pedido-chk'); }).filter(function(id) { return !!id; });
+  _executarLimpezaPedidosVista_(ids);
+}
+
+function apagarTodosPedidosLista() {
+  var ids = _obterIdsPedidosVisiveis_();
+  _executarLimpezaPedidosVista_(ids);
 }
 
 function responderPedido(id, decisao) {
