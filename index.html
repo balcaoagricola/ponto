@@ -2462,7 +2462,11 @@ function carregarPedidosPendentes() {
   box.innerHTML = '<div class="pedidos-empty"><div class="ico">⏳</div><h4>A carregar…</h4></div>';
   chamarAPIJsonp(adminParams({ action:'obterPedidos' }), function(r) {
     if (!r || !r.ok) { box.innerHTML = '<div class="pedidos-empty"><div class="ico">⚠️</div><h4>Erro</h4><p>' + ((r && r.erro) || '') + '</p></div>'; return; }
-    _pedidosCache = r.pedidos || [];
+    var ocultosLoc = _getOcultosLocalMap_();
+    _pedidosCache = (r.pedidos || []).filter(function(item) {
+      var itemId = String((item && item.id) || '').trim().replace(/^'+/, '');
+      return !ocultosLoc[itemId];
+    });
     atualizarStats();
     renderPedidos();
   });
@@ -2533,7 +2537,7 @@ function renderPedidos() {
         '<div class="pedido-info"><div class="pedido-nome">' + esc(x.nome || '—') + '</div><div class="pedido-tipo">' + esc(tp) + '</div></div>' +
         '<div style="display:inline-flex; align-items:center; gap:6px; flex-shrink:0;">' +
           '<div class="pedido-badge">' + bd + '</div>' +
-          '<button type="button" data-pedido-apagar="\' + esc(x.id) + \'" title="Apagar este pedido da vista (mantém no Sheets)" style="width:28px; height:28px; border-radius:8px; border:1px solid #fecaca; background:#fef2f2; color:#dc2626; font-size:0.78rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">🗑️</button>' +
+          '<button type="button" data-pedido-apagar="' + esc(x.id) + '" title="Apagar este pedido da vista (mantém no Sheets)" style="width:28px; height:28px; border-radius:8px; border:1px solid #fecaca; background:#fef2f2; color:#dc2626; font-size:0.78rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">🗑️</button>' +
         '</div>' +
       '</div>' +
       '<div class="pedido-datas"><div><div class="dt">De</div><div class="dv">' + esc(x.dataIni || '—') + '</div></div><div><div class="dt">Até</div><div class="dv">' + esc(x.dataFim || '—') + '</div></div></div>' +
@@ -2594,26 +2598,54 @@ function _obterIdsPedidosVisiveis_() {
   }).map(function(x) { return x.id; }).filter(function(id) { return !!id; });
 }
 
+function _getOcultosLocalMap_() {
+  return lerJsonSeguro('PONTO_PEDIDOS_OCULTOS_LOCAL_V1', {});
+}
+
+function _guardarOcultosLocalIds_(ids) {
+  var mapa = _getOcultosLocalMap_();
+  ids.forEach(function(id) {
+    var limpo = String(id || '').trim().replace(/^'+/, '');
+    if (limpo) mapa[limpo] = String(Date.now());
+  });
+  gravarJsonSeguro('PONTO_PEDIDOS_OCULTOS_LOCAL_V1', mapa);
+}
+
 function _executarLimpezaPedidosVista_(ids) {
-  if (!ids || ids.length === 0) {
+  var idsLimpos = (ids || []).map(function(id) {
+    return String(id || '').trim().replace(/^'+/, '');
+  }).filter(function(id) { return !!id; });
+
+  if (idsLimpos.length === 0) {
     mostrarPopup({ titulo: 'Sem seleção', mensagem: 'Selecione pelo menos um pedido para apagar da vista.', tipo: 'aviso' });
     return;
   }
+
+  // Aplicar remoção imediata na memória e no armazenamento local da app/PC
+  _guardarOcultosLocalIds_(idsLimpos);
+  var setRemovidos = {};
+  idsLimpos.forEach(function(id) { setRemovidos[id] = true; });
+  _pedidosCache = _pedidosCache.filter(function(item) {
+    var itemId = String((item && item.id) || '').trim().replace(/^'+/, '');
+    return !setRemovidos[itemId];
+  });
+  atualizarStats();
+  renderPedidos();
+
   mostrarPopup({ titulo: 'A Limpar', mensagem: 'A remover da vista da app e do PC (o registo mantém-se no Sheets)...', tipo: 'processando' });
-  chamarAPIJsonp(adminParams({ action: 'ocultarPedidos', ids: ids.join(',') }), function(r) {
+  chamarAPIJsonp(adminParams({ action: 'ocultarPedidos', ids: idsLimpos.join(',') }), function(r) {
     if (r && r.ok) {
-      var setRemovidos = {};
-      ids.forEach(function(id) { setRemovidos[id] = true; });
-      _pedidosCache = _pedidosCache.filter(function(item) { return !setRemovidos[item.id]; });
-      atualizarStats();
-      renderPedidos();
       mostrarPopup({
         titulo: 'Limpo da Vista',
-        mensagem: ids.length + ' pedido(s) removido(s) da app e do PC. A informação continua guardada no Google Sheets.',
+        mensagem: idsLimpos.length + ' pedido(s) removido(s) da app e do PC. A informação continua guardada no Google Sheets.',
         tipo: 'sucesso'
       });
     } else {
-      mostrarPopup({ titulo: 'Erro', mensagem: (r && r.erro) || 'Não foi possível limpar os pedidos.', tipo: 'erro' });
+      mostrarPopup({
+        titulo: 'Removido Localmente',
+        mensagem: 'O pedido foi ocultado nesta vista. (' + ((r && r.erro) || 'Aviso ao sincronizar') + ')',
+        tipo: 'aviso'
+      });
     }
   });
 }
