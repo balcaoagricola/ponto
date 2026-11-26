@@ -566,15 +566,23 @@ function atualizarBadgeOffline() {
   var el = document.getElementById('offlineBadge');
   if (!el) return;
   var fila = getFilaOffline();
-  if (fila.length === 0) { el.style.display = 'none'; el.innerHTML = ''; return; }
+  var pedidosOff = getFilaPedidosOffline();
+  var totalPendentes = fila.length + pedidosOff.length;
+  if (totalPendentes === 0) { el.style.display = 'none'; el.innerHTML = ''; return; }
+  var partes = [];
+  if (fila.length > 0) partes.push(fila.length + ' picagem(ns)');
+  if (pedidosOff.length > 0) partes.push(pedidosOff.length + ' pedido(s)');
   el.style.display = 'block';
-  el.innerHTML = '<div class="badge-off-box"><span class="badge-off-ico">📦</span><div class="badge-off-info"><div class="badge-off-title">' + fila.length + ' picagem(ns) offline</div><div class="badge-off-sub">Será enviada quando houver rede</div></div><button class="badge-off-btn" onclick="sincronizarFilaOffline()">Sincronizar</button></div>';
+  el.innerHTML = '<div class="badge-off-box"><span class="badge-off-ico">📦</span><div class="badge-off-info"><div class="badge-off-title">' + partes.join(' e ') + ' offline</div><div class="badge-off-sub">Será enviado quando houver rede</div></div><button class="badge-off-btn" onclick="sincronizarFilaOffline()">Sincronizar</button></div>';
 }
 
 async function sincronizarFilaOffline() {
   if (_sincronizando || !navigator.onLine) return;
   var fila = getFilaOffline();
-  if (fila.length === 0) return;
+  if (fila.length === 0) {
+    await sincronizarPedidosOffline();
+    return;
+  }
   _sincronizando = true;
   var restantes = [];
   for (var i = 0; i < fila.length; i++) {
@@ -595,6 +603,7 @@ async function sincronizarFilaOffline() {
   _sincronizando = false;
   if (restantes.length === 0 && fila.length > 0) mostrarPopup({ titulo: 'Sincronizado', mensagem: 'Todas as picagens offline foram enviadas.', tipo: 'sucesso' });
   else if (restantes.length > 0) setTimeout(sincronizarFilaOffline, 15000);
+  await sincronizarPedidosOffline();
 }
 
 async function guardarPicagemOffline(nome, pin, lat, lon, disp) {
@@ -626,6 +635,160 @@ async function guardarPicagemOffline(nome, pin, lat, lon, disp) {
   return item;
 }
 
+/* ════════════════ FILA OFFLINE DE PEDIDOS À GERÊNCIA ════════════════ */
+var LS_FILA_PEDIDOS_OFF = "PONTO_FILA_PEDIDOS_OFFLINE_V1";
+var LS_FILA_PEDIDOS_OFF_BAK = "PONTO_FILA_PEDIDOS_OFFLINE_BACKUP_V1";
+var _sincronizandoPedidos = false;
+
+function getFilaPedidosOffline() {
+  var mainArr = lerJsonSeguro(LS_FILA_PEDIDOS_OFF, null);
+  var bakArr = lerJsonSeguro(LS_FILA_PEDIDOS_OFF_BAK, []);
+  if (Array.isArray(mainArr) && mainArr.length > 0) {
+    gravarJsonSeguro(LS_FILA_PEDIDOS_OFF_BAK, mainArr);
+    return mainArr;
+  }
+  if (Array.isArray(bakArr) && bakArr.length > 0) {
+    gravarJsonSeguro(LS_FILA_PEDIDOS_OFF, bakArr);
+    return bakArr;
+  }
+  return [];
+}
+
+function setFilaPedidosOffline(arr) {
+  var lista = Array.isArray(arr) ? arr : [];
+  gravarJsonSeguro(LS_FILA_PEDIDOS_OFF, lista);
+  gravarJsonSeguro(LS_FILA_PEDIDOS_OFF_BAK, lista);
+  gravarIdbPonto_("pedidos_offline", lista);
+  atualizarBadgeOffline();
+}
+
+async function restaurarPedidosOfflineDoIdb_() {
+  try {
+    var pedIdb = await lerIdbPonto_("pedidos_offline", null);
+    if (Array.isArray(pedIdb) && pedIdb.length > 0) {
+      var atual = getFilaPedidosOffline();
+      var porId = {};
+      pedIdb.forEach(function(it) { if (it && it.idPedidoOff) porId[it.idPedidoOff] = it; });
+      atual.forEach(function(it) { if (it && it.idPedidoOff) porId[it.idPedidoOff] = it; });
+      var mesclada = Object.keys(porId).map(function(k) { return porId[k]; });
+      mesclada.sort(function(a, b) {
+        return String(a.criadoEm || "").localeCompare(String(b.criadoEm || ""));
+      });
+      setFilaPedidosOffline(mesclada);
+      await gravarIdbPonto_("pedidos_offline", mesclada);
+    }
+  } catch (e) {}
+}
+
+function guardarPedidoOffline(dadosPedido) {
+  var fila = getFilaPedidosOffline();
+  fila.push(dadosPedido);
+  setFilaPedidosOffline(fila);
+}
+
+async function sincronizarPedidosOffline() {
+  if (_sincronizandoPedidos || !navigator.onLine) return;
+  await restaurarPedidosOfflineDoIdb_();
+  var fila = getFilaPedidosOffline();
+  if (fila.length === 0) return;
+  _sincronizandoPedidos = true;
+  var restantes = [];
+
+  for (var i = 0; i < fila.length; i++) {
+    var item = fila[i];
+    item.tentativas = (item.tentativas || 0) + 1;
+    var fileIdFinal = item.fileId || "";
+    var obsFinal = item.obs || "";
+
+    if (!fileIdFinal && Array.isArray(item.anexosPendentes) && item.anexosPendentes.length > 0) {
+      var enviadosNow = [];
+      for (var a = 0; a < item.anexosPendentes.length; a++) {
+        var ax = item.anexosPendentes[a];
+        if (!ax || !ax.base64) continue;
+        try {
+          var sessionId = 'UP_OFF_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+          var chunkSize = 1500000;
+          var totalChunks = Math.ceil(ax.base64.length / chunkSize);
+          for (var c = 0; c < totalChunks; c++) {
+            var slice = ax.base64.slice(c * chunkSize, (c + 1) * chunkSize);
+            await fetch(APP_SCRIPT_URL, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({
+                action: 'uploadFile',
+                sessionId: sessionId,
+                fileName: ax.name || 'comprovativo',
+                mimeType: ax.mimeType || 'application/octet-stream',
+                base64: slice,
+                chunkIndex: c,
+                totalChunks: totalChunks
+              })
+            });
+            if (totalChunks > 1) await new Promise(function(r) { setTimeout(r, 250); });
+          }
+          for (var t = 0; t < 35; t++) {
+            await new Promise(function(r) { setTimeout(r, 1000); });
+            var upRes = await new Promise(function(resolve) {
+              chamarAPIJsonp({ action: 'obterUploadFile', sessionId: sessionId }, resolve);
+            });
+            if (upRes && upRes.ok && upRes.fileId) {
+              enviadosNow.push(upRes);
+              break;
+            }
+          }
+        } catch (eUp) {}
+      }
+      if (enviadosNow.length > 0) {
+        fileIdFinal = enviadosNow[0].fileId;
+        if (enviadosNow.length > 1) {
+          var extrasTxt = enviadosNow.slice(1).map(function(evItem) {
+            return '📎 ' + (evItem.fileName || 'Comprovativo') + ': ' + (evItem.fileUrl || '');
+          }).join('\n');
+          obsFinal = (obsFinal ? obsFinal + '\n\n' : '') + 'Outros anexos:\n' + extrasTxt;
+        }
+      }
+    }
+
+    var resp = await new Promise(function(resolve) {
+      try {
+        chamarAPIJsonp({
+          action: 'comunicarAusencia',
+          nome: item.nome,
+          pin: item.pin,
+          email: item.email,
+          tipo: item.tipo,
+          dataIni: item.dataIni,
+          dataFim: item.dataFim,
+          obs: obsFinal,
+          fileId: fileIdFinal,
+          lat: item.lat || 0,
+          lon: item.lon || 0,
+          disp: item.disp || 'Desconhecido'
+        }, resolve);
+      } catch (e) {
+        resolve({ ok: false, erro: 'Erro de rede' });
+      }
+    });
+
+    var ok = resp && resp.ok === true;
+    if (!ok) {
+      var erro = (resp && resp.erro) ? String(resp.erro) : String(resp || '');
+      var definitivo = /incorreto|não encontrado|inativo/i.test(erro);
+      if (!definitivo && item.tentativas < 10) {
+        restantes.push(item);
+      }
+    }
+  }
+
+  setFilaPedidosOffline(restantes);
+  _sincronizandoPedidos = false;
+  if (restantes.length === 0 && fila.length > 0) {
+    mostrarPopup({ titulo: 'Pedidos Sincronizados', mensagem: 'Os pedidos guardados offline foram enviados à gerência.', tipo: 'sucesso' });
+  } else if (restantes.length > 0) {
+    setTimeout(sincronizarPedidosOffline, 15000);
+  }
+}
 
 /* ════════════════ SALVAGUARDA INDEXEDDB (PINS + FILA OFFLINE) ════════════════ */
 var IDB_NAME = "PONTO_BALCAO_AGRICOLA_IDB_V1";
@@ -707,6 +870,7 @@ async function restaurarDadosOfflineDoIdb_() {
       setFilaOffline(mesclada);
       await gravarIdbPonto_("fila_offline", mesclada);
     }
+    await restaurarPedidosOfflineDoIdb_();
     atualizarBadgeOffline();
   } catch (e) {}
 }
@@ -1065,7 +1229,7 @@ function fecharCamera() {
 }
 
 /* ════════════════ UPLOAD (MÚLTIPLOS FICHEIROS + COMPRESSÃO DE IMAGENS > 5MB) ════════════════ */
-var _anexosItens = []; // Array de { uid, name, size, isImage, dataUrl, state, statusText, uploaded }
+var _anexosItens = [];
 var _uploadedFile = null;
 var _uploadState = 'idle';
 
@@ -1230,6 +1394,7 @@ async function processarFicheiroSelecionado(file) {
     size: file.size,
     isImage: isImage,
     dataUrl: '',
+    fileObj: null,
     state: 'uploading',
     statusText: isImage && file.size > MAX_UPLOAD_BYTES ? '🗜️ A otimizar imagem (>5MB)...' : '⏳ A processar...',
     uploaded: null
@@ -1261,6 +1426,15 @@ async function processarFicheiroSelecionado(file) {
       renderListaAnexos();
     }
 
+    item.fileObj = ficheiroFinal;
+    if (!navigator.onLine) {
+      item.state = 'done';
+      item.statusText = '📦 Guardado offline (envia quando houver rede)';
+      sincronizarEstadoGlobalAnexos();
+      renderListaAnexos();
+      return;
+    }
+
     var result = await uploadFile(ficheiroFinal);
     item.uploaded = result;
     item.state = 'done';
@@ -1285,7 +1459,7 @@ function removerFicheiro() {
 async function uploadFile(file) {
   var base64 = await fileToBase64(file);
   var sessionId = 'UP_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
-  var chunkSize = 1500000; // ~1.5 MB de caracteres base64 por envio
+  var chunkSize = 1500000;
   var totalChunks = Math.ceil(base64.length / chunkSize);
 
   for (var c = 0; c < totalChunks; c++) {
@@ -1373,6 +1547,68 @@ async function submeterFaltaFuncionario() {
     obsFinal = (obsFinal ? obsFinal + '\n\n' : '') + 'Outros anexos:\n' + extrasTxt;
   }
 
+  if (!navigator.onLine) {
+    await restaurarDadosOfflineDoIdb_();
+    var hPin = await hashPin(pin);
+    var revMapa = getPinRevMapa();
+    var nomeMemorizado = revMapa[hPin];
+    if (!nomeMemorizado) {
+      mostrarPopup({
+        titulo: "Sem rede",
+        mensagem: "Primeira vez neste dispositivo.<br><br>Ligue-se à internet <b>pelo menos uma vez</b> para validar este PIN antes de submeter pedidos offline.",
+        tipo: "erro"
+      });
+      return;
+    }
+
+    var anexosParaDepois = [];
+    for (var idxA = 0; idxA < _anexosItens.length; idxA++) {
+      var axItem = _anexosItens[idxA];
+      if (axItem && axItem.fileObj && axItem.fileObj.size <= 3500000) {
+        try {
+          var b64 = await fileToBase64(axItem.fileObj);
+          anexosParaDepois.push({
+            name: axItem.fileObj.name || axItem.name,
+            mimeType: axItem.fileObj.type || 'application/octet-stream',
+            base64: b64
+          });
+        } catch (eB64) {}
+      }
+    }
+
+    var pedidoOff = {
+      idPedidoOff: 'PED_OFF_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+      nome: nome,
+      pin: pin,
+      email: email.trim(),
+      tipo: tipo,
+      dataIni: dIni,
+      dataFim: dFim,
+      obs: obsFinal,
+      fileId: fileId,
+      anexosPendentes: anexosParaDepois,
+      lat: lat,
+      lon: lon,
+      disp: disp,
+      criadoEm: new Date().toISOString(),
+      tentativas: 0
+    };
+
+    guardarPedidoOffline(pedidoOff);
+    var avisoAnexo = (_anexosItens.length > 0 && anexosParaDepois.length === 0 && !fileId)
+      ? "<br><br>⚠️ Anexos muito grandes serão reanexados quando houver rede."
+      : "";
+
+    mostrarPopup({
+      titulo: "Guardado Offline",
+      mensagem: "O seu pedido de <b>" + tipo + "</b> foi guardado no dispositivo e será enviado à gerência assim que houver internet." + avisoAnexo,
+      tipo: "sucesso"
+    });
+    removerFicheiro();
+    setTimeout(voltarAoEcraPrincipal, 2500);
+    return;
+  }
+
   mostrarPopup({ titulo:"A Enviar", mensagem:"A submeter o pedido...", tipo:"processando" });
 
   chamarAPIJsonp({
@@ -1382,7 +1618,7 @@ async function submeterFaltaFuncionario() {
     lat: lat, lon: lon, disp: disp
   }, function(r) {
     if (r && r.ok) {
-      mostrarPopup({ titulo:"Pedido Enviado", mensagem:"A gerência foi notificada (email + Telegram). Será contactado com a resposta.", tipo:"sucesso" });
+      mostrarPopup({ titulo:"Pedido Enviado", mensagem:"A gerência foi notificada por email. Será contactado com a resposta.", tipo:"sucesso" });
       removerFicheiro();
       setTimeout(voltarAoEcraPrincipal, 2500);
     } else {
