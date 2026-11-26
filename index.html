@@ -1525,9 +1525,9 @@ function tentarEntrarAdmin() {
       document.getElementById('section-ponto').classList.remove('active');
       document.getElementById('section-falta-func').classList.remove('active');
       document.getElementById('section-admin').classList.add('active');
-      document.getElementById('headerTitle').style.display = 'none';
-      document.getElementById('headerClockBox').style.display = 'none';
-      document.getElementById('offlineBadge').style.display = 'none';
+      document.getElementById('headerTitle').style.display = 'block';
+      document.getElementById('headerClockBox').style.display = 'flex';
+      atualizarBadgeOffline();
       voltarAoMenuCentralAdmin();
     } else {
       mostrarPopup({ titulo: "Acesso Negado", mensagem: "Palavra-passe incorreta.", tipo: "erro" });
@@ -1538,9 +1538,9 @@ function abrirEcraFaltaFuncionario() {
   document.getElementById('section-ponto').classList.remove('active');
   document.getElementById('section-admin').classList.remove('active');
   document.getElementById('section-falta-func').classList.add('active');
-  document.getElementById('headerTitle').style.display = 'none';
-  document.getElementById('headerClockBox').style.display = 'none';
-  document.getElementById('offlineBadge').style.display = 'none';
+  document.getElementById('headerTitle').style.display = 'block';
+  document.getElementById('headerClockBox').style.display = 'flex';
+  atualizarBadgeOffline();
 }
 function voltarAoEcraPrincipal() {
   senhaAdminSessao = ""; tokenAdminSessao = ""; removerFicheiro();
@@ -1548,7 +1548,7 @@ function voltarAoEcraPrincipal() {
   document.getElementById('section-falta-func').classList.remove('active');
   document.getElementById('section-ponto').classList.add('active');
   document.getElementById('headerTitle').style.display = 'block';
-  document.getElementById('headerClockBox').style.display = 'inline-flex';
+  document.getElementById('headerClockBox').style.display = 'flex';
   voltarAoMenuCentralAdmin();
   atualizarBadgeOffline();
 }
