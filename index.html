@@ -316,7 +316,6 @@
         <button class="btn" onclick="abrirSubModulo('pdf')"><span>📄</span> PDF</button>
         <button class="btn" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar</button>
         <button class="btn" onclick="abrirSubModulo('remover')"><span>❌</span> Inativar</button>
-        <button class="btn" onclick="testarTodasComunicacoes()" style="grid-column:span 2; background:#eff6ff; color:#1e40af; border-color:#bfdbfe;"><span>🔔</span> Testar Comunicações (Email / Telegram)</button>
       </div>
       <button class="btn btn-nav-red" onclick="voltarAoEcraPrincipal()" style="margin-top:20px;">Sair do Painel</button>
     </div>
@@ -1909,66 +1908,6 @@ function submeterRemocaoFuncionario() {
   });
 }
 
-
-/* ════════════════ TESTAR TODAS AS COMUNICAÇÕES (ADMIN) ════════════════ */
-function testarTodasComunicacoes() {
-  if (!navigator.onLine) {
-    mostrarPopup({
-      titulo: 'Sem Ligação',
-      mensagem: 'É necessária ligação à internet para testar o envio de Email e Telegram.',
-      tipo: 'erro'
-    });
-    return;
-  }
-
-  mostrarPopup({
-    titulo: 'A Testar Comunicações',
-    mensagem: 'A disparar testes de Email e Telegram...',
-    tipo: 'processando'
-  });
-
-  chamarAPIJsonp(adminParams({ action: 'testarComunicacoes' }), function(r) {
-    if (!r || !r.ok || !r.resultados) {
-      mostrarPopup({
-        titulo: 'Erro no Teste',
-        mensagem: (r && r.erro) || 'Não foi possível executar o teste de comunicações.',
-        tipo: 'erro'
-      });
-      return;
-    }
-
-    var res = r.resultados;
-    var icMail = res.email && res.email.ok ? '✅' : '❌';
-    var icTg = res.telegram && res.telegram.ok ? '✅' : (res.telegram && res.telegram.configurado ? '❌' : '⚠️');
-
-    var listaEventosHtml = '';
-    if (Array.isArray(r.eventosImplementados)) {
-      listaEventosHtml = '<div style="margin-top:12px; padding-top:10px; border-top:1px solid var(--border); text-align:left;">' +
-        '<div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:6px;">Fluxos Implementados no Ponto</div>' +
-        r.eventosImplementados.map(function(ev) {
-          return '<div style="font-size:0.75rem; margin-bottom:4px; color:var(--text);">• <b>' + esc(ev.evento) + '</b> <span style="color:var(--text-muted);">(' + esc(ev.canais) + ')</span></div>';
-        }).join('') +
-      '</div>';
-    }
-
-    var msgHtml =
-      '<div style="text-align:left; font-size:0.82rem; line-height:1.45;">' +
-        '<div style="padding:8px 10px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; margin-bottom:8px;">' +
-          '<div><b>' + icMail + ' Email:</b> ' + esc((res.email && res.email.detalhe) || '') + '</div>' +
-        '</div>' +
-        '<div style="padding:8px 10px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px;">' +
-          '<div><b>' + icTg + ' Telegram:</b> ' + esc((res.telegram && res.telegram.detalhe) || '') + '</div>' +
-        '</div>' +
-        listaEventosHtml +
-      '</div>';
-
-    mostrarPopup({
-      titulo: 'Resultado do Teste (' + (r.hora || '') + ')',
-      mensagem: msgHtml,
-      tipo: (res.email && res.email.ok && res.telegram && res.telegram.ok) ? 'sucesso' : 'aviso'
-    });
-  });
-}
 
 /* ════════════════ DELEGAÇÃO GLOBAL DE EVENTOS ════════════════ */
 document.addEventListener('click', function(e) {
