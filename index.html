@@ -1518,14 +1518,14 @@ function _fetchIpRapido_(url, timeoutMs) {
   });
 }
 
+var _ipCacheSession = '';
 function chamarAPIJsonp(params, cb) {
   if (!navigator.onLine) { if (cb) cb({ ok: false, erro: 'Sem ligação à internet' }); return; }
-  _fetchIpRapido_('https://api.ipify.org?format=json', 2200).then(function(ip1) {
-    if (ip1) { params.ip = ip1; enviar(params, cb); return; }
-    _fetchIpRapido_('https://api64.ipify.org?format=json', 2000).then(function(ip2) {
-      params.ip = ip2 || "N/D";
-      enviar(params, cb);
-    });
+  if (_ipCacheSession) { params.ip = _ipCacheSession; enviar(params, cb); return; }
+  _fetchIpRapido_('https://api.ipify.org?format=json', 1100).then(function(ip1) {
+    if (ip1) { _ipCacheSession = ip1; params.ip = ip1; }
+    else { params.ip = "N/D"; }
+    enviar(params, cb);
   });
 }
 function enviar(params, cb) {
@@ -1760,7 +1760,7 @@ function tecladoPress(d) {
   vibrarTecla_(20);
   pinAtual += d;
   atualizarDots();
-  if (pinAtual.length === 4) setTimeout(registarPonto, 200);
+  if (pinAtual.length === 4) setTimeout(registarPonto, 20);
 }
 function tecladoClear() {
   vibrarTecla_([15, 30, 15]);
@@ -1824,12 +1824,12 @@ async function registarPonto() {
     if (navigator && navigator.geolocation && typeof navigator.geolocation.getCurrentPosition === 'function') {
       var pos = await new Promise(function(res){
         var done = false;
-        var timer = setTimeout(function(){ if (!done) { done = true; res(null); } }, 4500);
+        var timer = setTimeout(function(){ if (!done) { done = true; res(null); } }, 1200);
         try {
           navigator.geolocation.getCurrentPosition(
             function(p){ if (!done) { done = true; clearTimeout(timer); res(p); } },
             function(){ if (!done) { done = true; clearTimeout(timer); res(null); } },
-            { enableHighAccuracy: false, timeout: 4000, maximumAge: 60000 }
+            { enableHighAccuracy: false, timeout: 1100, maximumAge: 300000 }
           );
         } catch(eGeo) {
           if (!done) { done = true; clearTimeout(timer); res(null); }
