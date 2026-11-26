@@ -2528,7 +2528,7 @@ function renderPedidos() {
         '<div class="pedido-info"><div class="pedido-nome">' + esc(x.nome || '—') + '</div><div class="pedido-tipo">' + esc(tp) + '</div></div>' +
         '<div style="display:inline-flex; align-items:center; gap:6px; flex-shrink:0;">' +
           '<div class="pedido-badge">' + bd + '</div>' +
-          '<button type="button" onclick="apagarPedidoUnico('' + esc(x.id) + '')" title="Apagar este pedido da vista (mantém no Sheets)" style="width:28px; height:28px; border-radius:8px; border:1px solid #fecaca; background:#fef2f2; color:#dc2626; font-size:0.78rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">🗑️</button>' +
+          '<button type="button" data-pedido-apagar="\' + esc(x.id) + \'" title="Apagar este pedido da vista (mantém no Sheets)" style="width:28px; height:28px; border-radius:8px; border:1px solid #fecaca; background:#fef2f2; color:#dc2626; font-size:0.78rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">🗑️</button>' +
         '</div>' +
       '</div>' +
       '<div class="pedido-datas"><div><div class="dt">De</div><div class="dv">' + esc(x.dataIni || '—') + '</div></div><div><div class="dt">Até</div><div class="dv">' + esc(x.dataFim || '—') + '</div></div></div>' +
@@ -2740,6 +2740,16 @@ document.addEventListener('click', function(e) {
     chip.classList.add('active');
     _pedidosFiltro = chip.dataset.filter;
     renderPedidos();
+    return;
+  }
+
+  /* Botão apagar pedido único da vista */
+  var btnApagar = e.target.closest('[data-pedido-apagar]');
+  if (btnApagar) {
+    e.preventDefault();
+    e.stopPropagation();
+    var idAp = btnApagar.getAttribute('data-pedido-apagar');
+    if (idAp) apagarPedidoUnico(idAp);
     return;
   }
 
