@@ -1631,6 +1631,7 @@ function tentarEntrarAdmin() {
       document.getElementById('section-admin').classList.add('active');
       document.getElementById('headerTitle').style.display = 'block';
       document.getElementById('headerClockBox').style.display = 'flex';
+      garantirSelectsPopulados_();
       atualizarBadgeOffline();
       voltarAoMenuCentralAdmin();
     } else {
@@ -1644,6 +1645,7 @@ function abrirEcraFaltaFuncionario() {
   document.getElementById('section-falta-func').classList.add('active');
   document.getElementById('headerTitle').style.display = 'block';
   document.getElementById('headerClockBox').style.display = 'flex';
+  garantirSelectsPopulados_();
   atualizarBadgeOffline();
 }
 function voltarAoEcraPrincipal() {
@@ -1686,12 +1688,57 @@ function carregarFuncionarios() {
   });
 }
 function preencherSelectsNomes(lista) {
+  var limpos = [];
+  var vistos = {};
+  if (Array.isArray(lista)) {
+    for (var i = 0; i < lista.length; i++) {
+      var nomeItem = typeof lista[i] === 'string' ? lista[i].trim() : (lista[i] && lista[i].nome ? String(lista[i].nome).trim() : '');
+      if (!nomeItem) continue;
+      var chave = nomeItem.toUpperCase();
+      if (!vistos[chave]) {
+        vistos[chave] = true;
+        limpos.push(nomeItem);
+      }
+    }
+  }
   ['nomeFuncionarioFolga','nomeRemover','nomeFuncFalta','nomeCorrigir'].forEach(function(id) {
     var s = document.getElementById(id);
-    if (s) { s.innerHTML = '<option value="" disabled selected>Selecione</option>'; lista.forEach(function(n){ var o = document.createElement('option'); o.value = n; o.text = n; s.appendChild(o); }); }
+    if (s) {
+      s.innerHTML = '<option value="" disabled selected>Selecione</option>';
+      limpos.forEach(function(n){
+        var o = document.createElement('option');
+        o.value = n;
+        o.text = n;
+        s.appendChild(o);
+      });
+    }
   });
   var sA = document.getElementById('selecaoFuncionario');
-  if (sA) { sA.innerHTML = '<option value="" disabled selected>Selecione</option><option value="TODOS">TODOS</option>'; lista.forEach(function(n){ var o = document.createElement('option'); o.value = n; o.text = n; sA.appendChild(o); }); }
+  if (sA) {
+    sA.innerHTML = '<option value="" disabled selected>Selecione</option><option value="TODOS">TODOS</option>';
+    limpos.forEach(function(n){
+      var o = document.createElement('option');
+      o.value = n;
+      o.text = n;
+      sA.appendChild(o);
+    });
+  }
+}
+
+function garantirSelectsPopulados_() {
+  if (Array.isArray(listaFuncionariosCache) && listaFuncionariosCache.length > 0) {
+    preencherSelectsNomes(listaFuncionariosCache);
+    return;
+  }
+  try {
+    var c = JSON.parse(localStorage.getItem('FUNCIONARIOS_CACHE_V1') || '[]');
+    if (Array.isArray(c) && c.length > 0) {
+      listaFuncionariosCache = c;
+      preencherSelectsNomes(c);
+      return;
+    }
+  } catch (e) {}
+  carregarFuncionarios();
 }
 
 
@@ -2305,6 +2352,7 @@ async function submeterFaltaFuncionario() {
 function abrirSubModulo(id) {
   document.getElementById('admin-sub-menu').style.display = 'none';
   MODULOS_ADMIN.forEach(function(m){ var el = document.getElementById('admin-sub-' + m); if (el) el.style.display = (m === id) ? 'block' : 'none'; });
+  garantirSelectsPopulados_();
   document.getElementById('section-admin').scrollTop = 0;
 }
 function voltarAoMenuCentralAdmin() {
