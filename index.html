@@ -316,6 +316,7 @@
         <button class="btn" onclick="abrirSubModulo('pdf')"><span>📄</span> PDF</button>
         <button class="btn" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar</button>
         <button class="btn" onclick="abrirSubModulo('remover')"><span>❌</span> Inativar</button>
+        <button class="btn" onclick="testarTodasComunicacoes()" style="grid-column:span 2; background:#eff6ff; color:#1e40af; border-color:#bfdbfe;"><span>🔔</span> Testar Comunicações (Email / WhatsApp)</button>
       </div>
       <button class="btn btn-nav-red" onclick="voltarAoEcraPrincipal()" style="margin-top:20px;">Sair do Painel</button>
     </div>
@@ -579,10 +580,7 @@ function atualizarBadgeOffline() {
 async function sincronizarFilaOffline() {
   if (_sincronizando || !navigator.onLine) return;
   var fila = getFilaOffline();
-  if (fila.length === 0) {
-    await sincronizarPedidosOffline();
-    return;
-  }
+  if (fila.length === 0) return;
   _sincronizando = true;
   var restantes = [];
   for (var i = 0; i < fila.length; i++) {
@@ -700,6 +698,7 @@ async function sincronizarPedidosOffline() {
     var fileIdFinal = item.fileId || "";
     var obsFinal = item.obs || "";
 
+    // Se existirem ficheiros pendentes guardados em base64 (ex.: capturados ou escolhidos offline), tenta fazer upload agora
     if (!fileIdFinal && Array.isArray(item.anexosPendentes) && item.anexosPendentes.length > 0) {
       var enviadosNow = [];
       for (var a = 0; a < item.anexosPendentes.length; a++) {
@@ -789,6 +788,8 @@ async function sincronizarPedidosOffline() {
     setTimeout(sincronizarPedidosOffline, 15000);
   }
 }
+
+
 
 /* ════════════════ SALVAGUARDA INDEXEDDB (PINS + FILA OFFLINE) ════════════════ */
 var IDB_NAME = "PONTO_BALCAO_AGRICOLA_IDB_V1";
@@ -1229,7 +1230,7 @@ function fecharCamera() {
 }
 
 /* ════════════════ UPLOAD (MÚLTIPLOS FICHEIROS + COMPRESSÃO DE IMAGENS > 5MB) ════════════════ */
-var _anexosItens = [];
+var _anexosItens = []; // Array de { uid, name, size, isImage, dataUrl, state, statusText, uploaded }
 var _uploadedFile = null;
 var _uploadState = 'idle';
 
@@ -1427,14 +1428,6 @@ async function processarFicheiroSelecionado(file) {
     }
 
     item.fileObj = ficheiroFinal;
-    if (!navigator.onLine) {
-      item.state = 'done';
-      item.statusText = '📦 Guardado offline (envia quando houver rede)';
-      sincronizarEstadoGlobalAnexos();
-      renderListaAnexos();
-      return;
-    }
-
     var result = await uploadFile(ficheiroFinal);
     item.uploaded = result;
     item.state = 'done';
@@ -1459,7 +1452,7 @@ function removerFicheiro() {
 async function uploadFile(file) {
   var base64 = await fileToBase64(file);
   var sessionId = 'UP_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
-  var chunkSize = 1500000;
+  var chunkSize = 1500000; // ~1.5 MB de caracteres base64 por envio
   var totalChunks = Math.ceil(base64.length / chunkSize);
 
   for (var c = 0; c < totalChunks; c++) {
@@ -1913,6 +1906,71 @@ function submeterRemocaoFuncionario() {
   chamarAPIJsonp(adminParams({ action:'removerFuncionario', nome:n }), function(r) {
     if (r && r.ok) { carregarFuncionarios(); mostrarPopup({ titulo:'Concluído', mensagem:'Colaborador inativado.', tipo:'sucesso' }); }
     else mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
+  });
+}
+
+
+/* ════════════════ TESTAR TODAS AS COMUNICAÇÕES (ADMIN) ════════════════ */
+function testarTodasComunicacoes() {
+  if (!navigator.onLine) {
+    mostrarPopup({
+      titulo: 'Sem Ligação',
+      mensagem: 'É necessária ligação à internet para testar o envio de Email, WhatsApp e Telegram.',
+      tipo: 'erro'
+    });
+    return;
+  }
+
+  mostrarPopup({
+    titulo: 'A Testar Comunicações',
+    mensagem: 'A disparar testes de Email, WhatsApp e alertas do sistema...',
+    tipo: 'processando'
+  });
+
+  chamarAPIJsonp(adminParams({ action: 'testarComunicacoes' }), function(r) {
+    if (!r || !r.ok || !r.resultados) {
+      mostrarPopup({
+        titulo: 'Erro no Teste',
+        mensagem: (r && r.erro) || 'Não foi possível executar o teste de comunicações.',
+        tipo: 'erro'
+      });
+      return;
+    }
+
+    var res = r.resultados;
+    var icMail = res.email && res.email.ok ? '✅' : '❌';
+    var icWa = res.whatsapp && res.whatsapp.ok ? '✅' : (res.whatsapp && res.whatsapp.configurado ? '❌' : '⚠️');
+    var icTg = res.telegram && res.telegram.ok ? '✅' : (res.telegram && res.telegram.configurado ? '❌' : '⚠️');
+
+    var listaEventosHtml = '';
+    if (Array.isArray(r.eventosImplementados)) {
+      listaEventosHtml = '<div style="margin-top:12px; padding-top:10px; border-top:1px solid var(--border); text-align:left;">' +
+        '<div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:6px;">Fluxos Implementados no Ponto</div>' +
+        r.eventosImplementados.map(function(ev) {
+          return '<div style="font-size:0.75rem; margin-bottom:4px; color:var(--text);">• <b>' + esc(ev.evento) + '</b> <span style="color:var(--text-muted);">(' + esc(ev.canais) + ')</span></div>';
+        }).join('') +
+      '</div>';
+    }
+
+    var msgHtml =
+      '<div style="text-align:left; font-size:0.82rem; line-height:1.45;">' +
+        '<div style="padding:8px 10px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; margin-bottom:8px;">' +
+          '<div><b>' + icMail + ' Email:</b> ' + esc((res.email && res.email.detalhe) || '') + '</div>' +
+        '</div>' +
+        '<div style="padding:8px 10px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; margin-bottom:8px;">' +
+          '<div><b>' + icWa + ' WhatsApp:</b> ' + esc((res.whatsapp && res.whatsapp.detalhe) || '') + '</div>' +
+        '</div>' +
+        '<div style="padding:8px 10px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px;">' +
+          '<div><b>' + icTg + ' Telegram:</b> ' + esc((res.telegram && res.telegram.detalhe) || '') + '</div>' +
+        '</div>' +
+        listaEventosHtml +
+      '</div>';
+
+    mostrarPopup({
+      titulo: 'Resultado do Teste (' + (r.hora || '') + ')',
+      mensagem: msgHtml,
+      tipo: (res.email && res.email.ok) ? 'sucesso' : 'aviso'
+    });
   });
 }
 
