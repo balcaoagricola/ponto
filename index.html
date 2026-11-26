@@ -1506,7 +1506,38 @@ window.addEventListener('load', async function() {
       sincronizarPedidosOffline();
     }, 2000);
   }
-  console.log('[Ponto v7.3] index.html carregado');
+  try {
+    if ('serviceWorker' in navigator && window.location && /^https?:$/i.test(window.location.protocol)) {
+      var swCode = [
+        "const CACHE_NAME = 'ponto-balcao-agricola-offline-v1';",
+        "self.addEventListener('install', event => {",
+        "  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(['./'])).catch(() => {}));",
+        "  self.skipWaiting();",
+        "});",
+        "self.addEventListener('activate', event => {",
+        "  event.waitUntil(self.clients.claim());",
+        "});",
+        "self.addEventListener('fetch', event => {",
+        "  if (event.request.method !== 'GET') return;",
+        "  const urlStr = event.request.url || '';",
+        "  if (urlStr.indexOf('script.google.com') !== -1 || urlStr.indexOf('callback=') !== -1) return;",
+        "  event.respondWith(",
+        "    fetch(event.request).then(resp => {",
+        "      if (resp && resp.status === 200) {",
+        "        const clone = resp.clone();",
+        "        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone)).catch(() => {});",
+        "      }",
+        "      return resp;",
+        "    }).catch(() => caches.match(event.request).then(cached => cached || caches.match('./')))",
+        "  );",
+        "});"
+      ].join("\n");
+      var swBlob = new Blob([swCode], { type: 'application/javascript' });
+      var swUrl = URL.createObjectURL(swBlob);
+      navigator.serviceWorker.register(swUrl, { scope: './' }).catch(function(){});
+    }
+  } catch (eSw) {}
+  console.log('[Ponto v7.4] index.html carregado');
 });
 window.addEventListener('online', async function(){ var g = document.getElementById('gpsIndicator'); if (g) g.classList.remove('offline'); await restaurarDadosOfflineDoIdb_(); setTimeout(sincronizarFilaOffline, 1500); atualizarBadgeOffline(); });
 window.addEventListener('offline', async function(){ var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); await restaurarDadosOfflineDoIdb_(); atualizarBadgeOffline(); });
@@ -1810,6 +1841,14 @@ async function registarPonto() {
   if (!/^[0-9]{4}$/.test(pin)) { tecladoClear(); return; }
   emProcessamento = true;
 
+  var _isPcDesktopOff = false;
+  try {
+    var _uaOff = navigator.userAgent || '';
+    var _ehMobOff = /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(_uaOff);
+    var _temToqueOff = (typeof navigator.maxTouchPoints === 'number' && navigator.maxTouchPoints > 0) || ('ontouchstart' in window);
+    _isPcDesktopOff = (!_ehMobOff && !_temToqueOff) || (window.innerWidth >= 900 && !_ehMobOff);
+  } catch (eOffPc) { _isPcDesktopOff = false; }
+
   if (!navigator.onLine) {
     await restaurarDadosOfflineDoIdb_();
     var h = await hashPin(pin);
@@ -1820,19 +1859,36 @@ async function registarPonto() {
       mostrarPopup({ titulo: "Sem rede", mensagem: "Primeira vez neste dispositivo.<br><br>Ligue-se à internet <b>pelo menos uma vez</b> para memorizar este PIN.", tipo: "erro" });
       return;
     }
-    navigator.geolocation.getCurrentPosition(
-      async function(pos) {
-        var item = await guardarPicagemOffline(nome, pin, pos.coords.latitude, pos.coords.longitude, obterDetalhesDispositivo(), _isPcDesktop);
-        emProcessamento = false; pinAtual = ""; atualizarDots();
-        if (item) mostrarPopup({ titulo: "Guardado Offline", mensagem: "Olá <b>" + nome + "</b>!<br><br>Picagem guardada às " + new Date().toLocaleTimeString('pt-PT') + ".<br><br>Será enviada quando houver rede.", tipo: "sucesso" });
-      },
-      async function() {
-        var item = await guardarPicagemOffline(nome, pin, 0, 0, obterDetalhesDispositivo(), _isPcDesktop);
-        emProcessamento = false; pinAtual = ""; atualizarDots();
-        if (item) mostrarPopup({ titulo: "Guardado Offline", mensagem: "Olá <b>" + nome + "</b>!<br><br>Picagem guardada às " + new Date().toLocaleTimeString('pt-PT') + ".<br><br>Sem GPS — será validada ao sincronizar.", tipo: "aviso" });
-      },
-      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-    );
+
+    var latOff = 0, lonOff = 0;
+    try {
+      if (navigator && navigator.geolocation && typeof navigator.geolocation.getCurrentPosition === 'function') {
+        var posOff = await new Promise(function(resOff) {
+          var doneOff = false;
+          var tOff = setTimeout(function() { if (!doneOff) { doneOff = true; resOff(null); } }, 1200);
+          try {
+            navigator.geolocation.getCurrentPosition(
+              function(p) { if (!doneOff) { doneOff = true; clearTimeout(tOff); resOff(p); } },
+              function() { if (!doneOff) { doneOff = true; clearTimeout(tOff); resOff(null); } },
+              { enableHighAccuracy: false, timeout: 1100, maximumAge: 300000 }
+            );
+          } catch (eGeoOff) {
+            if (!doneOff) { doneOff = true; clearTimeout(tOff); resOff(null); }
+          }
+        });
+        if (posOff && posOff.coords) {
+          latOff = parseFloat(posOff.coords.latitude) || 0;
+          lonOff = parseFloat(posOff.coords.longitude) || 0;
+        }
+      }
+    } catch (eGOff) {}
+
+    var item = await guardarPicagemOffline(nome, pin, latOff, lonOff, obterDetalhesDispositivo(), _isPcDesktopOff);
+    emProcessamento = false; pinAtual = ""; atualizarDots();
+    if (item) {
+      var msgOff = "Olá <b>" + nome + "</b>!<br><br>Picagem guardada às " + new Date().toLocaleTimeString('pt-PT') + ".<br><br>Será enviada quando houver rede.";
+      mostrarPopup({ titulo: "Guardado Offline", mensagem: msgOff, tipo: (latOff && lonOff) ? "sucesso" : "aviso" });
+    }
     return;
   }
 
