@@ -2729,8 +2729,10 @@ function submeterCorrecao() {
   var d = document.getElementById('dataCorrigir').value;
   var h = document.getElementById('horaCorrigir').value;
   if (!n || !d || !h) { mostrarPopup({ titulo:'Campos em Falta', mensagem:'Preencha tudo.', tipo:'erro' }); return; }
+  var motEl = document.getElementById('motivoCorrigir');
+  var motivo = (motEl && motEl.value && motEl.value.trim()) ? motEl.value.trim() : 'Inserção manual pela gerência (Art. 202.º CT)';
   mostrarPopup({ titulo:'A Corrigir', mensagem:'A inserir picagem...', tipo:'processando' });
-  chamarAPIJsonp(adminParams({ action:'corrigirPicagem', nome:n, data:d, hora:h }), function(r) {
+  chamarAPIJsonp(adminParams({ action:'corrigirPicagem', nome:n, data:d, hora:h, motivo:motivo }), function(r) {
     if (r && r.ok) mostrarPopup({ titulo:'Concluído', mensagem:'Picagem inserida.<br><br>Hoje: ' + r.horasHoje + ' · Semana: ' + r.horasSemana + ' · Mês: ' + r.horasMes, tipo:'sucesso' });
     else mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
   });
