@@ -928,16 +928,27 @@
   <!-- SECÇÃO ADMIN -->
   <div id="section-admin" class="content-section">
     <div id="admin-sub-menu">
-      <div style="margin-bottom:20px;"><h3 style="font-size:1rem; font-weight:800;">Painel de Gestão</h3></div>
-      <div class="menu-admin-grid">
-        <button class="btn tile-emerald" onclick="abrirSubModulo('dashboard'); carregarDashboard();" style="grid-column:span 2;"><span>📊</span> Dashboard</button>
+      <div style="margin-bottom:16px;"><h3 style="font-size:1rem; font-weight:800;">Painel de Gestão</h3></div>
+      
+      <div style="font-size:0.65rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Operação Diária</div>
+      <div class="menu-admin-grid" style="margin-bottom:16px;">
+        <button class="btn tile-emerald" onclick="abrirSubModulo('dashboard'); carregarDashboard();"><span>📊</span> Dashboard</button>
         <button class="btn tile-amber" onclick="abrirSubModulo('pedidos'); carregarPedidosPendentes();"><span>📩</span> Pedidos</button>
-        <button class="btn" onclick="abrirSubModulo('ausencias')"><span>📅</span> Faltas</button>
+      </div>
+
+      <div style="font-size:0.65rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Assiduidade & Mapas</div>
+      <div class="menu-admin-grid" style="margin-bottom:16px;">
         <button class="btn" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
-        <button class="btn" onclick="abrirSubModulo('pdf')"><span>📄</span> PDF</button>
+        <button class="btn" onclick="abrirSubModulo('ausencias')"><span>📅</span> Faltas</button>
+        <button class="btn" onclick="abrirSubModulo('pdf')" style="grid-column:span 2;"><span>📄</span> Exportar Mapa PDF</button>
+      </div>
+
+      <div style="font-size:0.65rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Equipa</div>
+      <div class="menu-admin-grid">
         <button class="btn" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar</button>
         <button class="btn" onclick="abrirSubModulo('remover')"><span>❌</span> Inativar</button>
       </div>
+
       <button class="btn btn-nav-red" onclick="voltarAoEcraPrincipal()" style="margin-top:20px;">Sair do Painel</button>
     </div>
 
@@ -1004,14 +1015,18 @@
       <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()">← Menu</button>
     </div>
 
-    <!-- SUB-MÓDULO: CORRIGIR PICAGEM -->
+    <!-- SUB-MÓDULO: CORRIGIR PICAGEM (AUDITORIA IMUTÁVEL ART. 202.º, N.º 3 DO CT) -->
     <div id="admin-sub-corrigir" style="display:none;">
       <div class="admin-card">
-        <h3>Corrigir Picagem</h3>
+        <h3>Corrigir Picagem · Art. 202.º CT</h3>
         <div class="form-group"><label>Colaborador</label><select id="nomeCorrigir" class="form-control" onchange="carregarPicagensDoDia()"></select></div>
         <div class="form-group"><label>Data</label><input type="date" id="dataCorrigir" class="form-control" onchange="carregarPicagensDoDia()"></div>
         <div id="listaPicagensExistentes" style="margin-bottom:16px;"></div>
         <div class="form-group"><label>Nova Hora a Inserir</label><input type="time" id="horaCorrigir" class="form-control"></div>
+        <div class="form-group">
+          <label>Motivo Legal da Alteração (Obrigatório ACT) <span class="campo-obrigatorio">*</span></label>
+          <input type="text" id="motivoCorrigir" class="form-control" placeholder="Ex: Esquecimento de picagem de saída">
+        </div>
         <button class="btn btn-primary" onclick="submeterCorrecao()">Inserir Picagem</button>
       </div>
       <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()">← Menu</button>
@@ -1549,7 +1564,6 @@ function tecladoBack() {
   }
 }
 
-/* Suporte a teclado físico no ecrã principal */
 document.addEventListener('keydown', function(e) {
   var secPonto = document.getElementById('section-ponto');
   var toast = document.getElementById('toastOverlay');
@@ -2185,7 +2199,7 @@ function responderPedido(id, decisao) {
   setTimeout(function() { var el = document.getElementById('inputComentarioPopup'); if (el) el.focus(); }, 150);
 }
 
-/* ════════════════ CORRIGIR & REMOVER PICAGENS ════════════════ */
+/* ════════════════ CORRIGIR & REMOVER PICAGENS (AUDITORIA ART. 202.º N.º 3 CT) ════════════════ */
 function carregarPicagensDoDia() {
   var n = document.getElementById('nomeCorrigir').value;
   var d = document.getElementById('dataCorrigir').value;
@@ -2219,44 +2233,65 @@ function removerPicagemDia(index, hora) {
   var n = document.getElementById('nomeCorrigir').value;
   var d = document.getElementById('dataCorrigir').value;
   if (!n || !d) return;
-  mostrarPopup({
-    titulo: 'Remover Picagem',
-    mensagem: 'Tem a certeza que pretende remover a picagem das <b>' + esc(hora) + '</b>?',
-    tipo: 'aviso',
-    botoes: [
-      { texto: 'Cancelar', classe: 'toast-btn-secondary', acao: fecharToast },
-      {
-        texto: 'Remover',
-        classe: 'toast-btn-primary',
-        acao: function() {
-          mostrarPopup({ titulo: 'A Remover', mensagem: 'A atualizar folha...', tipo: 'processando' });
-          chamarAPIJsonp(adminParams({ action: 'corrigirPicagem', modo: 'remover', nome: n, data: d, index: index }), function(r) {
-            if (r && r.ok) {
-              mostrarPopup({ titulo: 'Concluído', mensagem: 'Picagem removida.<br><br>Hoje: ' + r.horasHoje + ' · Semana: ' + r.horasSemana + ' · Mês: ' + r.horasMes, tipo: 'sucesso' });
-              carregarPicagensDoDia();
-            } else {
-              mostrarPopup({ titulo: 'Erro', mensagem: (r && r.erro) || 'Erro', tipo: 'erro' });
-            }
-          });
-        }
+
+  var ov = document.getElementById('toastOverlay');
+  document.getElementById('toastTitle').innerText = 'Remover Picagem';
+  document.getElementById('toastBody').innerHTML =
+    '<p style="margin-bottom:12px; color:var(--text-muted); font-size:0.9rem;">Remover picagem das <b>' + esc(hora) + '</b>?</p>' +
+    '<div style="text-align:left;">' +
+      '<label style="display:block; margin-bottom:6px; font-weight:700; font-size:0.72rem; color:var(--text-muted); letter-spacing:0.08em; text-transform:uppercase;">Motivo Legal (Art. 202.º CT) <span class="campo-obrigatorio">*</span></label>' +
+      '<input type="text" id="inputMotivoRemocao" class="form-control" placeholder="Ex: Picagem duplicada por erro">' +
+    '</div>';
+
+  var acts = document.getElementById('toastActionsContainer');
+  acts.innerHTML = '';
+  acts.style.display = 'flex';
+
+  var btnC = document.createElement('button');
+  btnC.className = 'toast-btn toast-btn-secondary';
+  btnC.innerText = 'Cancelar';
+  btnC.onclick = fecharToast;
+  acts.appendChild(btnC);
+
+  var btnR = document.createElement('button');
+  btnR.className = 'toast-btn toast-btn-primary';
+  btnR.innerText = 'Remover';
+  btnR.onclick = function() {
+    var mEl = document.getElementById('inputMotivoRemocao');
+    var motivo = mEl ? mEl.value.trim() : '';
+    if (!motivo) {
+      alert('Indique o motivo legal da remoção (Art. 202.º, n.º 3 do Código do Trabalho).');
+      return;
+    }
+    mostrarPopup({ titulo: 'A Remover', mensagem: 'A atualizar folha...', tipo: 'processando' });
+    chamarAPIJsonp(adminParams({ action: 'corrigirPicagem', modo: 'remover', nome: n, data: d, index: index, motivo: motivo }), function(r) {
+      if (r && r.ok) {
+        mostrarPopup({ titulo: 'Concluído', mensagem: 'Picagem removida e registada em auditoria.<br><br>Hoje: ' + r.horasHoje + ' · Semana: ' + r.horasSemana + ' · Mês: ' + r.horasMes, tipo: 'sucesso' });
+        carregarPicagensDoDia();
+      } else {
+        mostrarPopup({ titulo: 'Erro', mensagem: (r && r.erro) || 'Erro', tipo: 'erro' });
       }
-    ]
-  });
+    });
+  };
+  acts.appendChild(btnR);
+  ov.style.display = 'flex';
 }
 
 function submeterCorrecao() {
   var n = document.getElementById('nomeCorrigir').value;
   var d = document.getElementById('dataCorrigir').value;
   var h = document.getElementById('horaCorrigir').value;
-  if (!n || !d || !h) {
-    mostrarPopup({ titulo: 'Campos em Falta', mensagem: 'Preencha tudo.', tipo: 'erro' });
+  var m = document.getElementById('motivoCorrigir').value.trim();
+  if (!n || !d || !h || !m) {
+    mostrarPopup({ titulo: 'Campos em Falta', mensagem: 'Preencha colaborador, data, hora e o motivo legal da alteração.', tipo: 'erro' });
     return;
   }
   mostrarPopup({ titulo: 'A Corrigir', mensagem: 'A inserir picagem...', tipo: 'processando' });
-  chamarAPIJsonp(adminParams({ action: 'corrigirPicagem', nome: n, data: d, hora: h }), function(r) {
+  chamarAPIJsonp(adminParams({ action: 'corrigirPicagem', nome: n, data: d, hora: h, motivo: m }), function(r) {
     if (r && r.ok) {
-      mostrarPopup({ titulo: 'Concluído', mensagem: 'Picagem inserida.<br><br>Hoje: ' + r.horasHoje + ' · Semana: ' + r.horasSemana + ' · Mês: ' + r.horasMes, tipo: 'sucesso' });
+      mostrarPopup({ titulo: 'Concluído', mensagem: 'Picagem inserida e registada em auditoria.<br><br>Hoje: ' + r.horasHoje + ' · Semana: ' + r.horasSemana + ' · Mês: ' + r.horasMes, tipo: 'sucesso' });
       document.getElementById('horaCorrigir').value = '';
+      document.getElementById('motivoCorrigir').value = '';
       carregarPicagensDoDia();
     } else {
       mostrarPopup({ titulo: 'Erro', mensagem: (r && r.erro) || 'Erro', tipo: 'erro' });
