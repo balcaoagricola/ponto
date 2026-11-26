@@ -316,7 +316,7 @@
         <button class="btn" onclick="abrirSubModulo('pdf')"><span>📄</span> PDF</button>
         <button class="btn" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar</button>
         <button class="btn" onclick="abrirSubModulo('remover')"><span>❌</span> Inativar</button>
-        <button class="btn" onclick="testarTodasComunicacoes()" style="grid-column:span 2; background:#eff6ff; color:#1e40af; border-color:#bfdbfe;"><span>🔔</span> Testar Comunicações (Email / WhatsApp)</button>
+        <button class="btn" onclick="testarTodasComunicacoes()" style="grid-column:span 2; background:#eff6ff; color:#1e40af; border-color:#bfdbfe;"><span>🔔</span> Testar Comunicações (Email / Telegram)</button>
       </div>
       <button class="btn btn-nav-red" onclick="voltarAoEcraPrincipal()" style="margin-top:20px;">Sair do Painel</button>
     </div>
@@ -450,7 +450,7 @@
 
 <script>
 /* ════════════════ CONFIG ════════════════ */
-var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4WzA4r4aOjJIWTco4z5QRQ7uzwhhnFDokLDLy77fI86BL5PEDR19O2YKlTA2d5lLKJQ/exec";
+var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwO33X2VgI6XIZz60-HhvPCf6rV-h3fv7lGTZ5cg12qS9Z6Bp4tXU_QIsjbd2RhmVpBKA/exec";
 var senhaAdminSessao = "";
 var tokenAdminSessao = "";
 var emProcessamento = false;
@@ -1915,7 +1915,7 @@ function testarTodasComunicacoes() {
   if (!navigator.onLine) {
     mostrarPopup({
       titulo: 'Sem Ligação',
-      mensagem: 'É necessária ligação à internet para testar o envio de Email, WhatsApp e Telegram.',
+      mensagem: 'É necessária ligação à internet para testar o envio de Email e Telegram.',
       tipo: 'erro'
     });
     return;
@@ -1923,7 +1923,7 @@ function testarTodasComunicacoes() {
 
   mostrarPopup({
     titulo: 'A Testar Comunicações',
-    mensagem: 'A disparar testes de Email, WhatsApp e alertas do sistema...',
+    mensagem: 'A disparar testes de Email e Telegram...',
     tipo: 'processando'
   });
 
@@ -1939,7 +1939,6 @@ function testarTodasComunicacoes() {
 
     var res = r.resultados;
     var icMail = res.email && res.email.ok ? '✅' : '❌';
-    var icWa = res.whatsapp && res.whatsapp.ok ? '✅' : (res.whatsapp && res.whatsapp.configurado ? '❌' : '⚠️');
     var icTg = res.telegram && res.telegram.ok ? '✅' : (res.telegram && res.telegram.configurado ? '❌' : '⚠️');
 
     var listaEventosHtml = '';
@@ -1957,9 +1956,6 @@ function testarTodasComunicacoes() {
         '<div style="padding:8px 10px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; margin-bottom:8px;">' +
           '<div><b>' + icMail + ' Email:</b> ' + esc((res.email && res.email.detalhe) || '') + '</div>' +
         '</div>' +
-        '<div style="padding:8px 10px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; margin-bottom:8px;">' +
-          '<div><b>' + icWa + ' WhatsApp:</b> ' + esc((res.whatsapp && res.whatsapp.detalhe) || '') + '</div>' +
-        '</div>' +
         '<div style="padding:8px 10px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px;">' +
           '<div><b>' + icTg + ' Telegram:</b> ' + esc((res.telegram && res.telegram.detalhe) || '') + '</div>' +
         '</div>' +
@@ -1969,7 +1965,7 @@ function testarTodasComunicacoes() {
     mostrarPopup({
       titulo: 'Resultado do Teste (' + (r.hora || '') + ')',
       mensagem: msgHtml,
-      tipo: (res.email && res.email.ok) ? 'sucesso' : 'aviso'
+      tipo: (res.email && res.email.ok && res.telegram && res.telegram.ok) ? 'sucesso' : 'aviso'
     });
   });
 }
