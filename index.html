@@ -772,6 +772,13 @@
       .menu-admin-grid .tile-emerald {
         grid-column: span 3 !important;
       }
+      #btnCameraComprovativo {
+        display: none !important;
+      }
+      .file-buttons:has(#btnCameraComprovativo[style*="display: none"]),
+      .file-buttons {
+        grid-template-columns: 1fr !important;
+      }
     }
 </style>
 </head>
@@ -871,7 +878,7 @@
           <button type="button" class="file-btn" onclick="document.getElementById('fileInputFalta').click()">
             <span>📁</span><span>Ficheiro</span>
           </button>
-          <button type="button" class="file-btn file-btn-camera" onclick="abrirCamera()">
+          <button type="button" class="file-btn file-btn-camera" id="btnCameraComprovativo" onclick="abrirCamera()">
             <span>📷</span><span>Câmara</span>
           </button>
         </div>
@@ -1489,7 +1496,7 @@ window.addEventListener('load', async function() {
       sincronizarPedidosOffline();
     }, 2000);
   }
-  console.log('[Ponto v7.2] index.html carregado');
+  console.log('[Ponto v7.3] index.html carregado');
 });
 window.addEventListener('online', async function(){ var g = document.getElementById('gpsIndicator'); if (g) g.classList.remove('offline'); await restaurarDadosOfflineDoIdb_(); setTimeout(sincronizarFilaOffline, 1500); atualizarBadgeOffline(); });
 window.addEventListener('offline', async function(){ var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); await restaurarDadosOfflineDoIdb_(); atualizarBadgeOffline(); });
