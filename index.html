@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
-  <style>
+<style>
     :root {
       --bg: #f3eee7;
       --surface: #ffffff;
@@ -74,6 +74,7 @@
       border: 1px solid rgba(255, 255, 255, 0.92);
     }
 
+    
     .header {
       flex-shrink: 0;
       padding: 20px 20px 18px;
@@ -92,9 +93,9 @@
     }
     .header-split-row {
       display: grid;
-      grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       min-height: 82px;
       position: relative;
     }
@@ -103,7 +104,7 @@
       position: absolute;
       top: 8%;
       bottom: 8%;
-      left: 51%;
+      left: 46.5%;
       width: 1px;
       background: linear-gradient(180deg, transparent, var(--border-strong) 25%, var(--border-strong) 75%, transparent);
       transform: translateX(-50%);
@@ -111,23 +112,25 @@
     .header-left {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
       justify-content: center;
+      text-align: center;
       min-width: 0;
-      padding-right: 6px;
+      padding-right: 4px;
     }
     .header-right {
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
+      align-items: stretch;
       justify-content: center;
       min-width: 0;
-      padding-left: 6px;
+      padding-left: 4px;
     }
     .logo-wrapper {
-      display: inline-flex;
-      justify-content: flex-start;
+      display: flex;
+      justify-content: center;
       align-items: center;
+      width: 100%;
       padding: 2px 0;
       margin-bottom: 0;
     }
@@ -146,13 +149,17 @@
       margin-top: 8px;
       margin-bottom: 0;
       line-height: 1.25;
+      text-align: center;
+      width: 100%;
     }
     .live-clock-card {
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
+      align-items: center;
+      justify-content: center;
       gap: 5px;
-      padding: 11px 14px;
+      width: 100%;
+      padding: 11px 16px;
       background: var(--surface);
       border: 1.5px solid var(--border);
       border-radius: 16px;
@@ -163,9 +170,10 @@
     .clock-time-row {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 9px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 1.52rem;
+      font-size: 1.54rem;
       font-weight: 700;
       color: var(--text);
       letter-spacing: -0.02em;
@@ -179,6 +187,7 @@
       letter-spacing: 0.13em;
       text-transform: uppercase;
       white-space: nowrap;
+      text-align: center;
     }
     .gps-badge { display: inline-flex; align-items: center; justify-content: center; }
     .gps-pulse-dot { width: 9px; height: 9px; background: #16a34a; border-radius: 50%; position: relative; }
@@ -226,6 +235,7 @@
       font-family: inherit;
     }
 
+    
     .content-section {
       flex: 1;
       display: none;
@@ -280,6 +290,7 @@
     textarea.form-control { resize: vertical; min-height: 98px; line-height: 1.5; }
     .campo-obrigatorio { color: var(--danger); font-weight: 800; margin-left: 3px; }
 
+    
     .btn {
       width: 100%;
       padding: 15px 18px;
@@ -332,6 +343,7 @@
     }
     .btn-nav-red:hover { background: #fee2e2; }
 
+    
     .admin-card {
       background: var(--surface);
       border: 1.5px solid var(--border);
@@ -388,6 +400,7 @@
       border-color: #fcd34d;
     }
 
+    
     .ponto-pin-only { flex: 1; display: flex; flex-direction: column; min-height: 0; text-align: center; }
     .pin-display-area {
       flex-shrink: 0;
@@ -484,6 +497,7 @@
     .top-action-btn:hover { background: var(--accent-soft); border-color: var(--accent-border); }
     .top-action-btn:active { transform: scale(0.94); }
 
+    
     .toast-overlay {
       display: none;
       position: fixed;
@@ -554,6 +568,7 @@
       letter-spacing: 0.05em;
     }
 
+    
     .pedidos-hero {
       background: linear-gradient(135deg, #9a3412 0%, #c2410c 100%);
       border-radius: var(--r-lg);
@@ -952,6 +967,7 @@
 </div>
 
 <script>
+
 var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwO33X2VgI6XIZz60-HhvPCf6rV-h3fv7lGTZ5cg12qS9Z6Bp4tXU_QIsjbd2RhmVpBKA/exec";
 var senhaAdminSessao = "";
 var tokenAdminSessao = "";
@@ -966,6 +982,7 @@ function adminParams(base) {
   else if (senhaAdminSessao) p.senha = senhaAdminSessao;
   return p;
 }
+
 
 var MINUTOS_BLOQUEIO_LOCAL = 10;
 var LS_FILA_OFF = "PONTO_FILA_OFFLINE_V2";
@@ -1134,6 +1151,7 @@ async function guardarPicagemOffline(nome, pin, lat, lon, disp) {
   return item;
 }
 
+
 var LS_FILA_PEDIDOS_OFF = "PONTO_FILA_PEDIDOS_OFFLINE_V1";
 var LS_FILA_PEDIDOS_OFF_BAK = "PONTO_FILA_PEDIDOS_OFFLINE_BACKUP_V1";
 var _sincronizandoPedidos = false;
@@ -1198,6 +1216,7 @@ async function sincronizarPedidosOffline() {
     var fileIdFinal = item.fileId || "";
     var obsFinal = item.obs || "";
 
+    // Se existirem ficheiros pendentes guardados em base64 (ex.: capturados ou escolhidos offline), tenta fazer upload agora
     if (!fileIdFinal && Array.isArray(item.anexosPendentes) && item.anexosPendentes.length > 0) {
       var enviadosNow = [];
       for (var a = 0; a < item.anexosPendentes.length; a++) {
@@ -1288,6 +1307,9 @@ async function sincronizarPedidosOffline() {
   }
 }
 
+
+
+
 var IDB_NAME = "PONTO_BALCAO_AGRICOLA_IDB_V1";
 var IDB_STORE = "dados_offline";
 
@@ -1372,6 +1394,7 @@ async function restaurarDadosOfflineDoIdb_() {
   } catch (e) {}
 }
 
+
 function iniciarRelogio() {
   setInterval(function() {
     var a = new Date();
@@ -1396,6 +1419,7 @@ window.addEventListener('load', async function() {
 window.addEventListener('online', async function(){ var g = document.getElementById('gpsIndicator'); if (g) g.classList.remove('offline'); await restaurarDadosOfflineDoIdb_(); setTimeout(sincronizarFilaOffline, 1500); atualizarBadgeOffline(); });
 window.addEventListener('offline', async function(){ var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); await restaurarDadosOfflineDoIdb_(); atualizarBadgeOffline(); });
 
+
 function chamarAPIJsonp(params, cb) {
   if (!navigator.onLine) { if (cb) cb({ ok: false, erro: 'Sem ligação à internet' }); return; }
   fetch('https://api.ipify.org?format=json').then(function(r){ return r.json(); }).then(function(d){ params.ip = d.ip; enviar(params, cb); }).catch(function(){ params.ip = "N/D"; enviar(params, cb); });
@@ -1412,6 +1436,7 @@ function enviar(params, cb) {
   s.onerror = function(){ clearTimeout(to); delete window[nome]; if(s.parentNode) s.remove(); emProcessamento = false; pinAtual = ""; atualizarDots(); if (cb) cb({ ok: false, erro: 'Não foi possível contactar o servidor.' }); };
   document.body.appendChild(s);
 }
+
 
 function mostrarPopup(cfg) {
   var ov = document.getElementById('toastOverlay');
@@ -1438,6 +1463,7 @@ function mostrarPopup(cfg) {
 function fecharToast() { document.getElementById('toastOverlay').style.display = "none"; emProcessamento = false; }
 function fecharToastOverlay(e) {}
 function alternarVisibilidadeSenhaInput(id, btn) { var i = document.getElementById(id); if (!i) return; if (i.type === "password") { i.type = "text"; if(btn) btn.innerText = "🙈"; } else { i.type = "password"; if(btn) btn.innerText = "👁️"; } }
+
 
 function obterDetalhesDispositivo() {
   var ua = navigator.userAgent || '';
@@ -1468,6 +1494,7 @@ function obterDetalhesDispositivo() {
   if (/Linux/i.test(ua)) return 'Linux PC';
   return 'Desconhecido';
 }
+
 
 function abrirModalSenhaAdmin() {
   mostrarPopup({
@@ -1526,6 +1553,7 @@ function voltarAoEcraPrincipal() {
   atualizarBadgeOffline();
 }
 
+
 function carregarFuncionarios() {
   if (!navigator.onLine) { try { var c = JSON.parse(localStorage.getItem('FUNCIONARIOS_CACHE_V1') || '[]'); if (c.length) preencherSelectsNomes(c); } catch(e){} return; }
   chamarAPIJsonp({ action: "obterFuncionarios" }, function(r) {
@@ -1545,21 +1573,39 @@ function preencherSelectsNomes(lista) {
   if (sA) { sA.innerHTML = '<option value="" disabled selected>Selecione</option><option value="TODOS">TODOS</option>'; lista.forEach(function(n){ var o = document.createElement('option'); o.value = n; o.text = n; sA.appendChild(o); }); }
 }
 
+
 var pinAtual = "";
 function atualizarDots() {
   var ds = document.querySelectorAll('#dotsPonto .pin-dot');
   for (var i = 0; i < 4; i++) { if (ds[i]) { if (i < pinAtual.length) ds[i].classList.add('filled'); else ds[i].classList.remove('filled'); } }
 }
+function vibrarTecla_(padrao) {
+  try {
+    if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+      navigator.vibrate(padrao || 20);
+    }
+  } catch (e) {}
+}
 function tecladoPress(d) {
   if (emProcessamento) return;
   if (pinAtual.length >= 4) return;
-  try { if ('vibrate' in navigator) navigator.vibrate(15); } catch(e){}
+  vibrarTecla_(20);
   pinAtual += d;
   atualizarDots();
   if (pinAtual.length === 4) setTimeout(registarPonto, 200);
 }
-function tecladoClear() { pinAtual = ""; atualizarDots(); }
-function tecladoBack() { if (pinAtual.length) { pinAtual = pinAtual.slice(0,-1); atualizarDots(); } }
+function tecladoClear() {
+  vibrarTecla_([15, 30, 15]);
+  pinAtual = "";
+  atualizarDots();
+}
+function tecladoBack() {
+  if (pinAtual.length) {
+    vibrarTecla_(15);
+    pinAtual = pinAtual.slice(0,-1);
+    atualizarDots();
+  }
+}
 
 async function hashPin(p) {
   try {
@@ -1571,6 +1617,7 @@ async function hashPin(p) {
     return String(h);
   }
 }
+
 
 async function registarPonto() {
   if (emProcessamento) return;
@@ -1634,6 +1681,7 @@ async function registarPonto() {
     }
   });
 }
+
 
 var _cameraStream = null;
 var _cameraFacingMode = 'environment';
@@ -1716,7 +1764,8 @@ function fecharCamera() {
   if (btnCapture) { btnCapture.disabled = false; btnCapture.innerText = '📸 Capturar'; }
 }
 
-var _anexosItens = [];
+
+var _anexosItens = []; // Array de { uid, name, size, isImage, dataUrl, state, statusText, uploaded }
 var _uploadedFile = null;
 var _uploadState = 'idle';
 
@@ -1938,7 +1987,7 @@ function removerFicheiro() {
 async function uploadFile(file) {
   var base64 = await fileToBase64(file);
   var sessionId = 'UP_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
-  var chunkSize = 1500000;
+  var chunkSize = 1500000; // ~1.5 MB de caracteres base64 por envio
   var totalChunks = Math.ceil(base64.length / chunkSize);
 
   for (var c = 0; c < totalChunks; c++) {
@@ -1988,6 +2037,7 @@ function formatBytes(b) {
   if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
   return (b / (1024 * 1024)).toFixed(2) + ' MB';
 }
+
 
 async function submeterFaltaFuncionario() {
   var nome = document.getElementById('nomeFuncFalta').value;
@@ -2105,6 +2155,7 @@ async function submeterFaltaFuncionario() {
   });
 }
 
+
 function abrirSubModulo(id) {
   document.getElementById('admin-sub-menu').style.display = 'none';
   MODULOS_ADMIN.forEach(function(m){ var el = document.getElementById('admin-sub-' + m); if (el) el.style.display = (m === id) ? 'block' : 'none'; });
@@ -2115,6 +2166,7 @@ function voltarAoMenuCentralAdmin() {
   document.getElementById('admin-sub-menu').style.display = 'block';
   document.getElementById('section-admin').scrollTop = 0;
 }
+
 
 function carregarDashboard() {
   var el = document.getElementById('dashboardData');
@@ -2179,6 +2231,7 @@ function carregarDashboard() {
     document.getElementById('dashLista').innerHTML = html || '<div style="text-align:center; color:var(--text-muted); padding:20px; font-size:0.85rem;">Sem colaboradores.</div>';
   });
 }
+
 
 var _pedidosCache = [];
 var _pedidosFiltro = 'pendente';
@@ -2335,6 +2388,7 @@ function responderPedido(id, decisao) {
   setTimeout(function(){ var el = document.getElementById('inputComentarioPopup'); if (el) el.focus(); }, 150);
 }
 
+
 function submeterAusenciaAdministrativa() {
   var n = document.getElementById('nomeFuncionarioFolga').value;
   var t = document.getElementById('tipoAusencia').value;
@@ -2390,7 +2444,10 @@ function submeterRemocaoFuncionario() {
   });
 }
 
+
+
 document.addEventListener('click', function(e) {
+  /* Filtros de pedidos */
   var chip = e.target.closest('.pf-chip');
   if (chip) {
     document.querySelectorAll('.pf-chip').forEach(function(c){ c.classList.remove('active'); });
@@ -2400,6 +2457,7 @@ document.addEventListener('click', function(e) {
     return;
   }
 
+  /* Botões Aprovar / Recusar */
   var btn = e.target.closest('[data-pedido-id]');
   if (btn) {
     e.preventDefault();
