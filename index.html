@@ -2434,10 +2434,15 @@ function carregarDashboard() {
     document.getElementById('dashAbertos').textContent = emps.filter(function(e){ return e.aberto; }).length;
     var html = '';
     emps.forEach(function(e) {
-      var cor = e.aberto ? '#f0fdf4' : (e.emFerias ? '#f0f9ff' : (e.picagens === '—' ? '#fef2f2' : 'var(--surface-2)'));
-      var badgeCor = e.aberto ? 'var(--success)' : (e.emFerias ? '#0284c7' : (e.picagens === '—' ? 'var(--danger)' : 'var(--text-muted)'));
-      var badgeTxt = e.aberto ? 'DENTRO' : (e.emFerias ? 'FÉRIAS' : (e.picagens === '—' ? 'AUSENTE' : 'FORA'));
-      html += '<div style="display:flex; justify-content:space-between; align-items:center; padding:11px 13px; background:' + cor + '; border-radius:10px; margin-bottom:6px;"><div><div style="font-weight:800; font-size:0.88rem;">' + e.nome + '</div><div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">' + e.picagens + '</div></div><div style="background:' + badgeCor + '; color:white; padding:3px 9px; border-radius:20px; font-size:0.6rem; font-weight:800; letter-spacing:0.06em;">' + badgeTxt + '</div></div>';
+      var picLimpa = String(e.picagens || '—');
+      if (/falta|férias|ferias|baixa|aviso|justificada|injustificada|compensação|troca/i.test(picLimpa)) {
+        var horasSo = picLimpa.split('·').map(function(s){ return s.trim(); }).filter(function(s){ return /^\d{1,2}:\d{2}$/.test(s); });
+        picLimpa = horasSo.length ? horasSo.join(' · ') : '—';
+      }
+      var cor = e.aberto ? '#f0fdf4' : (e.emFerias ? '#f0f9ff' : (picLimpa === '—' ? '#fef2f2' : 'var(--surface-2)'));
+      var badgeCor = e.aberto ? 'var(--success)' : (e.emFerias ? '#0284c7' : (picLimpa === '—' ? 'var(--danger)' : 'var(--text-muted)'));
+      var badgeTxt = e.aberto ? 'DENTRO' : (e.emFerias ? 'FÉRIAS' : (picLimpa === '—' ? 'AUSENTE' : 'FORA'));
+      html += '<div style="display:flex; justify-content:space-between; align-items:center; padding:11px 13px; background:' + cor + '; border-radius:10px; margin-bottom:6px;"><div><div style="font-weight:800; font-size:0.88rem;">' + e.nome + '</div><div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">' + picLimpa + '</div></div><div style="background:' + badgeCor + '; color:white; padding:3px 9px; border-radius:20px; font-size:0.6rem; font-weight:800; letter-spacing:0.06em;">' + badgeTxt + '</div></div>';
     });
     document.getElementById('dashLista').innerHTML = html || '<div style="text-align:center; color:var(--text-muted); padding:20px; font-size:0.85rem;">Sem colaboradores.</div>';
   });
