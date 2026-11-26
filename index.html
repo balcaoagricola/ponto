@@ -1,3 +1,2107 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Registo de Ponto · Balcão Agrícola</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#143d27">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #e8efe9;
+      --bg-grad-1: #dce8de;
+      --bg-grad-2: #f4f1ea;
+      --surface: #ffffff;
+      --surface-2: #f6f8f5;
+      --surface-3: #eef3ed;
+      --text: #132a1e;
+      --text-muted: #52665a;
+      --text-light: #86998d;
+      --border: #dce5dd;
+      --border-strong: #bfd0c2;
+      --accent: #1b5e3a;
+      --accent-light: #2d7a4f;
+      --accent-dark: #114027;
+      --gold: #c67d1b;
+      --gold-soft: #fef6e7;
+      --gold-border: #f5d89e;
+      --success: #15803d;
+      --danger: #b91c1c;
+      --warning: #b45309;
+      --r-sm: 14px;
+      --r-md: 20px;
+      --r-lg: 26px;
+      --r-xl: 32px;
+      --shadow-lg: 0 28px 60px -14px rgba(19, 42, 30, 0.22), 0 4px 16px -4px rgba(19, 42, 30, 0.08);
+      --shadow-key: 0 3px 0 #d5e0d7, 0 6px 14px rgba(19, 42, 30, 0.05);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+    html { min-height: 100%; background: var(--bg); }
+    body {
+      min-height: 100dvh;
+      background: radial-gradient(circle at top left, var(--bg-grad-1) 0%, var(--bg-grad-2) 65%, #e5ece6 100%);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      letter-spacing: -0.011em;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      height: calc(100dvh - 24px);
+      max-height: 870px;
+      background: var(--surface);
+      border-radius: var(--r-xl);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      margin: 0;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+    }
+
+    /* ═══ CABEÇALHO EM VERDE AGRÍCOLA PROFUNDO ═══ */
+    .header {
+      flex-shrink: 0;
+      padding: 20px 22px 18px;
+      text-align: center;
+      background: linear-gradient(155deg, #143d27 0%, #1d5738 58%, #256b45 100%);
+      color: #ffffff;
+      border-bottom: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      right: -35px;
+      top: -45px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .logo-wrapper {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      background: #ffffff;
+      padding: 8px 18px;
+      border-radius: 18px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+      margin-bottom: 4px;
+      position: relative;
+      z-index: 1;
+    }
+    .logo-empresa { max-height: 50px; object-fit: contain; }
+    .header h2 {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.78);
+      margin-top: 10px;
+      margin-bottom: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .live-clock-card {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.11);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 18px;
+      backdrop-filter: blur(6px);
+      margin-top: 10px;
+      position: relative;
+      z-index: 1;
+    }
+    .clock-time-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .clock-date-row {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.8);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .gps-badge { display: inline-flex; align-items: center; justify-content: center; }
+    .gps-pulse-dot { width: 9px; height: 9px; background: #4ade80; border-radius: 50%; position: relative; box-shadow: 0 0 8px rgba(74, 222, 128, 0.7); }
+    .gps-pulse-dot::after { content: ''; position: absolute; top: -4px; left: -4px; width: 17px; height: 17px; border-radius: 50%; background: #4ade80; opacity: 0.45; animation: pulseGps 2s infinite ease-out; }
+    .gps-pulse-dot.offline { background: #f87171; box-shadow: 0 0 8px rgba(248, 113, 113, 0.7); }
+    .gps-pulse-dot.offline::after { background: #f87171; animation: none; }
+    @keyframes pulseGps { 0% { transform: scale(0.8); opacity: 0.65; } 100% { transform: scale(2.4); opacity: 0; } }
+
+    #offlineBadge { margin-top: 12px; display: none; position: relative; z-index: 1; }
+    #offlineBadge .badge-off-box { background: #fef3c7; border: 1px solid #fcd34d; border-radius: 14px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14); }
+    #offlineBadge .badge-off-ico { font-size: 1.2rem; }
+    #offlineBadge .badge-off-info { flex: 1; text-align: left; }
+    #offlineBadge .badge-off-title { font-weight: 800; font-size: 0.82rem; color: #92400e; }
+    #offlineBadge .badge-off-sub { font-size: 0.7rem; color: #b45309; margin-top: 2px; }
+    #offlineBadge .badge-off-btn { background: var(--accent-dark); color: #fff; border: 0; border-radius: 10px; padding: 8px 12px; font-weight: 700; font-size: 0.75rem; cursor: pointer; font-family: inherit; }
+
+    .content-section { flex: 1; display: none; flex-direction: column; overflow-y: auto; overflow-x: hidden; padding: 18px 20px; -webkit-overflow-scrolling: touch; background: var(--surface); }
+    .content-section.active { display: flex; }
+    #section-ponto { padding-top: 14px; padding-bottom: 14px; }
+    #section-falta-func, #section-admin { padding: 18px 20px 26px; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; margin-bottom: 7px; font-weight: 700; font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+    .form-control { width: 100%; padding: 14px 16px; border: 1.5px solid var(--border); border-radius: var(--r-sm); font-size: 16px; background: var(--surface-2); color: var(--text); font-weight: 600; outline: none; transition: all .18s; }
+    .form-control:focus { border-color: var(--accent); background: #ffffff; box-shadow: 0 0 0 4px rgba(27, 94, 58, 0.1); }
+    select.form-control { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231b5e3a' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 42px; cursor: pointer; }
+    textarea.form-control { resize: vertical; min-height: 100px; line-height: 1.5; }
+    .campo-obrigatorio { color: var(--danger); font-weight: 800; margin-left: 3px; }
+
+    .btn { width: 100%; padding: 16px 20px; border: none; border-radius: var(--r-sm); font-size: 0.84rem; font-weight: 800; cursor: pointer; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all .15s; margin-bottom: 12px; letter-spacing: 0.06em; text-transform: uppercase; font-family: inherit; }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary { background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%); color: #fff; box-shadow: 0 6px 16px rgba(27, 94, 58, 0.24); }
+    .btn-primary:hover { filter: brightness(1.04); }
+    .btn-danger { background: var(--danger); color: #fff; box-shadow: 0 6px 16px rgba(185, 28, 28, 0.22); }
+    .btn-nav-blue { background: var(--surface-2); color: var(--accent-dark); border: 1.5px solid var(--border); }
+    .btn-nav-slate { background: var(--surface-2); color: var(--text-muted); border: 1.5px solid var(--border); }
+    .btn-nav-red { background: #fef2f2; color: var(--danger); border: 1.5px solid #fecaca; }
+
+    .admin-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-md); padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 14px rgba(19, 42, 30, 0.03); }
+    .admin-card h3 { font-size: 0.74rem; margin-bottom: 16px; color: var(--accent-dark); font-weight: 800; display: flex; align-items: center; gap: 8px; letter-spacing: 0.12em; text-transform: uppercase; }
+    .menu-admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .menu-admin-grid .btn { padding: 20px 10px 18px; font-size: 0.7rem; font-weight: 800; flex-direction: column; gap: 8px; border-radius: var(--r-md); border: 1.5px solid var(--border); margin-bottom: 0; background: var(--surface-2); color: var(--text); letter-spacing: 0.04em; box-shadow: 0 2px 6px rgba(19, 42, 30, 0.03); }
+    .menu-admin-grid .btn span { font-size: 1.65rem; }
+    .menu-admin-grid .tile-emerald { background: linear-gradient(135deg, #143d27 0%, #1f633e 100%); color: #fff; border-color: #143d27; box-shadow: 0 8px 20px rgba(20, 61, 39, 0.22); }
+    .menu-admin-grid .tile-amber { background: var(--gold-soft); color: #8c5209; border-color: var(--gold-border); }
+
+    /* ═══ ECRÃ PIN & TECLADO TÁTIL ═══ */
+    .ponto-pin-only { flex: 1; display: flex; flex-direction: column; min-height: 0; text-align: center; }
+    .pin-display-area {
+      flex-shrink: 0;
+      margin: 4px 0 12px;
+      padding: 12px 14px 8px;
+      background: var(--surface-2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-md);
+    }
+    .pin-dots-big { display: flex; justify-content: center; gap: 18px; margin: 6px 0; }
+    .pin-dots-big .pin-dot {
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid var(--border-strong);
+      transition: all .22s cubic-bezier(.34,1.56,.64,1);
+    }
+    .pin-dots-big .pin-dot.filled {
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(27, 94, 58, 0.16);
+      transform: scale(1.18);
+    }
+    .pin-nome-preview { min-height: 24px; margin: 4px 0 0; font-weight: 800; font-size: 0.96rem; color: var(--accent-dark); }
+    .pin-status { min-height: 16px; font-size: 0.78rem; font-weight: 700; }
+
+    .keypad { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 1.5vh, 12px); margin: 4px 0 0; min-height: 0; align-content: stretch; }
+    .key {
+      min-height: clamp(52px, 7.8vh, 72px);
+      border-radius: var(--r-md);
+      border: 1.5px solid var(--border);
+      background: #ffffff;
+      font-size: clamp(1.45rem, 3vh, 1.75rem);
+      font-weight: 800;
+      color: var(--text);
+      cursor: pointer;
+      transition: all .1s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      box-shadow: var(--shadow-key);
+    }
+    .key:active {
+      transform: translateY(2px) scale(0.97);
+      background: var(--surface-3);
+      box-shadow: none;
+    }
+    .key.key-action {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--surface-2);
+    }
+    .key.key-clear {
+      color: var(--danger);
+      background: #fef2f2;
+      border-color: #fecaca;
+      box-shadow: 0 3px 0 #fecaca;
+    }
+    .key:nth-child(11) {
+      background: linear-gradient(145deg, var(--accent) 0%, var(--accent-light) 100%);
+      color: #ffffff;
+      border-color: var(--accent-dark);
+      box-shadow: 0 3px 0 var(--accent-dark), 0 6px 14px rgba(27, 94, 58, 0.2);
+    }
+    .key:nth-child(11):active {
+      background: var(--accent-dark);
+      box-shadow: none;
+    }
+
+    .top-action-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.12rem;
+      border: 1.5px solid var(--border);
+      background: var(--surface-2);
+      box-shadow: 0 2px 6px rgba(19, 42, 30, 0.05);
+      transition: all .15s;
+    }
+    .top-action-btn:hover { border-color: var(--accent); background: #ffffff; }
+    .top-action-btn:active { transform: scale(0.94); }
+
+    /* ═══ POPUP / MODAL ═══ */
+    .toast-overlay { display: none; position: fixed; inset: 0; background: rgba(13, 31, 22, 0.62); backdrop-filter: blur(8px); z-index: 100000; justify-content: center; align-items: center; padding: 20px; }
+    .toast-card { background: var(--surface); border-radius: var(--r-xl); padding: 32px 24px 22px; max-width: 380px; width: 100%; text-align: center; box-shadow: var(--shadow-lg); border: 1px solid var(--border); animation: popModal .35s cubic-bezier(.16,1,.3,1); }
+    @keyframes popModal { from { transform: scale(.94) translateY(18px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+    .toast-icon { font-size: 3rem; margin-bottom: 12px; display: inline-block; }
+    .ampulheta-animada { display: inline-block; animation: rotate 2s linear infinite; }
+    @keyframes rotate { to { transform: rotate(360deg); } }
+    .toast-title { font-size: 1.06rem; font-weight: 800; margin-bottom: 8px; color: var(--text); letter-spacing: 0.01em; }
+    .toast-body { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 22px; line-height: 1.55; }
+    .toast-actions { display: flex; gap: 8px; }
+    .toast-btn { flex: 1; padding: 14px; border: none; border-radius: var(--r-sm); font-weight: 800; font-size: 0.82rem; cursor: pointer; letter-spacing: 0.06em; text-transform: uppercase; font-family: inherit; }
+    .toast-btn-primary { background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%); color: #fff; }
+    .toast-btn-secondary { background: var(--surface-2); color: var(--text-muted); border: 1.5px solid var(--border); }
+
+    .password-eye-wrapper { position: relative; width: 100%; }
+    .password-eye-wrapper .form-control { padding-right: 52px; }
+    .eye-toggle-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: #ffffff; border: 1.5px solid var(--border); cursor: pointer; font-size: 1rem; padding: 6px 8px; border-radius: 8px; }
+
+    .app-footer { text-align: center; font-size: 0.7rem; font-weight: 700; color: var(--text-light); padding: 12px; border-top: 1px solid var(--border); background: var(--surface-2); letter-spacing: 0.04em; }
+
+    /* ═══ GESTÃO DE PEDIDOS ═══ */
+    .pedidos-hero { background: linear-gradient(145deg, #143d27 0%, #1f633e 100%); border-radius: var(--r-lg); padding: 22px 20px; color: #fff; margin-bottom: 16px; position: relative; overflow: hidden; box-shadow: 0 10px 24px rgba(20, 61, 39, 0.2); }
+    .pedidos-hero::before { content: ''; position: absolute; top: -50%; right: -20%; width: 180px; height: 180px; background: radial-gradient(circle, rgba(251, 191, 36, 0.25) 0%, transparent 70%); pointer-events: none; }
+    .pedidos-hero h2 { font-size: 1.2rem; font-weight: 800; margin-bottom: 4px; position: relative; z-index: 1; }
+    .pedidos-hero p { font-size: 0.78rem; color: rgba(255, 255, 255, 0.75); position: relative; z-index: 1; }
+    .pedidos-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; position: relative; z-index: 1; }
+    .pedidos-stat { background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 12px; padding: 10px 8px; text-align: center; }
+    .pedidos-stat .num { font-size: 1.4rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+    .pedidos-stat .lbl { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255, 255, 255, 0.72); margin-top: 4px; }
+    .pedidos-stat.pendente .num { color: #fde047; }
+    .pedidos-stat.aprovado .num { color: #86efac; }
+    .pedidos-stat.recusado .num { color: #fca5a5; }
+    .pedidos-filtros { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 2px; }
+    .pedidos-filtros::-webkit-scrollbar { display: none; }
+    .pf-chip { padding: 8px 14px; border-radius: 999px; background: var(--surface-2); border: 1.5px solid var(--border); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; cursor: pointer; font-family: inherit; }
+    .pf-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .pf-chip .cnt { display: inline-block; margin-left: 5px; padding: 1px 6px; border-radius: 999px; background: rgba(198, 125, 27, 0.16); color: #8c5209; font-size: 0.64rem; font-weight: 800; }
+    .pf-chip.active .cnt { background: rgba(255, 255, 255, 0.24); color: #fff; }
+    .pedido-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-md); padding: 16px; margin-bottom: 10px; position: relative; overflow: hidden; }
+    .pedido-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--gold); }
+    .pedido-card.aprovado::before { background: var(--success); }
+    .pedido-card.recusado::before { background: var(--danger); }
+    .pedido-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+    .pedido-avatar { width: 40px; height: 40px; border-radius: 12px; background: var(--accent); color: #fff; font-weight: 800; font-size: 1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pedido-card.aprovado .pedido-avatar { background: var(--success); }
+    .pedido-card.recusado .pedido-avatar { background: var(--danger); }
+    .pedido-info { flex: 1; min-width: 0; }
+    .pedido-nome { font-size: 0.94rem; font-weight: 800; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pedido-tipo { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.03em; }
+    .pedido-badge { font-size: 0.58rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 9px; border-radius: 999px; flex-shrink: 0; background: #fef3c7; color: #92400e; }
+    .pedido-card.aprovado .pedido-badge { background: #dcfce7; color: #166534; }
+    .pedido-card.recusado .pedido-badge { background: #fee2e2; color: #991b1b; }
+    .pedido-datas { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+    .pedido-datas .dt { font-size: 0.56rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px; }
+    .pedido-datas .dv { font-size: 0.85rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .pedido-obs { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; font-style: italic; margin-bottom: 10px; padding: 8px 12px; background: var(--surface-2); border-radius: 8px; border-left: 3px solid var(--border-strong); white-space: pre-line; word-break: break-word; overflow-wrap: anywhere; }
+    .pedido-actions { display: flex; gap: 8px; }
+    .pedido-actions button { flex: 1; padding: 11px; border-radius: 10px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; font-family: inherit; cursor: pointer; border: none; }
+    .btn-aprovar { background: var(--success); color: #fff; }
+    .btn-recusar { background: var(--danger); color: #fff; }
+    .pedidos-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+    .pedidos-empty .ico { font-size: 2.4rem; margin-bottom: 10px; opacity: .4; }
+    .pedidos-empty h4 { font-size: 0.9rem; font-weight: 800; margin-bottom: 4px; }
+    .pedidos-empty p { font-size: 0.8rem; }
+    .pedido-resposta { text-align: center; padding: 12px; margin-top: 4px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; border-radius: 8px; }
+    .pedido-card.aprovado .pedido-resposta { background: #dcfce7; color: #166534; }
+    .pedido-card.recusado .pedido-resposta { background: #fee2e2; color: #991b1b; }
+    .tile-amber .badge-pendentes { position: absolute; top: 6px; right: 6px; min-width: 18px; height: 18px; border-radius: 9px; background: var(--danger); color: #fff; font-size: 0.6rem; font-weight: 800; display: flex; align-items: center; justify-content: center; padding: 0 5px; }
+    .menu-admin-grid .btn { position: relative; }
+
+    .pedido-meta { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; margin-bottom: 10px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; font-size: 0.74rem; color: var(--text-muted); }
+    .pedido-meta-row { display: flex; align-items: flex-start; gap: 6px; line-height: 1.4; }
+    .pedido-meta-row .meta-ico { flex-shrink: 0; font-size: 0.85rem; }
+    .pedido-meta-row .meta-txt { flex: 1; word-break: break-all; overflow-wrap: anywhere; }
+    .pedido-anexo-btn { display: flex; align-items: center; gap: 8px; padding: 12px 14px; background: #ecfdf5; color: #065f46; border: 1.5px solid #a7f3d0; border-radius: 10px; font-size: 0.78rem; font-weight: 700; text-decoration: none; margin-bottom: 10px; transition: all .15s; word-break: break-word; overflow-wrap: anywhere; }
+    .pedido-anexo-btn:hover { background: #d1fae5; }
+
+    .file-dropzone { border: 2px dashed var(--border-strong); border-radius: var(--r-md); padding: 20px 16px; text-align: center; background: var(--surface-2); margin-bottom: 10px; }
+    .file-dropzone-icon { font-size: 2rem; margin-bottom: 6px; }
+    .file-dropzone-text { font-weight: 700; font-size: 0.86rem; margin-bottom: 2px; }
+    .file-dropzone-sub { font-size: 0.72rem; color: var(--text-muted); }
+    .file-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .file-btn { padding: 14px 10px; border-radius: var(--r-sm); border: 1.5px solid var(--border); background: var(--surface); color: var(--text); font-weight: 700; font-size: 0.82rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all .15s; font-family: inherit; letter-spacing: 0.04em; text-transform: uppercase; }
+    .file-btn:hover { background: var(--surface-2); }
+    .file-btn:active { transform: scale(0.97); }
+    .file-btn-camera { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .file-btn-camera:hover { background: var(--accent-dark); }
+    .file-preview { margin-top: 12px; padding: 12px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--r-sm); display: flex; align-items: center; gap: 12px; animation: popIn .25s ease; }
+    @keyframes popIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+    .file-preview-thumb { width: 48px; height: 48px; border-radius: 8px; background: var(--border); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; overflow: hidden; }
+    .file-preview-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .file-preview-info { flex: 1; min-width: 0; }
+    .file-preview-name { font-weight: 700; font-size: 0.82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .file-preview-status { font-size: 0.72rem; margin-top: 2px; color: var(--text-muted); font-weight: 700; }
+    .file-preview-remove { width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--surface); color: var(--danger); font-weight: 800; cursor: pointer; flex-shrink: 0; font-family: inherit; transition: all .15s; }
+    .file-preview-remove:hover { background: #fef2f2; border-color: #fecaca; }
+
+    .camera-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 100001; justify-content: center; align-items: center; padding: 12px; }
+    .camera-modal.active { display: flex; }
+    .camera-card { background: #132a1e; border-radius: 22px; padding: 16px; max-width: 500px; width: 100%; max-height: 95dvh; display: flex; flex-direction: column; gap: 12px; }
+    .camera-header { display: flex; justify-content: space-between; align-items: center; color: #fff; }
+    .camera-title { font-weight: 800; font-size: 0.95rem; }
+    .camera-close { width: 36px; height: 36px; border-radius: 10px; border: none; background: rgba(255,255,255,0.15); color: #fff; font-size: 1rem; cursor: pointer; }
+    .camera-video-wrapper { position: relative; border-radius: 14px; overflow: hidden; background: #000; aspect-ratio: 3/4; max-height: 60dvh; }
+    #cameraVideo { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .camera-status { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 0.9rem; background: rgba(0,0,0,0.5); padding: 20px; text-align: center; }
+    .camera-status.hidden { display: none; }
+    .camera-actions { display: grid; grid-template-columns: 1fr 2fr; gap: 8px; }
+    .camera-btn-primary, .camera-btn-secondary { padding: 16px; border-radius: 12px; border: none; font-weight: 800; font-size: 0.85rem; cursor: pointer; font-family: inherit; letter-spacing: 0.04em; text-transform: uppercase; }
+    .camera-btn-primary { background: #ffffff; color: var(--accent-dark); }
+    .camera-btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .camera-btn-secondary { background: rgba(255,255,255,0.15); color: #fff; }
+
+    textarea, input, .form-control { max-width: 100%; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo-wrapper">
+      <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.style.opacity='0.9'" class="logo-empresa" alt="Logo">
+    </div>
+    <h2 id="headerTitle">Registo de Ponto</h2>
+    <div class="live-clock-card" id="headerClockBox">
+      <div class="clock-time-row">
+        <div class="gps-badge"><div class="gps-pulse-dot" id="gpsIndicator"></div></div>
+        <span id="liveClockTime">00:00:00</span>
+      </div>
+      <div class="clock-date-row" id="liveClockDate">A sincronizar...</div>
+    </div>
+    <div id="offlineBadge"></div>
+  </div>
+
+  <div id="section-ponto" class="content-section active">
+    <div class="ponto-pin-only">
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-bottom:8px;">
+        <button type="button" class="top-action-btn" onclick="abrirEcraFaltaFuncionario()" title="Comunicar à Gerência">📅</button>
+        <button type="button" class="top-action-btn" onclick="abrirModalSenhaAdmin()" title="Painel de Gestão">⚙️</button>
+      </div>
+      <div style="font-size:0.72rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Introduza o seu PIN</div>
+      <div class="pin-display-area">
+        <input type="password" id="pinPonto" maxlength="4" inputmode="numeric" style="position:absolute; opacity:0; pointer-events:none;">
+        <div id="dotsPonto" class="pin-dots-big">
+          <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+        </div>
+        <div id="nomePreview" class="pin-nome-preview"></div>
+        <div id="pinStatus" class="pin-status"></div>
+      </div>
+      <div class="keypad" id="keypadPonto">
+        <button class="key" onclick="tecladoPress('1')">1</button>
+        <button class="key" onclick="tecladoPress('2')">2</button>
+        <button class="key" onclick="tecladoPress('3')">3</button>
+        <button class="key" onclick="tecladoPress('4')">4</button>
+        <button class="key" onclick="tecladoPress('5')">5</button>
+        <button class="key" onclick="tecladoPress('6')">6</button>
+        <button class="key" onclick="tecladoPress('7')">7</button>
+        <button class="key" onclick="tecladoPress('8')">8</button>
+        <button class="key" onclick="tecladoPress('9')">9</button>
+        <button class="key key-action key-clear" onclick="tecladoClear()">Limpar</button>
+        <button class="key" onclick="tecladoPress('0')">0</button>
+        <button class="key key-action" onclick="tecladoBack()">⌫</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="section-falta-func" class="content-section">
+    <div style="margin-bottom:20px;">
+      <h3 style="font-size:1rem; font-weight:800; margin-bottom:6px;">Comunicar à Gerência</h3>
+      <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">Submeta os detalhes. A gerência será notificada e responderá por email.</p>
+    </div>
+    <div class="admin-card">
+      <div class="form-group"><label>O seu Nome <span class="campo-obrigatorio">*</span></label><select id="nomeFuncFalta" class="form-control"></select></div>
+      <div class="form-group">
+        <label>PIN (4 dígitos) <span class="campo-obrigatorio">*</span></label>
+        <div class="password-eye-wrapper">
+          <input type="password" id="pinFuncFalta" class="form-control" maxlength="4" inputmode="numeric" placeholder="••••" style="letter-spacing:8px; text-align:center; font-size:1.2rem;">
+          <button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput('pinFuncFalta', this)">👁️</button>
+        </div>
+      </div>
+      <div class="form-group"><label>O seu E-mail <span class="campo-obrigatorio">*</span></label><input type="email" id="emailFuncFalta" class="form-control" placeholder="email@exemplo.pt"></div>
+      <div class="form-group">
+        <label>Motivo <span class="campo-obrigatorio">*</span></label>
+        <select id="tipoFaltaFunc" class="form-control" onchange="aoMudarMotivo()">
+          <option value="" disabled selected>Selecione</option>
+          <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
+          <option value="🏖️ Férias">🏖️ Férias</option>
+          <option value="📄 Falta Justificada">📄 Falta Justificada</option>
+          <option value="⚠️ Falta Injustificada">⚠️ Falta Injustificada</option>
+          <option value="📝 Outro Assunto">📝 Outro Assunto</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Observações <span class="campo-obrigatorio" id="obsObrigatorio" style="display:none;">*</span></label>
+        <textarea id="obsFuncFalta" class="form-control" rows="3" placeholder="Detalhes (opcional)..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Anexar comprovativo (opcional)</label>
+        <div class="file-dropzone">
+          <div class="file-dropzone-icon">📎</div>
+          <div class="file-dropzone-text">Escolha como quer anexar</div>
+          <div class="file-dropzone-sub">Um ou mais documentos (incluindo PDF > 5MB) ou fotografias</div>
+        </div>
+        <div class="file-buttons">
+          <button type="button" class="file-btn" onclick="document.getElementById('fileInputFalta').click()">
+            <span>📁</span><span>Ficheiro</span>
+          </button>
+          <button type="button" class="file-btn file-btn-camera" onclick="abrirCamera()">
+            <span>📷</span><span>Câmara</span>
+          </button>
+        </div>
+        <input type="file" id="fileInputFalta" style="display:none;" onchange="handleFileSelect(event)" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt,.xlsx,.xls" multiple>
+        <input type="file" id="cameraInputFalta" style="display:none;" onchange="handleFileSelect(event)" accept="image/*" capture="environment">
+        <div id="fileListPreview" style="margin-top:10px; display:flex; flex-direction:column; gap:8px;"></div>
+      </div>
+      <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncInicio" class="form-control"></div>
+      <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncFim" class="form-control"></div>
+      <button class="btn btn-primary" onclick="submeterFaltaFuncionario()">Enviar Pedido</button>
+    </div>
+    <button class="btn btn-nav-blue" onclick="voltarAoEcraPrincipal()">← Voltar</button>
+  </div>
+
+  <div id="section-admin" class="content-section">
+    <div id="admin-sub-menu">
+      <div style="margin-bottom:20px;"><h3 style="font-size:1rem; font-weight:800;">Painel de Gestão</h3></div>
+      <div class="menu-admin-grid">
+        <button class="btn tile-emerald" onclick="abrirSubModulo('dashboard'); carregarDashboard();" style="grid-column:span 2;"><span>📊</span> Dashboard</button>
+        <button class="btn tile-amber" onclick="abrirSubModulo('pedidos'); carregarPedidosPendentes();"><span>📩</span> Pedidos</button>
+        <button class="btn" onclick="abrirSubModulo('ausencias')"><span>📅</span> Faltas</button>
+        <button class="btn" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
+        <button class="btn" onclick="abrirSubModulo('pdf')"><span>📄</span> PDF</button>
+        <button class="btn" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar</button>
+        <button class="btn" onclick="abrirSubModulo('remover')"><span>❌</span> Inativar</button>
+      </div>
+      <button class="btn btn-nav-red" onclick="voltarAoEcraPrincipal()" style="margin-top:20px;">Sair do Painel</button>
+    </div>
+
+    <div id="admin-sub-dashboard" style="display:none;">
+      <div class="admin-card">
+        <h3>Dashboard · Hoje</h3>
+        <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:16px;" id="dashboardData">A carregar...</p>
+        <div style="display:grid; gap:10px; grid-template-columns:1fr 1fr;">
+          <div style="background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:14px; text-align:center;"><div style="font-size:0.6rem; font-weight:800; color:var(--text-muted); letter-spacing:0.08em; text-transform:uppercase;">Presentes</div><div id="dashPresentes" style="font-size:1.8rem; font-weight:800; margin-top:4px;">--</div></div>
+          <div style="background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:14px; text-align:center;"><div style="font-size:0.6rem; font-weight:800; color:var(--text-muted); letter-spacing:0.08em; text-transform:uppercase;">Turno Aberto</div><div id="dashAbertos" style="font-size:1.8rem; font-weight:800; margin-top:4px;">--</div></div>
+        </div>
+        <div id="dashFeriasAvisos" style="margin-top:12px;"></div>
+        <div id="dashLista" style="margin-top:14px;"></div>
+        <button class="btn btn-primary" onclick="carregarDashboard()" style="margin-top:16px;">Atualizar</button>
+      </div>
+      <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()">← Menu</button>
+    </div>
+
+    <div id="admin-sub-pedidos" style="display:none;">
+      <div class="pedidos-hero">
+        <h2>📩 Pedidos</h2>
+        <p>Gestão em tempo real</p>
+        <div class="pedidos-stats">
+          <div class="pedidos-stat pendente"><div class="num" id="statPendentes">0</div><div class="lbl">Pendentes</div></div>
+          <div class="pedidos-stat aprovado"><div class="num" id="statAprovados">0</div><div class="lbl">Aprovados</div></div>
+          <div class="pedidos-stat recusado"><div class="num" id="statRecusados">0</div><div class="lbl">Recusados</div></div>
+        </div>
+      </div>
+      <div class="pedidos-filtros">
+        <button class="pf-chip active" data-filter="pendente">Pendentes <span class="cnt" id="chipPendentes">0</span></button>
+        <button class="pf-chip" data-filter="aprovado">Aprovados</button>
+        <button class="pf-chip" data-filter="recusado">Recusados</button>
+        <button class="pf-chip" data-filter="todos">Todos</button>
+      </div>
+      <div id="pedidosList"></div>
+      <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()" style="margin-top:16px;">← Menu</button>
+    </div>
+
+    <div id="admin-sub-ausencias" style="display:none;">
+      <div class="admin-card">
+        <h3>Lançar Registo Manual</h3>
+        <div class="form-group"><label>Colaborador</label><select id="nomeFuncionarioFolga" class="form-control"></select></div>
+        <div class="form-group"><label>Motivo</label>
+          <select id="tipoAusencia" class="form-control">
+            <option value="" disabled selected>Selecione</option>
+            <option value="🏖️ Férias">🏖️ Férias</option>
+            <option value="🩺 Baixa Médica">🩺 Baixa Médica</option>
+            <option value="📄 Falta Justificada">📄 Falta Justificada</option>
+            <option value="⚠️ Falta Injustificada">⚠️ Falta Injustificada</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Data Início</label><input type="date" id="dataFolgaInicio" class="form-control"></div>
+        <div class="form-group"><label>Data Fim</label><input type="date" id="dataFolgaFim" class="form-control"></div>
+        <button class="btn btn-primary" onclick="submeterAusenciaAdministrativa()">Confirmar</button>
+      </div>
+      <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()">← Menu</button>
+    </div>
+
+    <div id="admin-sub-corrigir" style="display:none;">
+      <div class="admin-card">
+        <h3>Corrigir Picagem</h3>
+        <div class="form-group"><label>Colaborador</label><select id="nomeCorrigir" class="form-control"></select></div>
+        <div class="form-group"><label>Data</label><input type="date" id="dataCorrigir" class="form-control"></div>
+        <div class="form-group"><label>Hora</label><input type="time" id="horaCorrigir" class="form-control"></div>
+        <button class="btn btn-primary" onclick="submeterCorrecao()">Inserir Picagem</button>
+      </div>
+      <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()">← Menu</button>
+    </div>
+
+    <div id="admin-sub-pdf" style="display:none;">
+      <div class="admin-card">
+        <h3>Exportar PDF</h3>
+        <div class="form-group"><label>Colaborador</label><select id="selecaoFuncionario" class="form-control"></select></div>
+        <div class="form-group"><label>De</label><input type="date" id="dataInicio" class="form-control"></div>
+        <div class="form-group"><label>Até</label><input type="date" id="dataFim" class="form-control"></div>
+        <button class="btn btn-primary" onclick="exportarRelatorioPDF()">Gerar PDF</button>
+      </div>
+      <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()">← Menu</button>
+    </div>
+
+    <div id="admin-sub-funcionario" style="display:none;">
+      <div class="admin-card">
+        <h3>Adicionar Colaborador</h3>
+        <div class="form-group"><label>Nome</label><input type="text" id="nomeNovo" class="form-control" placeholder="Nome e apelido"></div>
+        <div class="form-group"><label>PIN (4 dígitos)</label><input type="text" id="pinNovo" class="form-control" maxlength="4" inputmode="numeric" placeholder="0000"></div>
+        <div class="form-group"><label>Filial</label><select id="filialNovo" class="form-control"><option value="Pataias">Pataias</option><option value="Garcia">Garcia</option></select></div>
+        <button class="btn btn-primary" onclick="submeterNovoFuncionario()">Registar</button>
+      </div>
+      <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()">← Menu</button>
+    </div>
+
+    <div id="admin-sub-remover" style="display:none;">
+      <div class="admin-card">
+        <h3 style="color:var(--danger);">Inativar Colaborador</h3>
+        <div class="form-group"><label>Colaborador</label><select id="nomeRemover" class="form-control"></select></div>
+        <button class="btn btn-danger" onclick="submeterRemocaoFuncionario()">Confirmar</button>
+      </div>
+      <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()">← Menu</button>
+    </div>
+  </div>
+
+  <div class="app-footer">© 2026 · Balcão Agrícola</div>
+</div>
+
+<div id="toastOverlay" class="toast-overlay" onclick="fecharToastOverlay(event)">
+  <div class="toast-card">
+    <div id="toastIcon" class="toast-icon">🟢</div>
+    <div id="toastTitle" class="toast-title">CONCLUÍDO</div>
+    <div id="toastBody" class="toast-body">Operação processada.</div>
+    <div id="toastActionsContainer" class="toast-actions"></div>
+  </div>
+</div>
+
+<div id="cameraModal" class="camera-modal" onclick="if(event.target===this) fecharCamera()">
+  <div class="camera-card">
+    <div class="camera-header">
+      <div class="camera-title">📷 Tirar Fotografia</div>
+      <button class="camera-close" onclick="fecharCamera()" type="button">✕</button>
+    </div>
+    <div class="camera-video-wrapper">
+      <video id="cameraVideo" autoplay playsinline muted></video>
+      <div id="cameraStatus" class="camera-status">A iniciar câmara...</div>
+    </div>
+    <div class="camera-actions">
+      <button class="camera-btn-secondary" onclick="trocarCamera()" type="button">🔄 Trocar</button>
+      <button class="camera-btn-primary" onclick="capturarFoto()" id="cameraBtnCapturar" type="button" disabled>📸 Capturar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════ CONFIG ════════════════ */
+var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwO33X2VgI6XIZz60-HhvPCf6rV-h3fv7lGTZ5cg12qS9Z6Bp4tXU_QIsjbd2RhmVpBKA/exec";
+var senhaAdminSessao = "";
+var tokenAdminSessao = "";
+var emProcessamento = false;
+var listaFuncionariosCache = [];
+var MODULOS_ADMIN = ['dashboard','pedidos','ausencias','corrigir','pdf','funcionario','remover'];
+var MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
+
+function adminParams(base) {
+  var p = base || {};
+  if (tokenAdminSessao) p.token = tokenAdminSessao;
+  else if (senhaAdminSessao) p.senha = senhaAdminSessao;
+  return p;
+}
+
+/* ════════════════ OFFLINE (MULTI-COLABORADOR + SALVAGUARDA) ════════════════ */
+var MINUTOS_BLOQUEIO_LOCAL = 10;
+var LS_FILA_OFF = "PONTO_FILA_OFFLINE_V2";
+var LS_FILA_OFF_BAK = "PONTO_FILA_OFFLINE_BACKUP_V1";
+var LS_ULTIMA_POR_PIN = "PONTO_ULTIMA_POR_PIN_V1";
+var PIN_REV = "PONTO_PIN_REV_V1";
+var PIN_REV_BAK = "PONTO_PIN_REV_BACKUP_V1";
+var _sincronizando = false;
+
+function lerJsonSeguro(chave, fallback) {
+  try {
+    var raw = localStorage.getItem(chave);
+    if (!raw) return fallback;
+    return JSON.parse(raw);
+  } catch (e) {
+    return fallback;
+  }
+}
+
+function gravarJsonSeguro(chave, val) {
+  try {
+    localStorage.setItem(chave, JSON.stringify(val));
+  } catch (e) {}
+}
+
+function getPinRevMapa() {
+  var mainMap = lerJsonSeguro(PIN_REV, null);
+  var bakMap = lerJsonSeguro(PIN_REV_BAK, {});
+  if (mainMap && typeof mainMap === 'object' && Object.keys(mainMap).length > 0) {
+    gravarJsonSeguro(PIN_REV_BAK, mainMap);
+    return mainMap;
+  }
+  if (bakMap && typeof bakMap === 'object' && Object.keys(bakMap).length > 0) {
+    gravarJsonSeguro(PIN_REV, bakMap);
+    return bakMap;
+  }
+  return {};
+}
+
+function guardarPinRev(pinHash, nome) {
+  if (!pinHash || !nome) return;
+  var mapa = getPinRevMapa();
+  mapa[pinHash] = nome;
+  gravarJsonSeguro(PIN_REV, mapa);
+  gravarJsonSeguro(PIN_REV_BAK, mapa);
+  gravarIdbPonto_("pin_rev_mapa", mapa);
+}
+
+function getFilaOffline() {
+  var mainFila = lerJsonSeguro(LS_FILA_OFF, null);
+  var bakFila = lerJsonSeguro(LS_FILA_OFF_BAK, []);
+  if (Array.isArray(mainFila) && mainFila.length > 0) {
+    gravarJsonSeguro(LS_FILA_OFF_BAK, mainFila);
+    return mainFila;
+  }
+  if (Array.isArray(bakFila) && bakFila.length > 0) {
+    gravarJsonSeguro(LS_FILA_OFF, bakFila);
+    return bakFila;
+  }
+  return [];
+}
+
+function setFilaOffline(f) {
+  var arr = Array.isArray(f) ? f : [];
+  gravarJsonSeguro(LS_FILA_OFF, arr);
+  gravarJsonSeguro(LS_FILA_OFF_BAK, arr);
+  gravarIdbPonto_("fila_offline", arr);
+  atualizarBadgeOffline();
+}
+
+function getUltimaOfflinePorPinMs(pinHash) {
+  var mapa = lerJsonSeguro(LS_ULTIMA_POR_PIN, {});
+  if (!pinHash || !mapa || typeof mapa !== 'object') return 0;
+  return parseInt(mapa[pinHash] || '0', 10) || 0;
+}
+
+function setUltimaOfflinePorPinMs(pinHash) {
+  if (!pinHash) return;
+  var mapa = lerJsonSeguro(LS_ULTIMA_POR_PIN, {});
+  if (!mapa || typeof mapa !== 'object') mapa = {};
+  mapa[pinHash] = String(Date.now());
+  gravarJsonSeguro(LS_ULTIMA_POR_PIN, mapa);
+}
+
+function podePicarOfflineAgora(pinHash) {
+  var ultima = getUltimaOfflinePorPinMs(pinHash);
+  if (!ultima) return { ok: true };
+  var difMs = Date.now() - ultima;
+  var minMs = MINUTOS_BLOQUEIO_LOCAL * 60 * 1000;
+  if (difMs < minMs) {
+    var restamMs = minMs - difMs;
+    var restamMin = Math.ceil(restamMs / 60000);
+    var restamSeg = Math.ceil(restamMs / 1000);
+    return { ok: false, mensagem: restamMin >= 1 ? restamMin + ' min' : restamSeg + ' segundos' };
+  }
+  return { ok: true };
+}
+
+function atualizarBadgeOffline() {
+  var el = document.getElementById('offlineBadge');
+  if (!el) return;
+  var fila = getFilaOffline();
+  var pedidosOff = getFilaPedidosOffline();
+  var totalPendentes = fila.length + pedidosOff.length;
+  if (totalPendentes === 0) { el.style.display = 'none'; el.innerHTML = ''; return; }
+  var partes = [];
+  if (fila.length > 0) partes.push(fila.length + ' picagem(ns)');
+  if (pedidosOff.length > 0) partes.push(pedidosOff.length + ' pedido(s)');
+  el.style.display = 'block';
+  el.innerHTML = '<div class="badge-off-box"><span class="badge-off-ico">📦</span><div class="badge-off-info"><div class="badge-off-title">' + partes.join(' e ') + ' offline</div><div class="badge-off-sub">Será enviado quando houver rede</div></div><button class="badge-off-btn" onclick="sincronizarFilaOffline()">Sincronizar</button></div>';
+}
+
+async function sincronizarFilaOffline() {
+  if (_sincronizando || !navigator.onLine) return;
+  var fila = getFilaOffline();
+  if (fila.length === 0) return;
+  _sincronizando = true;
+  var restantes = [];
+  for (var i = 0; i < fila.length; i++) {
+    var item = fila[i];
+    item.tentativas = (item.tentativas || 0) + 1;
+    var resp = await new Promise(function(resolve) {
+      try { chamarAPIJsonp({ action: 'salvarPonto', nome: item.nome, pin: item.pin, lat: item.lat, lon: item.lon, isMock: 'false', disp: item.disp, idUnico: item.idUnico, horaOffline: item.horaLocal }, resolve); }
+      catch(e) { resolve({ ok: false, erro: 'Erro de rede' }); }
+    });
+    var ok = resp && (resp.ok === true || String(resp).toLowerCase().indexOf('sucesso') !== -1);
+    if (!ok) {
+      var erro = (resp && resp.erro) ? String(resp.erro) : String(resp || '');
+      var definitivo = /incorreto|não encontrado|inativo|fora do perímetro|sem sinal gps|falsificado/i.test(erro);
+      if (!definitivo && item.tentativas < 10) restantes.push(item);
+    }
+  }
+  setFilaOffline(restantes);
+  _sincronizando = false;
+  if (restantes.length === 0 && fila.length > 0) mostrarPopup({ titulo: 'Sincronizado', mensagem: 'Todas as picagens offline foram enviadas.', tipo: 'sucesso' });
+  else if (restantes.length > 0) setTimeout(sincronizarFilaOffline, 15000);
+  await sincronizarPedidosOffline();
+}
+
+async function guardarPicagemOffline(nome, pin, lat, lon, disp) {
+  var pinHash = await hashPin(pin);
+  var chk = podePicarOfflineAgora(pinHash);
+  if (!chk.ok) {
+    mostrarPopup({
+      titulo: 'Aguarde um momento',
+      mensagem: 'Esta picagem <b>não foi guardada</b> para <b>' + nome + '</b>.<br><br>Este colaborador já picou há menos de ' + MINUTOS_BLOQUEIO_LOCAL + ' minutos. Aguarde <b>' + chk.mensagem + '</b>.',
+      tipo: 'erro'
+    });
+    return null;
+  }
+  var item = {
+    idUnico: 'OFF_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+    nome: nome,
+    pin: pin,
+    lat: lat || 0,
+    lon: lon || 0,
+    disp: disp || 'Desconhecido',
+    horaLocal: new Date().toISOString(),
+    tentativas: 0
+  };
+  var fila = getFilaOffline();
+  fila.push(item);
+  setFilaOffline(fila);
+  setUltimaOfflinePorPinMs(pinHash);
+  guardarPinRev(pinHash, nome);
+  return item;
+}
+
+/* ════════════════ FILA OFFLINE DE PEDIDOS À GERÊNCIA ════════════════ */
+var LS_FILA_PEDIDOS_OFF = "PONTO_FILA_PEDIDOS_OFFLINE_V1";
+var LS_FILA_PEDIDOS_OFF_BAK = "PONTO_FILA_PEDIDOS_OFFLINE_BACKUP_V1";
+var _sincronizandoPedidos = false;
+
+function getFilaPedidosOffline() {
+  var mainArr = lerJsonSeguro(LS_FILA_PEDIDOS_OFF, null);
+  var bakArr = lerJsonSeguro(LS_FILA_PEDIDOS_OFF_BAK, []);
+  if (Array.isArray(mainArr) && mainArr.length > 0) {
+    gravarJsonSeguro(LS_FILA_PEDIDOS_OFF_BAK, mainArr);
+    return mainArr;
+  }
+  if (Array.isArray(bakArr) && bakArr.length > 0) {
+    gravarJsonSeguro(LS_FILA_PEDIDOS_OFF, bakArr);
+    return bakArr;
+  }
+  return [];
+}
+
+function setFilaPedidosOffline(arr) {
+  var lista = Array.isArray(arr) ? arr : [];
+  gravarJsonSeguro(LS_FILA_PEDIDOS_OFF, lista);
+  gravarJsonSeguro(LS_FILA_PEDIDOS_OFF_BAK, lista);
+  gravarIdbPonto_("pedidos_offline", lista);
+  atualizarBadgeOffline();
+}
+
+async function restaurarPedidosOfflineDoIdb_() {
+  try {
+    var pedIdb = await lerIdbPonto_("pedidos_offline", null);
+    if (Array.isArray(pedIdb) && pedIdb.length > 0) {
+      var atual = getFilaPedidosOffline();
+      var porId = {};
+      pedIdb.forEach(function(it) { if (it && it.idPedidoOff) porId[it.idPedidoOff] = it; });
+      atual.forEach(function(it) { if (it && it.idPedidoOff) porId[it.idPedidoOff] = it; });
+      var mesclada = Object.keys(porId).map(function(k) { return porId[k]; });
+      mesclada.sort(function(a, b) {
+        return String(a.criadoEm || "").localeCompare(String(b.criadoEm || ""));
+      });
+      setFilaPedidosOffline(mesclada);
+      await gravarIdbPonto_("pedidos_offline", mesclada);
+    }
+  } catch (e) {}
+}
+
+function guardarPedidoOffline(dadosPedido) {
+  var fila = getFilaPedidosOffline();
+  fila.push(dadosPedido);
+  setFilaPedidosOffline(fila);
+}
+
+async function sincronizarPedidosOffline() {
+  if (_sincronizandoPedidos || !navigator.onLine) return;
+  await restaurarPedidosOfflineDoIdb_();
+  var fila = getFilaPedidosOffline();
+  if (fila.length === 0) return;
+  _sincronizandoPedidos = true;
+  var restantes = [];
+
+  for (var i = 0; i < fila.length; i++) {
+    var item = fila[i];
+    item.tentativas = (item.tentativas || 0) + 1;
+    var fileIdFinal = item.fileId || "";
+    var obsFinal = item.obs || "";
+
+    // Se existirem ficheiros pendentes guardados em base64 (ex.: capturados ou escolhidos offline), tenta fazer upload agora
+    if (!fileIdFinal && Array.isArray(item.anexosPendentes) && item.anexosPendentes.length > 0) {
+      var enviadosNow = [];
+      for (var a = 0; a < item.anexosPendentes.length; a++) {
+        var ax = item.anexosPendentes[a];
+        if (!ax || !ax.base64) continue;
+        try {
+          var sessionId = 'UP_OFF_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+          var chunkSize = 1500000;
+          var totalChunks = Math.ceil(ax.base64.length / chunkSize);
+          for (var c = 0; c < totalChunks; c++) {
+            var slice = ax.base64.slice(c * chunkSize, (c + 1) * chunkSize);
+            await fetch(APP_SCRIPT_URL, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({
+                action: 'uploadFile',
+                sessionId: sessionId,
+                fileName: ax.name || 'comprovativo',
+                mimeType: ax.mimeType || 'application/octet-stream',
+                base64: slice,
+                chunkIndex: c,
+                totalChunks: totalChunks
+              })
+            });
+            if (totalChunks > 1) await new Promise(function(r) { setTimeout(r, 250); });
+          }
+          for (var t = 0; t < 35; t++) {
+            await new Promise(function(r) { setTimeout(r, 1000); });
+            var upRes = await new Promise(function(resolve) {
+              chamarAPIJsonp({ action: 'obterUploadFile', sessionId: sessionId }, resolve);
+            });
+            if (upRes && upRes.ok && upRes.fileId) {
+              enviadosNow.push(upRes);
+              break;
+            }
+          }
+        } catch (eUp) {}
+      }
+      if (enviadosNow.length > 0) {
+        fileIdFinal = enviadosNow[0].fileId;
+        if (enviadosNow.length > 1) {
+          var extrasTxt = enviadosNow.slice(1).map(function(evItem) {
+            return '📎 ' + (evItem.fileName || 'Comprovativo') + ': ' + (evItem.fileUrl || '');
+          }).join('\n');
+          obsFinal = (obsFinal ? obsFinal + '\n\n' : '') + 'Outros anexos:\n' + extrasTxt;
+        }
+      }
+    }
+
+    var resp = await new Promise(function(resolve) {
+      try {
+        chamarAPIJsonp({
+          action: 'comunicarAusencia',
+          nome: item.nome,
+          pin: item.pin,
+          email: item.email,
+          tipo: item.tipo,
+          dataIni: item.dataIni,
+          dataFim: item.dataFim,
+          obs: obsFinal,
+          fileId: fileIdFinal,
+          lat: item.lat || 0,
+          lon: item.lon || 0,
+          disp: item.disp || 'Desconhecido'
+        }, resolve);
+      } catch (e) {
+        resolve({ ok: false, erro: 'Erro de rede' });
+      }
+    });
+
+    var ok = resp && resp.ok === true;
+    if (!ok) {
+      var erro = (resp && resp.erro) ? String(resp.erro) : String(resp || '');
+      var definitivo = /incorreto|não encontrado|inativo/i.test(erro);
+      if (!definitivo && item.tentativas < 10) {
+        restantes.push(item);
+      }
+    }
+  }
+
+  setFilaPedidosOffline(restantes);
+  _sincronizandoPedidos = false;
+  if (restantes.length === 0 && fila.length > 0) {
+    mostrarPopup({ titulo: 'Pedidos Sincronizados', mensagem: 'Os pedidos guardados offline foram enviados à gerência.', tipo: 'sucesso' });
+  } else if (restantes.length > 0) {
+    setTimeout(sincronizarPedidosOffline, 15000);
+  }
+}
+
+
+
+/* ════════════════ SALVAGUARDA INDEXEDDB (PINS + FILA OFFLINE) ════════════════ */
+var IDB_NAME = "PONTO_BALCAO_AGRICOLA_IDB_V1";
+var IDB_STORE = "dados_offline";
+
+function abrirIdbPonto_() {
+  return new Promise(function(resolve) {
+    try {
+      if (!window.indexedDB) { resolve(null); return; }
+      var req = indexedDB.open(IDB_NAME, 1);
+      req.onupgradeneeded = function(ev) {
+        var db = ev.target.result;
+        if (!db.objectStoreNames.contains(IDB_STORE)) {
+          db.createObjectStore(IDB_STORE, { keyPath: "chave" });
+        }
+      };
+      req.onsuccess = function(ev) { resolve(ev.target.result); };
+      req.onerror = function() { resolve(null); };
+    } catch (e) { resolve(null); }
+  });
+}
+
+async function gravarIdbPonto_(chave, valor) {
+  try {
+    var db = await abrirIdbPonto_();
+    if (!db) return;
+    await new Promise(function(resolve) {
+      var tx = db.transaction(IDB_STORE, "readwrite");
+      var store = tx.objectStore(IDB_STORE);
+      store.put({ chave: chave, valor: JSON.stringify(valor), ts: Date.now() });
+      tx.oncomplete = function() { resolve(true); };
+      tx.onerror = function() { resolve(false); };
+    });
+  } catch (e) {}
+}
+
+async function lerIdbPonto_(chave, fallback) {
+  try {
+    var db = await abrirIdbPonto_();
+    if (!db) return fallback;
+    return await new Promise(function(resolve) {
+      var tx = db.transaction(IDB_STORE, "readonly");
+      var store = tx.objectStore(IDB_STORE);
+      var req = store.get(chave);
+      req.onsuccess = function() {
+        if (req.result && req.result.valor) {
+          try { resolve(JSON.parse(req.result.valor)); }
+          catch (e) { resolve(fallback); }
+        } else {
+          resolve(fallback);
+        }
+      };
+      req.onerror = function() { resolve(fallback); };
+    });
+  } catch (e) { return fallback; }
+}
+
+async function restaurarDadosOfflineDoIdb_() {
+  try {
+    var pinMapaIdb = await lerIdbPonto_("pin_rev_mapa", null);
+    if (pinMapaIdb && typeof pinMapaIdb === "object" && Object.keys(pinMapaIdb).length > 0) {
+      var atualLs = getPinRevMapa();
+      var combinado = Object.assign({}, pinMapaIdb, atualLs);
+      gravarJsonSeguro(PIN_REV, combinado);
+      gravarJsonSeguro(PIN_REV_BAK, combinado);
+      await gravarIdbPonto_("pin_rev_mapa", combinado);
+    }
+
+    var filaIdb = await lerIdbPonto_("fila_offline", null);
+    if (Array.isArray(filaIdb) && filaIdb.length > 0) {
+      var atualFila = getFilaOffline();
+      var porId = {};
+      filaIdb.forEach(function(it) { if (it && it.idUnico) porId[it.idUnico] = it; });
+      atualFila.forEach(function(it) { if (it && it.idUnico) porId[it.idUnico] = it; });
+      var mesclada = Object.keys(porId).map(function(k) { return porId[k]; });
+      mesclada.sort(function(a, b) {
+        return String(a.horaLocal || "").localeCompare(String(b.horaLocal || ""));
+      });
+      setFilaOffline(mesclada);
+      await gravarIdbPonto_("fila_offline", mesclada);
+    }
+    await restaurarPedidosOfflineDoIdb_();
+    atualizarBadgeOffline();
+  } catch (e) {}
+}
+
+/* ════════════════ RELÓGIO ════════════════ */
+function iniciarRelogio() {
+  setInterval(function() {
+    var a = new Date();
+    var h = String(a.getHours()).padStart(2,'0') + ':' + String(a.getMinutes()).padStart(2,'0') + ':' + String(a.getSeconds()).padStart(2,'0');
+    var m = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+    var et = document.getElementById('liveClockTime'); if (et) et.innerText = h;
+    var ed = document.getElementById('liveClockDate'); if (ed) ed.innerText = String(a.getDate()).padStart(2,'0') + ' ' + m[a.getMonth()] + ' ' + a.getFullYear();
+  }, 1000);
+}
+
+window.addEventListener('load', async function() {
+  iniciarRelogio();
+  await restaurarDadosOfflineDoIdb_();
+  carregarFuncionarios();
+  var email = localStorage.getItem('emailColaboradorBA');
+  if (email) { var ef = document.getElementById('emailFuncFalta'); if (ef) ef.value = email; }
+  var g = document.getElementById('gpsIndicator'); if (g && !navigator.onLine) g.classList.add('offline');
+  atualizarBadgeOffline();
+  if (navigator.onLine) setTimeout(sincronizarFilaOffline, 2000);
+  console.log('[Ponto v7.2] index.html carregado');
+});
+window.addEventListener('online', async function(){ var g = document.getElementById('gpsIndicator'); if (g) g.classList.remove('offline'); await restaurarDadosOfflineDoIdb_(); setTimeout(sincronizarFilaOffline, 1500); atualizarBadgeOffline(); });
+window.addEventListener('offline', async function(){ var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); await restaurarDadosOfflineDoIdb_(); atualizarBadgeOffline(); });
+
+/* ════════════════ API JSONP ════════════════ */
+function chamarAPIJsonp(params, cb) {
+  if (!navigator.onLine) { if (cb) cb({ ok: false, erro: 'Sem ligação à internet' }); return; }
+  fetch('https://api.ipify.org?format=json').then(function(r){ return r.json(); }).then(function(d){ params.ip = d.ip; enviar(params, cb); }).catch(function(){ params.ip = "N/D"; enviar(params, cb); });
+}
+function enviar(params, cb) {
+  var nome = "cb_" + Math.random().toString(36).substring(2,9);
+  var s = document.createElement('script');
+  var to = setTimeout(function(){ delete window[nome]; if(s.parentNode) s.remove(); emProcessamento = false; pinAtual = ""; atualizarDots(); if (cb) cb({ ok: false, erro: 'O servidor não respondeu.' }); }, 30000);
+  window[nome] = function(d){ clearTimeout(to); delete window[nome]; if(s.parentNode) s.remove(); if(cb) cb(d); };
+  var url = APP_SCRIPT_URL + "?";
+  for (var k in params) if (params.hasOwnProperty(k)) url += encodeURIComponent(k) + "=" + encodeURIComponent(params[k]) + "&";
+  url += "callback=" + nome;
+  s.src = url;
+  s.onerror = function(){ clearTimeout(to); delete window[nome]; if(s.parentNode) s.remove(); emProcessamento = false; pinAtual = ""; atualizarDots(); if (cb) cb({ ok: false, erro: 'Não foi possível contactar o servidor.' }); };
+  document.body.appendChild(s);
+}
+
+/* ════════════════ POPUP ════════════════ */
+function mostrarPopup(cfg) {
+  var ov = document.getElementById('toastOverlay');
+  document.getElementById('toastTitle').innerText = (cfg.titulo || "Aviso").replace(/[✅❌⏳⚠️📩📅✏️📄➕📊🤝🔄]/g, '').trim() || "Aviso";
+  document.getElementById('toastBody').innerHTML = cfg.mensagem || "";
+  var ic = document.getElementById('toastIcon'); ic.className = "toast-icon";
+  if (cfg.tipo === "sucesso") ic.innerText = "✅";
+  else if (cfg.tipo === "erro") ic.innerText = "❌";
+  else if (cfg.tipo === "processando") { ic.className = "toast-icon ampulheta-animada"; ic.innerText = "⏳"; }
+  else if (cfg.tipo === "aviso") ic.innerText = "⚠️";
+  else ic.innerText = "💬";
+  var acts = document.getElementById('toastActionsContainer'); acts.innerHTML = ""; acts.style.display = "flex";
+  if (cfg.tipo === "processando") {
+    var btnCancel = document.createElement('button'); btnCancel.className = "toast-btn toast-btn-secondary"; btnCancel.innerText = "Cancelar";
+    btnCancel.onclick = function() { emProcessamento = false; pinAtual = ""; atualizarDots(); fecharToast(); };
+    acts.appendChild(btnCancel);
+  } else if (cfg.botoes) {
+    cfg.botoes.forEach(function(b){ var btn = document.createElement('button'); btn.className = "toast-btn " + (b.classe || "toast-btn-primary"); btn.innerText = b.texto; btn.onclick = b.acao; acts.appendChild(btn); });
+  } else {
+    var btn = document.createElement('button'); btn.className = "toast-btn toast-btn-primary"; btn.innerText = "Concluir"; btn.onclick = fecharToast; acts.appendChild(btn);
+  }
+  ov.style.display = "flex";
+}
+function fecharToast() { document.getElementById('toastOverlay').style.display = "none"; emProcessamento = false; }
+function fecharToastOverlay(e) {}
+function alternarVisibilidadeSenhaInput(id, btn) { var i = document.getElementById(id); if (!i) return; if (i.type === "password") { i.type = "text"; if(btn) btn.innerText = "🙈"; } else { i.type = "password"; if(btn) btn.innerText = "👁️"; } }
+
+/* ════════════════ DISPOSITIVO ════════════════ */
+function obterDetalhesDispositivo() {
+  var ua = navigator.userAgent || '';
+  if (/iPhone/i.test(ua)) return 'Apple iPhone';
+  if (/iPad/i.test(ua)) return 'Apple iPad';
+  var samsung = ua.match(/SM-[A-Z0-9]+/i); if (samsung) return 'Samsung ' + samsung[0].toUpperCase();
+  var pixel = ua.match(/Pixel\s+[A-Za-z0-9]+/i); if (pixel) return 'Google ' + pixel[0];
+  var redmi = ua.match(/Redmi\s+[A-Za-z0-9\s]+?(?=Build|\))/i); if (redmi) return 'Xiaomi ' + redmi[0].trim();
+  var poco = ua.match(/POCO\s+[A-Za-z0-9\s]+?(?=Build|\))/i); if (poco) return 'Xiaomi ' + poco[0].trim();
+  var mi = ua.match(/Mi\s+[A-Za-z0-9\s]+?(?=Build|\))/i); if (mi) return 'Xiaomi ' + mi[0].trim();
+  var realme = ua.match(/RMX\d+/i); if (realme) return 'Realme ' + realme[0];
+  var hw = ua.match(/(HUAWEI|HONOR)\s+[A-Za-z0-9-]+/i); if (hw) return hw[0];
+  var op = ua.match(/(OnePlus|ONEPLUS)\s+[A-Za-z0-9]+/i); if (op) return op[0];
+  var moto = ua.match(/moto\s+[A-Za-z0-9\s]+?(?=Build|\))/i); if (moto) return 'Motorola ' + moto[0].trim();
+  var cph = ua.match(/CPH\d+/i); if (cph) return 'Oppo ' + cph[0];
+  var vivo = ua.match(/\bV\d{4}[A-Z]?\b/); if (vivo) return 'Vivo ' + vivo[0];
+  var android = ua.match(/Android[^;)]*;\s*([^;)]+?)(?:\s+Build|\s*\))/i);
+  if (android && android[1]) {
+    var model = android[1].replace(/^[a-z]{2}[-_][a-z]{2};\s*/i, '').trim();
+    if (model && model.length > 1 && model.length < 40 && !/^(wv|K|Linux|Mobile|Android)$/i.test(model)) {
+      if (/^\d{4,5}[A-Z0-9]{3,8}$/i.test(model)) return 'Xiaomi ' + model;
+      return model;
+    }
+  }
+  if (/Windows/i.test(ua)) return 'Windows PC';
+  if (/CrOS/i.test(ua)) return 'Chromebook';
+  if (/Macintosh/i.test(ua)) return 'Mac (Apple)';
+  if (/Linux/i.test(ua)) return 'Linux PC';
+  return 'Desconhecido';
+}
+
+/* ════════════════ ADMIN LOGIN ════════════════ */
+function abrirModalSenhaAdmin() {
+  mostrarPopup({
+    titulo: "Autenticação",
+    mensagem: '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.9rem;">Área reservada à gerência.</p><div class="password-eye-wrapper"><input type="password" id="inputSenhaPopup" class="form-control" style="text-align:center; font-size:1.2rem; letter-spacing:6px;" placeholder="••••"><button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput(\'inputSenhaPopup\', this)">👁️</button></div><p style="margin-top:10px; font-size:0.72rem; color:var(--text-light);">Pressione <b>Enter</b> para entrar</p>',
+    botoes: [
+      { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
+      { texto: "Entrar", classe: "toast-btn-primary", acao: tentarEntrarAdmin }
+    ]
+  });
+  setTimeout(function(){
+    var i = document.getElementById('inputSenhaPopup');
+    if (!i) return;
+    i.focus();
+    if (!i._enterBound) { i._enterBound = true; i.addEventListener('keydown', function(ev) { if (ev.key === 'Enter' || ev.keyCode === 13) { ev.preventDefault(); tentarEntrarAdmin(); } }); }
+  }, 120);
+}
+function tentarEntrarAdmin() {
+  var el = document.getElementById('inputSenhaPopup');
+  if (!el) return;
+  var s = el.value;
+  if (!s) return;
+  mostrarPopup({ titulo: "A Processar", mensagem: "A verificar...", tipo: "processando" });
+  chamarAPIJsonp({ action: "verificarSenha", senha: s }, function(r) {
+    if (r && r.ok) {
+      senhaAdminSessao = s; tokenAdminSessao = r.token || "";
+      fecharToast();
+      document.getElementById('section-ponto').classList.remove('active');
+      document.getElementById('section-falta-func').classList.remove('active');
+      document.getElementById('section-admin').classList.add('active');
+      document.getElementById('headerTitle').style.display = 'none';
+      document.getElementById('headerClockBox').style.display = 'none';
+      document.getElementById('offlineBadge').style.display = 'none';
+      voltarAoMenuCentralAdmin();
+    } else {
+      mostrarPopup({ titulo: "Acesso Negado", mensagem: "Palavra-passe incorreta.", tipo: "erro" });
+    }
+  });
+}
+function abrirEcraFaltaFuncionario() {
+  document.getElementById('section-ponto').classList.remove('active');
+  document.getElementById('section-admin').classList.remove('active');
+  document.getElementById('section-falta-func').classList.add('active');
+  document.getElementById('headerTitle').style.display = 'none';
+  document.getElementById('headerClockBox').style.display = 'none';
+  document.getElementById('offlineBadge').style.display = 'none';
+}
+function voltarAoEcraPrincipal() {
+  senhaAdminSessao = ""; tokenAdminSessao = ""; removerFicheiro();
+  document.getElementById('section-admin').classList.remove('active');
+  document.getElementById('section-falta-func').classList.remove('active');
+  document.getElementById('section-ponto').classList.add('active');
+  document.getElementById('headerTitle').style.display = 'block';
+  document.getElementById('headerClockBox').style.display = 'inline-flex';
+  voltarAoMenuCentralAdmin();
+  atualizarBadgeOffline();
+}
+
+/* ════════════════ FUNCIONÁRIOS ════════════════ */
+function carregarFuncionarios() {
+  if (!navigator.onLine) { try { var c = JSON.parse(localStorage.getItem('FUNCIONARIOS_CACHE_V1') || '[]'); if (c.length) preencherSelectsNomes(c); } catch(e){} return; }
+  chamarAPIJsonp({ action: "obterFuncionarios" }, function(r) {
+    if (r && r.ok && r.funcionarios) {
+      listaFuncionariosCache = r.funcionarios;
+      localStorage.setItem('FUNCIONARIOS_CACHE_V1', JSON.stringify(r.funcionarios));
+      preencherSelectsNomes(r.funcionarios);
+    }
+  });
+}
+function preencherSelectsNomes(lista) {
+  ['nomeFuncionarioFolga','nomeRemover','nomeFuncFalta','nomeCorrigir'].forEach(function(id) {
+    var s = document.getElementById(id);
+    if (s) { s.innerHTML = '<option value="" disabled selected>Selecione</option>'; lista.forEach(function(n){ var o = document.createElement('option'); o.value = n; o.text = n; s.appendChild(o); }); }
+  });
+  var sA = document.getElementById('selecaoFuncionario');
+  if (sA) { sA.innerHTML = '<option value="" disabled selected>Selecione</option><option value="TODOS">TODOS</option>'; lista.forEach(function(n){ var o = document.createElement('option'); o.value = n; o.text = n; sA.appendChild(o); }); }
+}
+
+/* ════════════════ PIN ════════════════ */
+var pinAtual = "";
+function atualizarDots() {
+  var ds = document.querySelectorAll('#dotsPonto .pin-dot');
+  for (var i = 0; i < 4; i++) { if (ds[i]) { if (i < pinAtual.length) ds[i].classList.add('filled'); else ds[i].classList.remove('filled'); } }
+}
+function tecladoPress(d) {
+  if (emProcessamento) return;
+  if (pinAtual.length >= 4) return;
+  try { if ('vibrate' in navigator) navigator.vibrate(15); } catch(e){}
+  pinAtual += d;
+  atualizarDots();
+  if (pinAtual.length === 4) setTimeout(registarPonto, 200);
+}
+function tecladoClear() { pinAtual = ""; atualizarDots(); }
+function tecladoBack() { if (pinAtual.length) { pinAtual = pinAtual.slice(0,-1); atualizarDots(); } }
+
+async function hashPin(p) {
+  try {
+    var b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(String(p)));
+    return Array.from(new Uint8Array(b)).map(function(x){ return x.toString(16).padStart(2,'0'); }).join('');
+  } catch(e) {
+    var h = 0, s = String(p);
+    for (var i = 0; i < s.length; i++) { h = ((h << 5) - h) + s.charCodeAt(i); h |= 0; }
+    return String(h);
+  }
+}
+
+/* ════════════════ REGISTAR PONTO ════════════════ */
+async function registarPonto() {
+  if (emProcessamento) return;
+  var pin = pinAtual;
+  if (!/^[0-9]{4}$/.test(pin)) { tecladoClear(); return; }
+  emProcessamento = true;
+
+  if (!navigator.onLine) {
+    await restaurarDadosOfflineDoIdb_();
+    var h = await hashPin(pin);
+    var rev = getPinRevMapa();
+    var nome = rev[h];
+    if (!nome) {
+      emProcessamento = false; pinAtual = ""; atualizarDots();
+      mostrarPopup({ titulo: "Sem rede", mensagem: "Primeira vez neste dispositivo.<br><br>Ligue-se à internet <b>pelo menos uma vez</b> para memorizar este PIN.", tipo: "erro" });
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      async function(pos) {
+        var item = await guardarPicagemOffline(nome, pin, pos.coords.latitude, pos.coords.longitude, obterDetalhesDispositivo());
+        emProcessamento = false; pinAtual = ""; atualizarDots();
+        if (item) mostrarPopup({ titulo: "Guardado Offline", mensagem: "Olá <b>" + nome + "</b>!<br><br>Picagem guardada às " + new Date().toLocaleTimeString('pt-PT') + ".<br><br>Será enviada quando houver rede.", tipo: "sucesso" });
+      },
+      async function() {
+        var item = await guardarPicagemOffline(nome, pin, 0, 0, obterDetalhesDispositivo());
+        emProcessamento = false; pinAtual = ""; atualizarDots();
+        if (item) mostrarPopup({ titulo: "Guardado Offline", mensagem: "Olá <b>" + nome + "</b>!<br><br>Picagem guardada às " + new Date().toLocaleTimeString('pt-PT') + ".<br><br>Sem GPS — será validada ao sincronizar.", tipo: "aviso" });
+      },
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+    );
+    return;
+  }
+
+  var lat = 0, lon = 0;
+  try {
+    var pos = await new Promise(function(res){ if (!navigator.geolocation) return res(null); navigator.geolocation.getCurrentPosition(function(p){ res(p); }, function(){ res(null); }, { enableHighAccuracy:true, timeout:5000, maximumAge:20000 }); });
+    if (pos) { lat = pos.coords.latitude; lon = pos.coords.longitude; }
+  } catch(e){}
+
+  mostrarPopup({ titulo: "A Registar", mensagem: "A validar o seu PIN...", tipo: "processando" });
+  chamarAPIJsonp({ action: "salvarPontoPorPin", pin: pin, lat: lat, lon: lon, isMock: "false", disp: obterDetalhesDispositivo() }, async function(r) {
+    emProcessamento = false; pinAtual = ""; atualizarDots();
+    if (r && r.ok) {
+      var h2 = await hashPin(pin);
+      setUltimaOfflinePorPinMs(h2);
+      guardarPinRev(h2, r.nome);
+      mostrarPopup({
+        titulo: "Ponto Registado",
+        mensagem: "Olá, <b>" + r.nome + "</b>!<br><br>" +
+          "<b>" + r.tipo + "</b> às <b>" + r.hora + "</b><br>" +
+          "📍 " + (r.local || "") + "<br><br>" +
+          "<div style='display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:14px; padding-top:14px; border-top:1px solid var(--border);'>" +
+          "<div style='text-align:center;'><div style='font-size:0.6rem; color:var(--text-muted); letter-spacing:0.08em; text-transform:uppercase; font-weight:700;'>Hoje</div><div style='font-size:1.05rem; font-weight:800; margin-top:2px;'>" + r.horasHoje + "</div></div>" +
+          "<div style='text-align:center;'><div style='font-size:0.6rem; color:var(--text-muted); letter-spacing:0.08em; text-transform:uppercase; font-weight:700;'>Semana</div><div style='font-size:1.05rem; font-weight:800; margin-top:2px;'>" + r.horasSemana + "</div></div>" +
+          "<div style='text-align:center;'><div style='font-size:0.6rem; color:var(--text-muted); letter-spacing:0.08em; text-transform:uppercase; font-weight:700;'>Mês</div><div style='font-size:1.05rem; font-weight:800; margin-top:2px;'>" + r.horasMes + "</div></div>" +
+          "</div>",
+        tipo: "sucesso"
+      });
+    } else {
+      mostrarPopup({ titulo: "Não Registado", mensagem: (r && r.erro) || "Erro", tipo: "erro" });
+    }
+  });
+}
+
+/* ════════════════ CÂMARA ════════════════ */
+var _cameraStream = null;
+var _cameraFacingMode = 'environment';
+
+async function abrirCamera() {
+  var modal = document.getElementById('cameraModal');
+  var video = document.getElementById('cameraVideo');
+  var status = document.getElementById('cameraStatus');
+  var btnCapture = document.getElementById('cameraBtnCapturar');
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    document.getElementById('cameraInputFalta').click();
+    return;
+  }
+
+  modal.classList.add('active');
+  status.classList.remove('hidden');
+  status.innerText = 'A iniciar câmara...';
+  btnCapture.disabled = true;
+
+  try {
+    if (_cameraStream) { _cameraStream.getTracks().forEach(function(t){ t.stop(); }); _cameraStream = null; }
+    _cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: _cameraFacingMode, width: { ideal: 1280 }, height: { ideal: 1920 } },
+      audio: false
+    });
+    video.srcObject = _cameraStream;
+    await video.play();
+    status.classList.add('hidden');
+    btnCapture.disabled = false;
+    btnCapture.innerText = '📸 Capturar';
+  } catch(e) {
+    try {
+      if (_cameraStream) { _cameraStream.getTracks().forEach(function(t){ t.stop(); }); _cameraStream = null; }
+      _cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      video.srcObject = _cameraStream;
+      await video.play();
+      status.classList.add('hidden');
+      btnCapture.disabled = false;
+      btnCapture.innerText = '📸 Capturar';
+    } catch(e2) {
+      status.innerText = '❌ Não foi possível aceder à câmara. Verifique as permissões.';
+      setTimeout(function() { fecharCamera(); document.getElementById('cameraInputFalta').click(); }, 1500);
+    }
+  }
+}
+async function trocarCamera() {
+  _cameraFacingMode = _cameraFacingMode === 'environment' ? 'user' : 'environment';
+  await abrirCamera();
+}
+function capturarFoto() {
+  var video = document.getElementById('cameraVideo');
+  var btnCapture = document.getElementById('cameraBtnCapturar');
+  if (!video.videoWidth) return;
+  btnCapture.disabled = true;
+  btnCapture.innerText = '⏳ A processar...';
+
+  var canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  var ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  canvas.toBlob(function(blob) {
+    if (!blob) { btnCapture.disabled = false; btnCapture.innerText = '📸 Capturar'; return; }
+    var ts = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
+    var fileName = 'foto_' + ts + '.jpg';
+    var file = new File([blob], fileName, { type: 'image/jpeg' });
+    fecharCamera();
+    processarFicheiroSelecionado(file);
+  }, 'image/jpeg', 0.85);
+}
+function fecharCamera() {
+  var modal = document.getElementById('cameraModal');
+  if (modal) modal.classList.remove('active');
+  if (_cameraStream) { _cameraStream.getTracks().forEach(function(t){ t.stop(); }); _cameraStream = null; }
+  var video = document.getElementById('cameraVideo');
+  if (video) video.srcObject = null;
+  var btnCapture = document.getElementById('cameraBtnCapturar');
+  if (btnCapture) { btnCapture.disabled = false; btnCapture.innerText = '📸 Capturar'; }
+}
+
+/* ════════════════ UPLOAD (MÚLTIPLOS FICHEIROS + COMPRESSÃO DE IMAGENS > 5MB) ════════════════ */
+var _anexosItens = []; // Array de { uid, name, size, isImage, dataUrl, state, statusText, uploaded }
+var _uploadedFile = null;
+var _uploadState = 'idle';
+
+function sincronizarEstadoGlobalAnexos() {
+  var uploading = _anexosItens.some(function(x) { return x.state === 'uploading'; });
+  var feitos = _anexosItens.filter(function(x) { return x.state === 'done' && x.uploaded && x.uploaded.fileId; });
+  if (uploading) {
+    _uploadState = 'uploading';
+  } else if (feitos.length > 0) {
+    _uploadState = 'done';
+  } else if (_anexosItens.some(function(x) { return x.state === 'error'; })) {
+    _uploadState = 'error';
+  } else {
+    _uploadState = 'idle';
+  }
+  _uploadedFile = feitos.length > 0 ? feitos[0].uploaded : null;
+}
+
+function renderListaAnexos() {
+  var box = document.getElementById('fileListPreview');
+  if (!box) return;
+  if (_anexosItens.length === 0) {
+    box.innerHTML = '';
+    return;
+  }
+  box.innerHTML = '';
+  _anexosItens.forEach(function(item) {
+    var row = document.createElement('div');
+    row.className = 'file-preview';
+    row.style.marginTop = '0';
+
+    var thumb = document.createElement('div');
+    thumb.className = 'file-preview-thumb';
+    if (item.isImage && item.dataUrl) {
+      thumb.innerHTML = '<img src="' + item.dataUrl + '" alt="">';
+    } else {
+      thumb.innerHTML = '📄';
+    }
+
+    var info = document.createElement('div');
+    info.className = 'file-preview-info';
+
+    var nomeDiv = document.createElement('div');
+    nomeDiv.className = 'file-preview-name';
+    nomeDiv.innerText = item.name + ' (' + formatBytes(item.size) + ')';
+
+    var stDiv = document.createElement('div');
+    stDiv.className = 'file-preview-status';
+    stDiv.innerText = item.statusText || '⏳ A processar...';
+    if (item.state === 'done') stDiv.style.color = 'var(--success)';
+    else if (item.state === 'error') stDiv.style.color = 'var(--danger)';
+    else stDiv.style.color = 'var(--text-muted)';
+
+    info.appendChild(nomeDiv);
+    info.appendChild(stDiv);
+
+    var btnRm = document.createElement('button');
+    btnRm.type = 'button';
+    btnRm.className = 'file-preview-remove';
+    btnRm.title = 'Remover';
+    btnRm.innerText = '✕';
+    btnRm.onclick = function() { removerAnexoPorUid(item.uid); };
+
+    row.appendChild(thumb);
+    row.appendChild(info);
+    row.appendChild(btnRm);
+    box.appendChild(row);
+  });
+}
+
+function removerAnexoPorUid(uid) {
+  _anexosItens = _anexosItens.filter(function(x) { return x.uid !== uid; });
+  sincronizarEstadoGlobalAnexos();
+  renderListaAnexos();
+}
+
+function comprimirImagemSeNecessario(file) {
+  return new Promise(function(resolve, reject) {
+    var isImage = file.type && file.type.indexOf('image/') === 0;
+    if (!isImage) {
+      resolve(file);
+      return;
+    }
+    if (file.size <= MAX_UPLOAD_BYTES) {
+      resolve(file);
+      return;
+    }
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var img = new Image();
+      img.onload = function() {
+        var maxDim = 1600;
+        var w = img.width;
+        var h = img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w >= h) {
+            h = Math.round(h * (maxDim / w));
+            w = maxDim;
+          } else {
+            w = Math.round(w * (maxDim / h));
+            h = maxDim;
+          }
+        }
+
+        var canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+
+        var qualidades = [0.82, 0.72, 0.62, 0.52];
+        function tentarQualidade(idx) {
+          var q = qualidades[idx] || 0.5;
+          canvas.toBlob(function(blob) {
+            if (!blob) {
+              reject(new Error('Não foi possível comprimir a imagem.'));
+              return;
+            }
+            if (blob.size <= MAX_UPLOAD_BYTES || idx === qualidades.length - 1) {
+              var nomeBase = (file.name || 'comprovativo').replace(/\.[^.]+$/, '');
+              var outFile = new File([blob], nomeBase + '_otimizado.jpg', { type: 'image/jpeg' });
+              resolve(outFile);
+            } else {
+              tentarQualidade(idx + 1);
+            }
+          }, 'image/jpeg', q);
+        }
+        tentarQualidade(0);
+      };
+      img.onerror = function() { reject(new Error('Erro ao ler a imagem.')); };
+      img.src = e.target.result;
+    };
+    reader.onerror = function() { reject(new Error('Erro ao abrir a imagem.')); };
+    reader.readAsDataURL(file);
+  });
+}
+
+function aoMudarMotivo() {
+  var tipo = document.getElementById('tipoFaltaFunc').value;
+  var marker = document.getElementById('obsObrigatorio');
+  var obsField = document.getElementById('obsFuncFalta');
+  if (!marker || !obsField) return;
+  if (tipo && tipo.indexOf('Outro Assunto') !== -1) { marker.style.display = 'inline'; obsField.placeholder = 'Descreva o assunto (obrigatório)...'; }
+  else { marker.style.display = 'none'; obsField.placeholder = 'Detalhes (opcional)...'; }
+}
+function handleFileSelect(ev) {
+  var files = ev.target.files;
+  if (!files || files.length === 0) return;
+  for (var i = 0; i < files.length; i++) {
+    processarFicheiroSelecionado(files[i]);
+  }
+  ev.target.value = '';
+}
+async function processarFicheiroSelecionado(file) {
+  var uid = 'ANX_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+  var isImage = file.type && file.type.indexOf('image/') === 0;
+
+  var item = {
+    uid: uid,
+    name: file.name,
+    size: file.size,
+    isImage: isImage,
+    dataUrl: '',
+    fileObj: null,
+    state: 'uploading',
+    statusText: isImage && file.size > MAX_UPLOAD_BYTES ? '🗜️ A otimizar imagem (>5MB)...' : '⏳ A processar...',
+    uploaded: null
+  };
+  _anexosItens.push(item);
+  sincronizarEstadoGlobalAnexos();
+  renderListaAnexos();
+
+  try {
+    var ficheiroFinal = file;
+    if (isImage && file.size > MAX_UPLOAD_BYTES) {
+      ficheiroFinal = await comprimirImagemSeNecessario(file);
+      item.name = ficheiroFinal.name;
+      item.size = ficheiroFinal.size;
+      item.statusText = '⏳ A enviar imagem otimizada...';
+      renderListaAnexos();
+    } else if (!isImage && ficheiroFinal.size > MAX_UPLOAD_BYTES) {
+      item.statusText = '⏳ A preparar documento grande (>5MB)...';
+      renderListaAnexos();
+    }
+
+    if (isImage) {
+      item.dataUrl = await new Promise(function(res) {
+        var r = new FileReader();
+        r.onload = function(ev) { res(ev.target.result); };
+        r.onerror = function() { res(''); };
+        r.readAsDataURL(ficheiroFinal);
+      });
+      renderListaAnexos();
+    }
+
+    item.fileObj = ficheiroFinal;
+    var result = await uploadFile(ficheiroFinal);
+    item.uploaded = result;
+    item.state = 'done';
+    item.statusText = '✅ Anexado com sucesso';
+    sincronizarEstadoGlobalAnexos();
+    renderListaAnexos();
+  } catch (err) {
+    item.state = 'error';
+    item.statusText = '❌ ' + (err.message || 'Falha no upload');
+    sincronizarEstadoGlobalAnexos();
+    renderListaAnexos();
+  }
+}
+function removerFicheiro() {
+  _anexosItens = [];
+  _uploadedFile = null;
+  _uploadState = 'idle';
+  var fi = document.getElementById('fileInputFalta'); if (fi) fi.value = '';
+  var ci = document.getElementById('cameraInputFalta'); if (ci) ci.value = '';
+  renderListaAnexos();
+}
+async function uploadFile(file) {
+  var base64 = await fileToBase64(file);
+  var sessionId = 'UP_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+  var chunkSize = 1500000; // ~1.5 MB de caracteres base64 por envio
+  var totalChunks = Math.ceil(base64.length / chunkSize);
+
+  for (var c = 0; c < totalChunks; c++) {
+    var slice = base64.slice(c * chunkSize, (c + 1) * chunkSize);
+    try {
+      await fetch(APP_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'uploadFile',
+          sessionId: sessionId,
+          fileName: file.name,
+          mimeType: file.type || 'application/octet-stream',
+          base64: slice,
+          chunkIndex: c,
+          totalChunks: totalChunks
+        })
+      });
+    } catch (e) {}
+    if (totalChunks > 1) {
+      await new Promise(function(r) { setTimeout(r, 250); });
+    }
+  }
+
+  var maxTentativas = totalChunks > 1 ? 60 : 30;
+  for (var i = 0; i < maxTentativas; i++) {
+    await new Promise(function(r) { setTimeout(r, 1000); });
+    var result = await new Promise(function(resolve) {
+      chamarAPIJsonp({ action: 'obterUploadFile', sessionId: sessionId }, resolve);
+    });
+    if (result && result.ok && result.fileId) return result;
+    if (result && result.erro && result.erro !== 'Ainda a processar') throw new Error(result.erro);
+  }
+  throw new Error('Timeout ao processar o ficheiro. Tente de novo.');
+}
+function fileToBase64(file) {
+  return new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    reader.onload = function() { resolve(reader.result.split(',')[1]); };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+function formatBytes(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+  return (b / (1024 * 1024)).toFixed(2) + ' MB';
+}
+
+/* ════════════════ SUBMETER FALTA ════════════════ */
+async function submeterFaltaFuncionario() {
+  var nome = document.getElementById('nomeFuncFalta').value;
+  var pin = document.getElementById('pinFuncFalta').value;
+  var email = document.getElementById('emailFuncFalta').value;
+  var tipo = document.getElementById('tipoFaltaFunc').value;
+  var dIni = document.getElementById('dataFaltaFuncInicio').value;
+  var dFim = document.getElementById('dataFaltaFuncFim').value;
+  var obs = document.getElementById('obsFuncFalta').value;
+
+  if (!nome || !pin || !email || !tipo || !dIni || !dFim) { mostrarPopup({ titulo:"Campos em Falta", mensagem:"Preencha todos os campos.", tipo:"erro" }); return; }
+  if (tipo.indexOf('Outro Assunto') !== -1 && !obs.trim()) { mostrarPopup({ titulo:"Observações obrigatórias", mensagem:"Para <b>Outro Assunto</b>, descreva o assunto nas observações.", tipo:"erro" }); return; }
+  if (_uploadState === 'uploading') { mostrarPopup({ titulo:"Aguarde", mensagem:"O ficheiro ainda está a ser processado.", tipo:"aviso" }); return; }
+
+  localStorage.setItem('emailColaboradorBA', email.trim());
+  mostrarPopup({ titulo:"A Enviar", mensagem:"A obter localização...", tipo:"processando" });
+
+  var lat = 0, lon = 0;
+  try {
+    var pos = await new Promise(function(resolve) {
+      if (!navigator.geolocation) return resolve(null);
+      navigator.geolocation.getCurrentPosition(function(p){ resolve(p); }, function(){ resolve(null); }, { enableHighAccuracy: true, timeout: 5000, maximumAge: 300000 });
+    });
+    if (pos) { lat = pos.coords.latitude; lon = pos.coords.longitude; }
+  } catch(e) {}
+
+  var disp = obterDetalhesDispositivo();
+  var enviados = _anexosItens.filter(function(x) { return x.state === 'done' && x.uploaded && x.uploaded.fileId; }).map(function(x) { return x.uploaded; });
+  var fileId = enviados.length > 0 ? enviados[0].fileId : '';
+  var obsFinal = obs || '';
+  if (enviados.length > 1) {
+    var extrasTxt = enviados.slice(1).map(function(ax) {
+      return '📎 ' + (ax.fileName || 'Comprovativo') + ': ' + (ax.fileUrl || '');
+    }).join('\n');
+    obsFinal = (obsFinal ? obsFinal + '\n\n' : '') + 'Outros anexos:\n' + extrasTxt;
+  }
+
+  if (!navigator.onLine) {
+    await restaurarDadosOfflineDoIdb_();
+    var hPin = await hashPin(pin);
+    var revMapa = getPinRevMapa();
+    var nomeMemorizado = revMapa[hPin];
+    if (!nomeMemorizado) {
+      mostrarPopup({
+        titulo: "Sem rede",
+        mensagem: "Primeira vez neste dispositivo.<br><br>Ligue-se à internet <b>pelo menos uma vez</b> para validar este PIN antes de submeter pedidos offline.",
+        tipo: "erro"
+      });
+      return;
+    }
+
+    var anexosParaDepois = [];
+    for (var idxA = 0; idxA < _anexosItens.length; idxA++) {
+      var axItem = _anexosItens[idxA];
+      if (axItem && axItem.fileObj && axItem.fileObj.size <= 3500000) {
+        try {
+          var b64 = await fileToBase64(axItem.fileObj);
+          anexosParaDepois.push({
+            name: axItem.fileObj.name || axItem.name,
+            mimeType: axItem.fileObj.type || 'application/octet-stream',
+            base64: b64
+          });
+        } catch (eB64) {}
+      }
+    }
+
+    var pedidoOff = {
+      idPedidoOff: 'PED_OFF_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+      nome: nome,
+      pin: pin,
+      email: email.trim(),
+      tipo: tipo,
+      dataIni: dIni,
+      dataFim: dFim,
+      obs: obsFinal,
+      fileId: fileId,
+      anexosPendentes: anexosParaDepois,
+      lat: lat,
+      lon: lon,
+      disp: disp,
+      criadoEm: new Date().toISOString(),
+      tentativas: 0
+    };
+
+    guardarPedidoOffline(pedidoOff);
+    var avisoAnexo = (_anexosItens.length > 0 && anexosParaDepois.length === 0 && !fileId)
+      ? "<br><br>⚠️ Anexos muito grandes serão reanexados quando houver rede."
+      : "";
+
+    mostrarPopup({
+      titulo: "Guardado Offline",
+      mensagem: "O seu pedido de <b>" + tipo + "</b> foi guardado no dispositivo e será enviado à gerência assim que houver internet." + avisoAnexo,
+      tipo: "sucesso"
+    });
+    removerFicheiro();
+    setTimeout(voltarAoEcraPrincipal, 2500);
+    return;
+  }
+
+  mostrarPopup({ titulo:"A Enviar", mensagem:"A submeter o pedido...", tipo:"processando" });
+
+  chamarAPIJsonp({
+    action:"comunicarAusencia",
+    nome: nome, pin: pin, email: email, tipo: tipo,
+    dataIni: dIni, dataFim: dFim, obs: obsFinal, fileId: fileId,
+    lat: lat, lon: lon, disp: disp
+  }, function(r) {
+    if (r && r.ok) {
+      mostrarPopup({ titulo:"Pedido Enviado", mensagem:"A gerência foi notificada por email. Será contactado com a resposta.", tipo:"sucesso" });
+      removerFicheiro();
+      setTimeout(voltarAoEcraPrincipal, 2500);
+    } else {
+      mostrarPopup({ titulo:"Erro", mensagem:(r && r.erro) || "Erro", tipo:"erro" });
+    }
+  });
+}
+
+/* ════════════════ ADMIN NAV ════════════════ */
+function abrirSubModulo(id) {
+  document.getElementById('admin-sub-menu').style.display = 'none';
+  MODULOS_ADMIN.forEach(function(m){ var el = document.getElementById('admin-sub-' + m); if (el) el.style.display = (m === id) ? 'block' : 'none'; });
+  document.getElementById('section-admin').scrollTop = 0;
+}
+function voltarAoMenuCentralAdmin() {
+  MODULOS_ADMIN.forEach(function(m){ var el = document.getElementById('admin-sub-' + m); if (el) el.style.display = 'none'; });
+  document.getElementById('admin-sub-menu').style.display = 'block';
+  document.getElementById('section-admin').scrollTop = 0;
+}
+
+/* ════════════════ DASHBOARD ════════════════ */
+function carregarDashboard() {
+  var el = document.getElementById('dashboardData');
+  if (el) {
+    var a = new Date();
+    var d = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"][a.getDay()];
+    el.textContent = d + ", " + String(a.getDate()).padStart(2,'0') + "/" + String(a.getMonth()+1).padStart(2,'0') + "/" + a.getFullYear();
+  }
+  chamarAPIJsonp(adminParams({ action:"obterResumoHoje" }), function(r) {
+    if (!r || !r.ok) {
+      document.getElementById('dashPresentes').textContent = '—';
+      document.getElementById('dashAbertos').textContent = '—';
+      var fBoxErr = document.getElementById('dashFeriasAvisos');
+      if (fBoxErr) fBoxErr.innerHTML = '';
+      document.getElementById('dashLista').innerHTML = '<div style="color:var(--danger); font-size:0.85rem; padding:14px; text-align:center;">Erro: ' + ((r && r.erro) || 'Sem resposta') + '</div>';
+      return;
+    }
+
+    var feriasHoje = r.feriasLista || [];
+    var feriasAmanha = r.feriasAmanhaLista || [];
+    var fBox = document.getElementById('dashFeriasAvisos');
+    var avisoHtml = '';
+
+    if (feriasHoje.length > 0) {
+      var nomesHoje = feriasHoje.map(function(f) {
+        return f.nome + (f.feriasPorGozar !== undefined ? ' (' + f.feriasPorGozar + 'd por gozar)' : '');
+      }).join(', ');
+      avisoHtml += '<div style="padding:11px 13px; background:#f0f9ff; border:1px solid #bae6fd; border-radius:10px; margin-bottom:8px;">' +
+        '<div style="font-weight:800; font-size:0.74rem; color:#0369a1; text-transform:uppercase; letter-spacing:0.05em;">🏖️ De Férias Hoje (' + feriasHoje.length + ')</div>' +
+        '<div style="font-size:0.8rem; color:var(--text); margin-top:3px; font-weight:600;">' + esc(nomesHoje) + '</div>' +
+      '</div>';
+    }
+
+    if (feriasAmanha.length > 0) {
+      var nomesAmanha = feriasAmanha.map(function(f) {
+        return f.nome + (f.dataInicio ? ' (início ' + f.dataInicio + ')' : '');
+      }).join(', ');
+      avisoHtml += '<div style="padding:11px 13px; background:#fffbeb; border:1px solid #fde68a; border-radius:10px; margin-bottom:8px;">' +
+        '<div style="font-weight:800; font-size:0.74rem; color:#92400e; text-transform:uppercase; letter-spacing:0.05em;">⏳ Entram de Férias Amanhã · Aviso Gerência (' + feriasAmanha.length + ')</div>' +
+        '<div style="font-size:0.8rem; color:var(--text); margin-top:3px; font-weight:600;">' + esc(nomesAmanha) + '</div>' +
+      '</div>';
+    }
+
+    if (fBox) fBox.innerHTML = avisoHtml;
+
+    var emps = (r.employees || []).slice();
+    emps.sort(function(a, b) {
+      function rank(e) { if (e.aberto) return 0; if (e.emFerias) return 1; if (e.picagens === '—') return 3; return 2; }
+      var ra = rank(a), rb = rank(b);
+      if (ra !== rb) return ra - rb;
+      return String(a.nome).localeCompare(String(b.nome));
+    });
+    document.getElementById('dashPresentes').textContent = emps.filter(function(e){ return !e.emFerias && e.picagens !== '—' && e.picagens !== '🏖️ Férias'; }).length;
+    document.getElementById('dashAbertos').textContent = emps.filter(function(e){ return e.aberto; }).length;
+    var html = '';
+    emps.forEach(function(e) {
+      var cor = e.aberto ? '#f0fdf4' : (e.emFerias ? '#f0f9ff' : (e.picagens === '—' ? '#fef2f2' : 'var(--surface-2)'));
+      var badgeCor = e.aberto ? 'var(--success)' : (e.emFerias ? '#0284c7' : (e.picagens === '—' ? 'var(--danger)' : 'var(--text-muted)'));
+      var badgeTxt = e.aberto ? 'DENTRO' : (e.emFerias ? 'FÉRIAS' : (e.picagens === '—' ? 'AUSENTE' : 'FORA'));
+      html += '<div style="display:flex; justify-content:space-between; align-items:center; padding:11px 13px; background:' + cor + '; border-radius:10px; margin-bottom:6px;"><div><div style="font-weight:800; font-size:0.88rem;">' + e.nome + '</div><div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">' + e.picagens + '</div></div><div style="background:' + badgeCor + '; color:white; padding:3px 9px; border-radius:20px; font-size:0.6rem; font-weight:800; letter-spacing:0.06em;">' + badgeTxt + '</div></div>';
+    });
+    document.getElementById('dashLista').innerHTML = html || '<div style="text-align:center; color:var(--text-muted); padding:20px; font-size:0.85rem;">Sem colaboradores.</div>';
+  });
+}
+
+/* ════════════════ PEDIDOS ════════════════ */
+var _pedidosCache = [];
+var _pedidosFiltro = 'pendente';
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function carregarPedidosPendentes() {
+  var box = document.getElementById('pedidosList');
+  if (!box) return;
+  box.innerHTML = '<div class="pedidos-empty"><div class="ico">⏳</div><h4>A carregar…</h4></div>';
+  chamarAPIJsonp(adminParams({ action:'obterPedidos' }), function(r) {
+    if (!r || !r.ok) { box.innerHTML = '<div class="pedidos-empty"><div class="ico">⚠️</div><h4>Erro</h4><p>' + ((r && r.erro) || '') + '</p></div>'; return; }
+    _pedidosCache = r.pedidos || [];
+    atualizarStats();
+    renderPedidos();
+  });
+}
+function atualizarStats() {
+  var p=0, a=0, rr=0;
+  _pedidosCache.forEach(function(x) {
+    if (x.estado && x.estado.indexOf('Aguardar') !== -1) p++;
+    else if (x.estado && x.estado.indexOf('Aprovado') !== -1) a++;
+    else if (x.estado && x.estado.indexOf('Recusado') !== -1) rr++;
+  });
+  var sp = document.getElementById('statPendentes'); if (sp) sp.textContent = p;
+  var sa = document.getElementById('statAprovados'); if (sa) sa.textContent = a;
+  var sr = document.getElementById('statRecusados'); if (sr) sr.textContent = rr;
+  var cp = document.getElementById('chipPendentes'); if (cp) cp.textContent = p;
+  var mb = document.querySelector('.menu-admin-grid .tile-amber');
+  if (mb) {
+    var b = mb.querySelector('.badge-pendentes');
+    if (p > 0) { if (!b) { b = document.createElement('span'); b.className = 'badge-pendentes'; mb.appendChild(b); } b.textContent = p; }
+    else if (b) b.remove();
+  }
+}
+
+function renderPedidos() {
+  var box = document.getElementById('pedidosList');
+  if (!box) return;
+
+  var lista = _pedidosCache.filter(function(x) {
+    if (_pedidosFiltro === 'todos') return true;
+    if (_pedidosFiltro === 'pendente') return x.estado && x.estado.indexOf('Aguardar') !== -1;
+    if (_pedidosFiltro === 'aprovado') return x.estado && x.estado.indexOf('Aprovado') !== -1;
+    if (_pedidosFiltro === 'recusado') return x.estado && x.estado.indexOf('Recusado') !== -1;
+    return true;
+  });
+
+  if (lista.length === 0) {
+    var ms = { pendente:['🎉','Sem pedidos pendentes','Tudo em dia'], aprovado:['📋','Sem aprovados',''], recusado:['📋','Sem recusados',''], todos:['📭','Sem pedidos',''] };
+    var m = ms[_pedidosFiltro] || ms.todos;
+    box.innerHTML = '<div class="pedidos-empty"><div class="ico">' + m[0] + '</div><h4>' + m[1] + '</h4><p>' + m[2] + '</p></div>';
+    return;
+  }
+
+  box.innerHTML = '';
+  lista.forEach(function(x) {
+    var cl = '';
+    if (x.estado && x.estado.indexOf('Aprovado') !== -1) cl = 'aprovado';
+    else if (x.estado && x.estado.indexOf('Recusado') !== -1) cl = 'recusado';
+    var bd = cl === 'aprovado' ? '✓ Aprovado' : cl === 'recusado' ? '✕ Recusado' : 'Aguarda';
+    var ini = (x.nome || '?').trim().charAt(0).toUpperCase();
+    var tp = x.tipo || '📋';
+
+    var metaRows = '';
+    if (x.dispIP && x.dispIP !== '—' && x.dispIP !== '') metaRows += '<div class="pedido-meta-row"><span class="meta-ico">📱</span><span class="meta-txt">' + esc(x.dispIP) + '</span></div>';
+    if (x.coords && x.coords !== '—' && x.coords !== '') metaRows += '<div class="pedido-meta-row"><span class="meta-ico">📍</span><span class="meta-txt">' + esc(x.coords) + '</span></div>';
+    var metaHtml = metaRows ? '<div class="pedido-meta">' + metaRows + '</div>' : '';
+
+    var anexoHtml = x.anexoUrl ? '<a href="' + esc(x.anexoUrl) + '" target="_blank" rel="noopener" class="pedido-anexo-btn"><span>📎</span><span>' + (x.anexoNome ? esc(x.anexoNome) : 'Ver anexo') + '</span></a>' : '';
+    var obsHtml = (x.obs && x.obs !== '—') ? '<div class="pedido-obs">"' + esc(x.obs) + '"</div>' : '';
+
+    var card = document.createElement('div');
+    card.className = 'pedido-card ' + cl;
+    card.innerHTML =
+      '<div class="pedido-head"><div class="pedido-avatar">' + ini + '</div><div class="pedido-info"><div class="pedido-nome">' + esc(x.nome || '—') + '</div><div class="pedido-tipo">' + esc(tp) + '</div></div><div class="pedido-badge">' + bd + '</div></div>' +
+      '<div class="pedido-datas"><div><div class="dt">De</div><div class="dv">' + esc(x.dataIni || '—') + '</div></div><div><div class="dt">Até</div><div class="dv">' + esc(x.dataFim || '—') + '</div></div></div>' +
+      metaHtml + obsHtml + anexoHtml;
+
+    if (cl === '') {
+      var actionsDiv = document.createElement('div');
+      actionsDiv.className = 'pedido-actions';
+
+      var btnAprovar = document.createElement('button');
+      btnAprovar.className = 'btn-aprovar';
+      btnAprovar.setAttribute('data-pedido-id', x.id);
+      btnAprovar.setAttribute('data-acao', 'aprovar');
+      btnAprovar.textContent = '✓ Aprovar';
+      actionsDiv.appendChild(btnAprovar);
+
+      var btnRecusar = document.createElement('button');
+      btnRecusar.className = 'btn-recusar';
+      btnRecusar.setAttribute('data-pedido-id', x.id);
+      btnRecusar.setAttribute('data-acao', 'recusar');
+      btnRecusar.textContent = '✕ Recusar';
+      actionsDiv.appendChild(btnRecusar);
+
+      card.appendChild(actionsDiv);
+    } else {
+      var respDiv = document.createElement('div');
+      respDiv.className = 'pedido-resposta';
+      respDiv.textContent = cl === 'aprovado' ? '✓ Aprovado' : '✕ Recusado';
+      card.appendChild(respDiv);
+    }
+
+    box.appendChild(card);
+  });
+}
+
+function responderPedido(id, decisao) {
+  if (!id) { console.error('responderPedido: id vazio'); return; }
+  var titulo = decisao === 'aprovar' ? 'Aprovar Pedido' : 'Recusar Pedido';
+  var ov = document.getElementById('toastOverlay');
+
+  document.getElementById('toastTitle').innerText = titulo;
+  document.getElementById('toastBody').innerHTML =
+    '<p style="margin-bottom:14px; color:var(--text-muted); font-size:0.9rem;">Confirma? O colaborador será notificado.</p>' +
+    '<div style="text-align:left;">' +
+      '<label style="display:block; margin-bottom:6px; font-weight:700; font-size:0.72rem; color:var(--text-muted); letter-spacing:0.08em; text-transform:uppercase;">Comentário (opcional)</label>' +
+      '<textarea id="inputComentarioPopup" class="form-control" rows="3" placeholder="Escreva um comentário…"></textarea>' +
+    '</div>';
+
+  var acts = document.getElementById('toastActionsContainer');
+  acts.innerHTML = '';
+  acts.style.display = 'flex';
+
+  var btnCancelar = document.createElement('button');
+  btnCancelar.className = 'toast-btn toast-btn-secondary';
+  btnCancelar.innerText = 'Cancelar';
+  btnCancelar.addEventListener('click', fecharToast);
+  acts.appendChild(btnCancelar);
+
+  var btnConfirmar = document.createElement('button');
+  btnConfirmar.className = 'toast-btn toast-btn-primary';
+  btnConfirmar.innerText = decisao === 'aprovar' ? 'Aprovar' : 'Recusar';
+  btnConfirmar.addEventListener('click', function() {
+    var txt = document.getElementById('inputComentarioPopup');
+    var comentario = txt ? txt.value : '';
+    mostrarPopup({ titulo:'A Processar', mensagem:'A atualizar…', tipo:'processando' });
+    chamarAPIJsonp(adminParams({ action: 'responderPedido', id: id, decisao: decisao, comentario: comentario }), function(r) {
+      if (r && r.ok) {
+        mostrarPopup({ titulo: decisao === 'aprovar' ? 'Aprovado' : 'Recusado', mensagem: 'Notificação enviada.', tipo: 'sucesso' });
+        carregarPedidosPendentes();
+      } else {
+        mostrarPopup({ titulo: 'Erro', mensagem: (r && r.erro) || 'Erro', tipo: 'erro' });
+      }
+    });
+  });
+  acts.appendChild(btnConfirmar);
+
+  ov.style.display = 'flex';
+  setTimeout(function(){ var el = document.getElementById('inputComentarioPopup'); if (el) el.focus(); }, 150);
+}
+
+/* ════════════════ OUTRAS AÇÕES ADMIN ════════════════ */
+function submeterAusenciaAdministrativa() {
+  var n = document.getElementById('nomeFuncionarioFolga').value;
+  var t = document.getElementById('tipoAusencia').value;
+  var d1 = document.getElementById('dataFolgaInicio').value;
+  var d2 = document.getElementById('dataFolgaFim').value;
+  if (!n || !t || !d1 || !d2) { mostrarPopup({ titulo:'Campos em Falta', mensagem:'Preencha tudo.', tipo:'erro' }); return; }
+  mostrarPopup({ titulo:'A Processar', mensagem:'A lançar...', tipo:'processando' });
+  chamarAPIJsonp(adminParams({ action:'lancarAusenciaAdmin', nome:n, tipo:t, dataInicio:d1, dataFim:d2 }), function(r) {
+    if (r && r.ok) mostrarPopup({ titulo:'Concluído', mensagem:'Registo lançado (' + r.count + ' dia(s)).', tipo:'sucesso' });
+    else mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
+  });
+}
+function submeterCorrecao() {
+  var n = document.getElementById('nomeCorrigir').value;
+  var d = document.getElementById('dataCorrigir').value;
+  var h = document.getElementById('horaCorrigir').value;
+  if (!n || !d || !h) { mostrarPopup({ titulo:'Campos em Falta', mensagem:'Preencha tudo.', tipo:'erro' }); return; }
+  mostrarPopup({ titulo:'A Corrigir', mensagem:'A inserir picagem...', tipo:'processando' });
+  chamarAPIJsonp(adminParams({ action:'corrigirPicagem', nome:n, data:d, hora:h }), function(r) {
+    if (r && r.ok) mostrarPopup({ titulo:'Concluído', mensagem:'Picagem inserida.<br><br>Hoje: ' + r.horasHoje + ' · Semana: ' + r.horasSemana + ' · Mês: ' + r.horasMes, tipo:'sucesso' });
+    else mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
+  });
+}
+function exportarRelatorioPDF() {
+  var n = document.getElementById('selecaoFuncionario').value;
+  var d1 = document.getElementById('dataInicio').value;
+  var d2 = document.getElementById('dataFim').value;
+  if (!n || !d1 || !d2) { mostrarPopup({ titulo:'Campos em Falta', mensagem:'Preencha tudo.', tipo:'erro' }); return; }
+  mostrarPopup({ titulo:'A Exportar', mensagem:'A gerar PDF...', tipo:'processando' });
+  chamarAPIJsonp(adminParams({ action:'gerarPdf', nome:n, ini:d1, fim:d2 }), function(r) {
+    if (r && r.ok) mostrarPopup({ titulo:'Concluído', mensagem:'PDF enviado por email (' + r.quantidade + ').', tipo:'sucesso' });
+    else mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
+  });
+}
+function submeterNovoFuncionario() {
+  var n = document.getElementById('nomeNovo').value;
+  var p = document.getElementById('pinNovo').value;
+  var f = document.getElementById('filialNovo').value;
+  if (!n || !p) { mostrarPopup({ titulo:'Campos em Falta', mensagem:'Preencha nome e PIN.', tipo:'erro' }); return; }
+  mostrarPopup({ titulo:'A Guardar', mensagem:'A registar...', tipo:'processando' });
+  chamarAPIJsonp(adminParams({ action:'adicionarFuncionario', nome:n, pin:p, filial:f }), function(r) {
+    if (r && r.ok) { carregarFuncionarios(); mostrarPopup({ titulo:'Concluído', mensagem:'Colaborador adicionado.', tipo:'sucesso' }); }
+    else mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
+  });
+}
+function submeterRemocaoFuncionario() {
+  var n = document.getElementById('nomeRemover').value;
+  if (!n) { mostrarPopup({ titulo:'Selecione', mensagem:'Escolha um colaborador.', tipo:'erro' }); return; }
+  mostrarPopup({ titulo:'A Atualizar', mensagem:'A inativar...', tipo:'processando' });
   chamarAPIJsonp(adminParams({ action:'removerFuncionario', nome:n }), function(r) {
     if (r && r.ok) { carregarFuncionarios(); mostrarPopup({ titulo:'Concluído', mensagem:'Colaborador inativado.', tipo:'sucesso' }); }
     else mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
