@@ -252,7 +252,7 @@
   <div id="section-falta-func" class="content-section">
     <div style="margin-bottom:20px;">
       <h3 style="font-size:1rem; font-weight:800; margin-bottom:6px;">Comunicar à Gerência</h3>
-      <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">Submeta os detalhes. A gerência será notificada e responderá por email e Telegram.</p>
+      <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">Submeta os detalhes. A gerência será notificada e responderá por email.</p>
     </div>
     <div class="admin-card">
       <div class="form-group"><label>O seu Nome <span class="campo-obrigatorio">*</span></label><select id="nomeFuncFalta" class="form-control"></select></div>
@@ -284,7 +284,7 @@
         <div class="file-dropzone">
           <div class="file-dropzone-icon">📎</div>
           <div class="file-dropzone-text">Escolha como quer anexar</div>
-          <div class="file-dropzone-sub">Documento ou fotografia · máx. 5MB</div>
+          <div class="file-dropzone-sub">Um ou mais documentos (incluindo PDF > 5MB) ou fotografias</div>
         </div>
         <div class="file-buttons">
           <button type="button" class="file-btn" onclick="document.getElementById('fileInputFalta').click()">
@@ -294,16 +294,9 @@
             <span>📷</span><span>Câmara</span>
           </button>
         </div>
-        <input type="file" id="fileInputFalta" style="display:none;" onchange="handleFileSelect(event)" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt,.xlsx,.xls">
+        <input type="file" id="fileInputFalta" style="display:none;" onchange="handleFileSelect(event)" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt,.xlsx,.xls" multiple>
         <input type="file" id="cameraInputFalta" style="display:none;" onchange="handleFileSelect(event)" accept="image/*" capture="environment">
-        <div id="filePreview" class="file-preview" style="display:none;">
-          <div class="file-preview-thumb" id="fileThumb"></div>
-          <div class="file-preview-info">
-            <div class="file-preview-name" id="fileNameDisplay"></div>
-            <div class="file-preview-status" id="fileUploadStatus"></div>
-          </div>
-          <button type="button" class="file-preview-remove" onclick="removerFicheiro()" title="Remover">✕</button>
-        </div>
+        <div id="fileListPreview" style="margin-top:10px; display:flex; flex-direction:column; gap:8px;"></div>
       </div>
       <div class="form-group"><label>Data Início <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncInicio" class="form-control"></div>
       <div class="form-group"><label>Data Fim <span class="campo-obrigatorio">*</span></label><input type="date" id="dataFaltaFuncFim" class="form-control"></div>
@@ -887,9 +880,145 @@ function fecharCamera() {
   if (btnCapture) { btnCapture.disabled = false; btnCapture.innerText = '📸 Capturar'; }
 }
 
-/* ════════════════ UPLOAD ════════════════ */
+/* ════════════════ UPLOAD (MÚLTIPLOS FICHEIROS + COMPRESSÃO DE IMAGENS > 5MB) ════════════════ */
+var _anexosItens = []; // Array de { uid, name, size, isImage, dataUrl, state, statusText, uploaded }
 var _uploadedFile = null;
 var _uploadState = 'idle';
+
+function sincronizarEstadoGlobalAnexos() {
+  var uploading = _anexosItens.some(function(x) { return x.state === 'uploading'; });
+  var feitos = _anexosItens.filter(function(x) { return x.state === 'done' && x.uploaded && x.uploaded.fileId; });
+  if (uploading) {
+    _uploadState = 'uploading';
+  } else if (feitos.length > 0) {
+    _uploadState = 'done';
+  } else if (_anexosItens.some(function(x) { return x.state === 'error'; })) {
+    _uploadState = 'error';
+  } else {
+    _uploadState = 'idle';
+  }
+  _uploadedFile = feitos.length > 0 ? feitos[0].uploaded : null;
+}
+
+function renderListaAnexos() {
+  var box = document.getElementById('fileListPreview');
+  if (!box) return;
+  if (_anexosItens.length === 0) {
+    box.innerHTML = '';
+    return;
+  }
+  box.innerHTML = '';
+  _anexosItens.forEach(function(item) {
+    var row = document.createElement('div');
+    row.className = 'file-preview';
+    row.style.marginTop = '0';
+
+    var thumb = document.createElement('div');
+    thumb.className = 'file-preview-thumb';
+    if (item.isImage && item.dataUrl) {
+      thumb.innerHTML = '<img src="' + item.dataUrl + '" alt="">';
+    } else {
+      thumb.innerHTML = '📄';
+    }
+
+    var info = document.createElement('div');
+    info.className = 'file-preview-info';
+
+    var nomeDiv = document.createElement('div');
+    nomeDiv.className = 'file-preview-name';
+    nomeDiv.innerText = item.name + ' (' + formatBytes(item.size) + ')';
+
+    var stDiv = document.createElement('div');
+    stDiv.className = 'file-preview-status';
+    stDiv.innerText = item.statusText || '⏳ A processar...';
+    if (item.state === 'done') stDiv.style.color = 'var(--success)';
+    else if (item.state === 'error') stDiv.style.color = 'var(--danger)';
+    else stDiv.style.color = 'var(--text-muted)';
+
+    info.appendChild(nomeDiv);
+    info.appendChild(stDiv);
+
+    var btnRm = document.createElement('button');
+    btnRm.type = 'button';
+    btnRm.className = 'file-preview-remove';
+    btnRm.title = 'Remover';
+    btnRm.innerText = '✕';
+    btnRm.onclick = function() { removerAnexoPorUid(item.uid); };
+
+    row.appendChild(thumb);
+    row.appendChild(info);
+    row.appendChild(btnRm);
+    box.appendChild(row);
+  });
+}
+
+function removerAnexoPorUid(uid) {
+  _anexosItens = _anexosItens.filter(function(x) { return x.uid !== uid; });
+  sincronizarEstadoGlobalAnexos();
+  renderListaAnexos();
+}
+
+function comprimirImagemSeNecessario(file) {
+  return new Promise(function(resolve, reject) {
+    var isImage = file.type && file.type.indexOf('image/') === 0;
+    if (!isImage) {
+      resolve(file);
+      return;
+    }
+    if (file.size <= MAX_UPLOAD_BYTES) {
+      resolve(file);
+      return;
+    }
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var img = new Image();
+      img.onload = function() {
+        var maxDim = 1600;
+        var w = img.width;
+        var h = img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w >= h) {
+            h = Math.round(h * (maxDim / w));
+            w = maxDim;
+          } else {
+            w = Math.round(w * (maxDim / h));
+            h = maxDim;
+          }
+        }
+
+        var canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+
+        var qualidades = [0.82, 0.72, 0.62, 0.52];
+        function tentarQualidade(idx) {
+          var q = qualidades[idx] || 0.5;
+          canvas.toBlob(function(blob) {
+            if (!blob) {
+              reject(new Error('Não foi possível comprimir a imagem.'));
+              return;
+            }
+            if (blob.size <= MAX_UPLOAD_BYTES || idx === qualidades.length - 1) {
+              var nomeBase = (file.name || 'comprovativo').replace(/\.[^.]+$/, '');
+              var outFile = new File([blob], nomeBase + '_otimizado.jpg', { type: 'image/jpeg' });
+              resolve(outFile);
+            } else {
+              tentarQualidade(idx + 1);
+            }
+          }, 'image/jpeg', q);
+        }
+        tentarQualidade(0);
+      };
+      img.onerror = function() { reject(new Error('Erro ao ler a imagem.')); };
+      img.src = e.target.result;
+    };
+    reader.onerror = function() { reject(new Error('Erro ao abrir a imagem.')); };
+    reader.readAsDataURL(file);
+  });
+}
 
 function aoMudarMotivo() {
   var tipo = document.getElementById('tipoFaltaFunc').value;
@@ -900,60 +1029,110 @@ function aoMudarMotivo() {
   else { marker.style.display = 'none'; obsField.placeholder = 'Detalhes (opcional)...'; }
 }
 function handleFileSelect(ev) {
-  var file = ev.target.files[0];
-  if (!file) return;
-  if (ev.target.id === 'fileInputFalta') { var c = document.getElementById('cameraInputFalta'); if (c) c.value = ''; }
-  else { var f = document.getElementById('fileInputFalta'); if (f) f.value = ''; }
-  processarFicheiroSelecionado(file);
-}
-function processarFicheiroSelecionado(file) {
-  var nomeEl = document.getElementById('fileNameDisplay');
-  var statusEl = document.getElementById('fileUploadStatus');
-  var previewEl = document.getElementById('filePreview');
-  var thumbEl = document.getElementById('fileThumb');
-  _uploadedFile = null;
-
-  if (file.size > MAX_UPLOAD_BYTES) { mostrarPopup({ titulo:'Ficheiro muito grande', mensagem:'Tamanho máximo: 5MB.', tipo:'erro' }); return; }
-
-  var isImage = file.type.indexOf('image/') === 0;
-  if (previewEl) previewEl.style.display = 'flex';
-  if (thumbEl) {
-    if (isImage) { var reader = new FileReader(); reader.onload = function(e) { thumbEl.innerHTML = '<img src="' + e.target.result + '" alt="">'; }; reader.readAsDataURL(file); }
-    else { thumbEl.innerHTML = '📄'; }
+  var files = ev.target.files;
+  if (!files || files.length === 0) return;
+  for (var i = 0; i < files.length; i++) {
+    processarFicheiroSelecionado(files[i]);
   }
-  if (nomeEl) nomeEl.innerText = file.name + ' (' + formatBytes(file.size) + ')';
-  if (statusEl) { statusEl.innerText = '⏳ A processar...'; statusEl.style.color = 'var(--text-muted)'; }
-  _uploadState = 'uploading';
+  ev.target.value = '';
+}
+async function processarFicheiroSelecionado(file) {
+  var uid = 'ANX_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+  var isImage = file.type && file.type.indexOf('image/') === 0;
 
-  uploadFile(file).then(function(result) {
-    _uploadedFile = result;
-    _uploadState = 'done';
-    if (statusEl) { statusEl.innerText = '✅ Anexado com sucesso'; statusEl.style.color = 'var(--success)'; }
-  }).catch(function(err) {
-    _uploadedFile = null;
-    _uploadState = 'error';
-    if (statusEl) { statusEl.innerText = '❌ ' + (err.message || 'Falha no upload'); statusEl.style.color = 'var(--danger)'; }
-  });
+  var item = {
+    uid: uid,
+    name: file.name,
+    size: file.size,
+    isImage: isImage,
+    dataUrl: '',
+    state: 'uploading',
+    statusText: isImage && file.size > MAX_UPLOAD_BYTES ? '🗜️ A otimizar imagem (>5MB)...' : '⏳ A processar...',
+    uploaded: null
+  };
+  _anexosItens.push(item);
+  sincronizarEstadoGlobalAnexos();
+  renderListaAnexos();
+
+  try {
+    var ficheiroFinal = file;
+    if (isImage && file.size > MAX_UPLOAD_BYTES) {
+      ficheiroFinal = await comprimirImagemSeNecessario(file);
+      item.name = ficheiroFinal.name;
+      item.size = ficheiroFinal.size;
+      item.statusText = '⏳ A enviar imagem otimizada...';
+      renderListaAnexos();
+    } else if (!isImage && ficheiroFinal.size > MAX_UPLOAD_BYTES) {
+      item.statusText = '⏳ A preparar documento grande (>5MB)...';
+      renderListaAnexos();
+    }
+
+    if (isImage) {
+      item.dataUrl = await new Promise(function(res) {
+        var r = new FileReader();
+        r.onload = function(ev) { res(ev.target.result); };
+        r.onerror = function() { res(''); };
+        r.readAsDataURL(ficheiroFinal);
+      });
+      renderListaAnexos();
+    }
+
+    var result = await uploadFile(ficheiroFinal);
+    item.uploaded = result;
+    item.state = 'done';
+    item.statusText = '✅ Anexado com sucesso';
+    sincronizarEstadoGlobalAnexos();
+    renderListaAnexos();
+  } catch (err) {
+    item.state = 'error';
+    item.statusText = '❌ ' + (err.message || 'Falha no upload');
+    sincronizarEstadoGlobalAnexos();
+    renderListaAnexos();
+  }
 }
 function removerFicheiro() {
-  _uploadedFile = null; _uploadState = 'idle';
-  var previewEl = document.getElementById('filePreview'); if (previewEl) previewEl.style.display = 'none';
-  var thumbEl = document.getElementById('fileThumb'); if (thumbEl) thumbEl.innerHTML = '';
+  _anexosItens = [];
+  _uploadedFile = null;
+  _uploadState = 'idle';
   var fi = document.getElementById('fileInputFalta'); if (fi) fi.value = '';
   var ci = document.getElementById('cameraInputFalta'); if (ci) ci.value = '';
-  var statusEl = document.getElementById('fileUploadStatus'); if (statusEl) statusEl.innerText = '';
-  var nomeEl = document.getElementById('fileNameDisplay'); if (nomeEl) nomeEl.innerText = '';
+  renderListaAnexos();
 }
 async function uploadFile(file) {
   var base64 = await fileToBase64(file);
   var sessionId = 'UP_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
-  try {
-    await fetch(APP_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'uploadFile', sessionId: sessionId, fileName: file.name, mimeType: file.type || 'application/octet-stream', base64: base64 }) });
-  } catch(e) {}
+  var chunkSize = 1500000; // ~1.5 MB de caracteres base64 por envio
+  var totalChunks = Math.ceil(base64.length / chunkSize);
 
-  for (var i = 0; i < 30; i++) {
-    await new Promise(function(r){ setTimeout(r, 1000); });
-    var result = await new Promise(function(resolve) { chamarAPIJsonp({ action: 'obterUploadFile', sessionId: sessionId }, resolve); });
+  for (var c = 0; c < totalChunks; c++) {
+    var slice = base64.slice(c * chunkSize, (c + 1) * chunkSize);
+    try {
+      await fetch(APP_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'uploadFile',
+          sessionId: sessionId,
+          fileName: file.name,
+          mimeType: file.type || 'application/octet-stream',
+          base64: slice,
+          chunkIndex: c,
+          totalChunks: totalChunks
+        })
+      });
+    } catch (e) {}
+    if (totalChunks > 1) {
+      await new Promise(function(r) { setTimeout(r, 250); });
+    }
+  }
+
+  var maxTentativas = totalChunks > 1 ? 60 : 30;
+  for (var i = 0; i < maxTentativas; i++) {
+    await new Promise(function(r) { setTimeout(r, 1000); });
+    var result = await new Promise(function(resolve) {
+      chamarAPIJsonp({ action: 'obterUploadFile', sessionId: sessionId }, resolve);
+    });
     if (result && result.ok && result.fileId) return result;
     if (result && result.erro && result.erro !== 'Ainda a processar') throw new Error(result.erro);
   }
@@ -1000,19 +1179,27 @@ async function submeterFaltaFuncionario() {
   } catch(e) {}
 
   var disp = obterDetalhesDispositivo();
-  var fileId = _uploadedFile ? _uploadedFile.fileId : '';
+  var enviados = _anexosItens.filter(function(x) { return x.state === 'done' && x.uploaded && x.uploaded.fileId; }).map(function(x) { return x.uploaded; });
+  var fileId = enviados.length > 0 ? enviados[0].fileId : '';
+  var obsFinal = obs || '';
+  if (enviados.length > 1) {
+    var extrasTxt = enviados.slice(1).map(function(ax) {
+      return '📎 ' + (ax.fileName || 'Comprovativo') + ': ' + (ax.fileUrl || '');
+    }).join('\n');
+    obsFinal = (obsFinal ? obsFinal + '\n\n' : '') + 'Outros anexos:\n' + extrasTxt;
+  }
 
   mostrarPopup({ titulo:"A Enviar", mensagem:"A submeter o pedido...", tipo:"processando" });
 
   chamarAPIJsonp({
     action:"comunicarAusencia",
     nome: nome, pin: pin, email: email, tipo: tipo,
-    dataIni: dIni, dataFim: dFim, obs: obs, fileId: fileId,
+    dataIni: dIni, dataFim: dFim, obs: obsFinal, fileId: fileId,
     lat: lat, lon: lon, disp: disp
   }, function(r) {
     if (r && r.ok) {
       mostrarPopup({ titulo:"Pedido Enviado", mensagem:"A gerência foi notificada (email + Telegram). Será contactado com a resposta.", tipo:"sucesso" });
-      _uploadedFile = null; _uploadState = 'idle';
+      removerFicheiro();
       setTimeout(voltarAoEcraPrincipal, 2500);
     } else {
       mostrarPopup({ titulo:"Erro", mensagem:(r && r.erro) || "Erro", tipo:"erro" });
