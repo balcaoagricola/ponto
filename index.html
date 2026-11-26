@@ -1531,7 +1531,7 @@ function chamarAPIJsonp(params, cb) {
 function enviar(params, cb) {
   var nome = "cb_" + Math.random().toString(36).substring(2,9);
   var s = document.createElement('script');
-  var to = setTimeout(function(){ delete window[nome]; if(s.parentNode) s.remove(); emProcessamento = false; pinAtual = ""; atualizarDots(); if (cb) cb({ ok: false, erro: 'O servidor não respondeu.' }); }, 30000);
+  var to = setTimeout(function(){ delete window[nome]; if(s.parentNode) s.remove(); emProcessamento = false; pinAtual = ""; atualizarDots(); if (cb) cb({ ok: false, erro: 'O servidor não respondeu.' }); }, 45000);
   window[nome] = function(d){ clearTimeout(to); delete window[nome]; if(s.parentNode) s.remove(); if(cb) cb(d); };
   var url = APP_SCRIPT_URL + "?";
   for (var k in params) if (params.hasOwnProperty(k)) url += encodeURIComponent(k) + "=" + encodeURIComponent(params[k]) + "&";
