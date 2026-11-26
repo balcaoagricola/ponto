@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Registo de Ponto · Balcão Agrícola</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#faf7f2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -711,7 +711,69 @@
     .camera-btn-secondary { background: rgba(255,255,255,0.15); color: #fff; }
 
     textarea, input, .form-control { max-width: 100%; }
-  </style>
+  
+    /* ═══ ADAPTAÇÃO RESPONSIVA ÚNICA (SMARTPHONE / APK + PC DESKTOP) ═══ */
+    @media (min-width: 640px) {
+      body {
+        padding: 20px;
+        overflow-y: auto;
+        align-items: flex-start;
+      }
+      .container {
+        width: 100%;
+        max-width: 780px;
+        height: auto;
+        min-height: min(740px, calc(100dvh - 40px));
+        max-height: none;
+        margin: 0 auto;
+      }
+      .header {
+        padding: 22px 28px 20px;
+      }
+      .header-split-row {
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        gap: 20px;
+      }
+      .logo-empresa {
+        max-height: 60px;
+      }
+      .header h2 {
+        font-size: 0.72rem;
+      }
+      .live-clock-card {
+        padding: 12px 20px;
+      }
+      .clock-time-row {
+        font-size: 1.75rem;
+      }
+      .clock-date-row {
+        font-size: 0.7rem;
+      }
+      .content-section {
+        padding: 22px 28px 28px;
+        overflow-y: visible;
+      }
+      #section-ponto .ponto-pin-only {
+        max-width: 480px;
+        width: 100%;
+        margin: 0 auto;
+      }
+      .keypad {
+        gap: 12px;
+      }
+      .key {
+        min-height: 64px;
+        font-size: 1.65rem;
+      }
+      .menu-admin-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .menu-admin-grid .tile-emerald {
+        grid-column: span 3 !important;
+      }
+    }
+</style>
 </head>
 <body>
 <div class="container">
@@ -937,7 +999,7 @@
     </div>
   </div>
 
-  <div class="app-footer">© 2026 · Balcão Agrícola</div>
+  <div class="app-footer">© 2027 · Balcão Agrícola</div>
 </div>
 
 <div id="toastOverlay" class="toast-overlay" onclick="fecharToastOverlay(event)">
@@ -1653,8 +1715,25 @@ async function registarPonto() {
 
   var lat = 0, lon = 0;
   try {
-    var pos = await new Promise(function(res){ if (!navigator.geolocation) return res(null); navigator.geolocation.getCurrentPosition(function(p){ res(p); }, function(){ res(null); }, { enableHighAccuracy:true, timeout:5000, maximumAge:20000 }); });
-    if (pos) { lat = pos.coords.latitude; lon = pos.coords.longitude; }
+    if (navigator && navigator.geolocation && typeof navigator.geolocation.getCurrentPosition === 'function') {
+      var pos = await new Promise(function(res){
+        var done = false;
+        var timer = setTimeout(function(){ if (!done) { done = true; res(null); } }, 4500);
+        try {
+          navigator.geolocation.getCurrentPosition(
+            function(p){ if (!done) { done = true; clearTimeout(timer); res(p); } },
+            function(){ if (!done) { done = true; clearTimeout(timer); res(null); } },
+            { enableHighAccuracy: false, timeout: 4000, maximumAge: 60000 }
+          );
+        } catch(eGeo) {
+          if (!done) { done = true; clearTimeout(timer); res(null); }
+        }
+      });
+      if (pos && pos.coords) {
+        lat = parseFloat(pos.coords.latitude) || 0;
+        lon = parseFloat(pos.coords.longitude) || 0;
+      }
+    }
   } catch(e){}
 
   mostrarPopup({ titulo: "A Registar", mensagem: "A validar o seu PIN...", tipo: "processando" });
@@ -2472,6 +2551,30 @@ document.addEventListener('click', function(e) {
 }, true);
 
 console.log('[Ponto v7.2] Script carregado. responderPedido:', typeof responderPedido, '| renderPedidos:', typeof renderPedidos);
+
+/* ═══ SUPORTE TECLADO FÍSICO NO PC (SEM ALTERAR TOQUE / APK) ═══ */
+document.addEventListener('keydown', function(ev) {
+  var pontoSec = document.getElementById('section-ponto');
+  if (!pontoSec || !pontoSec.classList.contains('active')) return;
+  var overlay = document.getElementById('toastOverlay');
+  if (overlay && overlay.style.display === 'flex') return;
+  var camModal = document.getElementById('cameraModal');
+  if (camModal && camModal.classList.contains('active')) return;
+  var activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+  if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') return;
+
+  if (ev.key >= '0' && ev.key <= '9') {
+    ev.preventDefault();
+    tecladoPress(ev.key);
+  } else if (ev.key === 'Backspace') {
+    ev.preventDefault();
+    tecladoBack();
+  } else if (ev.key === 'Escape' || ev.key === 'Delete') {
+    ev.preventDefault();
+    tecladoClear();
+  }
+});
+
 </script>
 </body>
 </html>
