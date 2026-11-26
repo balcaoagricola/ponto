@@ -1167,7 +1167,7 @@ async function sincronizarFilaOffline() {
     var item = fila[i];
     item.tentativas = (item.tentativas || 0) + 1;
     var resp = await new Promise(function(resolve) {
-      try { chamarAPIJsonp({ action: 'salvarPonto', nome: item.nome, pin: item.pin, lat: item.lat, lon: item.lon, isMock: 'false', disp: item.disp, idUnico: item.idUnico, horaOffline: item.horaLocal }, resolve); }
+      try { chamarAPIJsonp({ action: 'salvarPonto', nome: item.nome, pin: item.pin, lat: item.lat, lon: item.lon, isMock: 'false', disp: item.disp, idUnico: item.idUnico, horaOffline: item.horaLocal, pcMode: item.pcMode ? 'true' : 'false' }, resolve); }
       catch(e) { resolve({ ok: false, erro: 'Erro de rede' }); }
     });
     var ok = resp && (resp.ok === true || String(resp).toLowerCase().indexOf('sucesso') !== -1);
@@ -1184,7 +1184,7 @@ async function sincronizarFilaOffline() {
   await sincronizarPedidosOffline();
 }
 
-async function guardarPicagemOffline(nome, pin, lat, lon, disp) {
+async function guardarPicagemOffline(nome, pin, lat, lon, disp, pcMode) {
   var pinHash = await hashPin(pin);
   var chk = podePicarOfflineAgora(pinHash);
   if (!chk.ok) {
@@ -1202,6 +1202,7 @@ async function guardarPicagemOffline(nome, pin, lat, lon, disp) {
     lat: lat || 0,
     lon: lon || 0,
     disp: disp || 'Desconhecido',
+    pcMode: !!pcMode,
     horaLocal: new Date().toISOString(),
     tentativas: 0
   };
@@ -1470,21 +1471,62 @@ function iniciarRelogio() {
 window.addEventListener('load', async function() {
   iniciarRelogio();
   await restaurarDadosOfflineDoIdb_();
+  try {
+    var funcsIdb = await lerIdbPonto_("funcionarios_cache", null);
+    if (Array.isArray(funcsIdb) && funcsIdb.length > 0 && (!listaFuncionariosCache || listaFuncionariosCache.length === 0)) {
+      listaFuncionariosCache = funcsIdb;
+      preencherSelectsNomes(funcsIdb);
+    }
+  } catch (eFIdb) {}
   carregarFuncionarios();
   var email = localStorage.getItem('emailColaboradorBA');
   if (email) { var ef = document.getElementById('emailFuncFalta'); if (ef) ef.value = email; }
   var g = document.getElementById('gpsIndicator'); if (g && !navigator.onLine) g.classList.add('offline');
   atualizarBadgeOffline();
-  if (navigator.onLine) setTimeout(sincronizarFilaOffline, 2000);
+  if (navigator.onLine) {
+    setTimeout(function() {
+      sincronizarFilaOffline();
+      sincronizarPedidosOffline();
+    }, 2000);
+  }
   console.log('[Ponto v7.2] index.html carregado');
 });
 window.addEventListener('online', async function(){ var g = document.getElementById('gpsIndicator'); if (g) g.classList.remove('offline'); await restaurarDadosOfflineDoIdb_(); setTimeout(sincronizarFilaOffline, 1500); atualizarBadgeOffline(); });
 window.addEventListener('offline', async function(){ var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); await restaurarDadosOfflineDoIdb_(); atualizarBadgeOffline(); });
 
 
+function _fetchIpRapido_(url, timeoutMs) {
+  return new Promise(function(resolve) {
+    var done = false;
+    var timer = setTimeout(function() { if (!done) { done = true; resolve(''); } }, timeoutMs || 2200);
+    try {
+      fetch(url, { cache: 'no-store' })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          if (!done) {
+            done = true;
+            clearTimeout(timer);
+            resolve((d && d.ip) ? String(d.ip).trim() : '');
+          }
+        })
+        .catch(function() {
+          if (!done) { done = true; clearTimeout(timer); resolve(''); }
+        });
+    } catch (e) {
+      if (!done) { done = true; clearTimeout(timer); resolve(''); }
+    }
+  });
+}
+
 function chamarAPIJsonp(params, cb) {
   if (!navigator.onLine) { if (cb) cb({ ok: false, erro: 'Sem ligação à internet' }); return; }
-  fetch('https://api.ipify.org?format=json').then(function(r){ return r.json(); }).then(function(d){ params.ip = d.ip; enviar(params, cb); }).catch(function(){ params.ip = "N/D"; enviar(params, cb); });
+  _fetchIpRapido_('https://api.ipify.org?format=json', 2200).then(function(ip1) {
+    if (ip1) { params.ip = ip1; enviar(params, cb); return; }
+    _fetchIpRapido_('https://api64.ipify.org?format=json', 2000).then(function(ip2) {
+      params.ip = ip2 || "N/D";
+      enviar(params, cb);
+    });
+  });
 }
 function enviar(params, cb) {
   var nome = "cb_" + Math.random().toString(36).substring(2,9);
@@ -1617,11 +1659,28 @@ function voltarAoEcraPrincipal() {
 
 
 function carregarFuncionarios() {
-  if (!navigator.onLine) { try { var c = JSON.parse(localStorage.getItem('FUNCIONARIOS_CACHE_V1') || '[]'); if (c.length) preencherSelectsNomes(c); } catch(e){} return; }
+  if (!navigator.onLine) {
+    try {
+      var c = JSON.parse(localStorage.getItem('FUNCIONARIOS_CACHE_V1') || '[]');
+      if (Array.isArray(c) && c.length) {
+        listaFuncionariosCache = c;
+        preencherSelectsNomes(c);
+        return;
+      }
+    } catch(e){}
+    lerIdbPonto_("funcionarios_cache", []).then(function(cIdb) {
+      if (Array.isArray(cIdb) && cIdb.length) {
+        listaFuncionariosCache = cIdb;
+        preencherSelectsNomes(cIdb);
+      }
+    });
+    return;
+  }
   chamarAPIJsonp({ action: "obterFuncionarios" }, function(r) {
     if (r && r.ok && r.funcionarios) {
       listaFuncionariosCache = r.funcionarios;
-      localStorage.setItem('FUNCIONARIOS_CACHE_V1', JSON.stringify(r.funcionarios));
+      try { localStorage.setItem('FUNCIONARIOS_CACHE_V1', JSON.stringify(r.funcionarios)); } catch(eLs){}
+      gravarIdbPonto_("funcionarios_cache", r.funcionarios);
       preencherSelectsNomes(r.funcionarios);
     }
   });
@@ -1699,12 +1758,12 @@ async function registarPonto() {
     }
     navigator.geolocation.getCurrentPosition(
       async function(pos) {
-        var item = await guardarPicagemOffline(nome, pin, pos.coords.latitude, pos.coords.longitude, obterDetalhesDispositivo());
+        var item = await guardarPicagemOffline(nome, pin, pos.coords.latitude, pos.coords.longitude, obterDetalhesDispositivo(), _isPcDesktop);
         emProcessamento = false; pinAtual = ""; atualizarDots();
         if (item) mostrarPopup({ titulo: "Guardado Offline", mensagem: "Olá <b>" + nome + "</b>!<br><br>Picagem guardada às " + new Date().toLocaleTimeString('pt-PT') + ".<br><br>Será enviada quando houver rede.", tipo: "sucesso" });
       },
       async function() {
-        var item = await guardarPicagemOffline(nome, pin, 0, 0, obterDetalhesDispositivo());
+        var item = await guardarPicagemOffline(nome, pin, 0, 0, obterDetalhesDispositivo(), _isPcDesktop);
         emProcessamento = false; pinAtual = ""; atualizarDots();
         if (item) mostrarPopup({ titulo: "Guardado Offline", mensagem: "Olá <b>" + nome + "</b>!<br><br>Picagem guardada às " + new Date().toLocaleTimeString('pt-PT') + ".<br><br>Sem GPS — será validada ao sincronizar.", tipo: "aviso" });
       },
@@ -1737,7 +1796,15 @@ async function registarPonto() {
   } catch(e){}
 
   mostrarPopup({ titulo: "A Registar", mensagem: "A validar o seu PIN...", tipo: "processando" });
-  chamarAPIJsonp({ action: "salvarPontoPorPin", pin: pin, lat: lat, lon: lon, isMock: "false", disp: obterDetalhesDispositivo() }, async function(r) {
+  var _isPcDesktop = false;
+  try {
+    var _uaPc = navigator.userAgent || '';
+    var _ehMobileUa = /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(_uaPc);
+    var _temToque = (typeof navigator.maxTouchPoints === 'number' && navigator.maxTouchPoints > 0) || ('ontouchstart' in window);
+    _isPcDesktop = (!_ehMobileUa && !_temToque) || (window.innerWidth >= 900 && !_ehMobileUa);
+  } catch (ePc) { _isPcDesktop = false; }
+
+  chamarAPIJsonp({ action: "salvarPontoPorPin", pin: pin, lat: lat, lon: lon, isMock: "false", disp: obterDetalhesDispositivo(), pcMode: _isPcDesktop ? "true" : "false" }, async function(r) {
     emProcessamento = false; pinAtual = ""; atualizarDots();
     if (r && r.ok) {
       var h2 = await hashPin(pin);
