@@ -125,6 +125,13 @@
     .status-msg.ok { display: block; background: #dcfce7; color: #166534; }
     .status-msg.err { display: block; background: #fee2e2; color: #991b1b; }
     .status-msg.wait { display: block; background: #fef3c7; color: #92400e; }
+    .verificacao-box {
+      text-align: center;
+      padding: 22px 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
     .concluido-box {
       text-align: center;
       padding: 12px 4px;
@@ -165,7 +172,9 @@
       <p id="subtituloPagina">Escreva a mensagem e envie a resposta</p>
     </div>
     <div class="body">
-      <div id="areaFormulario">
+      <div id="areaVerificacao" class="verificacao-box">A verificar estado do pedido...</div>
+
+      <div id="areaFormulario" style="display:none;">
         <div class="detalhes-box" id="caixaDetalhes">
           <div class="detalhes-row"><span class="detalhes-lbl">Colaborador:</span> <span class="detalhes-val" id="dNome">—</span></div>
           <div class="detalhes-row"><span class="detalhes-lbl">Motivo:</span> <span class="detalhes-val" id="dTipo">—</span></div>
@@ -199,10 +208,39 @@
       periodo: ((qs.get('ini') || qs.get('fim')) ? ((qs.get('ini') || '—') + ' → ' + (qs.get('fim') || '—')) : '—')
     };
 
+    function guardarEstadoLocal(id, estado) {
+      if (!id || !estado) return;
+      try {
+        localStorage.setItem('PED_RESP_LOC_' + id, JSON.stringify({ estado: estado, ts: Date.now() }));
+      } catch (e) {}
+    }
+
+    function lerEstadoLocal(id) {
+      if (!id) return '';
+      try {
+        var raw = localStorage.getItem('PED_RESP_LOC_' + id);
+        if (!raw) return '';
+        var obj = JSON.parse(raw);
+        return (obj && obj.estado) ? String(obj.estado).trim() : '';
+      } catch (e) {
+        return '';
+      }
+    }
+
+    function mostrarAreaFormulario() {
+      var verif = document.getElementById('areaVerificacao');
+      var formArea = document.getElementById('areaFormulario');
+      var endArea = document.getElementById('areaEncerrado');
+      if (verif) verif.style.display = 'none';
+      if (endArea) endArea.style.display = 'none';
+      if (formArea) formArea.style.display = 'block';
+    }
+
     function mostrarEcraJaRespondido(estadoTexto, mensagemDetalhe) {
       var badge = document.getElementById('badgeAcao');
       var h1 = document.getElementById('tituloPagina');
       var sub = document.getElementById('subtituloPagina');
+      var verif = document.getElementById('areaVerificacao');
       var formArea = document.getElementById('areaFormulario');
       var endArea = document.getElementById('areaEncerrado');
       var ico = document.getElementById('icoEncerrado');
@@ -210,6 +248,7 @@
       var desc = document.getElementById('descEncerrado');
       var res = document.getElementById('resumoEncerrado');
 
+      if (verif) verif.style.display = 'none';
       if (formArea) formArea.style.display = 'none';
       if (endArea) endArea.style.display = 'block';
 
@@ -260,23 +299,47 @@
       document.getElementById('dTipo').textContent = infoPedido.tipo;
       document.getElementById('dPeriodo').textContent = infoPedido.periodo;
 
-      if (pedidoId) {
-        chamarJsonp({ action: 'obterDetalhePedido', id: pedidoId }, function(r) {
-          if (r && r.ok && r.pedido) {
-            infoPedido.nome = r.pedido.nome || infoPedido.nome;
-            infoPedido.tipo = r.pedido.tipo || infoPedido.tipo;
-            infoPedido.periodo = ((r.pedido.dataIni || r.pedido.dataFim) ? ((r.pedido.dataIni || '—') + ' → ' + (r.pedido.dataFim || '—')) : infoPedido.periodo);
-            document.getElementById('dNome').textContent = infoPedido.nome;
-            document.getElementById('dTipo').textContent = infoPedido.tipo;
-            document.getElementById('dPeriodo').textContent = infoPedido.periodo;
-
-            var estAtual = String(r.pedido.estado || '').trim();
-            if (estAtual && estAtual.toUpperCase().indexOf('AGUARDAR') === -1) {
-              mostrarEcraJaRespondido(estAtual, 'Este pedido já foi respondido anteriormente e já não é possível submeter nova resposta.');
-            }
-          }
-        });
+      var estadoLocal = lerEstadoLocal(pedidoId);
+      if (estadoLocal && estadoLocal.toUpperCase().indexOf('AGUARDAR') === -1) {
+        mostrarEcraJaRespondido(estadoLocal, 'Este pedido já foi respondido anteriormente e já não é possível submeter nova resposta.');
+        return;
       }
+
+      if (!pedidoId) {
+        mostrarAreaFormulario();
+        return;
+      }
+
+      var resolvido = false;
+      var fallbackTimer = setTimeout(function() {
+        if (!resolvido) {
+          resolvido = true;
+          mostrarAreaFormulario();
+        }
+      }, 2500);
+
+      chamarJsonp({ action: 'obterDetalhePedido', id: pedidoId }, function(r) {
+        if (resolvido) return;
+        resolvido = true;
+        clearTimeout(fallbackTimer);
+
+        if (r && r.ok && r.pedido) {
+          infoPedido.nome = r.pedido.nome || infoPedido.nome;
+          infoPedido.tipo = r.pedido.tipo || infoPedido.tipo;
+          infoPedido.periodo = ((r.pedido.dataIni || r.pedido.dataFim) ? ((r.pedido.dataIni || '—') + ' → ' + (r.pedido.dataFim || '—')) : infoPedido.periodo);
+          document.getElementById('dNome').textContent = infoPedido.nome;
+          document.getElementById('dTipo').textContent = infoPedido.tipo;
+          document.getElementById('dPeriodo').textContent = infoPedido.periodo;
+
+          var estAtual = String(r.pedido.estado || '').trim();
+          if (estAtual && estAtual.toUpperCase().indexOf('AGUARDAR') === -1) {
+            guardarEstadoLocal(pedidoId, estAtual);
+            mostrarEcraJaRespondido(estAtual, 'Este pedido já foi respondido anteriormente e já não é possível submeter nova resposta.');
+            return;
+          }
+        }
+        mostrarAreaFormulario();
+      });
     })();
 
     function chamarJsonp(params, cb) {
@@ -328,14 +391,18 @@
         viaGithub: '1'
       }, function(r) {
         if (r && r.ok) {
+          var estFinal = r.estado || (acao === 'aprovar' ? 'Aprovado' : 'Recusado');
+          guardarEstadoLocal(pedidoId, estFinal);
           mostrarEcraJaRespondido(
-            r.estado || (acao === 'aprovar' ? 'Aprovado' : 'Recusado'),
+            estFinal,
             'A sua resposta foi registada com sucesso. Este pedido encontra-se agora encerrado e não aceita novas respostas.'
           );
         } else {
           if (r && r.jaRespondido) {
+            var estJa = r.estadoAtual || (acao === 'aprovar' ? 'Aprovado' : 'Recusado');
+            guardarEstadoLocal(pedidoId, estJa);
             mostrarEcraJaRespondido(
-              r.estadoAtual || (acao === 'aprovar' ? 'Aprovado' : 'Recusado'),
+              estJa,
               r.erro || 'Este pedido já foi respondido anteriormente e já não permite nova resposta.'
             );
           } else {
