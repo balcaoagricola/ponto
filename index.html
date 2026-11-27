@@ -901,6 +901,7 @@
         <button class="btn tile-amber" onclick="abrirSubModulo('pedidos'); carregarPedidosPendentes();"><span>📩</span> Pedidos</button>
         <button class="btn" onclick="abrirSubModulo('ausencias')"><span>📅</span> Faltas</button>
         <button class="btn" onclick="abrirSubModulo('corrigir')"><span>✏️</span> Corrigir</button>
+        <button class="btn" onclick="abrirSubModulo('notas')"><span>📝</span> Notas</button>
         <button class="btn" onclick="abrirSubModulo('pdf')"><span>📄</span> PDF</button>
         <button class="btn" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar</button>
         <button class="btn" onclick="abrirSubModulo('remover')"><span>❌</span> Inativar</button>
@@ -995,6 +996,17 @@
       <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()">← Menu</button>
     </div>
 
+    <div id="admin-sub-notas" style="display:none;">
+      <div class="admin-card">
+        <h3>Notas da Gerência (Dia)</h3>
+        <div class="form-group"><label>Colaborador</label><select id="nomeNotaDia" class="form-control" onchange="carregarNotaDiaAdmin()"></select></div>
+        <div class="form-group"><label>Data</label><input type="date" id="dataNotaDia" class="form-control" onchange="carregarNotaDiaAdmin()"></div>
+        <div class="form-group"><label>Nota do Dia</label><textarea id="textoNotaDia" class="form-control" rows="4" placeholder="Escreva aqui o que aconteceu neste dia para não esquecer..."></textarea></div>
+        <button class="btn btn-primary" onclick="submeterNotaDiaAdmin()">Guardar Nota</button>
+      </div>
+      <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()">← Menu</button>
+    </div>
+
     <div id="admin-sub-pdf" style="display:none;">
       <div class="admin-card">
         <h3>Exportar PDF</h3>
@@ -1063,7 +1075,7 @@ var senhaAdminSessao = "";
 var tokenAdminSessao = "";
 var emProcessamento = false;
 var listaFuncionariosCache = [];
-var MODULOS_ADMIN = ['dashboard','pedidos','ausencias','corrigir','pdf','funcionario','remover'];
+var MODULOS_ADMIN = ['dashboard','pedidos','ausencias','corrigir','notas','pdf','funcionario','remover'];
 var MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 
 function adminParams(base) {
@@ -1760,7 +1772,7 @@ function preencherSelectsNomes(lista) {
       }
     }
   }
-  ['nomeFuncionarioFolga','nomeRemover','nomeFuncFalta','nomeCorrigir'].forEach(function(id) {
+  ['nomeFuncionarioFolga','nomeRemover','nomeFuncFalta','nomeCorrigir','nomeNotaDia'].forEach(function(id) {
     var s = document.getElementById(id);
     if (s) {
       s.innerHTML = '<option value="" disabled selected>Selecione</option>';
@@ -2913,6 +2925,36 @@ function submeterCorrecao() {
     }
   });
 }
+function carregarNotaDiaAdmin() {
+  var nEl = document.getElementById('nomeNotaDia');
+  var dEl = document.getElementById('dataNotaDia');
+  var tEl = document.getElementById('textoNotaDia');
+  if (!nEl || !dEl || !tEl) return;
+  var n = nEl.value;
+  var d = dEl.value;
+  if (!n || !d) { tEl.value = ''; return; }
+  chamarAPIJsonp(adminParams({ action: 'obterNotaDia', nome: n, data: d }), function(r) {
+    if (r && r.ok) {
+      tEl.value = r.nota || '';
+    }
+  });
+}
+
+function submeterNotaDiaAdmin() {
+  var n = document.getElementById('nomeNotaDia').value;
+  var d = document.getElementById('dataNotaDia').value;
+  var nota = document.getElementById('textoNotaDia').value;
+  if (!n || !d) { mostrarPopup({ titulo:'Campos em Falta', mensagem:'Selecione colaborador e data.', tipo:'erro' }); return; }
+  mostrarPopup({ titulo:'A Guardar', mensagem:'A guardar nota do dia...', tipo:'processando' });
+  chamarAPIJsonp(adminParams({ action: 'guardarNotaDia', nome: n, data: d, nota: nota }), function(r) {
+    if (r && r.ok) {
+      mostrarPopup({ titulo:'Nota Guardada', mensagem:'Nota atualizada para <b>' + esc(r.nome || n) + '</b> em <b>' + esc(r.data || d) + '</b>.', tipo:'sucesso' });
+    } else {
+      mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
+    }
+  });
+}
+
 function exportarRelatorioPDF() {
   var n = document.getElementById('selecaoFuncionario').value;
   var d1 = document.getElementById('dataInicio').value;
