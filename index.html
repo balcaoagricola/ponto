@@ -819,7 +819,6 @@
         </div>
         <div id="nomePreview" class="pin-nome-preview"></div>
         <div id="pinStatus" class="pin-status"></div>
-        <div id="pcEquipamentoBadge" style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; font-weight:700;"></div>
       </div>
       <div class="keypad" id="keypadPonto">
         <button class="key" onclick="tecladoPress('1')">1</button>
@@ -851,10 +850,6 @@
           <input type="password" id="pinFuncFalta" class="form-control" maxlength="4" inputmode="numeric" placeholder="••••" style="letter-spacing:8px; text-align:center; font-size:1.2rem;">
           <button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput('pinFuncFalta', this)">👁️</button>
         </div>
-      </div>
-      <div class="form-group" id="grupoNomePcFalta">
-        <label>Nome do Dispositivo (PC)</label>
-        <input type="text" id="nomeDispositivoPcFalta" class="form-control" placeholder="Ex.: DESKTOP-H2Q6GF1" onchange="guardarNomePcDesdeFalta_(this.value)">
       </div>
       <div class="form-group"><label>O seu E-mail <span class="campo-obrigatorio">*</span></label><input type="email" id="emailFuncFalta" class="form-control" placeholder="email@exemplo.pt"></div>
       <div class="form-group">
@@ -1517,7 +1512,6 @@ function iniciarRelogio() {
 
 window.addEventListener('load', async function() {
   iniciarRelogio();
-  atualizarIndicadorEquipamentoPc_();
   await restaurarDadosOfflineDoIdb_();
   try {
     var funcsIdb = await lerIdbPonto_("funcionarios_cache", null);
@@ -1634,8 +1628,7 @@ function mostrarPopup(cfg) {
   var acts = document.getElementById('toastActionsContainer'); acts.innerHTML = ""; acts.style.display = "flex";
   if (cfg.tipo === "processando") {
     var btnCancel = document.createElement('button'); btnCancel.className = "toast-btn toast-btn-secondary"; btnCancel.innerText = "Cancelar";
-    btnCancel.onclick = function() { emProcessamento = false; pinAtual = ""; atualizarDots(); fecharToast();
-        atualizarIndicadorEquipamentoPc_(); };
+    btnCancel.onclick = function() { emProcessamento = false; pinAtual = ""; atualizarDots(); fecharToast(); };
     acts.appendChild(btnCancel);
   } else if (cfg.botoes) {
     cfg.botoes.forEach(function(b){ var btn = document.createElement('button'); btn.className = "toast-btn " + (b.classe || "toast-btn-primary"); btn.innerText = b.texto; btn.onclick = b.acao; acts.appendChild(btn); });
@@ -1705,6 +1698,31 @@ function obterCoordenadasComFallback_(timeoutMs) {
   });
 }
 
+var _pcInfoAutoCache = '';
+(function iniciarDetecaoAutomaticaPC_() {
+  try {
+    if (navigator.userAgentData && typeof navigator.userAgentData.getHighEntropyValues === 'function') {
+      navigator.userAgentData.getHighEntropyValues(['platform', 'platformVersion', 'architecture', 'bitness', 'model'])
+        .then(function(u) {
+          var plat = (u && u.platform) ? String(u.platform) : '';
+          var ver = (u && u.platformVersion) ? String(u.platformVersion) : '';
+          var arch = (u && u.architecture) ? String(u.architecture) : '';
+          var bits = (u && u.bitness) ? String(u.bitness) : '';
+          var mod = (u && u.model) ? String(u.model).trim() : '';
+          if (plat === 'Windows' && ver) {
+            var major = parseInt(ver.split('.')[0], 10);
+            if (!isNaN(major)) plat = major >= 13 ? 'Windows 11' : 'Windows 10';
+          }
+          var partes = [];
+          if (mod) partes.push(mod);
+          if (plat) partes.push(plat);
+          if (arch) partes.push(arch + (bits ? '-' + bits : ''));
+          if (partes.length) _pcInfoAutoCache = partes.join(' · ');
+        }).catch(function(){});
+    }
+  } catch (e) {}
+})();
+
 function obterIdentificacaoPC() {
   try {
     var qsPc = new URLSearchParams(window.location.search || '').get('pcNome') || new URLSearchParams(window.location.search || '').get('pc');
@@ -1725,13 +1743,40 @@ function obterIdentificacaoPC() {
       return String(savedPc).trim().substring(0, 60);
     }
   } catch (eSaved) {}
+
   var ua = navigator.userAgent || '';
-  if (/Windows NT 10\.0|Windows NT 11\.0/i.test(ua)) return 'PC (Windows)';
-  if (/Windows/i.test(ua)) return 'PC (Windows)';
-  if (/Macintosh|Mac OS X/i.test(ua)) return 'PC (Mac)';
-  if (/CrOS/i.test(ua)) return 'PC (Chromebook)';
-  if (/Linux/i.test(ua)) return 'PC (Linux)';
-  return 'PC';
+  var so = 'PC';
+  if (_pcInfoAutoCache) {
+    so = 'PC · ' + _pcInfoAutoCache;
+  } else if (/Windows NT 10\.0|Windows NT 11\.0/i.test(ua)) {
+    so = 'PC · Windows 10/11';
+  } else if (/Windows/i.test(ua)) {
+    so = 'PC · Windows';
+  } else if (/Macintosh|Mac OS X/i.test(ua)) {
+    so = 'PC · macOS';
+  } else if (/CrOS/i.test(ua)) {
+    so = 'PC · ChromeOS';
+  } else if (/Linux/i.test(ua)) {
+    so = 'PC · Linux';
+  }
+
+  var nav = '';
+  if (/Edg\//i.test(ua)) nav = 'Edge';
+  else if (/OPR\//i.test(ua)) nav = 'Opera';
+  else if (/Chrome\//i.test(ua)) nav = 'Chrome';
+  else if (/Firefox\//i.test(ua)) nav = 'Firefox';
+  else if (/Safari\//i.test(ua)) nav = 'Safari';
+
+  var hw = [];
+  if (nav) hw.push(nav);
+  try {
+    if (navigator.hardwareConcurrency) hw.push(navigator.hardwareConcurrency + 'c');
+    if (window.screen && window.screen.width && window.screen.height) {
+      hw.push(window.screen.width + 'x' + window.screen.height);
+    }
+  } catch (eHw) {}
+
+  return hw.length ? (so + ' [' + hw.join(' · ') + ']') : so;
 }
 
 function obterDetalhesDispositivo() {
@@ -1825,37 +1870,12 @@ function tentarEntrarAdmin() {
       document.getElementById('headerTitle').style.display = 'block';
       document.getElementById('headerClockBox').style.display = 'flex';
       garantirSelectsPopulados_();
-  sincronizarCampoPcFalta_();
       atualizarBadgeOffline();
       voltarAoMenuCentralAdmin();
     } else {
       mostrarPopup({ titulo: "Acesso Negado", mensagem: "Palavra-passe incorreta.", tipo: "erro" });
     }
   });
-}
-
-function guardarNomePcDesdeFalta_(val) {
-  try {
-    var limpo = String(val || '').trim().substring(0, 60);
-    if (limpo) localStorage.setItem('NOME_PC_LOCAL', limpo);
-    atualizarIndicadorEquipamentoPc_();
-  } catch (e) {}
-}
-
-function sincronizarCampoPcFalta_() {
-  try {
-    var el = document.getElementById('nomeDispositivoPcFalta');
-    var grp = document.getElementById('grupoNomePcFalta');
-    if (!el) return;
-    var ua = navigator.userAgent || '';
-    var ehMob = /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua);
-    var temToque = (typeof navigator.maxTouchPoints === 'number' && navigator.maxTouchPoints > 0) || ('ontouchstart' in window);
-    var isPc = (!ehMob && !_temToque) || (window.innerWidth >= 900 && !ehMob);
-    if (grp) grp.style.display = isPc ? 'block' : 'none';
-    if (isPc) {
-      el.value = obterIdentificacaoPC();
-    }
-  } catch (e) {}
 }
 
 function abrirEcraFaltaFuncionario() {
@@ -1962,22 +1982,6 @@ function garantirSelectsPopulados_() {
 
 
 var pinAtual = "";
-
-function atualizarIndicadorEquipamentoPc_() {
-  try {
-    var el = document.getElementById('pcEquipamentoBadge');
-    if (!el) return;
-    var ua = navigator.userAgent || '';
-    var ehMob = /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua);
-    var temToque = (typeof navigator.maxTouchPoints === 'number' && navigator.maxTouchPoints > 0) || ('ontouchstart' in window);
-    var isPc = (!ehMob && !_temToque) || (window.innerWidth >= 900 && !ehMob);
-    if (isPc) {
-      el.innerHTML = '💻 Equipamento: <span style="color:var(--accent-dark);">' + esc(obterIdentificacaoPC()) + '</span>';
-    } else {
-      el.textContent = '';
-    }
-  } catch (e) {}
-}
 
 function atualizarDots() {
   var ds = document.querySelectorAll('#dotsPonto .pin-dot');
@@ -2516,12 +2520,6 @@ async function submeterFaltaFuncionario() {
   var lon = geoPed.lon || 0;
   var coordsFallbackPed = geoPed.fallback || '';
 
-  try {
-    var inpPcF = document.getElementById('nomeDispositivoPcFalta');
-    if (inpPcF && String(inpPcF.value || '').trim()) {
-      localStorage.setItem('NOME_PC_LOCAL', String(inpPcF.value || '').trim().substring(0, 60));
-    }
-  } catch (ePcF) {}
   var disp = obterDetalhesDispositivo();
   
   var enviados = _anexosItens.filter(function(x) { return x.state === 'done' && x.uploaded && x.uploaded.fileId; }).map(function(x) { return x.uploaded; });
