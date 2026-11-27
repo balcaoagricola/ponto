@@ -167,9 +167,9 @@
   <div class="card">
     <div class="top-bar"></div>
     <div class="head">
-      <div id="badgeAcao" class="tag aprovar">✅ Aprovar Pedido</div>
-      <h1 id="tituloPagina">Responder ao Pedido</h1>
-      <p id="subtituloPagina">Escreva a mensagem e envie a resposta</p>
+      <div id="badgeAcao" class="tag encerrado">Pedido</div>
+      <h1 id="tituloPagina">A verificar pedido...</h1>
+      <p id="subtituloPagina">A aguardar confirmação do estado</p>
     </div>
     <div class="body">
       <div id="areaVerificacao" class="verificacao-box">A verificar estado do pedido...</div>
@@ -247,9 +247,28 @@
     }
 
     function mostrarAreaFormulario() {
+      var badge = document.getElementById('badgeAcao');
+      var h1 = document.getElementById('tituloPagina');
+      var sub = document.getElementById('subtituloPagina');
+      var btn = document.getElementById('btnEnviar');
       var verif = document.getElementById('areaVerificacao');
       var formArea = document.getElementById('areaFormulario');
       var endArea = document.getElementById('areaEncerrado');
+
+      if (acao === 'recusar') {
+        badge.className = 'tag recusar';
+        badge.textContent = '❌ Recusar Pedido';
+        btn.className = 'btn-submit recusar';
+        btn.textContent = 'Enviar Recusa';
+      } else {
+        badge.className = 'tag aprovar';
+        badge.textContent = '✅ Aprovar Pedido';
+        btn.className = 'btn-submit aprovar';
+        btn.textContent = 'Enviar Aprovação';
+      }
+      h1.textContent = 'Responder ao Pedido';
+      sub.textContent = 'Escreva a mensagem e envie a resposta';
+
       if (verif) verif.style.display = 'none';
       if (endArea) endArea.style.display = 'none';
       if (formArea) formArea.style.display = 'block';
@@ -300,20 +319,6 @@
     }
 
     (function init() {
-      var badge = document.getElementById('badgeAcao');
-      var btn = document.getElementById('btnEnviar');
-      if (acao === 'recusar') {
-        badge.className = 'tag recusar';
-        badge.textContent = '❌ Recusar Pedido';
-        btn.className = 'btn-submit recusar';
-        btn.textContent = 'Enviar Recusa';
-      } else {
-        badge.className = 'tag aprovar';
-        badge.textContent = '✅ Aprovar Pedido';
-        btn.className = 'btn-submit aprovar';
-        btn.textContent = 'Enviar Aprovação';
-      }
-
       document.getElementById('dNome').textContent = infoPedido.nome;
       document.getElementById('dTipo').textContent = infoPedido.tipo;
       document.getElementById('dPeriodo').textContent = infoPedido.periodo;
