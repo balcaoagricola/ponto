@@ -1213,8 +1213,8 @@ async function sincronizarFilaOffline() {
     var ok = resp && (resp.ok === true || String(resp).toLowerCase().indexOf('sucesso') !== -1);
     if (!ok) {
       var erro = (resp && resp.erro) ? String(resp.erro) : String(resp || '');
-      var definitivo = /incorreto|não encontrado|inativo|fora do perímetro|sem sinal gps|falsificado/i.test(erro);
-      if (!definitivo && item.tentativas < 10) restantes.push(item);
+      var definitivo = /incorreto|não encontrado|inativo|fora do perímetro|falsificado/i.test(erro);
+      if (!definitivo && item.tentativas < 15) restantes.push(item);
     }
   }
   setFilaOffline(restantes);
@@ -1593,7 +1593,7 @@ var _ipCacheSession = '';
 function chamarAPIJsonp(params, cb) {
   if (!navigator.onLine) { if (cb) cb({ ok: false, erro: 'Sem ligação à internet' }); return; }
   if (_ipCacheSession) { params.ip = _ipCacheSession; enviar(params, cb); return; }
-  _fetchIpRapido_('https://api.ipify.org?format=json', 1100).then(function(ip1) {
+  _fetchIpRapido_('https://api.ipify.org?format=json', 700).then(function(ip1) {
     if (ip1) { _ipCacheSession = ip1; params.ip = ip1; }
     else { params.ip = "N/D"; }
     enviar(params, cb);
@@ -1974,12 +1974,12 @@ async function registarPonto() {
     if (navigator && navigator.geolocation && typeof navigator.geolocation.getCurrentPosition === 'function') {
       var pos = await new Promise(function(res){
         var done = false;
-        var timer = setTimeout(function(){ if (!done) { done = true; res(null); } }, 3200);
+        var timer = setTimeout(function(){ if (!done) { done = true; res(null); } }, 2200);
         try {
           navigator.geolocation.getCurrentPosition(
             function(p){ if (!done) { done = true; clearTimeout(timer); res(p); } },
             function(){ if (!done) { done = true; clearTimeout(timer); res(null); } },
-            { enableHighAccuracy: false, timeout: 3000, maximumAge: 300000 }
+            { enableHighAccuracy: false, timeout: 2000, maximumAge: 300000 }
           );
         } catch(eGeo) {
           if (!done) { done = true; clearTimeout(timer); res(null); }
