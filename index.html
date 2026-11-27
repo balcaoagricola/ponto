@@ -1876,12 +1876,12 @@ async function registarPonto() {
       if (navigator && navigator.geolocation && typeof navigator.geolocation.getCurrentPosition === 'function') {
         var posOff = await new Promise(function(resOff) {
           var doneOff = false;
-          var tOff = setTimeout(function() { if (!doneOff) { doneOff = true; resOff(null); } }, 1200);
+          var tOff = setTimeout(function() { if (!doneOff) { doneOff = true; resOff(null); } }, 3200);
           try {
             navigator.geolocation.getCurrentPosition(
               function(p) { if (!doneOff) { doneOff = true; clearTimeout(tOff); resOff(p); } },
               function() { if (!doneOff) { doneOff = true; clearTimeout(tOff); resOff(null); } },
-              { enableHighAccuracy: false, timeout: 1100, maximumAge: 300000 }
+              { enableHighAccuracy: false, timeout: 3000, maximumAge: 300000 }
             );
           } catch (eGeoOff) {
             if (!doneOff) { doneOff = true; clearTimeout(tOff); resOff(null); }
@@ -1908,12 +1908,12 @@ async function registarPonto() {
     if (navigator && navigator.geolocation && typeof navigator.geolocation.getCurrentPosition === 'function') {
       var pos = await new Promise(function(res){
         var done = false;
-        var timer = setTimeout(function(){ if (!done) { done = true; res(null); } }, 1200);
+        var timer = setTimeout(function(){ if (!done) { done = true; res(null); } }, 3200);
         try {
           navigator.geolocation.getCurrentPosition(
             function(p){ if (!done) { done = true; clearTimeout(timer); res(p); } },
             function(){ if (!done) { done = true; clearTimeout(timer); res(null); } },
-            { enableHighAccuracy: false, timeout: 1100, maximumAge: 300000 }
+            { enableHighAccuracy: false, timeout: 3000, maximumAge: 300000 }
           );
         } catch(eGeo) {
           if (!done) { done = true; clearTimeout(timer); res(null); }
