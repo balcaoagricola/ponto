@@ -2,6 +2,9 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Estado do Pedido · Balcão Agrícola</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -113,6 +116,19 @@
     .btn-submit.aprovar { background: linear-gradient(135deg, #15803d, #16a34a); }
     .btn-submit.recusar { background: linear-gradient(135deg, #b91c1c, #dc2626); }
     .btn-submit:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-retry {
+      margin-top: 14px;
+      padding: 11px 16px;
+      border-radius: var(--r-sm);
+      border: 1.5px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+    }
     .status-msg {
       margin-top: 14px;
       padding: 12px 14px;
@@ -169,10 +185,13 @@
     <div class="head">
       <div id="badgeAcao" class="tag encerrado">Pedido</div>
       <h1 id="tituloPagina">A verificar pedido...</h1>
-      <p id="subtituloPagina">A aguardar confirmação do estado</p>
+      <p id="subtituloPagina">A confirmar estado atual no servidor</p>
     </div>
     <div class="body">
-      <div id="areaVerificacao" class="verificacao-box">A verificar estado do pedido...</div>
+      <div id="areaVerificacao" class="verificacao-box">
+        <div id="textoVerificacao">A verificar estado do pedido...</div>
+        <button type="button" id="btnReverificar" class="btn-retry" style="display:none;" onclick="verificarEstadoPedidoServidor()">🔄 Verificar novamente</button>
+      </div>
 
       <div id="areaFormulario" style="display:none;">
         <div class="detalhes-box" id="caixaDetalhes">
@@ -208,6 +227,34 @@
       periodo: ((qs.get('ini') || qs.get('fim')) ? ((qs.get('ini') || '—') + ' → ' + (qs.get('fim') || '—')) : '—')
     };
 
+    function limparCacheLocalAoAbrir() {
+      try {
+        if (window.sessionStorage) sessionStorage.clear();
+      } catch (eS) {}
+      try {
+        if (window.localStorage) {
+          var keysToRemove = [];
+          for (var i = 0; i < localStorage.length; i++) {
+            var k = localStorage.key(i);
+            if (!k) continue;
+            if (k.indexOf('PED_RESP_KEY_') === 0 || (k.indexOf('PED_RESP_LOC_') === 0 && k !== ('PED_RESP_LOC_' + pedidoId))) {
+              keysToRemove.push(k);
+            }
+          }
+          for (var j = 0; j < keysToRemove.length; j++) {
+            localStorage.removeItem(keysToRemove[j]);
+          }
+        }
+      } catch (eL) {}
+      try {
+        if (window.caches && typeof caches.keys === 'function') {
+          caches.keys().then(function(names) {
+            names.forEach(function(n) { caches.delete(n).catch(function(){}); });
+          }).catch(function(){});
+        }
+      } catch (eC) {}
+    }
+
     function guardarEstadoLocal(id, estado) {
       if (!id || !estado) return;
       try {
@@ -226,6 +273,19 @@
         }
       } catch (e) {}
       return '';
+    }
+
+    function mostrarVerificacao(msg, mostrarBotao) {
+      var verif = document.getElementById('areaVerificacao');
+      var txt = document.getElementById('textoVerificacao');
+      var btnRe = document.getElementById('btnReverificar');
+      var formArea = document.getElementById('areaFormulario');
+      var endArea = document.getElementById('areaEncerrado');
+      if (formArea) formArea.style.display = 'none';
+      if (endArea) endArea.style.display = 'none';
+      if (verif) verif.style.display = 'block';
+      if (txt) txt.textContent = msg || 'A verificar estado do pedido...';
+      if (btnRe) btnRe.style.display = mostrarBotao ? 'inline-block' : 'none';
     }
 
     function mostrarAreaFormulario() {
@@ -300,10 +360,11 @@
         .replace(/"/g, '&quot;');
     }
 
-    (function init() {
-      document.getElementById('dNome').textContent = infoPedido.nome;
-      document.getElementById('dTipo').textContent = infoPedido.tipo;
-      document.getElementById('dPeriodo').textContent = infoPedido.periodo;
+    function verificarEstadoPedidoServidor() {
+      if (!pedidoId) {
+        mostrarAreaFormulario();
+        return;
+      }
 
       var estadoLocal = lerEstadoLocal(pedidoId);
       if (estadoLocal && estadoLocal.toUpperCase().indexOf('AGUARDAR') === -1) {
@@ -311,24 +372,16 @@
         return;
       }
 
-      if (!pedidoId) {
-        mostrarAreaFormulario();
-        return;
-      }
+      mostrarVerificacao('A confirmar se o pedido já foi respondido...', false);
 
-      var resolvido = false;
-      var fallbackTimer = setTimeout(function() {
-        if (!resolvido) {
-          resolvido = true;
-          mostrarAreaFormulario();
-        }
-      }, 2500);
-
-      chamarJsonp({ action: 'obterDetalhePedido', id: pedidoId }, function(r) {
-        if (resolvido) return;
-        resolvido = true;
-        clearTimeout(fallbackTimer);
-
+      chamarJsonp({
+        action: 'obterDetalhePedido',
+        id: pedidoId,
+        nome: infoPedido.nome,
+        tipo: infoPedido.tipo,
+        ini: qs.get('ini') || '',
+        fim: qs.get('fim') || ''
+      }, function(r) {
         if (r && r.ok && r.pedido) {
           infoPedido.nome = r.pedido.nome || infoPedido.nome;
           infoPedido.tipo = r.pedido.tipo || infoPedido.tipo;
@@ -338,14 +391,28 @@
           document.getElementById('dPeriodo').textContent = infoPedido.periodo;
 
           var estAtual = String(r.pedido.estado || '').trim();
-          if (estAtual && estAtual.toUpperCase().indexOf('AGUARDAR') === -1) {
-            guardarEstadoLocal(pedidoId, estAtual);
-            mostrarEcraJaRespondido(estAtual, 'Este pedido já foi respondido anteriormente e já não é possível submeter nova resposta.');
+          if (!estAtual || estAtual.toUpperCase().indexOf('AGUARDAR') === -1) {
+            var estGuardado = estAtual || 'Respondido';
+            guardarEstadoLocal(pedidoId, estGuardado);
+            mostrarEcraJaRespondido(estGuardado, 'Este pedido já foi respondido anteriormente e já não é possível submeter nova resposta.');
             return;
           }
+          mostrarAreaFormulario();
+          return;
         }
-        mostrarAreaFormulario();
+
+        mostrarVerificacao('Não foi possível confirmar o estado do pedido neste momento. Verifique a ligação e tente novamente.', true);
       });
+    }
+
+    (function init() {
+      limparCacheLocalAoAbrir();
+
+      document.getElementById('dNome').textContent = infoPedido.nome;
+      document.getElementById('dTipo').textContent = infoPedido.tipo;
+      document.getElementById('dPeriodo').textContent = infoPedido.periodo;
+
+      verificarEstadoPedidoServidor();
     })();
 
     function chamarJsonp(params, cb) {
@@ -368,6 +435,7 @@
           url += encodeURIComponent(k) + '=' + encodeURIComponent(params[k]) + '&';
         }
       }
+      url += '_nocache=' + encodeURIComponent(Date.now() + '_' + Math.random().toString(36).substring(2, 7)) + '&';
       url += 'callback=' + cbName;
       s.src = url;
       s.onerror = function() {
