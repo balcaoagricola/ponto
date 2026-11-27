@@ -1663,10 +1663,7 @@ function obterDetalhesDispositivo() {
       return model;
     }
   }
-  if (/Windows/i.test(ua)) return 'Windows PC';
-  if (/CrOS/i.test(ua)) return 'Chromebook';
-  if (/Macintosh/i.test(ua)) return 'Mac (Apple)';
-  if (/Linux/i.test(ua)) return 'Linux PC';
+  if (/Windows|CrOS|Macintosh|Linux/i.test(ua)) return 'PC';
   return 'Desconhecido';
 }
 
@@ -1906,7 +1903,8 @@ async function registarPonto() {
       }
     } catch (eGOff) {}
 
-    var item = await guardarPicagemOffline(nome, pin, latOff, lonOff, obterDetalhesDispositivo(), _isPcDesktopOff);
+    var _dispOff = _isPcDesktopOff ? "Localização" : obterDetalhesDispositivo();
+    var item = await guardarPicagemOffline(nome, pin, latOff, lonOff, _dispOff, _isPcDesktopOff);
     emProcessamento = false; pinAtual = ""; atualizarDots();
     if (item) {
       var msgOff = "Olá <b>" + nome + "</b>!<br><br>Picagem guardada às " + new Date().toLocaleTimeString('pt-PT') + ".<br><br>Será enviada quando houver rede.";
@@ -1947,7 +1945,8 @@ async function registarPonto() {
     _isPcDesktop = (!_ehMobileUa && !_temToque) || (window.innerWidth >= 900 && !_ehMobileUa);
   } catch (ePc) { _isPcDesktop = false; }
 
-  chamarAPIJsonp({ action: "salvarPontoPorPin", pin: pin, lat: lat, lon: lon, isMock: "false", disp: obterDetalhesDispositivo(), pcMode: _isPcDesktop ? "true" : "false" }, async function(r) {
+  var _dispPonto = _isPcDesktop ? "Localização" : obterDetalhesDispositivo();
+  chamarAPIJsonp({ action: "salvarPontoPorPin", pin: pin, lat: lat, lon: lon, isMock: "false", disp: _dispPonto, pcMode: _isPcDesktop ? "true" : "false" }, async function(r) {
     emProcessamento = false; pinAtual = ""; atualizarDots();
     if (r && r.ok) {
       var h2 = await hashPin(pin);
@@ -2354,6 +2353,7 @@ async function submeterFaltaFuncionario() {
   } catch(e) {}
 
   var disp = obterDetalhesDispositivo();
+  if (disp === 'PC') disp = 'Localização';
   var enviados = _anexosItens.filter(function(x) { return x.state === 'done' && x.uploaded && x.uploaded.fileId; }).map(function(x) { return x.uploaded; });
   var fileId = enviados.length > 0 ? enviados[0].fileId : '';
   var obsFinal = obs || '';
