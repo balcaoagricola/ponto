@@ -1640,6 +1640,62 @@ function fecharToastOverlay(e) {}
 function alternarVisibilidadeSenhaInput(id, btn) { var i = document.getElementById(id); if (!i) return; if (i.type === "password") { i.type = "text"; if(btn) btn.innerText = "🙈"; } else { i.type = "password"; if(btn) btn.innerText = "👁️"; } }
 
 
+function obterCoordenadasComFallback_(timeoutMs) {
+  return new Promise(function(resolve) {
+    var done = false;
+    var lim = timeoutMs || 3500;
+    var t = setTimeout(function() {
+      if (!done) { done = true; resolve({ lat: 0, lon: 0, fallback: '' }); }
+    }, lim + 1200);
+
+    function resolverComIpFallback_(latVal, lonVal) {
+      if (latVal && lonVal) {
+        if (!done) { done = true; clearTimeout(t); resolve({ lat: latVal, lon: lonVal, fallback: '' }); }
+        return;
+      }
+      try {
+        fetch('https://ipwho.is/', { cache: 'no-store' })
+          .then(function(r) { return r.json(); })
+          .then(function(d) {
+            if (done) return;
+            done = true;
+            clearTimeout(t);
+            if (d && d.success && d.latitude && d.longitude) {
+              var cStr = Number(d.latitude).toFixed(6) + ', ' + Number(d.longitude).toFixed(6);
+              if (d.city) cStr += ' (' + d.city + ')';
+              resolve({ lat: 0, lon: 0, fallback: cStr });
+            } else {
+              resolve({ lat: 0, lon: 0, fallback: '' });
+            }
+          })
+          .catch(function() {
+            if (!done) { done = true; clearTimeout(t); resolve({ lat: 0, lon: 0, fallback: '' }); }
+          });
+      } catch (eIp) {
+        if (!done) { done = true; clearTimeout(t); resolve({ lat: 0, lon: 0, fallback: '' }); }
+      }
+    }
+
+    try {
+      if (navigator && navigator.geolocation && typeof navigator.geolocation.getCurrentPosition === 'function') {
+        navigator.geolocation.getCurrentPosition(
+          function(p) {
+            var la = (p && p.coords) ? (parseFloat(p.coords.latitude) || 0) : 0;
+            var lo = (p && p.coords) ? (parseFloat(p.coords.longitude) || 0) : 0;
+            resolverComIpFallback_(la, lo);
+          },
+          function() { resolverComIpFallback_(0, 0); },
+          { enableHighAccuracy: false, timeout: lim, maximumAge: 300000 }
+        );
+      } else {
+        resolverComIpFallback_(0, 0);
+      }
+    } catch (eGeo) {
+      resolverComIpFallback_(0, 0);
+    }
+  });
+}
+
 function obterDetalhesDispositivo() {
   var ua = navigator.userAgent || '';
   if (/iPhone/i.test(ua)) return 'Apple iPhone';
@@ -2343,14 +2399,10 @@ async function submeterFaltaFuncionario() {
   localStorage.setItem('emailColaboradorBA', email.trim());
   mostrarPopup({ titulo:"A Enviar", mensagem:"A obter localização...", tipo:"processando" });
 
-  var lat = 0, lon = 0;
-  try {
-    var pos = await new Promise(function(resolve) {
-      if (!navigator.geolocation) return resolve(null);
-      navigator.geolocation.getCurrentPosition(function(p){ resolve(p); }, function(){ resolve(null); }, { enableHighAccuracy: true, timeout: 5000, maximumAge: 300000 });
-    });
-    if (pos) { lat = pos.coords.latitude; lon = pos.coords.longitude; }
-  } catch(e) {}
+  var geoPed = await obterCoordenadasComFallback_(3500);
+  var lat = geoPed.lat || 0;
+  var lon = geoPed.lon || 0;
+  var coordsFallbackPed = geoPed.fallback || '';
 
   var disp = obterDetalhesDispositivo();
   if (disp === 'PC') disp = 'Localização';
@@ -2432,7 +2484,7 @@ async function submeterFaltaFuncionario() {
     action:"comunicarAusencia",
     nome: nome, pin: pin, email: email, tipo: tipo,
     dataIni: dIni, dataFim: dFim, obs: obsFinal, fileId: fileId,
-    lat: lat, lon: lon, disp: disp
+    lat: lat, lon: lon, coordsFallback: coordsFallbackPed, disp: disp
   }, function(r) {
     if (r && r.ok) {
       mostrarPopup({ titulo:"Pedido Enviado", mensagem:"A gerência foi notificada por email. Será contactado com a resposta.", tipo:"sucesso" });
