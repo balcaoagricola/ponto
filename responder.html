@@ -241,8 +241,13 @@
         if (r && r.ok) {
           mostrarEstado('ok', acao === 'aprovar' ? '✅ Pedido aprovado e resposta enviada!' : '❌ Pedido recusado e resposta enviada!');
         } else {
-          btn.disabled = false;
-          mostrarEstado('err', '❌ ' + ((r && r.erro) || 'Não foi possível enviar a resposta.'));
+          if (r && r.jaRespondido) {
+            btn.disabled = true;
+            mostrarEstado('err', '🔒 ' + ((r && r.erro) || 'Este pedido já foi respondido.'));
+          } else {
+            btn.disabled = false;
+            mostrarEstado('err', '❌ ' + ((r && r.erro) || 'Não foi possível enviar a resposta.'));
+          }
         }
       });
     }
