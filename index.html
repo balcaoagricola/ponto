@@ -975,11 +975,22 @@
 
     <div id="admin-sub-corrigir" style="display:none;">
       <div class="admin-card">
-        <h3>Corrigir Picagem</h3>
-        <div class="form-group"><label>Colaborador</label><select id="nomeCorrigir" class="form-control"></select></div>
-        <div class="form-group"><label>Data</label><input type="date" id="dataCorrigir" class="form-control"></div>
-        <div class="form-group"><label>Hora</label><input type="time" id="horaCorrigir" class="form-control"></div>
-        <button class="btn btn-primary" onclick="submeterCorrecao()">Inserir Picagem</button>
+        <h3>Corrigir Picagem (Art. 202.º CT)</h3>
+        <div class="form-group"><label>Colaborador</label><select id="nomeCorrigir" class="form-control" onchange="carregarPicagensDiaCorrecao()"></select></div>
+        <div class="form-group"><label>Data</label><input type="date" id="dataCorrigir" class="form-control" onchange="carregarPicagensDiaCorrecao()"></div>
+        <div class="form-group"><label>Operação</label>
+          <select id="modoCorrigir" class="form-control" onchange="aoMudarModoCorrigir()">
+            <option value="inserir">➕ Inserir Nova Picagem</option>
+            <option value="remover">🗑️ Remover Picagem Existente</option>
+          </select>
+        </div>
+        <div class="form-group" id="grupoHoraCorrigir"><label>Hora</label><input type="time" id="horaCorrigir" class="form-control"></div>
+        <div class="form-group" id="grupoListaPicagensDia" style="display:none;">
+          <label>Picagem do Dia a Remover</label>
+          <select id="indicePicagemRemover" class="form-control"><option value="">Selecione colaborador e data</option></select>
+        </div>
+        <div class="form-group"><label>Motivo Legal (Art. 202.º CT) <span class="campo-obrigatorio">*</span></label><input type="text" id="motivoCorrigir" class="form-control" placeholder="Ex.: Esquecimento de registo / falha terminal"></div>
+        <button class="btn btn-primary" id="btnSubmeterCorrecao" onclick="submeterCorrecao()">Confirmar Correção</button>
       </div>
       <button class="btn btn-nav-slate" onclick="voltarAoMenuCentralAdmin()">← Menu</button>
     </div>
@@ -1934,7 +1945,7 @@ async function registarPonto() {
         titulo: "Ponto Registado",
         mensagem: "Olá, <b>" + r.nome + "</b>!<br><br>" +
           "<b>" + r.tipo + "</b> às <b>" + r.hora + "</b><br>" +
-          "📍 " + (r.local || "") + "<br><br>" +
+          "📍 " + (r.local || "") + (r.avisoAusencia ? ("<br><div style='margin-top:8px; padding:8px 10px; background:#fffbeb; border:1px solid #fde68a; border-radius:8px; color:#92400e; font-size:0.78rem; font-weight:700;'>⚠️ " + esc(r.avisoAusencia) + "</div>") : "") + "<br><br>" +
           "<div style='display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:14px; padding-top:14px; border-top:1px solid var(--border);'>" +
           "<div style='text-align:center;'><div style='font-size:0.6rem; color:var(--text-muted); letter-spacing:0.08em; text-transform:uppercase; font-weight:700;'>Hoje</div><div style='font-size:1.05rem; font-weight:800; margin-top:2px;'>" + r.horasHoje + "</div></div>" +
           "<div style='text-align:center;'><div style='font-size:0.6rem; color:var(--text-muted); letter-spacing:0.08em; text-transform:uppercase; font-weight:700;'>Semana</div><div style='font-size:1.05rem; font-weight:800; margin-top:2px;'>" + r.horasSemana + "</div></div>" +
@@ -2477,6 +2488,17 @@ function carregarDashboard() {
       '</div>';
     }
 
+    var turnosOntem = r.turnosAbertosOntemLista || [];
+    if (turnosOntem.length > 0) {
+      var nomesOntem = turnosOntem.map(function(tItem) {
+        return tItem.nome + (tItem.picagensOntem ? (' [' + tItem.picagensOntem + ']') : '');
+      }).join(', ');
+      avisoHtml += '<div style="padding:11px 13px; background:#fef2f2; border:1px solid #fecaca; border-radius:10px; margin-bottom:8px;">' +
+        '<div style="font-weight:800; font-size:0.74rem; color:#991b1b; text-transform:uppercase; letter-spacing:0.05em;">⚠️ Turno Aberto de Ontem (' + turnosOntem.length + ')</div>' +
+        '<div style="font-size:0.8rem; color:var(--text); margin-top:3px; font-weight:600;">' + esc(nomesOntem) + '</div>' +
+      '</div>';
+    }
+
     if (fBox) fBox.innerHTML = avisoHtml;
 
     var emps = (r.employees || []).slice();
@@ -2768,29 +2790,127 @@ function responderPedido(id, decisao) {
 }
 
 
+function _executarLancamentoAusencia_(n, t, d1, d2, forcarSobrescrita) {
+  mostrarPopup({ titulo:'A Processar', mensagem:'A lançar...', tipo:'processando' });
+  chamarAPIJsonp(adminParams({
+    action:'lancarAusenciaAdmin',
+    nome:n,
+    tipo:t,
+    dataInicio:d1,
+    dataFim:d2,
+    forcarSobrescrita: forcarSobrescrita ? 'true' : 'false'
+  }), function(r) {
+    if (r && r.ok) {
+      mostrarPopup({ titulo:'Concluído', mensagem:'Registo lançado (' + r.count + ' dia(s)).', tipo:'sucesso' });
+    } else if (r && r.jaTemPicagens) {
+      mostrarPopup({
+        titulo: 'Picagens Já Existentes',
+        mensagem: esc(r.erro || 'Já existem picagens registadas nesse dia.'),
+        tipo: 'aviso',
+        botoes: [
+          { texto: 'Cancelar', classe: 'toast-btn-secondary', acao: fecharToast },
+          { texto: 'Substituir', classe: 'toast-btn-primary', acao: function() {
+            fecharToast();
+            _executarLancamentoAusencia_(n, t, d1, d2, true);
+          }}
+        ]
+      });
+    } else {
+      mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
+    }
+  });
+}
+
 function submeterAusenciaAdministrativa() {
   var n = document.getElementById('nomeFuncionarioFolga').value;
   var t = document.getElementById('tipoAusencia').value;
   var d1 = document.getElementById('dataFolgaInicio').value;
   var d2 = document.getElementById('dataFolgaFim').value;
   if (!n || !t || !d1 || !d2) { mostrarPopup({ titulo:'Campos em Falta', mensagem:'Preencha tudo.', tipo:'erro' }); return; }
-  mostrarPopup({ titulo:'A Processar', mensagem:'A lançar...', tipo:'processando' });
-  chamarAPIJsonp(adminParams({ action:'lancarAusenciaAdmin', nome:n, tipo:t, dataInicio:d1, dataFim:d2 }), function(r) {
-    if (r && r.ok) mostrarPopup({ titulo:'Concluído', mensagem:'Registo lançado (' + r.count + ' dia(s)).', tipo:'sucesso' });
-    else mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
+  _executarLancamentoAusencia_(n, t, d1, d2, false);
+}
+
+function aoMudarModoCorrigir() {
+  var modoEl = document.getElementById('modoCorrigir');
+  var modo = modoEl ? modoEl.value : 'inserir';
+  var gHora = document.getElementById('grupoHoraCorrigir');
+  var gLista = document.getElementById('grupoListaPicagensDia');
+  var btn = document.getElementById('btnSubmeterCorrecao');
+  if (modo === 'remover') {
+    if (gHora) gHora.style.display = 'none';
+    if (gLista) gLista.style.display = 'block';
+    if (btn) btn.textContent = 'Remover Picagem';
+    carregarPicagensDiaCorrecao();
+  } else {
+    if (gHora) gHora.style.display = 'block';
+    if (gLista) gLista.style.display = 'none';
+    if (btn) btn.textContent = 'Inserir Picagem';
+  }
+}
+
+function carregarPicagensDiaCorrecao() {
+  var modoEl = document.getElementById('modoCorrigir');
+  if (!modoEl || modoEl.value !== 'remover') return;
+  var n = document.getElementById('nomeCorrigir').value;
+  var d = document.getElementById('dataCorrigir').value;
+  var sel = document.getElementById('indicePicagemRemover');
+  if (!sel) return;
+  if (!n || !d) {
+    sel.innerHTML = '<option value="">Selecione colaborador e data</option>';
+    return;
+  }
+  sel.innerHTML = '<option value="">A carregar picagens...</option>';
+  chamarAPIJsonp(adminParams({ action: 'listarPicagens', nome: n, data: d }), function(r) {
+    if (!r || !r.ok || !Array.isArray(r.picagens) || r.picagens.length === 0) {
+      sel.innerHTML = '<option value="">Sem picagens registadas neste dia</option>';
+      return;
+    }
+    sel.innerHTML = '<option value="" disabled selected>Escolha a picagem a remover</option>';
+    r.picagens.forEach(function(item) {
+      var o = document.createElement('option');
+      o.value = String(item.index);
+      o.text = (item.tipo || 'Picagem') + ' · ' + item.hora;
+      sel.appendChild(o);
+    });
   });
 }
+
 function submeterCorrecao() {
   var n = document.getElementById('nomeCorrigir').value;
   var d = document.getElementById('dataCorrigir').value;
-  var h = document.getElementById('horaCorrigir').value;
-  if (!n || !d || !h) { mostrarPopup({ titulo:'Campos em Falta', mensagem:'Preencha tudo.', tipo:'erro' }); return; }
+  var modoEl = document.getElementById('modoCorrigir');
+  var modo = modoEl ? modoEl.value : 'inserir';
   var motEl = document.getElementById('motivoCorrigir');
-  var motivo = (motEl && motEl.value && motEl.value.trim()) ? motEl.value.trim() : 'Inserção manual pela gerência (Art. 202.º CT)';
+  var motivo = (motEl && motEl.value && motEl.value.trim()) ? motEl.value.trim() : '';
+
+  if (!n || !d) { mostrarPopup({ titulo:'Campos em Falta', mensagem:'Selecione colaborador e data.', tipo:'erro' }); return; }
+  if (!motivo) { mostrarPopup({ titulo:'Motivo Obrigatório', mensagem:'Indique o motivo da alteração (Art. 202.º CT).', tipo:'erro' }); return; }
+
+  if (modo === 'remover') {
+    var selIdx = document.getElementById('indicePicagemRemover');
+    var idxVal = selIdx ? selIdx.value : '';
+    if (idxVal === '') { mostrarPopup({ titulo:'Selecione a Picagem', mensagem:'Escolha a picagem que pretende remover.', tipo:'erro' }); return; }
+    mostrarPopup({ titulo:'A Remover', mensagem:'A remover picagem...', tipo:'processando' });
+    chamarAPIJsonp(adminParams({ action:'corrigirPicagem', modo:'remover', nome:n, data:d, index:idxVal, motivo:motivo }), function(r) {
+      if (r && r.ok) {
+        carregarPicagensDiaCorrecao();
+        mostrarPopup({ titulo:'Concluído', mensagem:'Picagem removida.<br><br>Hoje: ' + r.horasHoje + ' · Semana: ' + r.horasSemana + ' · Mês: ' + r.horasMes, tipo:'sucesso' });
+      } else {
+        mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
+      }
+    });
+    return;
+  }
+
+  var h = document.getElementById('horaCorrigir').value;
+  if (!h) { mostrarPopup({ titulo:'Campos em Falta', mensagem:'Preencha a hora.', tipo:'erro' }); return; }
   mostrarPopup({ titulo:'A Corrigir', mensagem:'A inserir picagem...', tipo:'processando' });
-  chamarAPIJsonp(adminParams({ action:'corrigirPicagem', nome:n, data:d, hora:h, motivo:motivo }), function(r) {
-    if (r && r.ok) mostrarPopup({ titulo:'Concluído', mensagem:'Picagem inserida.<br><br>Hoje: ' + r.horasHoje + ' · Semana: ' + r.horasSemana + ' · Mês: ' + r.horasMes, tipo:'sucesso' });
-    else mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
+  chamarAPIJsonp(adminParams({ action:'corrigirPicagem', modo:'inserir', nome:n, data:d, hora:h, motivo:motivo }), function(r) {
+    if (r && r.ok) {
+      mostrarPopup({ titulo:'Concluído', mensagem:'Picagem inserida.<br><br>Hoje: ' + r.horasHoje + ' · Semana: ' + r.horasSemana + ' · Mês: ' + r.horasMes, tipo:'sucesso' });
+    } else {
+      mostrarPopup({ titulo:'Erro', mensagem:(r && r.erro) || 'Erro', tipo:'erro' });
+    }
   });
 }
 function exportarRelatorioPDF() {
