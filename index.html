@@ -2118,7 +2118,14 @@ async function registarPonto() {
   } catch (ePc) { _isPcDesktop = false; }
 
   var _dispPonto = obterDetalhesDispositivo();
-  chamarAPIJsonp({ action: "salvarPontoPorPin", pin: pin, lat: lat, lon: lon, isMock: "false", disp: _dispPonto, pcMode: _isPcDesktop ? "true" : "false" }, async function(r) {
+  var _payloadPonto = { action: "salvarPontoPorPin", pin: pin, lat: lat, lon: lon, isMock: "false", disp: _dispPonto, pcMode: _isPcDesktop ? "true" : "false" };
+  async function _processarRespostaPonto_(r, jaRetentou) {
+    if (!jaRetentou && r && !r.ok && /servidor ocupado/i.test(String(r.erro || ''))) {
+      setTimeout(function() {
+        chamarAPIJsonp(_payloadPonto, function(r2) { _processarRespostaPonto_(r2, true); });
+      }, 450);
+      return;
+    }
     emProcessamento = false; pinAtual = ""; atualizarDots();
     if (r && r.ok) {
       var h2 = await hashPin(pin);
@@ -2139,6 +2146,9 @@ async function registarPonto() {
     } else {
       mostrarPopup({ titulo: "Não Registado", mensagem: (r && r.erro) || "Erro", tipo: "erro" });
     }
+  }
+  chamarAPIJsonp(_payloadPonto, function(r) {
+    _processarRespostaPonto_(r, false);
   });
 }
 
