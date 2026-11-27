@@ -208,39 +208,21 @@
       periodo: ((qs.get('ini') || qs.get('fim')) ? ((qs.get('ini') || '—') + ' → ' + (qs.get('fim') || '—')) : '—')
     };
 
-    var chavePedidoExtra = [
-      (qs.get('nome') || '').trim(),
-      (qs.get('tipo') || '').trim(),
-      (qs.get('ini') || '').trim(),
-      (qs.get('fim') || '').trim()
-    ].join('|');
-
     function guardarEstadoLocal(id, estado) {
-      if (!estado) return;
+      if (!id || !estado) return;
       try {
         var payload = JSON.stringify({ estado: estado, ts: Date.now() });
-        if (id) localStorage.setItem('PED_RESP_LOC_' + id, payload);
-        if (chavePedidoExtra && chavePedidoExtra !== '|||') {
-          localStorage.setItem('PED_RESP_KEY_' + chavePedidoExtra, payload);
-        }
+        localStorage.setItem('PED_RESP_LOC_' + id, payload);
       } catch (e) {}
     }
 
     function lerEstadoLocal(id) {
+      if (!id) return '';
       try {
-        if (id) {
-          var raw = localStorage.getItem('PED_RESP_LOC_' + id);
-          if (raw) {
-            var obj = JSON.parse(raw);
-            if (obj && obj.estado) return String(obj.estado).trim();
-          }
-        }
-        if (chavePedidoExtra && chavePedidoExtra !== '|||') {
-          var raw2 = localStorage.getItem('PED_RESP_KEY_' + chavePedidoExtra);
-          if (raw2) {
-            var obj2 = JSON.parse(raw2);
-            if (obj2 && obj2.estado) return String(obj2.estado).trim();
-          }
+        var raw = localStorage.getItem('PED_RESP_LOC_' + id);
+        if (raw) {
+          var obj = JSON.parse(raw);
+          if (obj && obj.estado) return String(obj.estado).trim();
         }
       } catch (e) {}
       return '';
