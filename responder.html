@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>Responder a Pedido · Balcão Agrícola</title>
+  <title>Estado do Pedido · Balcão Agrícola</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,6 +57,7 @@
     }
     .tag.aprovar { background: #dcfce7; color: #166534; }
     .tag.recusar { background: #fee2e2; color: #991b1b; }
+    .tag.encerrado { background: #f1f5f9; color: #334155; }
     .head h1 { font-size: 1.2rem; font-weight: 800; color: var(--text); }
     .head p { font-size: 0.84rem; color: var(--text-muted); margin-top: 4px; }
     .body { padding: 22px 24px 26px; }
@@ -124,6 +125,35 @@
     .status-msg.ok { display: block; background: #dcfce7; color: #166534; }
     .status-msg.err { display: block; background: #fee2e2; color: #991b1b; }
     .status-msg.wait { display: block; background: #fef3c7; color: #92400e; }
+    .concluido-box {
+      text-align: center;
+      padding: 12px 4px;
+    }
+    .concluido-ico {
+      font-size: 2.4rem;
+      margin-bottom: 12px;
+    }
+    .concluido-titulo {
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .concluido-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 18px;
+    }
+    .resumo-final {
+      text-align: left;
+      background: var(--surface-2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 14px 16px;
+      font-size: 0.86rem;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
@@ -132,20 +162,29 @@
     <div class="head">
       <div id="badgeAcao" class="tag aprovar">✅ Aprovar Pedido</div>
       <h1 id="tituloPagina">Responder ao Pedido</h1>
-      <p>Escreva a mensagem e envie a resposta</p>
+      <p id="subtituloPagina">Escreva a mensagem e envie a resposta</p>
     </div>
     <div class="body">
-      <div class="detalhes-box" id="caixaDetalhes">
-        <div class="detalhes-row"><span class="detalhes-lbl">Colaborador:</span> <span class="detalhes-val" id="dNome">—</span></div>
-        <div class="detalhes-row"><span class="detalhes-lbl">Motivo:</span> <span class="detalhes-val" id="dTipo">—</span></div>
-        <div class="detalhes-row"><span class="detalhes-lbl">Período:</span> <span class="detalhes-val" id="dPeriodo">—</span></div>
+      <div id="areaFormulario">
+        <div class="detalhes-box" id="caixaDetalhes">
+          <div class="detalhes-row"><span class="detalhes-lbl">Colaborador:</span> <span class="detalhes-val" id="dNome">—</span></div>
+          <div class="detalhes-row"><span class="detalhes-lbl">Motivo:</span> <span class="detalhes-val" id="dTipo">—</span></div>
+          <div class="detalhes-row"><span class="detalhes-lbl">Período:</span> <span class="detalhes-val" id="dPeriodo">—</span></div>
+        </div>
+
+        <label for="mensagemResposta">Mensagem de resposta (opcional)</label>
+        <textarea id="mensagemResposta" placeholder="Escreva aqui a sua mensagem..."></textarea>
+
+        <button type="button" id="btnEnviar" class="btn-submit aprovar" onclick="enviarRespostaPedido()">Enviar Resposta</button>
+        <div id="estadoEnvio" class="status-msg"></div>
       </div>
 
-      <label for="mensagemResposta">Mensagem de resposta (opcional)</label>
-      <textarea id="mensagemResposta" placeholder="Escreva aqui a sua mensagem..."></textarea>
-
-      <button type="button" id="btnEnviar" class="btn-submit aprovar" onclick="enviarRespostaPedido()">Enviar Resposta</button>
-      <div id="estadoEnvio" class="status-msg"></div>
+      <div id="areaEncerrado" class="concluido-box" style="display:none;">
+        <div id="icoEncerrado" class="concluido-ico">✅</div>
+        <div id="tituloEncerrado" class="concluido-titulo">Pedido já respondido</div>
+        <div id="descEncerrado" class="concluido-desc">Este pedido já foi processado anteriormente e não permite novas respostas.</div>
+        <div id="resumoEncerrado" class="resumo-final"></div>
+      </div>
     </div>
   </div>
 
@@ -154,6 +193,53 @@
     var qs = new URLSearchParams(window.location.search || '');
     var pedidoId = (qs.get('id') || '').trim();
     var acao = ((qs.get('acao') || 'aprovar').trim().toLowerCase() === 'recusar') ? 'recusar' : 'aprovar';
+    var infoPedido = {
+      nome: qs.get('nome') || '—',
+      tipo: qs.get('tipo') || '—',
+      periodo: ((qs.get('ini') || qs.get('fim')) ? ((qs.get('ini') || '—') + ' → ' + (qs.get('fim') || '—')) : '—')
+    };
+
+    function mostrarEcraJaRespondido(estadoTexto, mensagemDetalhe) {
+      var badge = document.getElementById('badgeAcao');
+      var h1 = document.getElementById('tituloPagina');
+      var sub = document.getElementById('subtituloPagina');
+      var formArea = document.getElementById('areaFormulario');
+      var endArea = document.getElementById('areaEncerrado');
+      var ico = document.getElementById('icoEncerrado');
+      var tit = document.getElementById('tituloEncerrado');
+      var desc = document.getElementById('descEncerrado');
+      var res = document.getElementById('resumoEncerrado');
+
+      if (formArea) formArea.style.display = 'none';
+      if (endArea) endArea.style.display = 'block';
+
+      var estLimpo = (estadoTexto || '').trim();
+      var estUp = estLimpo.toUpperCase();
+      var isRecusado = estUp.indexOf('RECUS') !== -1;
+
+      badge.className = 'tag ' + (isRecusado ? 'recusar' : 'aprovar');
+      badge.textContent = estLimpo ? (isRecusado ? '❌ ' + estLimpo : '✅ ' + estLimpo) : 'Pedido Respondido';
+      h1.textContent = 'Pedido já respondido';
+      sub.textContent = 'Registo encerrado · Balcão Agrícola';
+
+      ico.textContent = isRecusado ? '❌' : '✅';
+      tit.textContent = 'Este pedido já foi respondido';
+      desc.textContent = mensagemDetalhe || ('O pedido encontra-se atualmente registado como ' + (estLimpo || 'respondido') + ' e não é permitida nova resposta.');
+
+      res.innerHTML =
+        '<div class="detalhes-row"><span class="detalhes-lbl">Colaborador:</span> <span class="detalhes-val">' + escaparHtml(infoPedido.nome) + '</span></div>' +
+        '<div class="detalhes-row"><span class="detalhes-lbl">Motivo:</span> <span class="detalhes-val">' + escaparHtml(infoPedido.tipo) + '</span></div>' +
+        '<div class="detalhes-row"><span class="detalhes-lbl">Período:</span> <span class="detalhes-val">' + escaparHtml(infoPedido.periodo) + '</span></div>' +
+        (estLimpo ? ('<div class="detalhes-row"><span class="detalhes-lbl">Estado atual:</span> <span class="detalhes-val">' + escaparHtml(estLimpo) + '</span></div>') : '');
+    }
+
+    function escaparHtml(v) {
+      return String(v || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
 
     (function init() {
       var badge = document.getElementById('badgeAcao');
@@ -170,21 +256,24 @@
         btn.textContent = 'Enviar Aprovação';
       }
 
-      var nomeQs = qs.get('nome') || '';
-      var tipoQs = qs.get('tipo') || '';
-      var iniQs = qs.get('ini') || '';
-      var fimQs = qs.get('fim') || '';
+      document.getElementById('dNome').textContent = infoPedido.nome;
+      document.getElementById('dTipo').textContent = infoPedido.tipo;
+      document.getElementById('dPeriodo').textContent = infoPedido.periodo;
 
-      if (nomeQs) document.getElementById('dNome').textContent = nomeQs;
-      if (tipoQs) document.getElementById('dTipo').textContent = tipoQs;
-      if (iniQs || fimQs) document.getElementById('dPeriodo').textContent = (iniQs || '—') + ' → ' + (fimQs || '—');
-
-      if ((!nomeQs || !tipoQs) && pedidoId) {
+      if (pedidoId) {
         chamarJsonp({ action: 'obterDetalhePedido', id: pedidoId }, function(r) {
           if (r && r.ok && r.pedido) {
-            document.getElementById('dNome').textContent = r.pedido.nome || '—';
-            document.getElementById('dTipo').textContent = r.pedido.tipo || '—';
-            document.getElementById('dPeriodo').textContent = (r.pedido.dataIni || '—') + ' → ' + (r.pedido.dataFim || '—');
+            infoPedido.nome = r.pedido.nome || infoPedido.nome;
+            infoPedido.tipo = r.pedido.tipo || infoPedido.tipo;
+            infoPedido.periodo = ((r.pedido.dataIni || r.pedido.dataFim) ? ((r.pedido.dataIni || '—') + ' → ' + (r.pedido.dataFim || '—')) : infoPedido.periodo);
+            document.getElementById('dNome').textContent = infoPedido.nome;
+            document.getElementById('dTipo').textContent = infoPedido.tipo;
+            document.getElementById('dPeriodo').textContent = infoPedido.periodo;
+
+            var estAtual = String(r.pedido.estado || '').trim();
+            if (estAtual && estAtual.toUpperCase().indexOf('AGUARDAR') === -1) {
+              mostrarEcraJaRespondido(estAtual, 'Este pedido já foi respondido anteriormente e já não é possível submeter nova resposta.');
+            }
           }
         });
       }
@@ -239,11 +328,16 @@
         viaGithub: '1'
       }, function(r) {
         if (r && r.ok) {
-          mostrarEstado('ok', acao === 'aprovar' ? '✅ Pedido aprovado e resposta enviada!' : '❌ Pedido recusado e resposta enviada!');
+          mostrarEcraJaRespondido(
+            r.estado || (acao === 'aprovar' ? 'Aprovado' : 'Recusado'),
+            'A sua resposta foi registada com sucesso. Este pedido encontra-se agora encerrado e não aceita novas respostas.'
+          );
         } else {
           if (r && r.jaRespondido) {
-            btn.disabled = true;
-            mostrarEstado('err', '🔒 ' + ((r && r.erro) || 'Este pedido já foi respondido.'));
+            mostrarEcraJaRespondido(
+              r.estadoAtual || (acao === 'aprovar' ? 'Aprovado' : 'Recusado'),
+              r.erro || 'Este pedido já foi respondido anteriormente e já não permite nova resposta.'
+            );
           } else {
             btn.disabled = false;
             mostrarEstado('err', '❌ ' + ((r && r.erro) || 'Não foi possível enviar a resposta.'));
