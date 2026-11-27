@@ -819,6 +819,7 @@
         </div>
         <div id="nomePreview" class="pin-nome-preview"></div>
         <div id="pinStatus" class="pin-status"></div>
+        <div id="pcEquipamentoBadge" style="font-size:0.7rem; color:var(--text-muted); margin-top:4px; font-weight:700;"></div>
       </div>
       <div class="keypad" id="keypadPonto">
         <button class="key" onclick="tecladoPress('1')">1</button>
@@ -850,6 +851,10 @@
           <input type="password" id="pinFuncFalta" class="form-control" maxlength="4" inputmode="numeric" placeholder="••••" style="letter-spacing:8px; text-align:center; font-size:1.2rem;">
           <button type="button" class="eye-toggle-btn" onclick="alternarVisibilidadeSenhaInput('pinFuncFalta', this)">👁️</button>
         </div>
+      </div>
+      <div class="form-group" id="grupoNomePcFalta">
+        <label>Nome do Dispositivo (PC)</label>
+        <input type="text" id="nomeDispositivoPcFalta" class="form-control" placeholder="Ex.: DESKTOP-H2Q6GF1" onchange="guardarNomePcDesdeFalta_(this.value)">
       </div>
       <div class="form-group"><label>O seu E-mail <span class="campo-obrigatorio">*</span></label><input type="email" id="emailFuncFalta" class="form-control" placeholder="email@exemplo.pt"></div>
       <div class="form-group">
@@ -905,6 +910,8 @@
         <button class="btn" onclick="abrirSubModulo('pdf')"><span>📄</span> PDF</button>
         <button class="btn" onclick="abrirSubModulo('funcionario')"><span>➕</span> Adicionar</button>
         <button class="btn" onclick="abrirSubModulo('remover')"><span>❌</span> Inativar</button>
+<button class="btn" onclick="configurarNomePcModal()"><span>💻</span> Nome do PC</button>
+
       </div>
       <button class="btn btn-nav-red" onclick="voltarAoEcraPrincipal()" style="margin-top:20px;">Sair do Painel</button>
     </div>
@@ -1510,6 +1517,7 @@ function iniciarRelogio() {
 
 window.addEventListener('load', async function() {
   iniciarRelogio();
+  atualizarIndicadorEquipamentoPc_();
   await restaurarDadosOfflineDoIdb_();
   try {
     var funcsIdb = await lerIdbPonto_("funcionarios_cache", null);
@@ -1626,7 +1634,8 @@ function mostrarPopup(cfg) {
   var acts = document.getElementById('toastActionsContainer'); acts.innerHTML = ""; acts.style.display = "flex";
   if (cfg.tipo === "processando") {
     var btnCancel = document.createElement('button'); btnCancel.className = "toast-btn toast-btn-secondary"; btnCancel.innerText = "Cancelar";
-    btnCancel.onclick = function() { emProcessamento = false; pinAtual = ""; atualizarDots(); fecharToast(); };
+    btnCancel.onclick = function() { emProcessamento = false; pinAtual = ""; atualizarDots(); fecharToast();
+        atualizarIndicadorEquipamentoPc_(); };
     acts.appendChild(btnCancel);
   } else if (cfg.botoes) {
     cfg.botoes.forEach(function(b){ var btn = document.createElement('button'); btn.className = "toast-btn " + (b.classe || "toast-btn-primary"); btn.innerText = b.texto; btn.onclick = b.acao; acts.appendChild(btn); });
@@ -1753,6 +1762,37 @@ function obterDetalhesDispositivo() {
 }
 
 
+
+function configurarNomePcModal() {
+  var atual = '';
+  try { atual = localStorage.getItem('NOME_PC_LOCAL') || ''; } catch (e) {}
+  var detetado = obterIdentificacaoPC();
+  mostrarPopup({
+    titulo: "Nome deste Computador",
+    mensagem: '<p style="margin-bottom:8px; color:var(--text-muted); font-size:0.86rem;">Equipamento ativo neste navegador: <b>' + esc(detetado) + '</b></p>' +
+      '<p style="margin-bottom:12px; color:var(--text-muted); font-size:0.84rem;">Escreva o nome deste PC para ficar registado nas picagens e pedidos seguido do IP (ex.: <code>PC-Balcao-Pataias (89.115.216.30)</code>):</p>' +
+      '<input type="text" id="inputNomePcModal" class="form-control" value="' + esc(atual) + '" placeholder="Ex.: PC-Balcao-Pataias">',
+    botoes: [
+      { texto: "Cancelar", classe: "toast-btn-secondary", acao: fecharToast },
+      { texto: "Guardar", classe: "toast-btn-primary", acao: function() {
+        var el = document.getElementById('inputNomePcModal');
+        var val = el ? String(el.value || '').trim().substring(0, 60) : '';
+        try {
+          if (val) localStorage.setItem('NOME_PC_LOCAL', val);
+          else localStorage.removeItem('NOME_PC_LOCAL');
+        } catch (eLs) {}
+        fecharToast();
+        mostrarPopup({
+          titulo: "Nome Guardado",
+          mensagem: val ? ('Equipamento registado como <b>' + esc(val) + '</b> e será gravado seguido do IP.') : 'Identificação do PC reposta para predefinição.',
+          tipo: "sucesso"
+        });
+      }}
+    ]
+  });
+  setTimeout(function(){ var el = document.getElementById('inputNomePcModal'); if (el) el.focus(); }, 120);
+}
+
 function abrirModalSenhaAdmin() {
   mostrarPopup({
     titulo: "Autenticação",
@@ -1785,6 +1825,7 @@ function tentarEntrarAdmin() {
       document.getElementById('headerTitle').style.display = 'block';
       document.getElementById('headerClockBox').style.display = 'flex';
       garantirSelectsPopulados_();
+  sincronizarCampoPcFalta_();
       atualizarBadgeOffline();
       voltarAoMenuCentralAdmin();
     } else {
@@ -1792,6 +1833,31 @@ function tentarEntrarAdmin() {
     }
   });
 }
+
+function guardarNomePcDesdeFalta_(val) {
+  try {
+    var limpo = String(val || '').trim().substring(0, 60);
+    if (limpo) localStorage.setItem('NOME_PC_LOCAL', limpo);
+    atualizarIndicadorEquipamentoPc_();
+  } catch (e) {}
+}
+
+function sincronizarCampoPcFalta_() {
+  try {
+    var el = document.getElementById('nomeDispositivoPcFalta');
+    var grp = document.getElementById('grupoNomePcFalta');
+    if (!el) return;
+    var ua = navigator.userAgent || '';
+    var ehMob = /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+    var temToque = (typeof navigator.maxTouchPoints === 'number' && navigator.maxTouchPoints > 0) || ('ontouchstart' in window);
+    var isPc = (!ehMob && !_temToque) || (window.innerWidth >= 900 && !ehMob);
+    if (grp) grp.style.display = isPc ? 'block' : 'none';
+    if (isPc) {
+      el.value = obterIdentificacaoPC();
+    }
+  } catch (e) {}
+}
+
 function abrirEcraFaltaFuncionario() {
   document.getElementById('section-ponto').classList.remove('active');
   document.getElementById('section-admin').classList.remove('active');
@@ -1896,6 +1962,23 @@ function garantirSelectsPopulados_() {
 
 
 var pinAtual = "";
+
+function atualizarIndicadorEquipamentoPc_() {
+  try {
+    var el = document.getElementById('pcEquipamentoBadge');
+    if (!el) return;
+    var ua = navigator.userAgent || '';
+    var ehMob = /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+    var temToque = (typeof navigator.maxTouchPoints === 'number' && navigator.maxTouchPoints > 0) || ('ontouchstart' in window);
+    var isPc = (!ehMob && !_temToque) || (window.innerWidth >= 900 && !ehMob);
+    if (isPc) {
+      el.innerHTML = '💻 Equipamento: <span style="color:var(--accent-dark);">' + esc(obterIdentificacaoPC()) + '</span>';
+    } else {
+      el.textContent = '';
+    }
+  } catch (e) {}
+}
+
 function atualizarDots() {
   var ds = document.querySelectorAll('#dotsPonto .pin-dot');
   for (var i = 0; i < 4; i++) { if (ds[i]) { if (i < pinAtual.length) ds[i].classList.add('filled'); else ds[i].classList.remove('filled'); } }
@@ -2433,6 +2516,12 @@ async function submeterFaltaFuncionario() {
   var lon = geoPed.lon || 0;
   var coordsFallbackPed = geoPed.fallback || '';
 
+  try {
+    var inpPcF = document.getElementById('nomeDispositivoPcFalta');
+    if (inpPcF && String(inpPcF.value || '').trim()) {
+      localStorage.setItem('NOME_PC_LOCAL', String(inpPcF.value || '').trim().substring(0, 60));
+    }
+  } catch (ePcF) {}
   var disp = obterDetalhesDispositivo();
   
   var enviados = _anexosItens.filter(function(x) { return x.state === 'done' && x.uploaded && x.uploaded.fileId; }).map(function(x) { return x.uploaded; });
