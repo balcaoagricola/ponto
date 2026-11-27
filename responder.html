@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Responder a Pedido · Balcão Agrícola</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f3eee7;
+      --surface: #ffffff;
+      --surface-2: #faf7f2;
+      --text: #271b14;
+      --text-muted: #756255;
+      --border: #e6dcd0;
+      --accent: #b45309;
+      --accent-dark: #78350f;
+      --success: #15803d;
+      --danger: #dc2626;
+      --r-sm: 14px;
+      --r-md: 18px;
+      --r-xl: 26px;
+      --shadow: 0 20px 44px -14px rgba(39, 27, 20, 0.14);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; }
+    body {
+      min-height: 100dvh;
+      background: linear-gradient(155deg, #ede5da 0%, #faf7f2 55%, #e8ddd0 100%);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+    .card {
+      width: 100%;
+      max-width: 460px;
+      background: var(--surface);
+      border-radius: var(--r-xl);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .top-bar { height: 4px; background: linear-gradient(90deg, #78350f, #b45309, #d97706); }
+    .head { padding: 22px 24px 16px; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+    .tag {
+      display: inline-block;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .tag.aprovar { background: #dcfce7; color: #166534; }
+    .tag.recusar { background: #fee2e2; color: #991b1b; }
+    .head h1 { font-size: 1.2rem; font-weight: 800; color: var(--text); }
+    .head p { font-size: 0.84rem; color: var(--text-muted); margin-top: 4px; }
+    .body { padding: 22px 24px 26px; }
+    .detalhes-box {
+      background: var(--surface-2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+    .detalhes-row { margin-bottom: 6px; }
+    .detalhes-row:last-child { margin-bottom: 0; }
+    .detalhes-lbl { font-weight: 700; color: var(--text-muted); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .detalhes-val { font-weight: 700; color: var(--text); }
+    label {
+      display: block;
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    textarea {
+      width: 100%;
+      min-height: 112px;
+      padding: 13px 15px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      background: var(--surface-2);
+      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 500;
+      resize: vertical;
+      outline: none;
+      margin-bottom: 16px;
+    }
+    textarea:focus { border-color: var(--accent); background: #fff; }
+    .btn-submit {
+      width: 100%;
+      padding: 15px 18px;
+      border: none;
+      border-radius: var(--r-sm);
+      font-size: 0.86rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #fff;
+      cursor: pointer;
+    }
+    .btn-submit.aprovar { background: linear-gradient(135deg, #15803d, #16a34a); }
+    .btn-submit.recusar { background: linear-gradient(135deg, #b91c1c, #dc2626); }
+    .btn-submit:disabled { opacity: 0.55; cursor: not-allowed; }
+    .status-msg {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: var(--r-sm);
+      font-size: 0.88rem;
+      font-weight: 700;
+      display: none;
+      text-align: center;
+    }
+    .status-msg.ok { display: block; background: #dcfce7; color: #166534; }
+    .status-msg.err { display: block; background: #fee2e2; color: #991b1b; }
+    .status-msg.wait { display: block; background: #fef3c7; color: #92400e; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="top-bar"></div>
+    <div class="head">
+      <div id="badgeAcao" class="tag aprovar">✅ Aprovar Pedido</div>
+      <h1 id="tituloPagina">Responder ao Pedido</h1>
+      <p>Escreva a mensagem e envie a resposta</p>
+    </div>
+    <div class="body">
+      <div class="detalhes-box" id="caixaDetalhes">
+        <div class="detalhes-row"><span class="detalhes-lbl">Colaborador:</span> <span class="detalhes-val" id="dNome">—</span></div>
+        <div class="detalhes-row"><span class="detalhes-lbl">Motivo:</span> <span class="detalhes-val" id="dTipo">—</span></div>
+        <div class="detalhes-row"><span class="detalhes-lbl">Período:</span> <span class="detalhes-val" id="dPeriodo">—</span></div>
+      </div>
+
+      <label for="mensagemResposta">Mensagem de resposta (opcional)</label>
+      <textarea id="mensagemResposta" placeholder="Escreva aqui a sua mensagem..."></textarea>
+
+      <button type="button" id="btnEnviar" class="btn-submit aprovar" onclick="enviarRespostaPedido()">Enviar Resposta</button>
+      <div id="estadoEnvio" class="status-msg"></div>
+    </div>
+  </div>
+
+  <script>
+    var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwO33X2VgI6XIZz60-HhvPCf6rV-h3fv7lGTZ5cg12qS9Z6Bp4tXU_QIsjbd2RhmVpBKA/exec";
+    var qs = new URLSearchParams(window.location.search || '');
+    var pedidoId = (qs.get('id') || '').trim();
+    var acao = ((qs.get('acao') || 'aprovar').trim().toLowerCase() === 'recusar') ? 'recusar' : 'aprovar';
+
+    (function init() {
+      var badge = document.getElementById('badgeAcao');
+      var btn = document.getElementById('btnEnviar');
+      if (acao === 'recusar') {
+        badge.className = 'tag recusar';
+        badge.textContent = '❌ Recusar Pedido';
+        btn.className = 'btn-submit recusar';
+        btn.textContent = 'Enviar Recusa';
+      } else {
+        badge.className = 'tag aprovar';
+        badge.textContent = '✅ Aprovar Pedido';
+        btn.className = 'btn-submit aprovar';
+        btn.textContent = 'Enviar Aprovação';
+      }
+
+      var nomeQs = qs.get('nome') || '';
+      var tipoQs = qs.get('tipo') || '';
+      var iniQs = qs.get('ini') || '';
+      var fimQs = qs.get('fim') || '';
+
+      if (nomeQs) document.getElementById('dNome').textContent = nomeQs;
+      if (tipoQs) document.getElementById('dTipo').textContent = tipoQs;
+      if (iniQs || fimQs) document.getElementById('dPeriodo').textContent = (iniQs || '—') + ' → ' + (fimQs || '—');
+
+      if ((!nomeQs || !tipoQs) && pedidoId) {
+        chamarJsonp({ action: 'obterDetalhePedido', id: pedidoId }, function(r) {
+          if (r && r.ok && r.pedido) {
+            document.getElementById('dNome').textContent = r.pedido.nome || '—';
+            document.getElementById('dTipo').textContent = r.pedido.tipo || '—';
+            document.getElementById('dPeriodo').textContent = (r.pedido.dataIni || '—') + ' → ' + (r.pedido.dataFim || '—');
+          }
+        });
+      }
+    })();
+
+    function chamarJsonp(params, cb) {
+      var cbName = 'cb_gh_' + Math.random().toString(36).substring(2, 10);
+      var s = document.createElement('script');
+      var timer = setTimeout(function() {
+        delete window[cbName];
+        if (s.parentNode) s.remove();
+        if (cb) cb({ ok: false, erro: 'Sem resposta do servidor.' });
+      }, 30000);
+      window[cbName] = function(data) {
+        clearTimeout(timer);
+        delete window[cbName];
+        if (s.parentNode) s.remove();
+        if (cb) cb(data);
+      };
+      var url = APP_SCRIPT_URL + '?';
+      for (var k in params) {
+        if (Object.prototype.hasOwnProperty.call(params, k)) {
+          url += encodeURIComponent(k) + '=' + encodeURIComponent(params[k]) + '&';
+        }
+      }
+      url += 'callback=' + cbName;
+      s.src = url;
+      s.onerror = function() {
+        clearTimeout(timer);
+        delete window[cbName];
+        if (s.parentNode) s.remove();
+        if (cb) cb({ ok: false, erro: 'Erro de ligação ao servidor.' });
+      };
+      document.body.appendChild(s);
+    }
+
+    function enviarRespostaPedido() {
+      if (!pedidoId) {
+        mostrarEstado('err', 'Pedido não identificado no link.');
+        return;
+      }
+      var btn = document.getElementById('btnEnviar');
+      var comentario = (document.getElementById('mensagemResposta').value || '').trim();
+      btn.disabled = true;
+      mostrarEstado('wait', 'A enviar resposta...');
+
+      chamarJsonp({
+        action: 'responderPedido',
+        id: pedidoId,
+        decisao: acao,
+        comentario: comentario,
+        viaGithub: '1'
+      }, function(r) {
+        if (r && r.ok) {
+          mostrarEstado('ok', acao === 'aprovar' ? '✅ Pedido aprovado e resposta enviada!' : '❌ Pedido recusado e resposta enviada!');
+        } else {
+          btn.disabled = false;
+          mostrarEstado('err', '❌ ' + ((r && r.erro) || 'Não foi possível enviar a resposta.'));
+        }
+      });
+    }
+
+    function mostrarEstado(tipo, texto) {
+      var el = document.getElementById('estadoEnvio');
+      el.className = 'status-msg ' + tipo;
+      el.textContent = texto;
+    }
+  </script>
+</body>
+</html>
