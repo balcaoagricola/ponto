@@ -1562,7 +1562,7 @@ window.addEventListener('load', async function() {
   } catch (eSw) {}
   console.log('[Ponto v7.4] index.html carregado');
 });
-window.addEventListener('online', async function(){ var g = document.getElementById('gpsIndicator'); if (g) g.classList.remove('offline'); await restaurarDadosOfflineDoIdb_(); setTimeout(sincronizarFilaOffline, 1500); atualizarBadgeOffline(); });
+window.addEventListener('online', async function(){ var g = document.getElementById('gpsIndicator'); if (g) g.classList.remove('offline'); await restaurarDadosOfflineDoIdb_(); setTimeout(function(){ sincronizarFilaOffline(); sincronizarPedidosOffline(); }, 1000); atualizarBadgeOffline(); });
 window.addEventListener('offline', async function(){ var g = document.getElementById('gpsIndicator'); if (g) g.classList.add('offline'); await restaurarDadosOfflineDoIdb_(); atualizarBadgeOffline(); });
 
 
@@ -1884,7 +1884,7 @@ function tecladoPress(d) {
   vibrarTecla_(20);
   pinAtual += d;
   atualizarDots();
-  if (pinAtual.length === 4) setTimeout(registarPonto, 20);
+  if (pinAtual.length === 4) setTimeout(registarPonto, 0);
 }
 function tecladoClear() {
   vibrarTecla_([15, 30, 15]);
