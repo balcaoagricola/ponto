@@ -1696,6 +1696,35 @@ function obterCoordenadasComFallback_(timeoutMs) {
   });
 }
 
+function obterIdentificacaoPC() {
+  try {
+    var qsPc = new URLSearchParams(window.location.search || '').get('pcNome') || new URLSearchParams(window.location.search || '').get('pc');
+    if (qsPc && String(qsPc).trim()) {
+      var limpoQs = String(qsPc).trim().substring(0, 60);
+      try { localStorage.setItem('NOME_PC_LOCAL', limpoQs); } catch (eLsPc) {}
+      return limpoQs;
+    }
+  } catch (eQs) {}
+  try {
+    if (window.NOME_PC_LOCAL && String(window.NOME_PC_LOCAL).trim()) {
+      return String(window.NOME_PC_LOCAL).trim().substring(0, 60);
+    }
+  } catch (eWin) {}
+  try {
+    var savedPc = localStorage.getItem('NOME_PC_LOCAL');
+    if (savedPc && String(savedPc).trim()) {
+      return String(savedPc).trim().substring(0, 60);
+    }
+  } catch (eSaved) {}
+  var ua = navigator.userAgent || '';
+  if (/Windows NT 10\.0|Windows NT 11\.0/i.test(ua)) return 'PC (Windows)';
+  if (/Windows/i.test(ua)) return 'PC (Windows)';
+  if (/Macintosh|Mac OS X/i.test(ua)) return 'PC (Mac)';
+  if (/CrOS/i.test(ua)) return 'PC (Chromebook)';
+  if (/Linux/i.test(ua)) return 'PC (Linux)';
+  return 'PC';
+}
+
 function obterDetalhesDispositivo() {
   var ua = navigator.userAgent || '';
   if (/iPhone/i.test(ua)) return 'Apple iPhone';
@@ -1719,7 +1748,7 @@ function obterDetalhesDispositivo() {
       return model;
     }
   }
-  if (/Windows|CrOS|Macintosh|Linux/i.test(ua)) return 'PC';
+  if (/Windows|CrOS|Macintosh|Linux/i.test(ua)) return obterIdentificacaoPC();
   return 'Desconhecido';
 }
 
@@ -1959,7 +1988,7 @@ async function registarPonto() {
       }
     } catch (eGOff) {}
 
-    var _dispOff = _isPcDesktopOff ? "Localização" : obterDetalhesDispositivo();
+    var _dispOff = obterDetalhesDispositivo();
     var item = await guardarPicagemOffline(nome, pin, latOff, lonOff, _dispOff, _isPcDesktopOff);
     emProcessamento = false; pinAtual = ""; atualizarDots();
     if (item) {
@@ -2001,7 +2030,7 @@ async function registarPonto() {
     _isPcDesktop = (!_ehMobileUa && !_temToque) || (window.innerWidth >= 900 && !_ehMobileUa);
   } catch (ePc) { _isPcDesktop = false; }
 
-  var _dispPonto = _isPcDesktop ? "Localização" : obterDetalhesDispositivo();
+  var _dispPonto = obterDetalhesDispositivo();
   chamarAPIJsonp({ action: "salvarPontoPorPin", pin: pin, lat: lat, lon: lon, isMock: "false", disp: _dispPonto, pcMode: _isPcDesktop ? "true" : "false" }, async function(r) {
     emProcessamento = false; pinAtual = ""; atualizarDots();
     if (r && r.ok) {
@@ -2405,7 +2434,7 @@ async function submeterFaltaFuncionario() {
   var coordsFallbackPed = geoPed.fallback || '';
 
   var disp = obterDetalhesDispositivo();
-  if (disp === 'PC') disp = 'Localização';
+  
   var enviados = _anexosItens.filter(function(x) { return x.state === 'done' && x.uploaded && x.uploaded.fileId; }).map(function(x) { return x.uploaded; });
   var fileId = enviados.length > 0 ? enviados[0].fileId : '';
   var obsFinal = obs || '';
