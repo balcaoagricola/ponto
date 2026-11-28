@@ -7,6 +7,8 @@
   <meta http-equiv="Expires" content="0">
   <title>Estado do Pedido · Balcão Agrícola</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#faf7f2">
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -20,6 +22,8 @@
       --border: #e6dcd0;
       --accent: #b45309;
       --accent-dark: #78350f;
+      --accent-soft: #fef3c7;
+      --accent-border: #fcd34d;
       --success: #15803d;
       --danger: #dc2626;
       --r-sm: 14px;
@@ -39,7 +43,7 @@
     }
     .card {
       width: 100%;
-      max-width: 460px;
+      max-width: 470px;
       background: var(--surface);
       border-radius: var(--r-xl);
       box-shadow: var(--shadow);
@@ -47,7 +51,19 @@
       overflow: hidden;
     }
     .top-bar { height: 4px; background: linear-gradient(90deg, #78350f, #b45309, #d97706); }
-    .head { padding: 22px 24px 16px; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+    .head { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .brand-logo {
+      max-height: 36px;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+    }
     .tag {
       display: inline-block;
       padding: 5px 11px;
@@ -56,12 +72,11 @@
       font-weight: 800;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      margin-bottom: 10px;
     }
     .tag.aprovar { background: #dcfce7; color: #166534; }
     .tag.recusar { background: #fee2e2; color: #991b1b; }
     .tag.encerrado { background: #f1f5f9; color: #334155; }
-    .head h1 { font-size: 1.2rem; font-weight: 800; color: var(--text); }
+    .head h1 { font-size: 1.18rem; font-weight: 800; color: var(--text); }
     .head p { font-size: 0.84rem; color: var(--text-muted); margin-top: 4px; }
     .body { padding: 22px 24px 26px; }
     .detalhes-box {
@@ -73,10 +88,26 @@
       font-size: 0.88rem;
       line-height: 1.55;
     }
-    .detalhes-row { margin-bottom: 6px; }
+    .detalhes-row { margin-bottom: 7px; }
     .detalhes-row:last-child { margin-bottom: 0; }
-    .detalhes-lbl { font-weight: 700; color: var(--text-muted); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; }
-    .detalhes-val { font-weight: 700; color: var(--text); }
+    .detalhes-lbl { font-weight: 700; color: var(--text-muted); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .detalhes-val { font-weight: 700; color: var(--text); word-break: break-word; }
+    .anexo-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding: 9px 12px;
+      background: var(--accent-soft);
+      border: 1.5px solid var(--accent-border);
+      border-radius: 10px;
+      color: var(--accent-dark);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      word-break: break-word;
+    }
+    .anexo-link:hover { filter: brightness(0.97); }
     label {
       display: block;
       font-size: 0.74rem;
@@ -148,26 +179,10 @@
       font-weight: 600;
       color: var(--text-muted);
     }
-    .concluido-box {
-      text-align: center;
-      padding: 12px 4px;
-    }
-    .concluido-ico {
-      font-size: 2.4rem;
-      margin-bottom: 12px;
-    }
-    .concluido-titulo {
-      font-size: 1.08rem;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-    .concluido-desc {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.55;
-      margin-bottom: 18px;
-    }
+    .concluido-box { text-align: center; padding: 12px 4px; }
+    .concluido-ico { font-size: 2.4rem; margin-bottom: 12px; }
+    .concluido-titulo { font-size: 1.08rem; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+    .concluido-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 18px; }
     .resumo-final {
       text-align: left;
       background: var(--surface-2);
@@ -177,13 +192,25 @@
       font-size: 0.86rem;
       line-height: 1.6;
     }
+    .foot {
+      text-align: center;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #a39184;
+      padding: 10px;
+      border-top: 1px solid var(--border);
+      background: var(--surface-2);
+    }
   </style>
 </head>
 <body>
   <div class="card">
     <div class="top-bar"></div>
     <div class="head">
-      <div id="badgeAcao" class="tag encerrado">Pedido</div>
+      <div class="brand-row">
+        <img src="https://lh3.googleusercontent.com/d/1dgTBVH4Mv0nn4xwTRFC-5iRV5TJ2RQqG" onerror="this.src='./icon.svg'" class="brand-logo" alt="Balcão Agrícola">
+        <div id="badgeAcao" class="tag encerrado">Pedido</div>
+      </div>
       <h1 id="tituloPagina">A verificar pedido...</h1>
       <p id="subtituloPagina">A confirmar estado atual no servidor</p>
     </div>
@@ -198,6 +225,8 @@
           <div class="detalhes-row"><span class="detalhes-lbl">Colaborador:</span> <span class="detalhes-val" id="dNome">—</span></div>
           <div class="detalhes-row"><span class="detalhes-lbl">Motivo:</span> <span class="detalhes-val" id="dTipo">—</span></div>
           <div class="detalhes-row"><span class="detalhes-lbl">Período:</span> <span class="detalhes-val" id="dPeriodo">—</span></div>
+          <div class="detalhes-row" id="rowObs" style="display:none;"><span class="detalhes-lbl">Observações:</span> <span class="detalhes-val" id="dObs" style="font-weight:500;">—</span></div>
+          <div id="rowAnexo" style="display:none;"></div>
         </div>
 
         <label for="mensagemResposta">Mensagem de resposta (opcional)</label>
@@ -214,23 +243,29 @@
         <div id="resumoEncerrado" class="resumo-final"></div>
       </div>
     </div>
+    <div class="foot">© <span id="footYear">2026</span> · Balcão Agrícola</div>
   </div>
 
   <script>
     var APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwO33X2VgI6XIZz60-HhvPCf6rV-h3fv7lGTZ5cg12qS9Z6Bp4tXU_QIsjbd2RhmVpBKA/exec";
     var qs = new URLSearchParams(window.location.search || '');
     var pedidoId = (qs.get('id') || '').trim();
+    var pedidoSig = (qs.get('sig') || '').trim();
     var acao = ((qs.get('acao') || 'aprovar').trim().toLowerCase() === 'recusar') ? 'recusar' : 'aprovar';
     var infoPedido = {
       nome: qs.get('nome') || '—',
       tipo: qs.get('tipo') || '—',
-      periodo: ((qs.get('ini') || qs.get('fim')) ? ((qs.get('ini') || '—') + ' → ' + (qs.get('fim') || '—')) : '—')
+      periodo: ((qs.get('ini') || qs.get('fim')) ? ((qs.get('ini') || '—') + ' → ' + (qs.get('fim') || '—')) : '—'),
+      obs: '',
+      anexoNome: '',
+      anexoUrl: ''
     };
 
+    var fy = document.getElementById('footYear');
+    if (fy) fy.textContent = String(new Date().getFullYear());
+
     function limparCacheLocalAoAbrir() {
-      try {
-        if (window.sessionStorage) sessionStorage.clear();
-      } catch (eS) {}
+      try { if (window.sessionStorage) sessionStorage.clear(); } catch (eS) {}
       try {
         if (window.localStorage) {
           var keysToRemove = [];
@@ -246,20 +281,12 @@
           }
         }
       } catch (eL) {}
-      try {
-        if (window.caches && typeof caches.keys === 'function') {
-          caches.keys().then(function(names) {
-            names.forEach(function(n) { caches.delete(n).catch(function(){}); });
-          }).catch(function(){});
-        }
-      } catch (eC) {}
     }
 
     function guardarEstadoLocal(id, estado) {
       if (!id || !estado) return;
       try {
-        var payload = JSON.stringify({ estado: estado, ts: Date.now() });
-        localStorage.setItem('PED_RESP_LOC_' + id, payload);
+        localStorage.setItem('PED_RESP_LOC_' + id, JSON.stringify({ estado: estado, ts: Date.now() }));
       } catch (e) {}
     }
 
@@ -273,6 +300,30 @@
         }
       } catch (e) {}
       return '';
+    }
+
+    function atualizarDetalhesVisiveis() {
+      document.getElementById('dNome').textContent = infoPedido.nome;
+      document.getElementById('dTipo').textContent = infoPedido.tipo;
+      document.getElementById('dPeriodo').textContent = infoPedido.periodo;
+
+      var rowObs = document.getElementById('rowObs');
+      var dObs = document.getElementById('dObs');
+      if (infoPedido.obs && infoPedido.obs !== '—') {
+        dObs.textContent = infoPedido.obs;
+        rowObs.style.display = 'block';
+      } else {
+        rowObs.style.display = 'none';
+      }
+
+      var rowAnexo = document.getElementById('rowAnexo');
+      if (infoPedido.anexoUrl) {
+        rowAnexo.innerHTML = '<a href="' + escaparHtml(infoPedido.anexoUrl) + '" target="_blank" rel="noopener" class="anexo-link">📎 ' + escaparHtml(infoPedido.anexoNome || 'Ver comprovativo anexo') + '</a>';
+        rowAnexo.style.display = 'block';
+      } else {
+        rowAnexo.style.display = 'none';
+        rowAnexo.innerHTML = '';
+      }
     }
 
     function mostrarVerificacao(msg, mostrarBotao) {
@@ -309,8 +360,11 @@
         btn.textContent = 'Enviar Aprovação';
       }
       h1.textContent = 'Responder ao Pedido';
-      sub.textContent = 'Escreva a mensagem e envie a resposta';
+      sub.textContent = acao === 'aprovar'
+        ? 'Ao aprovar, os dias de ausência são lançados automaticamente na folha'
+        : 'Escreva a mensagem e envie a resposta';
 
+      atualizarDetalhesVisiveis();
       if (verif) verif.style.display = 'none';
       if (endArea) endArea.style.display = 'none';
       if (formArea) formArea.style.display = 'block';
@@ -361,8 +415,10 @@
     }
 
     function verificarEstadoPedidoServidor() {
-      if (!pedidoId) {
-        mostrarAreaFormulario();
+      if (!pedidoId || !pedidoSig) {
+        document.getElementById('tituloPagina').textContent = 'Link sem autorização';
+        document.getElementById('subtituloPagina').textContent = 'Acesso protegido por token único';
+        mostrarVerificacao('Este link está incompleto ou desatualizado. Abra o pedido através do email/Telegram mais recente ou pelo Painel de Gestão.', false);
         return;
       }
 
@@ -377,6 +433,7 @@
       chamarJsonp({
         action: 'obterDetalhePedido',
         id: pedidoId,
+        sig: pedidoSig,
         nome: infoPedido.nome,
         tipo: infoPedido.tipo,
         ini: qs.get('ini') || '',
@@ -386,9 +443,10 @@
           infoPedido.nome = r.pedido.nome || infoPedido.nome;
           infoPedido.tipo = r.pedido.tipo || infoPedido.tipo;
           infoPedido.periodo = ((r.pedido.dataIni || r.pedido.dataFim) ? ((r.pedido.dataIni || '—') + ' → ' + (r.pedido.dataFim || '—')) : infoPedido.periodo);
-          document.getElementById('dNome').textContent = infoPedido.nome;
-          document.getElementById('dTipo').textContent = infoPedido.tipo;
-          document.getElementById('dPeriodo').textContent = infoPedido.periodo;
+          infoPedido.obs = r.pedido.obs || '';
+          infoPedido.anexoNome = r.pedido.anexoNome || '';
+          infoPedido.anexoUrl = r.pedido.anexoUrl || '';
+          atualizarDetalhesVisiveis();
 
           var estAtual = String(r.pedido.estado || '').trim();
           if (!estAtual || estAtual.toUpperCase().indexOf('AGUARDAR') === -1) {
@@ -401,17 +459,14 @@
           return;
         }
 
-        mostrarVerificacao('Não foi possível confirmar o estado do pedido neste momento. Verifique a ligação e tente novamente.', true);
+        var msgErr = (r && r.erro) ? r.erro : 'Não foi possível confirmar o estado do pedido neste momento. Verifique a ligação e tente novamente.';
+        mostrarVerificacao(msgErr, true);
       });
     }
 
     (function init() {
       limparCacheLocalAoAbrir();
-
-      document.getElementById('dNome').textContent = infoPedido.nome;
-      document.getElementById('dTipo').textContent = infoPedido.tipo;
-      document.getElementById('dPeriodo').textContent = infoPedido.periodo;
-
+      atualizarDetalhesVisiveis();
       verificarEstadoPedidoServidor();
     })();
 
@@ -448,8 +503,8 @@
     }
 
     function enviarRespostaPedido() {
-      if (!pedidoId) {
-        mostrarEstado('err', 'Pedido não identificado no link.');
+      if (!pedidoId || !pedidoSig) {
+        mostrarEstado('err', 'Pedido ou token de autorização em falta no link.');
         return;
       }
       var btn = document.getElementById('btnEnviar');
@@ -460,25 +515,26 @@
       chamarJsonp({
         action: 'responderPedido',
         id: pedidoId,
+        sig: pedidoSig,
         decisao: acao,
-        comentario: comentario,
-        viaGithub: '1'
+        comentario: comentario
       }, function(r) {
         if (r && r.ok) {
           var estFinal = r.estado || (acao === 'aprovar' ? 'Aprovado' : 'Recusado');
           guardarEstadoLocal(pedidoId, estFinal);
-          mostrarEcraJaRespondido(
-            estFinal,
-            'A sua resposta foi registada com sucesso. Este pedido encontra-se agora encerrado e não aceita novas respostas.'
-          );
+          var descOk = 'A sua resposta foi registada com sucesso. Este pedido encontra-se agora encerrado.';
+          if (acao === 'aprovar' && r.diasLancados > 0) {
+            descOk += ' Foram lançados automaticamente ' + r.diasLancados + ' dia(s) na folha do colaborador.';
+          }
+          if (r.diasComPicagem && r.diasComPicagem.length > 0) {
+            descOk += ' Aviso: dias com picagens já registadas foram preservados (' + r.diasComPicagem.join(', ') + ').';
+          }
+          mostrarEcraJaRespondido(estFinal, descOk);
         } else {
           if (r && r.jaRespondido) {
             var estJa = r.estadoAtual || (acao === 'aprovar' ? 'Aprovado' : 'Recusado');
             guardarEstadoLocal(pedidoId, estJa);
-            mostrarEcraJaRespondido(
-              estJa,
-              r.erro || 'Este pedido já foi respondido anteriormente e já não permite nova resposta.'
-            );
+            mostrarEcraJaRespondido(estJa, r.erro || 'Este pedido já foi respondido anteriormente e já não permite nova resposta.');
           } else {
             btn.disabled = false;
             mostrarEstado('err', '❌ ' + ((r && r.erro) || 'Não foi possível enviar a resposta.'));

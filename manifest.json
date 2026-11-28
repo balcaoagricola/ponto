@@ -1,0 +1,20 @@
+{
+  "name": "Registo de Ponto · Balcão Agrícola",
+  "short_name": "Ponto BA",
+  "description": "Sistema de registo de ponto e gestão de assiduidade do Balcão Agrícola (Gaspar & Novo, Lda).",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf7f2",
+  "theme_color": "#faf7f2",
+  "lang": "pt-PT",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
